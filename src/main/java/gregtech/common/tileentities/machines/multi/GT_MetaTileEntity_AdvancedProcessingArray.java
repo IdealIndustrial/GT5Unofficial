@@ -54,11 +54,15 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                 "Place up to 64 Single Block GT Machines into the Controller Inventory"};
     }
 
+    @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
-            return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[64], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_PROCESSING_ARRAY_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_PROCESSING_ARRAY)};
+            return new ITexture[] {
+                    Textures.BlockIcons.casingTexturePages[1][16],
+                    new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_PROCESSING_ARRAY_ACTIVE
+                            : Textures.BlockIcons.OVERLAY_FRONT_PROCESSING_ARRAY) };
         }
-        return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[64]};
+        return new ITexture[] { Textures.BlockIcons.casingTexturePages[1][16] };
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
@@ -302,32 +306,32 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                     IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, h, zDir + j);
                     if (i != 2 && i != -2 && j != 2 && j != -2) {
                         if(h == -1||h==3){
-                           if ((!addMaintenanceToMachineList(tTileEntity, 64)) && (!addInputToMachineList(tTileEntity, 64)) && (!addOutputToMachineList(tTileEntity, 64)) && (!addEnergyInputToMachineList(tTileEntity, 48))) {
-                               if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings6) {
-                                   return false;
-                               }
-                               if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 0) {
-                                   return false;
-                               }
-                               tAmount++;
-                           }
-                       }
-                       else{
-                           if (!aBaseMetaTileEntity.getAirOffset(xDir + i, h, zDir + j)) {
-                               return false;
-                           }
-                       }
+                            if ((!addMaintenanceToMachineList(tTileEntity, 144)) && (!addInputToMachineList(tTileEntity, 144)) && (!addOutputToMachineList(tTileEntity, 144)) && (!addEnergyInputToMachineList(tTileEntity, 144))) {
+                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings6) {
+                                    return false;
+                                }
+                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 0) {
+                                    return false;
+                                }
+                                tAmount++;
+                            }
+                        }
+                        else{
+                            if (!aBaseMetaTileEntity.getAirOffset(xDir + i, h, zDir + j)) {
+                                return false;
+                            }
+                        }
                     }
                     else {
                         if(!(i+xDir==0&&j+zDir==0&&h==0)){
-                        if ((!addMaintenanceToMachineList(tTileEntity, 64)) && (!addInputToMachineList(tTileEntity, 64)) && (!addOutputToMachineList(tTileEntity, 64)) && (!addEnergyInputToMachineList(tTileEntity, 64))) {
-                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings6) {
-                                return false;
-                            }
-                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 0) {
-                                return false;
-                            }
-                            tAmount++;
+                            if ((!addMaintenanceToMachineList(tTileEntity, 144)) && (!addInputToMachineList(tTileEntity, 144)) && (!addOutputToMachineList(tTileEntity, 144)) && (!addEnergyInputToMachineList(tTileEntity, 144))) {
+                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings6) {
+                                    return false;
+                                }
+                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 0) {
+                                    return false;
+                                }
+                                tAmount++;
                             }
                         }
                     }
