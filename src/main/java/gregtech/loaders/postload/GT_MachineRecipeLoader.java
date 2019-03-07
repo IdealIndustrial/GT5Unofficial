@@ -3220,7 +3220,7 @@ if(Loader.isModLoaded("Railcraft")){
 
         GT_Values.RA.addMixerRecipe(Materials.Sugar.getDust(4), GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.SulfuricAcid.getFluid(1000), Materials.DilutedSulfuricAcid.getFluid(1000), Materials.Charcoal.getGems(1), 600, 2);
         GT_Values.RA.addMixerRecipe(Materials.Wood.getDust(4), 	GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.SulfuricAcid.getFluid(1000), Materials.DilutedSulfuricAcid.getFluid(1000), Materials.Charcoal.getGems(1), 600, 2);
-
+	GT_Values.RA.addMixerRecipe(new ItemStack(Blocks.sand, 1), Materials.Coal.getDustSmall(1), Materials.Saltpeter.getDust(1), GT_Values.NI, Materials.Oil.getFluid(160), GT_Values.NF, new ItemStack(Blocks.soul_sand), 100, 16);
         GT_Values.RA.addChemicalRecipe(Materials.Propene.getCells(3),  GT_Utility.getIntegratedCircuit(1),  Materials.Ethylene.getGas(2000), Materials.Isoprene.getFluid(5000),   Materials.Empty.getCells(3), 120);
         GT_Values.RA.addChemicalRecipe(Materials.Ethylene.getCells(2), GT_Utility.getIntegratedCircuit(1),  Materials.Propene.getGas(3000),  Materials.Isoprene.getFluid(5000),   Materials.Empty.getCells(2), 120);
         GT_Values.RA.addChemicalRecipe(Materials.Propene.getCells(3),  Materials.Empty.getCells(2),         Materials.Ethylene.getGas(2000), GT_Values.NF,                      Materials.Isoprene.getCells(5), 120);
