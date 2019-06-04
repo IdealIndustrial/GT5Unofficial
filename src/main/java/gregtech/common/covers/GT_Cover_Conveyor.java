@@ -14,6 +14,11 @@ public class GT_Cover_Conveyor
     public final int mTickRate;
     public final byte stacksByOperation;
 
+    public GT_Cover_Conveyor(int aTickRate) {
+        this.mTickRate = aTickRate;
+        this.stacksByOperation = 1;
+    }
+
     public GT_Cover_Conveyor(int aTickRate, byte aStacksByOperation) {
         this.mTickRate = aTickRate;
         this.stacksByOperation = aStacksByOperation;
