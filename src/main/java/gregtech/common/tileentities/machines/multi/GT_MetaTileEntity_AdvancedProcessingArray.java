@@ -307,11 +307,16 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                     if (i != 2 && i != -2 && j != 2 && j != -2) {
                         if(h == -1||h==3){
                             if ((!addMaintenanceToMachineList(tTileEntity, 178)) && (!addInputToMachineList(tTileEntity, 178)) && (!addOutputToMachineList(tTileEntity, 178)) && (!addEnergyInputToMachineList(tTileEntity, 178))) {
-                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings8) {
-                                    return false;
-                                }
-                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 2) {
-                                    return false;
+                                System.out.println("updating "+(xDir + i)+" "+h+" "+(zDir + j));
+                                if ((aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings8)||(aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 2)) {
+                                    System.out.println("not new block");
+                                    if ((aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) == GregTech_API.sBlockCasings6)&&(aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) == 0)) {
+                                        aBaseMetaTileEntity.getWorld().setBlock(aBaseMetaTileEntity.getXCoord()+xDir + i, aBaseMetaTileEntity.getYCoord()+h,aBaseMetaTileEntity.getZCoord()+ zDir + j, GregTech_API.sBlockCasings8, 2, 3);
+                                    }
+                                    else {
+                                        System.out.println("not old block");
+                                        return false;
+                                    }
                                 }
                                 tAmount++;
                             }
@@ -325,11 +330,16 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                     else {
                         if(!(i+xDir==0&&j+zDir==0&&h==0)){
                             if ((!addMaintenanceToMachineList(tTileEntity, 178)) && (!addInputToMachineList(tTileEntity, 178)) && (!addOutputToMachineList(tTileEntity, 178)) && (!addEnergyInputToMachineList(tTileEntity, 178))) {
-                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings8) {
-                                    return false;
-                                }
-                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 2) {
-                                    return false;
+                                System.out.println("updating "+(xDir + i)+" "+h+" "+(zDir + j));
+                                if ((aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings8)||(aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 2)) {
+                                    System.out.println("not new block");
+                                    if ((aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) == GregTech_API.sBlockCasings6)&&(aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) == 0)) {
+                                        aBaseMetaTileEntity.getWorld().setBlock(aBaseMetaTileEntity.getXCoord()+xDir + i, aBaseMetaTileEntity.getYCoord()+h,aBaseMetaTileEntity.getZCoord()+ zDir + j, GregTech_API.sBlockCasings8, 2, 3);
+                                    }
+                                    else {
+                                        System.out.println("not old block");
+                                        return false;
+                                    }
                                 }
                                 tAmount++;
                             }
@@ -359,3 +369,14 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
     }
 
 }
+/*System.out.println("updating "+(xDir + i)+" "+h+" "+(zDir + j));
+                                if ((aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings8)||(aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 2)) {
+                                    System.out.println("not new block");
+                                    if ((aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) == GregTech_API.sBlockCasings6)&&(aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) == 0)) {
+                                        aBaseMetaTileEntity.getWorld().setBlock(aBaseMetaTileEntity.getXCoord()+xDir + i, aBaseMetaTileEntity.getYCoord()+h,aBaseMetaTileEntity.getZCoord()+ zDir + j, GregTech_API.sBlockCasings8, 2, 3);
+                                    }
+                                    else {
+                                        System.out.println("not old block");
+                                        return false;
+                                    }
+                                }*/

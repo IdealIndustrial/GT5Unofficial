@@ -117,6 +117,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_Coil_Cupronickel.get(1L, new Object[0]), bits, new Object[] {ItemList.Casing_Coil_Cupronickel_Deprecated});
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_Coil_Kanthal.get(1L, new Object[0]), bits, new Object[] {ItemList.Casing_Coil_Kanthal_Deprecated});
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_Coil_Nichrome.get(1L, new Object[0]), bits, new Object[] {ItemList.Casing_Coil_Nichrome_Deprecated});
+        GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_RobustHSSG.get(1L,new Object[0]),bits,new Object[]{ItemList.Casing_RobustHSSG_Deprecated});
 
        	GT_ModHandler.addCraftingRecipe(ItemList.Casing_Firebricks.get(1L, new Object[0]), bits, new Object[] {"BB", "BB", 'B', ItemList.Firebrick.get(1, new Object[0])});
         
