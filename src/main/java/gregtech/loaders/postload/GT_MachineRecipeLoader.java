@@ -174,7 +174,7 @@ public class GT_MachineRecipeLoader implements Runnable {
         GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.block,Materials.Coal,1), ItemList.MSFMixture.get(2, new Object[]{}),     GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.GreenSapphire, 1L), null, Materials.NitroFuel.getFluid(500), null, ItemList.Block_MSSFUEL.get(1, new Object[]{}), 120, 96);
 
 
-       /* if(Loader.isModLoaded("Thaumcraft")){
+        if(Loader.isModLoaded("Thaumcraft")){
         GT_Values.RA.addMixerRecipe(ItemList.SFMixture.get(4, new Object[]{}), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.InfusedAir, 1L), null, null, Materials.FierySteel.getFluid(10), null, ItemList.MSFMixture.get(4, new Object[]{}), 100, 64);
         GT_Values.RA.addMixerRecipe(ItemList.SFMixture.get(4, new Object[]{}), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.InfusedEarth, 1L), null, null, Materials.FierySteel.getFluid(10), null, ItemList.MSFMixture.get(4, new Object[]{}), 100, 64);
         GT_Values.RA.addMixerRecipe(ItemList.SFMixture.get(4, new Object[]{}), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.InfusedEntropy, 1L), null, null, Materials.FierySteel.getFluid(10), null, ItemList.MSFMixture.get(4, new Object[]{}), 100, 64);
@@ -211,7 +211,7 @@ public class GT_MachineRecipeLoader implements Runnable {
     	GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.block,Materials.Charcoal,1), ItemList.MSFMixture.get(4, new Object[]{}), GT_ModHandler.getModItem("Thaumcraft", "ItemResource", 4), null, Materials.LPG.getFluid(1200), null, ItemList.Block_MSSFUEL.get(1, new Object[]{}), 120, 96);
     	GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.block,Materials.Coal,1), ItemList.MSFMixture.get(2, new Object[]{}), GT_ModHandler.getModItem("Thaumcraft", "ItemResource", 4), null, Materials.LPG.getFluid(750), null, ItemList.Block_MSSFUEL.get(1, new Object[]{}), 120, 96);
 
-        }}*/
+        }}
 
         GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.block,Materials.Lignite,1), ItemList.SFMixture.get(6, new Object[]{}), null, null, Materials.NitroFuel.getFluid(1000), null, ItemList.Block_SSFUEL.get(1, new Object[]{}), 120, 96);
         GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.block,Materials.Charcoal,1), ItemList.SFMixture.get(4, new Object[]{}), null, null, Materials.NitroFuel.getFluid(800), null, ItemList.Block_SSFUEL.get(1, new Object[]{}), 120, 96);
