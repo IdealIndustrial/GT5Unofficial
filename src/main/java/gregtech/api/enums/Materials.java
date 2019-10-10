@@ -751,7 +751,40 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     public static Materials AntiKnock = new MaterialBuilder(994, TextureSet.SET_FLUID, "Ethyl Tert-Butyl Ether").addCell().addFluid().setRGB(255, 255, 255).setColor(Dyes.dyeWhite).constructMaterial();
     public static Materials GasolineRegular = new MaterialBuilder(997, TextureSet.SET_FLUID, "Gasoline").addCell().addFluid().setRGB(255,165,0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(384).constructMaterial();
     public static Materials GasolinePremium = new MaterialBuilder(998, TextureSet.SET_FLUID, "High Octane Gasoline").addCell().addFluid().setRGB(255,165,0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(768).constructMaterial();
-    
+
+    //Rocket fuel from Gt++
+    public static Materials Coaltar = new MaterialBuilder(753, TextureSet.SET_FLUID, "Coal Tar").addCell().addFluid().setRGB(64, 64, 64).setColor(Dyes.dyeBlack).setFuelType(MaterialBuilder.SEMIFLUID).setFuelPower(16).constructMaterial();
+    public static Materials Coalgas = new MaterialBuilder(754, TextureSet.SET_FLUID, "Coal Gas").addCell().addGas().setRGB(64, 64, 64).setColor(Dyes.dyeBlack).setFuelType(MaterialBuilder.GAS).setFuelPower(96).constructMaterial();
+    public static Materials Coaltaroil = new MaterialBuilder(755, TextureSet.SET_FLUID, "Coal Tar Oil").addCell().addFluid().setRGB(16, 255, 196).setColor(Dyes.dyeYellow).setFuelType(MaterialBuilder.SEMIFLUID).setFuelPower(32).constructMaterial();
+    public static Materials Kerosene = new MaterialBuilder(759, TextureSet.SET_FLUID, "Kerosene").addCell().addFluid().setRGB(130, 76, 255).setColor(Dyes.dyePurple).setFuelType(MaterialBuilder.SEMIFLUID).setFuelPower(64).constructMaterial();
+    public static Materials Ethylbenzene = new MaterialBuilder(762, TextureSet.SET_FLUID, "Ethylbenzene").addCell().addFluid().setRGB(255, 255, 255).setColor(Dyes.dyeWhite)/*.setMaterialList(new MaterialStack(Styrene, 1), new MaterialStack(Hydrogen, 2)).addChemicalRecipe()*/.constructMaterial();
+    public static Materials Anthracene = new MaterialBuilder(763, TextureSet.SET_FLUID, "Anthracene").addCell().addFluid().setRGB(255, 255, 255).setColor(Dyes.dyeWhite).constructMaterial();
+    public static Materials Sulfuriccoaltaroil = new MaterialBuilder(756, TextureSet.SET_FLUID, "Sulfuric Coal Tar Oil").addCell().addFluid().setRGB(255, 155, 35).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.SEMIFLUID).setFuelPower(64).constructMaterial();
+    public static Materials Naphthalene = new MaterialBuilder(757, TextureSet.SET_FLUID, "Naphthalene").addCell().addFluid().setRGB(111, 138, 145).setColor(Dyes.dyeGray).constructMaterial();
+    public static Materials Phthalicanhydride = new Materials(758, TextureSet.SET_ROUGH, 1.0F, 0, 1, 1, 255, 255, 255, 0, "PhthalicAnhydride", "Phthalic Anhydride", 0, 0, -1, 0, false, false, 3, 1, 1, Dyes.dyeWhite/*, 1, Arrays.asList(new MaterialStack(Benzene, 1), new MaterialStack(CarbonMonoxide, 2), new MaterialStack(Oxygen, 1))*/);
+    public static Materials RP1 = new MaterialBuilder(760, TextureSet.SET_FLUID, "RP1 Rocket Fluid").addCell().addFluid().setRGB(255, 110, 115).setColor(Dyes.dyeRed).constructMaterial();
+    public static Materials Ethylanthraquinone = new MaterialBuilder(764, TextureSet.SET_FLUID, "Ethylanthraquinone").addCell().addFluid().setRGB(240, 50, 50).setColor(Dyes.dyeLime).constructMaterial();
+    public static Materials Ethylanthrahydroquinone = new MaterialBuilder(765, TextureSet.SET_FLUID, "Ethylanthrahydroquinone").addCell().addFluid().setRGB(240, 50, 50).setColor(Dyes.dyeLime).constructMaterial();
+    public static Materials Hydrogenperoxide = new MaterialBuilder(766, TextureSet.SET_FLUID, "Hydrogen Peroxide").addCell().addFluid().setRGB(240, 50, 50).setColor(Dyes.dyeLime).constructMaterial();
+    public static Materials Hydrazine = new MaterialBuilder(767, TextureSet.SET_FLUID, "Hydrazine").addCell().addFluid().setRGB(255, 255, 255).setColor(Dyes.dyeWhite).constructMaterial();
+    public static Materials Monomethilhydrazine = new MaterialBuilder(768, TextureSet.SET_FLUID, "Monomethilhydrazine").addCell().addFluid().setRGB(115, 138, 145).setColor(Dyes.dyeGray).constructMaterial();
+    public static Materials Formaldehydecatalyst = new Materials(771, TextureSet.SET_ROUGH, 1.0F, 0, 1, 1, 255, 255, 255, 0, "FormaldehydeCatalyst", "Formaldehyde Catalyst", 0, 0, -1, 0, false, false, 3, 1, 1, Dyes.dyeWhite/*, 1,Arrays.asList(new MaterialStack(Iron, 16), new MaterialStack(Vanadium, 1))*/);
+    public static Materials Formaldehyde = new MaterialBuilder(772, TextureSet.SET_FLUID, "Formaldehyde").addCell().addFluid().setRGB(255, 125, 235).setColor(Dyes.dyePink).constructMaterial();
+    public static Materials Nitrogentetroxide = new MaterialBuilder(773, TextureSet.SET_FLUID, "Nitrogen Tetroxide").addCell().addFluid().setRGB(255, 125, 235).setColor(Dyes.dyePink).constructMaterial();
+    //774 free ID
+    public static Materials LithiumHydroxide = new Materials(775, TextureSet.SET_ROUGH, 1.0F, 0, 1, 1, 255, 255, 255, 0, "LithiumHydroxide", "Lithium Hydroxide", 0, 0, -1, 0, false, false, 3, 1, 1, Dyes.dyeWhite/*, 1, Arrays.asList(new MaterialStack(Oxygen, 1), new MaterialStack(Lithium, 16), new MaterialStack(Water, 1))*/);
+    public static Materials LithiumPeroxide = new Materials(776, TextureSet.SET_ROUGH, 1.0F, 0, 1, 1, 255, 255, 255, 0, "LithiumPeroxide", "Lithium Peroxide", 0, 0, -1, 0, false, false, 3, 1, 1, Dyes.dyeWhite/*, 1, Arrays.asList(new MaterialStack(Lithium, 2), new MaterialStack(Oxygen, 2))*/);
+    public static Materials LithiumHydroperoxide = new Materials(777, TextureSet.SET_ROUGH, 1.0F, 0, 1, 1, 255, 255, 255, 0, "LithiumHydroperoxide", "Lithium Hydroperoxide", 0, 0, -1, 0, false, false, 3, 1, 1, Dyes.dyeWhite/*, 1, Arrays.asList(new MaterialStack(LithiumPeroxide, 1), new MaterialStack(Hydrogenperoxide, 1), new MaterialStack(Water, 2))*/);
+    //Fuel RP1
+    public static Materials RP1rocketfuelmixture = new MaterialBuilder(761, TextureSet.SET_FLUID, "RP1 Rocket Fuel").addCell().addGas().setRGB(255, 10, 15).setColor(Dyes.dyeRed).setFuelType(MaterialBuilder.GAS).setFuelPower(768).constructMaterial();
+    //Fuel RP2
+    public static Materials Densehydrazinefuel = new MaterialBuilder(770, TextureSet.SET_FLUID, "RP2 Rocket Fuel").addCell().addGas().setRGB(255, 115, 55).setColor(Dyes.dyeRed).setFuelType(MaterialBuilder.GAS).setFuelPower(1536).constructMaterial();
+    //Fuel RP3
+    public static Materials CN3H7O3rocketfuel = new MaterialBuilder(769, TextureSet.SET_FLUID, "RP3 Rocket Fuel").addCell().addGas().setRGB(255, 10, 15).setColor(Dyes.dyeRed).setFuelType(MaterialBuilder.GAS).setFuelPower(2304).constructMaterial();
+    //Fuel RP4
+    public static Materials H8N4C2O4rocketfuel = new MaterialBuilder(774, TextureSet.SET_FLUID, "RP4 Rocket Fuel").addCell().addGas().setRGB(255, 10, 15).setColor(Dyes.dyeRed).setFuelType(MaterialBuilder.GAS).setFuelPower(3072).constructMaterial();
+	
+	
     /**
      * Materials which are renamed automatically
      */
