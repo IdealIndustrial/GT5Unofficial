@@ -3192,7 +3192,54 @@ if(Loader.isModLoaded("Railcraft")){
 
     	GT_Values.RA.addPyrolyseRecipe(Materials.Sugar.getDust(23), GT_Values.NF, 					1, Materials.Charcoal.getDust(12),   Materials.Water.getFluid(11000), 320, 64);
     	GT_Values.RA.addPyrolyseRecipe(Materials.Sugar.getDust(23), Materials.Nitrogen.getGas(500), 2, Materials.Charcoal.getDust(12),   Materials.Water.getFluid(11000), 160, 96);
+//Rocket Fuel Gt++
+	GT_Values.RA.addPyrolyseRecipe(Materials.Charcoal.getGems(16), GT_Values.NF, 8, Materials.Ash.getDust(1), Materials.Coaltar.getFluid(1000), 320, 64);
+	GT_Values.RA.addPyrolyseRecipe(Materials.Lignite.getGems(16), GT_Values.NF, 8, Materials.Ash.getDust(1), Materials.Coaltar.getFluid(1000), 320, 64);
+        GT_Values.RA.addChemicalRecipe(Materials.SodiumHydroxide.getDustTiny(1), Materials.Methanol.getCells(1), Materials.Coaltaroil.getFluid(6000), Materials.BioDiesel.getFluid(6000), Materials.Glycerol.getCells(1), 600);
+        GT_Values.RA.addChemicalRecipe(Materials.SodiumHydroxide.getDustTiny(1), Materials.Coaltaroil.getCells(6), Materials.Methanol.getFluid(1000), Materials.Glycerol.getFluid(1000), Materials.BioDiesel.getCells(6), 600);
+        GT_Values.RA.addChemicalRecipe(Materials.SodiumHydroxide.getDustTiny(1), Materials.Ethanol.getCells(1), Materials.Coaltaroil.getFluid(6000), Materials.BioDiesel.getFluid(6000), Materials.Glycerol.getCells(1), 600);
+        GT_Values.RA.addChemicalRecipe(Materials.SodiumHydroxide.getDustTiny(1), Materials.Coaltaroil.getCells(6), Materials.Ethanol.getFluid(1000), Materials.Glycerol.getFluid(1000), Materials.BioDiesel.getCells(6), 600);
+        GT_Values.RA.addChemicalRecipe(Materials.Fuel.getCells(9), GT_Values.NI, Materials.Ethylbenzene.getFluid(2000),  Materials.NitroFuel.getFluid(3000),  Materials.Empty.getCells(9), 300,  480);
+        GT_Values.RA.addChemicalRecipe(Materials.BioDiesel.getCells(9), GT_Values.NI, Materials.Ethylbenzene.getFluid(2000), Materials.NitroFuel.getFluid(3000),  Materials.Empty.getCells(9), 300, 480);		
+        GT_Values.RA.addChemicalRecipe(Materials.Ethylbenzene.getCells(2), GT_Values.NI, Materials.Fuel.getFluid(9000),  Materials.NitroFuel.getFluid(3000),  Materials.Empty.getCells(2), 300,  480);
+        GT_Values.RA.addChemicalRecipe(Materials.Ethylbenzene.getCells(2), GT_Values.NI, Materials.BioDiesel.getFluid(9000), Materials.NitroFuel.getFluid(3000),  Materials.Empty.getCells(2), 300, 480);
+	GT_Values.RA.addChemicalRecipe(Materials.Empty.getCells(2), GT_Utility.getIntegratedCircuit(24), Materials.Ethylbenzene.getFluid(1000),  Materials.Styrene.getFluid(1000), Materials.Hydrogen.getCells(2),  60,  30);		
+	GT_Values.RA.addChemicalRecipe(Materials.Ethylbenzene.getCells(3), GT_Utility.getIntegratedCircuit(24), GT_Values.NF,  Materials.Hydrogen.getGas(2000), Materials.Styrene.getCells(1), Materials.Empty.getCells(2),  60,  30);
+        GT_Values.RA.addChemicalRecipe(Materials.Phthalicanhydride.getDust(4), GT_Utility.getIntegratedCircuit(1), Materials.Ethylbenzene.getFluid(2000), Materials.Ethylanthraquinone.getFluid(2000), GT_Values.NI, 600, 30);
+        GT_Values.RA.addChemicalRecipe(Materials.Ethylanthraquinone.getCells(1), GT_Utility.getIntegratedCircuit(2),Materials.Hydrogen.getGas(500), Materials.Ethylanthrahydroquinone.getFluid(1500), GT_Values.NI, 800, 30);
+        GT_Values.RA.addChemicalRecipe(ItemList.Cell_Air.get(16, new Object[0]), Materials.Ethylanthrahydroquinone.getCells(5), Materials.Anthracene.getFluid(50), Materials.Ethylanthrahydroquinone.getFluid(4000), Materials.Hydrogenperoxide.getCells(2), Materials.Empty.getCells(19), 600, 240);
+	GT_Values.RA.addChemicalRecipe(Materials.Hydrogenperoxide.getCells(1), GT_Utility.getIntegratedCircuit(23),  Materials.Ammonia.getGas(1000),  Materials.Hydrazine.getFluid(1000), Materials.Water.getCells(1),  320,  30);
+	GT_Values.RA.addChemicalRecipe(Materials.Ammonia.getCells(1), GT_Utility.getIntegratedCircuit(23),  Materials.Hydrogenperoxide.getFluid(1000),  Materials.Hydrazine.getFluid(1000), Materials.Water.getCells(1),  320,  30);
+        GT_Values.RA.addCentrifugeRecipe(Materials.Hydrazine.getCells(1), GT_Utility.getIntegratedCircuit(23), Materials.Methanol.getFluid(1500), Materials.Densehydrazinefuel.getGas(2500), Materials.Empty.getCells(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000}, 500, 240);
+        GT_Values.RA.addCentrifugeRecipe(Materials.Methanol.getCells(3), GT_Utility.getIntegratedCircuit(23), Materials.Hydrazine.getFluid(2000), Materials.Densehydrazinefuel.getGas(5000), Materials.Empty.getCells(3), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000}, 1000, 240);
+        GT_Values.RA.addChemicalRecipe(Materials.Oxygen.getCells(1), Materials.Lithium.getDust(4), Materials.Water.getFluid(1000), GT_Values.NF, Materials.LithiumHydroxide.getDust(4), Materials.Empty.getCells(1), 6000, 30);
+	GT_Values.RA.addChemicalRecipe(Materials.LithiumHydroxide.getDust(4), Materials.Empty.getCells(1),GT_Values.NF, Materials.Water.getFluid(1000), Materials.Lithium.getDust(4), Materials.Oxygen.getCells(1), 6000, 30);
+        GT_Values.RA.addElectrolyzerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.LithiumPeroxide, 2), GT_Values.NI, GT_Values.NF, Materials.Oxygen.getGas(1000), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Lithium, 1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000, 0, 0, 0, 0, 0},400, 120);
+        GT_Values.RA.addElectrolyzerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Phthalicanhydride, 3), Materials.Empty.getCells(3), GT_Values.NF, Materials.Oxygen.getGas(1000), Materials.Benzene.getCells(1), Materials.CarbonMonoxide.getCells(2), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000, 100000, 0, 0, 0, 0},400, 120);
+	GT_Values.RA.addChemicalRecipe(Materials.LithiumHydroxide.getDust(7), GT_Utility.getIntegratedCircuit(23),  Materials.Hydrogenperoxide.getFluid(1000),  GT_Values.NF, Materials.LithiumHydroperoxide.getDust(14), Materials.Empty.getCells(1),  600,  240);
+        GT_Values.RA.addElectrolyzerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.LithiumHydroperoxide, 2), Materials.Empty.getCells(3), GT_Values.NF, GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.LithiumPeroxide, 1), Materials.Hydrogenperoxide.getCells(1), Materials.Water.getCells(2), GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000, 10000, 10000, 0, 0, 0},2000, 240);
+	GT_Values.RA.addDistilleryRecipe(23, Materials.Kerosene.getFluid(100), Materials.RP1.getFluid(50), 80, 30, false);
+        GT_Values.RA.addCentrifugeRecipe(Materials.Oxygen.getCells(1), GT_Utility.getIntegratedCircuit(23), Materials.RP1.getFluid(250), Materials.RP1rocketfuelmixture.getGas(250), Materials.Empty.getCells(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000}, 320, 480);
+        GT_Values.RA.addChemicalRecipe(Materials.Carbon.getDust(1), Materials.Hydrazine.getCells(1), Materials.Hydrogen.getGas(2000), Materials.Monomethilhydrazine.getFluid(1500), Materials.Empty.getCells(1), 480, 240);
+	GT_Values.RA.addChemicalRecipe(Materials.NitricAcid.getCells(1), GT_Utility.getIntegratedCircuit(23),  Materials.Monomethilhydrazine.getFluid(1000),  Materials.CN3H7O3rocketfuel.getGas(2000), Materials.Empty.getCells(1),  640,  240);
+	GT_Values.RA.addChemicalRecipe(Materials.Monomethilhydrazine.getCells(1), GT_Utility.getIntegratedCircuit(23),  Materials.NitricAcid.getFluid(1000),  Materials.CN3H7O3rocketfuel.getGas(2000), Materials.Empty.getCells(1),  640,  240);
+        GT_Values.RA.addChemicalRecipe(Materials.Copper.getDust(4), GT_Utility.getIntegratedCircuit(23), Materials.NitricAcid.getFluid(2000), Materials.Nitrogentetroxide.getFluid(450), GT_Values.NI, 320, 500);
+	GT_Values.RA.addChemicalRecipe(Materials.Nitrogentetroxide.getCells(1), GT_Utility.getIntegratedCircuit(23),  Materials.Dimethylhydrazine.getFluid(1000),  Materials.H8N4C2O4rocketfuel.getGas(875), Materials.Empty.getCells(1),  180,  480);
+	GT_Values.RA.addChemicalRecipe(Materials.Dimethylhydrazine.getCells(1), GT_Utility.getIntegratedCircuit(23),  Materials.Nitrogentetroxide.getFluid(1000),  Materials.H8N4C2O4rocketfuel.getGas(875), Materials.Empty.getCells(1),  180,  480);
+	GT_Values.RA.addChemicalRecipe(Materials.Hydrogen.getCells(4), Materials.Formaldehyde.getCells(2),  Materials.Hydrazine.getFluid(2000),  Materials.Dimethylhydrazine.getFluid(1000),  Materials.Water.getCells(2),Materials.Empty.getCells(4),  1200,  30);
+        GT_Values.RA.addMixerRecipe(Materials.Iron.getDust(16), Materials.Vanadium.getDust(1), GT_Utility.getIntegratedCircuit(2), GT_Values.NI, GT_Values.NF, GT_Values.NF, Materials.Formaldehydecatalyst.getDust(4), 160, 30);
+        GT_Values.RA.addChemicalRecipe(Materials.Formaldehydecatalyst.getDust(1), Materials.Oxygen.getCells(16), Materials.Methanol.getFluid(32000), Materials.Formaldehyde.getFluid(8000), Materials.Water.getCells(16), 1800, 120);
+	GT_Values.RA.addChemicalRecipe(Materials.Coaltaroil.getCells(1), GT_Utility.getIntegratedCircuit(23),  Materials.SulfuricAcid.getFluid(1000),  Materials.Sulfuriccoaltaroil.getFluid(2000), Materials.Empty.getCells(1),  40,  30);
+	GT_Values.RA.addChemicalRecipe(Materials.SulfuricAcid.getCells(1), GT_Utility.getIntegratedCircuit(23),  Materials.Coaltaroil.getFluid(1000),  Materials.Sulfuriccoaltaroil.getFluid(2000), Materials.Empty.getCells(1),  40,  30);
+	GT_Values.RA.addDistilleryRecipe(6, Materials.Sulfuriccoaltaroil.getFluid(60), Materials.Naphthalene.getFluid(60), 80, 30, false);
+        GT_Values.RA.addChemicalRecipe(Materials.Lithium.getDust(5), GT_Utility.getIntegratedCircuit(23), Materials.Naphthalene.getFluid(2000), Materials.PhthalicAcid.getFluid(2500), GT_Values.NI, 320, 30);
+	GT_Values.RA.addChemicalRecipe(Materials.Lithium.getDust(5), Materials.Naphthalene.getCells(2), GT_Values.NF, Materials.PhthalicAcid.getFluid(2500), Materials.Empty.getCells(2), 320, 30);
+	GT_Values.RA.addElectrolyzerRecipe(GT_Values.NI, GT_Values.NI, Materials.PhthalicAcid.getFluid(144), GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Phthalicanhydride, 1), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, new int[]{10000, 0, 0, 0, 0, 0},1200, 120);
 
+	GT_Values.RA.addUniversalDistillationRecipe(Materials.Coaltar.getFluid(1000), 
+		new FluidStack[]{Materials.Coaltaroil.getFluid(500), Materials.Naphtha.getFluid(100), Materials.Ethylbenzene.getFluid(150), Materials.Anthracene.getFluid(50), Materials.Kerosene.getFluid(200)}, 
+		GT_Values.NI, 900, 60);			
+		
     	GT_Values.RA.addUniversalDistillationRecipe(Materials.CharcoalByproducts.getGas(1000),
     			new FluidStack[]{Materials.WoodTar.getFluid(250), Materials.WoodVinegar.getFluid(500), Materials.WoodGas.getGas(250)},
     			Materials.Charcoal.getDustSmall(1), 40, 256);
