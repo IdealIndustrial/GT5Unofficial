@@ -315,7 +315,7 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
         return EnumAction.none;
     }
 
-    @Override
+    /*@Override
     @SideOnly(Side.CLIENT)
     public final void getSubItems(Item var1, CreativeTabs aCreativeTab, List aList) {
         for (int i = 0; i < 32766; i += 2)
@@ -324,7 +324,20 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
                 isItemStackUsable(tStack);
                 aList.add(tStack);
             }
-    }
+    }*/
+    @Override
+    @SideOnly(Side.CLIENT)
+    public final void getSubItems(Item var1, CreativeTabs aCreativeTab, List aList) {
+        for (int i = 0; i < 32766; i += 2) {
+            if (getToolStats(new ItemStack(this, 1, i)) != null) {
+                ItemStack tStack = new ItemStack(this, 1, i);
+                isItemStackUsable(tStack);
+                aList.add(tStack);
+                aList.add(getToolWithStats(i,1,Materials.Neutronium,Materials.Neutronium,null));
+            }
+
+        }
+    }	
 
     @Override
     @SideOnly(Side.CLIENT)
