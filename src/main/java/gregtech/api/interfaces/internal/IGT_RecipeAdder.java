@@ -662,6 +662,9 @@ public interface IGT_RecipeAdder {
      */
     public boolean addCrackingRecipe(int circuitConfig, FluidStack aInput, FluidStack aInput2, FluidStack aOutput, int aDuration, int aEUt);
 
+
+    public boolean addDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutputs, int aDuration, int aEUt);
+
     /**
      * Adds a Sound to the Sonictron9001
      * you should NOT call this in the preInit-Phase!

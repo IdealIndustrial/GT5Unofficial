@@ -1086,6 +1086,18 @@ public class GT_RecipeAdder
 		return true;    
 	}
 
+	@Override
+    public boolean addDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutputs, int aDuration, int aEUt) {
+        if (aInput == null) {
+            return false;
+        }
+        if (aOutputs == null || aOutputs.length == 0|| aOutputs[0] == null) {
+            return false;
+        }
+        GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes.addRecipe(true, new ItemStack[]{aInput}, aOutputs, null, new FluidStack[0],new FluidStack[0], aDuration, aEUt, 0);
+        return true;
+    }
+
 	private boolean areItemsAndFluidsBothNull(ItemStack[] items, FluidStack[] fluids){
     	boolean itemsNull = true;
     	if (items != null) {
