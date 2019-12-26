@@ -37,8 +37,12 @@ public class GT_MetaTileEntity_Disassembler
     public int checkRecipe() {
         if ((getInputAt(0) != null) && (isOutputEmpty())) {
             if(GT_Mod.gregtechproxy.disassemblerRecipeMapOn&& !(getInputAt(0).getItem() instanceof GT_MetaGenerated_Tool)){
-                ItemStack is = getInputAt(0);
                 int f = super.checkRecipe();
+                for (int i = 0; i < this.mOutputItems.length; i++) {
+                    if (!(getBaseMetaTileEntity().getRandomNumber(100) < 50 + 10 * this.mTier)) {
+                        this.mOutputItems[i] = null;
+                    }
+                }
                 return f;
             }else {
                 if (GT_Utility.areStacksEqual(getInputAt(0), new ItemStack(Items.egg))) {
