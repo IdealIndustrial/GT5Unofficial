@@ -72,9 +72,7 @@ public class GT_Shaped_Recipe extends ShapedOreRecipe implements IGT_CraftingRec
 
             // Saving Ingredients inside the Item.
             if (mDismantleable) {
-                if(GT_Mod.gregtechproxy.disassemblerRecipeMapOn && !(getRecipeOutput().getItem()instanceof GT_MetaGenerated_Tool)){
-
-                }else {
+                if(!GT_Mod.gregtechproxy.disassemblerRecipeMapOn || (getRecipeOutput().getItem() instanceof GT_MetaGenerated_Tool)){
                     NBTTagCompound rNBT = rStack.getTagCompound(), tNBT = new NBTTagCompound();
                     if (rNBT == null) rNBT = new NBTTagCompound();
                     for (int i = 0; i < 9; i++) {
