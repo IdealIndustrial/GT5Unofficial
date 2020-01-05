@@ -17,11 +17,11 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
     }
 
     public GT_MetaTileEntity_Hatch_OutputBus(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier, aTier < 1 ? 1 : aTier == 1 ? 4 : aTier == 2 ? 9 : 16, aDescription, aTextures);
+        super(aName, aTier, aTier < 1 ? 1 : aTier <= 6  ? (aTier + 1) * (aTier + 1) : 64, aDescription, aTextures);
     }
 
     public GT_MetaTileEntity_Hatch_OutputBus(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier, aTier < 1 ? 1 : aTier == 1 ? 4 : aTier == 2 ? 9 : 16, aDescription, aTextures);
+        super(aName, aTier, aTier < 1 ? 1 : aTier <= 6  ? (aTier + 1) * (aTier + 1) : 64, aDescription, aTextures);
     }
 
     @Override
@@ -75,8 +75,10 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
                 return new GT_Container_2by2(aPlayerInventory, aBaseMetaTileEntity);
             case 2:
                 return new GT_Container_3by3(aPlayerInventory, aBaseMetaTileEntity);
+            case 3:
+                return  new GT_Container_4by4(aPlayerInventory, aBaseMetaTileEntity);
             default:
-                return new GT_Container_4by4(aPlayerInventory, aBaseMetaTileEntity);
+                return new GT_Container_NbyN(aPlayerInventory, aBaseMetaTileEntity, mTier<=6?mTier+1:8);
         }
     }
 
@@ -92,7 +94,7 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
             case 3:
                 return new GT_GUIContainer_4by4(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
             default:
-                return new GT_GUIContainer_4by4(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_NbyN(aPlayerInventory, aBaseMetaTileEntity, "Output Bus", mTier<=6?mTier+1:8);
         }
     }
 

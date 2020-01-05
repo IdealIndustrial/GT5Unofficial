@@ -29,7 +29,7 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
     }
 
     public static int getSlots(int aTier) {
-        return aTier < 1 ? 1 : aTier == 1 ? 4 : aTier == 2 ? 9 : 16;
+        return aTier < 1 ? 1 : aTier <= 6  ? (aTier + 1) * (aTier + 1) : 64;
     }
 
     @Override
