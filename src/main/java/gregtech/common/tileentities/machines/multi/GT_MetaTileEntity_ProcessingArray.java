@@ -7,19 +7,22 @@ import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GT_Utility;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static gregtech.api.enums.GT_Values.V;
 import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine.isValidForLowGravity;
@@ -27,6 +30,8 @@ import static gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Basi
 public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBlockBase {
 
     GT_Recipe mLastRecipe;
+
+    boolean separateBusesMode = false, processFluidCells = false;
 
     public GT_MetaTileEntity_ProcessingArray(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -199,9 +204,29 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
 
         ArrayList<FluidStack> tFluidList = getStoredFluids();
         
-        FluidStack[] tFluids = (FluidStack[]) tFluidList.toArray(new FluidStack[tFluidList.size()]); 
+        FluidStack[] tFluids = (FluidStack[]) tFluidList.toArray(new FluidStack[tFluidList.size()]);
+
         if (tInputList.size() > 0 || tFluids.length > 0) {
-            GT_Recipe tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+            GT_Recipe tRecipe = null;
+            if (separateBusesMode){
+                for(GT_MetaTileEntity_Hatch_InputBus tBus : mInputBusses){
+                    tInputs = tBus.mInventory;
+                    tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                    if (tRecipe!=null)
+                        break;
+                }
+            } else {
+                tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+            }
+            if(tRecipe == null && processFluidCells){
+                for(FluidStack tFluid : tFluids){
+                    if(tFluid.amount%1000!=0)
+                        continue;
+                    tInputList.add(GT_Utility.fillFluidContainer(tFluid, GT_ModHandler.getIC2Item("cell",tFluid.amount/1000),false,true));
+                }
+                tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
+                tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+            }
             if (tRecipe != null) {
                 if (GT_Mod.gregtechproxy.mLowGravProcessing && tRecipe.mSpecialValue == -100 &&
                         !isValidForLowGravity(tRecipe,getBaseMetaTileEntity().getWorld().provider.dimensionId))
@@ -214,7 +239,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 int machines = Math.min(16, mInventory[1].stackSize);
                 int i = 0;
                 for (; i < machines; i++) {
-                    if (!tRecipe.isRecipeInputEqual(true, tFluids, tInputs)) {
+                    if (processFluidCells ? !isRecipeInputEqualFluids(tRecipe,tInputs,tFluids,true) : !tRecipe.isRecipeInputEqual(true, tFluids, tInputs)) {
                         if (i == 0) {
                             return false;
                         }
@@ -277,12 +302,24 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                     tOut = ArrayUtils.addAll(tOut, tmp);
                 }
                 List<ItemStack> tSList = new ArrayList<ItemStack>();
-                for (ItemStack tS : tOut) {
+                ArrayList<FluidStack> tFOuts = new ArrayList<>();
+                tFOuts.add(tFOut);
+                for (ItemStack tS : tOut) {//make convertation
+                    if(processFluidCells){
+                        FluidStack tFluid = GT_Utility.getFluidForFilledItem(tS, true);
+                        if(tFluid!=null) {
+                            tFluid.amount = 1000*tS.stackSize;
+                            tFOuts.add(tFluid);
+                            continue;
+                        }
+                        if (GT_Utility.areStacksEqual(tS, GT_ModHandler.getIC2Item("cell", 1), true))
+                            continue;
+                    }
                     if (tS.stackSize > 0) tSList.add(tS);
                 }
                 tOut = tSList.toArray(new ItemStack[tSList.size()]);
                 this.mOutputItems = tOut;
-                this.mOutputFluids = new FluidStack[]{tFOut};
+                this.mOutputFluids = tFOuts.toArray(new FluidStack[tFOuts.size()]);
                 updateSlots();
                 return true;
             }
@@ -338,5 +375,135 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
 
     public boolean explodesOnComponentBreak(ItemStack aStack) {
         return false;
+    }
+
+    @Override
+    public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
+        checkRecipe(getStackInSlot(0));
+        if (aPlayer.isSneaking()){
+            processFluidCells = !processFluidCells;
+            if (processFluidCells)
+                GT_Utility.sendChatToPlayer(aPlayer, "Fluid Autocanning Enabled");
+            else
+                GT_Utility.sendChatToPlayer(aPlayer, "Fluid Autocanning Disabled");
+        }else {
+            separateBusesMode = !separateBusesMode;
+            if (separateBusesMode)
+
+                GT_Utility.sendChatToPlayer(aPlayer, "Processing all buses separately");
+            else
+                GT_Utility.sendChatToPlayer(aPlayer, "Processing all buses together");
+        }
+    }
+
+    @Override
+    public void saveNBTData(NBTTagCompound aNBT) {
+        aNBT.setBoolean("processingMode",separateBusesMode);
+        aNBT.setBoolean("autocanning",processFluidCells);
+        super.saveNBTData(aNBT);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound aNBT) {
+        super.loadNBTData(aNBT);
+        separateBusesMode = aNBT.getBoolean("processingMode");
+        processFluidCells = aNBT.getBoolean("autocanning");
+    }
+
+    public static boolean isRecipeInputEqualFluids(GT_Recipe aRecipe, ItemStack[] aInputs, FluidStack[] aFluidInputs, boolean aDecreaseStacksizeBySuccess){
+        if (aFluidInputs.length > 0 && aInputs == null) return false;
+        int amt;
+        ArrayList<ItemStack> mInputs = new ArrayList<>(Arrays.asList(aRecipe.mInputs));
+        ArrayList<FluidStack> mFluids = new ArrayList<>(Arrays.asList(aRecipe.mFluidInputs));
+        Iterator<ItemStack> itr = mInputs.iterator();
+        while(itr.hasNext()){
+            ItemStack is = itr.next();
+            FluidStack tFluid = GT_Utility.getFluidForFilledItem(is,true);
+            if(tFluid == null)
+                continue;
+            tFluid.amount = 1000*is.stackSize;
+            mFluids.add(tFluid);
+            itr.remove();
+
+
+        }
+        FluidStack[] mFluidInputs = mFluids.toArray(new FluidStack[mFluids.size()]);
+        for (FluidStack tFluid : mFluidInputs)
+            if (tFluid != null) {
+                boolean temp = true;
+                amt = tFluid.amount;
+                for (FluidStack aFluid : aFluidInputs)
+                    if (aFluid != null && aFluid.isFluidEqual(tFluid)) {
+                        amt -= aFluid.amount;
+                        if (amt < 1) {
+                            temp = false;
+                            break;
+                        }
+                    }
+                if (temp) return false;
+            }
+
+        if (mInputs.size() > 0 && aInputs == null) return false;
+
+        for (ItemStack tStack : mInputs) {
+            if (tStack != null) {
+                amt = tStack.stackSize;
+                boolean temp = true;
+                for (ItemStack aStack : aInputs) {
+                    if ((GT_Utility.areUnificationsEqual(aStack, tStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), tStack, true))) {
+                        amt -= aStack.stackSize;
+                        if (amt < 1) {
+                            temp = false;
+                            break;
+                        }
+                    }
+                }
+                if (temp) return false;
+            }
+        }
+        if (aDecreaseStacksizeBySuccess) {
+            if (aFluidInputs != null) {
+                for (FluidStack tFluid : mFluidInputs) {
+                    if (tFluid != null) {
+                        amt = tFluid.amount;
+                        for (FluidStack aFluid : aFluidInputs) {
+                            if (aFluid != null && aFluid.isFluidEqual(tFluid)) {
+                                if (aFluid.amount < amt) {
+                                    amt -= aFluid.amount;
+                                    aFluid.amount = 0;
+                                } else {
+                                    aFluid.amount -= amt;
+                                    amt = 0;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (aInputs != null) {
+                for (ItemStack tStack : mInputs) {
+                    if (tStack != null) {
+                        amt = tStack.stackSize;
+                        for (ItemStack aStack : aInputs) {
+                            if ((GT_Utility.areUnificationsEqual(aStack, tStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), tStack, true))) {
+                                if (aStack.stackSize < amt) {
+                                    amt -= aStack.stackSize;
+                                    aStack.stackSize = 0;
+                                } else {
+                                    aStack.stackSize -= amt;
+                                    amt = 0;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }
