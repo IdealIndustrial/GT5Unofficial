@@ -10,7 +10,7 @@ public class GT_GUIContainer_NbyN extends GT_GUIContainerMetaTile_Machine {
     private final String mName;
 
     public GT_GUIContainer_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, int N) {
-        super(new GT_Container_NbyN(aInventoryPlayer, aTileEntity, N), RES_PATH_GUI + "by" + N + ".png");
+        super(new GT_Container_NbyN(aInventoryPlayer, aTileEntity, N), RES_PATH_GUI + N + "by" + N + ".png");
         mName = aName;
         xSize = 182 + (N - 5) * 18;
         ySize = 182 + (N - 5) * 18;
