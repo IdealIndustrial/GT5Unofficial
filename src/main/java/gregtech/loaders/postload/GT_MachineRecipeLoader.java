@@ -1810,6 +1810,16 @@ if(Loader.isModLoaded("Railcraft")){
         else
             GT_Values.RA.addChemicalRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.Plutonium, 6), null, null, Materials.Radon.getGas(100), GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Plutonium, 6), 12000, 8);
 
+        //Oil Production
+        GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.Sugar.getDust(32), Materials.Water.getCells(1), Materials.GrowthMediumRaw.getFluid(1000), Materials.Anaerobicoilbacteria.getFluid(1000), Materials.Empty.getCells(1), GT_Values.NI, 200, 120);		
+        GT_Values.RA.addFluidCannerRecipe(ItemList.Circuit_Parts_PetriDish.get(1L), ItemList.Petridishoil.get(1L), Materials.Anaerobicoilbacteria.getFluid(1000L), GT_Values.NF);
+        GT_Values.RA.addChemicalRecipeForBasicMachineOnly(ItemList.Petridishoil.get(0L), GT_Utility.getIntegratedCircuit(10), Materials.FermentedBiomass.getFluid(1000), Materials.Fulvicacid.getFluid(100), GT_Values.NI, GT_Values.NI, 20, 480);
+        GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(10),ItemList.Petridishoil.get(0L)},new FluidStack[]{Materials.FermentedBiomass.getFluid(10000)}, new FluidStack[]{Materials.Fulvicacid.getFluid(1000)}, null, 200, 480);
+        GT_Values.RA.addFluidHeaterRecipe(GT_Utility.getIntegratedCircuit(10), Materials.Fulvicacid.getFluid(200), Materials.Heatedfulvicacid.getFluid(200), 18, 120);
+        GT_Values.RA.addChemicalRecipe(GT_Values.NI, GT_Utility.getIntegratedCircuit(10), Materials.Heatedfulvicacid.getFluid(25), Materials.Kerogen.getFluid(25), GT_Values.NI, 20, 120);		
+        GT_Values.RA.addPyrolyseRecipe(Materials.Wood.getDust(10), Materials.Kerogen.getFluid(1000), 10, GT_Values.NI, Materials.Oil.getFluid(1000), 120, 120);
+        //
+		
         GT_Values.RA.addCentrifugeRecipe(new ItemStack(Items.golden_apple, 1, 1), GT_Values.NI, GT_Values.NF, Materials.Methane.getGas(4608L), new ItemStack(Items.gold_ingot, 64), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, null, 9216, 5);
         GT_Values.RA.addCentrifugeRecipe(new ItemStack(Items.golden_apple, 1, 0), GT_Values.NI, GT_Values.NF, Materials.Methane.getGas(576L), new ItemStack(Items.gold_ingot, 7), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, null, 9216, 5);
         GT_Values.RA.addCentrifugeRecipe(new ItemStack(Items.golden_carrot, 1, 0), GT_Values.NI, GT_Values.NF, Materials.Methane.getGas(576L), new ItemStack(Items.gold_nugget, 6), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, null, 9216, 5);
