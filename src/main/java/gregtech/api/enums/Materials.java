@@ -753,10 +753,10 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     public static Materials GasolinePremium = new MaterialBuilder(998, TextureSet.SET_FLUID, "High Octane Gasoline").addCell().addFluid().setRGB(255,165,0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(768).constructMaterial();
 
     //Oil pruduction
-    public static Materials Anaerobicoilbacteria = new MaterialBuilder(778, TextureSet.SET_FLUID, "Anaerobic Oil Bacteria Fluid").addCell().addFluid().setRGB(20, 0, 0).setColor(Dyes.dyeBlack).constructMaterial();
-    public static Materials Fulvicacid = new MaterialBuilder(779, TextureSet.SET_FLUID, "Fulvic Acid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
-    public static Materials Heatedfulvicacid = new MaterialBuilder(780, TextureSet.SET_FLUID, "Heated Fulvic Acid").addCell().addFluid().setRGB(64, 64, 64).setColor(Dyes.dyeBlack).constructMaterial();
-    public static Materials Kerogen = new MaterialBuilder(781, TextureSet.SET_FLUID, "Kerogen").addCell().addFluid().setRGB(100, 100, 100).setColor(Dyes.dyeGray).constructMaterial();
+    public static Materials Anaerobicoilbacteria = new MaterialBuilder(-1, TextureSet.SET_FLUID, "Anaerobic Oil Bacteria Fluid").addCell().addFluid().setRGB(20, 0, 0).setColor(Dyes.dyeBlack).constructMaterial();
+    public static Materials Fulvicacid = new MaterialBuilder(-1, TextureSet.SET_FLUID, "Fulvic Acid").addCell().addFluid().setRGB(20, 20, 20).setColor(Dyes.dyeBlack).constructMaterial();
+    public static Materials Heatedfulvicacid = new MaterialBuilder(-1, TextureSet.SET_FLUID, "Heated Fulvic Acid").addCell().addFluid().setRGB(64, 64, 64).setColor(Dyes.dyeBlack).constructMaterial();
+    public static Materials Kerogen = new MaterialBuilder(-1, TextureSet.SET_FLUID, "Kerogen").addCell().addFluid().setRGB(100, 100, 100).setColor(Dyes.dyeGray).constructMaterial();
 
     /**
      * Materials which are renamed automatically
