@@ -12,8 +12,11 @@ public class GT_GUIContainer_NbyN extends GT_GUIContainerMetaTile_Machine {
     public GT_GUIContainer_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, int N) {
         super(new GT_Container_NbyN(aInventoryPlayer, aTileEntity, N), RES_PATH_GUI + N + "by" + N + ".png");
         mName = aName;
-        xSize = 182 + (N - 5) * 18;// 182 196
         ySize = 197 + (N - 5) * 18;
+        if(N>6) N = 6;
+        xSize = 182 + (N - 5) * 18;// 182 196
+
+
     }
     public GT_GUIContainer_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, String aBackground, int N) {
         super(new GT_Container_NbyN(aInventoryPlayer, aTileEntity, N), RES_PATH_GUI + aBackground + N +"by" + N + ".png");
