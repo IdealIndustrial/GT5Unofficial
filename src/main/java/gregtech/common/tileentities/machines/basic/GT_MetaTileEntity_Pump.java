@@ -34,6 +34,7 @@ import java.util.Set;
 import static gregtech.api.enums.GT_Values.D1;
 import static gregtech.api.enums.GT_Values.V;
 import static gregtech.api.util.GT_Utility.getFakePlayer;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_Hatch {
     private static final ItemStack MINING_PIPE = GT_ModHandler.getIC2Item("miningPipe", 0);
@@ -249,6 +250,18 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_Hatch {
                 }
                 getBaseMetaTileEntity().setActive(!this.mPumpList.isEmpty());
             }
+            if (this.mFluid != null && (aTick % 20 == 0)) {
+                // auto outputs on top every second or so
+                IFluidHandler tTank = aBaseMetaTileEntity.getITankContainerAtSide((byte)1); //1 is up.
+                if (tTank != null) {
+                    FluidStack tDrained = drain(1000, false);
+                    if (tDrained != null) {
+                        int tFilledAmount = tTank.fill(ForgeDirection.DOWN, tDrained, false);
+                        if (tFilledAmount > 0)
+                            tTank.fill(ForgeDirection.DOWN, drain(tFilledAmount, true), true);
+                    }
+                }
+            }            
         }
     }
 
