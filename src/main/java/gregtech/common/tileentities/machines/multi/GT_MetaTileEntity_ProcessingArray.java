@@ -224,6 +224,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                         continue;
                     tInputList.add(GT_Utility.fillFluidContainer(tFluid, GT_ModHandler.getIC2Item("cell",tFluid.amount/1000),false,true));
                 }
+                tInputList.add(GT_ModHandler.getIC2Item("cell",64));
                 tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
                 tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
             }
@@ -415,6 +416,13 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
         if (aFluidInputs.length > 0 && aInputs == null) return false;
         int amt;
         ArrayList<ItemStack> mInputs = new ArrayList<>(Arrays.asList(aRecipe.mInputs));
+        Iterator<ItemStack> iterator = mInputs.iterator();
+        while (iterator.hasNext()){
+            ItemStack is = iterator.next();
+            if(GT_Utility.areStacksEqual(GT_ModHandler.getIC2Item("cell",1),is, true)){
+                iterator.remove();
+            }
+        }
         ArrayList<FluidStack> mFluids = new ArrayList<>(Arrays.asList(aRecipe.mFluidInputs));
         Iterator<ItemStack> itr = mInputs.iterator();
         while(itr.hasNext()){
