@@ -197,6 +197,9 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
         }else if (mInventory[1].getUnlocalizedName().endsWith("8")) {
             tTier = 8;
         }
+
+        if(processFluidCells&&!(map.mUnlocalizedName.equals("gt.recipe.centrifuge")||map.mUnlocalizedName.equals("gt.recipe.electrolyzer")))
+            return false;
         
         if(!mMachine.equals(mInventory[1].getUnlocalizedName()))mLastRecipe=null;
         mMachine = mInventory[1].getUnlocalizedName();
@@ -227,6 +230,8 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 tInputList.add(GT_ModHandler.getIC2Item("cell",64));
                 tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
                 tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                if(tRecipe.mOutputs.length>0&&GT_Utility.areStacksEqual(tRecipe.mOutputs[0],GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L),true))
+                    return false;
             }
             if (tRecipe != null) {
                 if (GT_Mod.gregtechproxy.mLowGravProcessing && tRecipe.mSpecialValue == -100 &&
