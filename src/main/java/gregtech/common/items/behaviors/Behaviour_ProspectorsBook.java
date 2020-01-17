@@ -28,6 +28,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import scala.tools.nsc.doc.model.Public;
 
@@ -63,33 +64,8 @@ public class Behaviour_ProspectorsBook
     }
 
     public boolean onItemUseFirst(GT_MetaBase_Item aItem, ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int aSide, float hitX, float hitY, float hitZ) {
-        if (((aPlayer instanceof EntityPlayerMP)) && !aWorld.isRemote && !GT_Utility.isStringValid(GT_Utility.ItemNBT.getBookTitle(aStack))) {
-          /*  ItemStack tDataStick = ItemList.Tool_DataStick.get(1L);
-
-            HashMap<String, Integer> tNearOres = new HashMap<String, Integer>();
-            HashMap<String, Integer> tMiddleOres = new HashMap<String, Integer>();
-            HashMap<String, Integer> tFarOres = new HashMap<String, Integer>();
-            prospectOres(tNearOres, tMiddleOres, tFarOres, aWorld, aX, aY, aZ);
-
-            // prospecting oils
-            ArrayList<String> tOils = new ArrayList<String>();
-            prospectOils(tOils, aWorld, aX, aZ);
-
-            GT_Utility.ItemNBT.setAdvancedProspectionData((byte)2,
-                    tDataStick,
-                    aX,
-                    (short)aY,
-                    aZ,
-                    aWorld.provider.dimensionId,
-                    tOils,
-                    GT_Utility.sortByValueToList(tNearOres),
-                    GT_Utility.sortByValueToList(tMiddleOres),
-                    GT_Utility.sortByValueToList(tFarOres),
-                    near, middle, radius);
-            GT_Utility.ItemNBT.convertProspectionData(tDataStick);
-            aStack.setTagCompound(tDataStick.getTagCompound());
-
-            return true;*/
+        if ((GT_Utility.isStringValid(GT_Utility.ItemNBT.getBookTitle(aStack))) && ((aPlayer instanceof EntityPlayerSP))) {
+            Minecraft.getMinecraft().displayGuiScreen(new GuiScreenBook(aPlayer, aStack, false));
         }
         return aPlayer instanceof EntityPlayerMP;
     }
@@ -99,9 +75,9 @@ public class Behaviour_ProspectorsBook
         return aList;
     }
 
-    private static void prospectOils(ArrayList<String> aOils, World aWorld, int aX, int aZ) {
+    private static void prospectOils(String aOil, World aWorld, int aX, int aZ) {
 
-        FluidStack tFluid;
+        FluidStack tFluid = null;
 
         Chunk tChunk = aWorld.getChunkFromBlockCoords(aX, aZ);
         int range = 6; //(int)Math.ceil((double)radius / 16);
@@ -122,7 +98,6 @@ public class Behaviour_ProspectorsBook
                             tChunk = aWorld.getChunkFromChunkCoords(xChunk + i + x * 6, zChunk + j + z * 6);
                             tFluid = undergroundOilReadInformation(tChunk);
                             if (tFluid != null) {
-                                minMaxValue.add(tFluid.amount);
                                 if (!tFluids.containsKey(cInts)) {
                                     tFluids.put(cInts, tFluid);
                                 }
@@ -132,7 +107,9 @@ public class Behaviour_ProspectorsBook
 
                     int min = Collections.min(minMaxValue);
                     int max = Collections.max(minMaxValue);
-                    aOils.add(++oilFieldCount + "," + min + "-" + max + "," + tFluids.get(cInts).getLocalizedName());
+                    if(tFluid!=null&&tFluid.isFluidEqual(new FluidStack(FluidRegistry.WATER,10)))
+                        aOil = (""+(xChunk+x*6)+"|"+(zChunk+z*6)+"|"+tFluid.getLocalizedName());
+
                 }
             }
         } catch (Exception e) {/*Do nothing*/}
@@ -219,8 +196,8 @@ public class Behaviour_ProspectorsBook
         prospectOres(allOres,tNearOres, tMiddleOres, tFarOres, aWorld, aX, aY, aZ);
 
         // prospecting oils
-        ArrayList<String> tOils = new ArrayList<String>();
-        prospectOils(tOils, aWorld, aX, aZ);
+        String tOil = "";
+        prospectOils(tOil, aWorld, aX, aZ);
 
 
 
@@ -237,7 +214,7 @@ public class Behaviour_ProspectorsBook
                 near, middle, radius);
         GT_Utility.ItemNBT.convertProspectionData(tDataStick);
         aStack.setTagCompound(tDataStick.getTagCompound());*/
-        new StoryGenerator(aRandom,allOres,aStack,new int[]{aX,aY,aZ});
+        new StoryGenerator(aRandom,allOres,aStack,tOil,new int[]{aX,aY,aZ});
         return aStack;
     }
 
@@ -245,17 +222,24 @@ public class Behaviour_ProspectorsBook
 
         private final String[] groundLevels = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.groundlevels", "almost at surface|at cave level|deep in solid rock").split("\\|");
 
-        private final String[] caveEvents = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.caveevents", "Met some cave spiders today, my luck is good though I'm still alive |" +
-                "Found some malachite ore, I need a bit more iron to forge a new pickaxe|" +
-                "Dug very deep today, I almost swam in lava").split("\\|");
+        private final String[] caveEvents = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.caveevents",
+                "met some cave spiders today, my luck is good though I'm still alive |" +
+                "found some malachite ore, I need a bit more iron to forge a new pickaxe|" +
+                "tried to dig deeper, I almost swam in lava").split("\\|");
 
-        private final String[] rutineEvents = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.rutineevents", "milked my cow, milk can heal every injury!|" +
-                "harvested some wheat and baked bread |" +
-                "axed oak and got some apples .. what?!").split("\\|");
+        private final String[] rutineEvents = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.rutineevents",
+                "Milked my cow -again-, milk can heal every injury!|" +
+                "Harvested some wheat and baked bread -again-, delicious |" +
+                "Axed oak and got some apples -again- .. what?!").split("\\|");
+
+        private final String[] oreFindEvents = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.orefindevents",
+                "I found some -name- ore traces|" +
+                "while going back I saw some -name- ore pieces|" +
+                "I noticed some -name- ore chunks").split("\\|");
 
         private final String[] agains = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.agains", "again|once more|one more time").split("\\|");
         private final String[] ands = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.ands", "and then|also").split("\\|");
-        private final String[] laters = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.laters", "later today I|in 2 hours I|some time after I").split("\\|");
+        private final String[] laters = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.laters", "Later today I|In 2 hours I|Some time after I").split("\\|");
 
 
         Random random;
@@ -263,7 +247,7 @@ public class Behaviour_ProspectorsBook
         HashSet<Integer> alreadyUsedMine = new HashSet<>();
         HashSet<Integer> alreadyUsedRutine = new HashSet<>();
 
-        public StoryGenerator(Random aRandom, HashMap<String, ArrayList<int[]>> allOres, ItemStack aBook, int[] tilePos){
+        public StoryGenerator(Random aRandom, HashMap<String, ArrayList<int[]>> allOres, ItemStack aBook, String aOil, int[] tilePos){
             random = aRandom;
 
             NBTTagCompound tNBT = new NBTTagCompound();
@@ -281,7 +265,12 @@ public class Behaviour_ProspectorsBook
                 day+=1+random.nextInt(5);
 
             }
-            tPageText = "now I'm leaving this place, may be sombody will find my diary and read it";
+            tPageText = "";
+            if(aOil!=""){
+                String[] aWater = aOil.split("\\|");
+                tPageText += "It seems that there is underground water source at " + getDirectionZ(Integer.valueOf(aWater[1])*16-tilePos[2]) +" "+ getDirectionX(Integer.valueOf(aWater[0])*16-tilePos[0]);
+            }
+            tPageText += "now I'm leaving this place, may be sombody will find my diary and read it";
             tTagList.appendTag(new NBTTagString(tPageText));
             tNBT.setString("author", "unknown miner");
             tNBT.setString("title", "Written long time ago");
@@ -294,7 +283,7 @@ public class Behaviour_ProspectorsBook
             String out = EnumChatFormatting.BOLD+ "Day "+aDay +EnumChatFormatting.RESET + "\n"
                     + getRandomRutineEvent(random)+" "+laters[random.nextInt(laters.length)] + " "
                     + getRandomMineEvent(random)+" "+ands[random.nextInt(ands.length)]+" "
-                    +" Found some "+ oreName+" ore traces "
+                    +getRandomOreFoundEvent(random, oreName)+" "
                     +getOrePositionRelative(orePosition,tilePosition);
 
                     return out;
@@ -326,31 +315,39 @@ public class Behaviour_ProspectorsBook
             int event = random.nextInt(rutineEvents.length);
             String out = rutineEvents[event];
             if(alreadyUsedRutine.contains(event)){
-                out += " " + agains[random.nextInt(agains.length)];
-            }
+                out = out.replaceAll("-again-", agains[random.nextInt(agains.length)]);
+            }else
+                out = out.replaceAll("-again-","");
             alreadyUsedRutine.add(event);
+            out+=".";
+            return out;
+        }
+
+        private String getRandomOreFoundEvent(Random random, String ore){
+            int event = random.nextInt(rutineEvents.length);
+            String out = oreFindEvents[event].replaceAll("-name-",ore);
             return out;
         }
 
         private String getOrePositionRelative(int[] orePosition, int[] tilePosition){
             int aX = orePosition[0] - tilePosition[0];
             int aZ = orePosition[2] - tilePosition[2];
-            return "in "+getGroundLevel(orePosition[1]) + getDirectionX(aX) + " and " + getDirectionZ(aZ);
+            return "in "+getGroundLevel(orePosition[1]) + getDirectionZ(aZ) + " and " + getDirectionX(aX);
 
         }
 
         private String getDirectionZ(int aZ){
             if(aZ<0)
-                return (-aZ)+" m North";
+                return (-aZ)+" m to North";
             else
-                return (aZ)+ " m South";
+                return (aZ)+ " m to South";
         }
 
         private String getDirectionX(int aX){
             if(aX<0)
-                return (-aX)+ " m West";
+                return (-aX)+ " m to West";
             else
-                return (aX)+ " m East";
+                return (aX)+ " m to East";
         }
 
     }
