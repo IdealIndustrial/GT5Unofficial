@@ -230,7 +230,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 tInputList.add(GT_ModHandler.getIC2Item("cell",64));
                 tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
                 tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
-                if(tRecipe.mOutputs.length>0&&GT_Utility.areStacksEqual(tRecipe.mOutputs[0],GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L),true))
+                if(tRecipe==null||tRecipe.mOutputs.length>0&&GT_Utility.areStacksEqual(tRecipe.mOutputs[0],GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L),true))
                     return false;
             }
             if (tRecipe != null) {
@@ -386,7 +386,6 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
     @Override
     public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
-        checkRecipe(getStackInSlot(0));
         if (aPlayer.isSneaking()){
             processFluidCells = !processFluidCells;
             if (processFluidCells)
