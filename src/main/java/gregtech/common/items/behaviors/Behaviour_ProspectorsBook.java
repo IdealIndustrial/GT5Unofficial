@@ -101,14 +101,15 @@ public class Behaviour_ProspectorsBook
                                 if (!tFluids.containsKey(cInts)) {
                                     tFluids.put(cInts, tFluid);
                                 }
+                                if(tFluid!=null&&tFluid.getUnlocalizedName().equals("tile.water"))
+                                    aOil = (""+(xChunk+x*6)+"|"+(zChunk+z*6)+"|"+tFluid.getLocalizedName());
+
                             }
                         }
                     }
 
                     int min = Collections.min(minMaxValue);
                     int max = Collections.max(minMaxValue);
-                    if(tFluid!=null&&tFluid.isFluidEqual(new FluidStack(FluidRegistry.WATER,10)))
-                        aOil = (""+(xChunk+x*6)+"|"+(zChunk+z*6)+"|"+tFluid.getLocalizedName());
 
                 }
             }
