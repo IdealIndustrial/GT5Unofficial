@@ -1360,6 +1360,8 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Machine_DigitalTransformer_ZPM.set(new GT_MetaTileEntity_Digital_Transformer(12186, "basicmachine.d_transformer.tier.07", "ZPM Adjustable Transformer", 7,"ULV -> ZPM (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Machine_DigitalTransformer_UV.set(new GT_MetaTileEntity_Digital_Transformer(12187, "basicmachine.d_transformer.tier.08", "Ultimate Adjustable Transformer", 8,"ULV -> UV (Use Soft Mallet to invert)").getStackForm(1L));
         ItemList.Machine_DigitalTransformer_MAX.set(new GT_MetaTileEntity_Digital_Transformer(12188, "basicmachine.d_transformer.tier.09", "MAX Adjustable Transformer", 9,"ULV -> MAX (Use Soft Mallet to invert)").getStackForm(1L));
+
+        ItemList.Machine_Well.set(new GT_MetaTileEntity_Well(12189, "basicmachine.well", "Well", 0).getStackForm(1));
     }
 
     private static void run4() {
