@@ -213,120 +213,142 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
         ArrayList<FluidStack> tFluidList = getStoredFluids();
 
         FluidStack[] tFluids = (FluidStack[]) tFluidList.toArray(new FluidStack[tFluidList.size()]);
+
         if (tInputList.size() > 0 || tFluids.length > 0) {
             GT_Recipe tRecipe = null;
-            if (separateBusesMode){
-                for(GT_MetaTileEntity_Hatch_InputBus tBus : mInputBusses){
+            this.mEUt = 0;
+            this.mOutputItems = null;
+            this.mOutputFluids = null;
+            int machines = Math.min(64, mInventory[1].stackSize);
+            int i = 0;
+            if(separateBusesMode){
+                boolean tSucceed = false;
+                a:for(GT_MetaTileEntity_Hatch_InputBus tBus : mInputBusses){
+                    i = 0;
                     tInputs = tBus.mInventory;
+                    tInputList = new ArrayList<>(Arrays.asList(tInputs));
                     tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
-                    if (tRecipe!=null)
-                        break;
+                    if(tRecipe == null && processFluidCells){
+                        for(FluidStack tFluid : tFluids){
+                            if(tFluid.amount%1000!=0)
+                                continue;
+                            tInputList.add(GT_Utility.fillFluidContainer(tFluid, GT_ModHandler.getIC2Item("cell",tFluid.amount/1000),false,true));
+                        }
+                        int s = tInputList.size();
+                        for(int q = 0; q < s; q++)
+                            tInputList.add(GT_ModHandler.getIC2Item("cell", 64));
+                        tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
+                        tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                        if(tRecipe==null||tRecipe.mOutputs.length>0&&GT_Utility.areStacksEqual(tRecipe.mOutputs[0],GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L),true))
+                            continue a;
+                    }
+                    if (tRecipe!=null) {
+                        if (GT_Mod.gregtechproxy.mLowGravProcessing && tRecipe.mSpecialValue == -100 && !isValidForLowGravity(tRecipe,getBaseMetaTileEntity().getWorld().provider.dimensionId))
+                            continue a;
+                        for (; i < machines; i++) {
+                            if (processFluidCells ? !isRecipeInputEqualFluids(tRecipe,tInputs,tFluids,true) : !tRecipe.isRecipeInputEqual(true, tFluids, tInputs)) {
+                                if (i == 0) {
+                                    continue a;
+                                }
+                                tSucceed = true;
+                                break a;
+                            }
+                        }
+                        tSucceed = true;
+                        break a;
+                    }
                 }
-            } else {
-                tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
-            }
-            if(tRecipe == null && processFluidCells){
-                for(FluidStack tFluid : tFluids){
-                    if(tFluid.amount%1000!=0)
-                        continue;
-                    tInputList.add(GT_Utility.fillFluidContainer(tFluid, GT_ModHandler.getIC2Item("cell",tFluid.amount/1000),false,true));
-                }
-                tInputList.add(GT_ModHandler.getIC2Item("cell",64));
-                tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
-                tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
-                if(tRecipe==null||tRecipe.mOutputs.length>0&&GT_Utility.areStacksEqual(tRecipe.mOutputs[0],GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L),true))
+                if(!tSucceed)
                     return false;
-            }
-            if (tRecipe != null) {
-                if (GT_Mod.gregtechproxy.mLowGravProcessing && tRecipe.mSpecialValue == -100 &&
-                        !isValidForLowGravity(tRecipe,getBaseMetaTileEntity().getWorld().provider.dimensionId))
+            }else {
+                tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                if(tRecipe == null)
                     return false;
-
-                mLastRecipe = tRecipe;
-                this.mEUt = 0;
-                this.mOutputItems = null;
-                this.mOutputFluids = null;
-                int machines = Math.min(64, mInventory[1].stackSize);
-                int i = 0;
+                if (GT_Mod.gregtechproxy.mLowGravProcessing && tRecipe.mSpecialValue == -100 && !isValidForLowGravity(tRecipe,getBaseMetaTileEntity().getWorld().provider.dimensionId))
+                    return false;
+                i = 0;
                 for (; i < machines; i++) {
                     if (processFluidCells ? !isRecipeInputEqualFluids(tRecipe,tInputs,tFluids,true) : !tRecipe.isRecipeInputEqual(true, tFluids, tInputs)) {    if (i == 0) {
-                            return false;
-                        }
+                        return false;
+                    }
                         break;
                     }
                 }
-                this.mMaxProgresstime = tRecipe.mDuration;
-                this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-                this.mEfficiencyIncrease = 10000;
-                this.mEUt = tRecipe.mEUt;
-                this.mMaxProgresstime = tRecipe.mDuration;
-                while (this.mEUt <= V[tTier - 1] * map.mAmperage) {
-                    this.mEUt *= 4;
-                    this.mMaxProgresstime /= 2;
-                }
-                this.mEUt *= i;
-                if (this.mEUt > 0) {
-                    this.mEUt = (-this.mEUt);
-                }
-                ItemStack[] tOut = new ItemStack[tRecipe.mOutputs.length];
-                for (int h = 0; h < tRecipe.mOutputs.length; h++) {
-                    if(tRecipe.getOutput(h)!=null){
-                        tOut[h] = tRecipe.getOutput(h).copy();
-                        tOut[h].stackSize = 0;}
-                }
-                FluidStack tFOut = null;
-                if (tRecipe.getFluidOutput(0) != null) tFOut = tRecipe.getFluidOutput(0).copy();
-                for (int f = 0; f < tOut.length; f++) {
-                    if (tRecipe.mOutputs[f] != null && tOut[f] != null) {
-                        for (int g = 0; g < i; g++) {
-                            if (getBaseMetaTileEntity().getRandomNumber(10000) < tRecipe.getOutputChance(f))
-                                tOut[f].stackSize += tRecipe.mOutputs[f].stackSize;
-                        }
-                    }
-                }
-                if (tFOut != null) {
-                    int tSize = tFOut.amount;
-                    tFOut.amount = tSize * i;
-                }
-                tOut = clean(tOut);
-                this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
-                List<ItemStack> overStacks = new ArrayList<ItemStack>();
-                for (int f = 0; f < tOut.length; f++) {
-                    while (tOut[f].getMaxStackSize() < tOut[f].stackSize) {
-                        if(tOut[f]!=null){
-                            ItemStack tmp = tOut[f].copy();
-                            tmp.stackSize = tmp.getMaxStackSize();
-                            tOut[f].stackSize = tOut[f].stackSize - tOut[f].getMaxStackSize();
-                            overStacks.add(tmp);}
-                    }
-                }
-                if (overStacks.size() > 0) {
-                    ItemStack[] tmp = new ItemStack[overStacks.size()];
-                    tmp = overStacks.toArray(tmp);
-                    tOut = ArrayUtils.addAll(tOut, tmp);
-                }
-                List<ItemStack> tSList = new ArrayList<ItemStack>();
-                ArrayList<FluidStack> tFOuts = new ArrayList<>();
-                tFOuts.add(tFOut);
-                for (ItemStack tS : tOut) {
-                    if(processFluidCells){
-                        FluidStack tFluid = GT_Utility.getFluidForFilledItem(tS, true);
-                        if(tFluid!=null) {
-                            tFluid.amount = 1000*tS.stackSize;
-                            tFOuts.add(tFluid);
-                            continue;
-                        }
-                        if (GT_Utility.areStacksEqual(tS, GT_ModHandler.getIC2Item("cell", 1), true))
-                            continue;
-                    }
-                    if (tS.stackSize > 0) tSList.add(tS);
-                }
-                tOut = tSList.toArray(new ItemStack[tSList.size()]);
-                this.mOutputItems = tOut;
-                this.mOutputFluids = tFOuts.toArray(new FluidStack[tFOuts.size()]);
-                updateSlots();
-                return true;
             }
+            if(tRecipe == null)
+                return false;
+
+            mLastRecipe = tRecipe;
+
+            this.mMaxProgresstime = tRecipe.mDuration;
+            this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+            this.mEfficiencyIncrease = 10000;
+            this.mEUt *= i;
+            if (this.mEUt > 0) {
+                this.mEUt = (-this.mEUt);
+            }
+            ItemStack[] tOut = new ItemStack[tRecipe.mOutputs.length];
+            for (int h = 0; h < tRecipe.mOutputs.length; h++) {
+                if(tRecipe.getOutput(h)!=null){
+                    tOut[h] = tRecipe.getOutput(h).copy();
+                    tOut[h].stackSize = 0;
+                }
+            }
+            FluidStack tFOut = null;
+            if (tRecipe.getFluidOutput(0) != null)
+                tFOut = tRecipe.getFluidOutput(0).copy();
+            for (int f = 0; f < tOut.length; f++) {
+                if (tRecipe.mOutputs[f] != null && tOut[f] != null) {
+                    for (int g = 0; g < i; g++) {
+                        if (getBaseMetaTileEntity().getRandomNumber(10000) < tRecipe.getOutputChance(f))
+                            tOut[f].stackSize += tRecipe.mOutputs[f].stackSize;
+                    }
+                }
+            }
+            if (tFOut != null) {
+                int tSize = tFOut.amount;
+                tFOut.amount = tSize * i;
+            }
+            tOut = clean(tOut);
+            this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+            List<ItemStack> overStacks = new ArrayList<ItemStack>();
+            for (int f = 0; f < tOut.length; f++) {
+                while (tOut[f].getMaxStackSize() < tOut[f].stackSize) {
+                    if(tOut[f]!=null){
+                        ItemStack tmp = tOut[f].copy();
+                        tmp.stackSize = tmp.getMaxStackSize();
+                        tOut[f].stackSize = tOut[f].stackSize - tOut[f].getMaxStackSize();
+                        overStacks.add(tmp);}
+                }
+            }
+            if (overStacks.size() > 0) {
+                ItemStack[] tmp = new ItemStack[overStacks.size()];
+                tmp = overStacks.toArray(tmp);
+                tOut = ArrayUtils.addAll(tOut, tmp);
+            }
+            List<ItemStack> tSList = new ArrayList<ItemStack>();
+            ArrayList<FluidStack> tFOuts = new ArrayList<>();
+            tFOuts.add(tFOut);
+            for (ItemStack tS : tOut) {//make convertation
+                if(processFluidCells){
+                    FluidStack tFluid = GT_Utility.getFluidForFilledItem(tS, true);
+                    if(tFluid!=null) {
+                        tFluid.amount = 1000*tS.stackSize;
+                        tFOuts.add(tFluid);
+                        continue;
+                    }
+                    if (GT_Utility.areStacksEqual(tS, GT_ModHandler.getIC2Item("cell", 1), true))
+                        continue;
+                }
+                if (tS.stackSize > 0)
+                    tSList.add(tS);
+            }
+            tOut = tSList.toArray(new ItemStack[tSList.size()]);
+            this.mOutputItems = tOut;
+            this.mOutputFluids = tFOuts.toArray(new FluidStack[tFOuts.size()]);
+            updateSlots();
+            return true;
+
         }
         return false;
     }
@@ -533,7 +555,6 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
         }
 
         return true;
-
     }
 
 }
