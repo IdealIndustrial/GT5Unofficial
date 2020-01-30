@@ -262,6 +262,20 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                     return false;
             }else {
                 tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                if(tRecipe == null && processFluidCells){
+                    for(FluidStack tFluid : tFluids){
+                        if(tFluid.amount%1000!=0)
+                            continue;
+                        tInputList.add(GT_Utility.fillFluidContainer(tFluid, GT_ModHandler.getIC2Item("cell",tFluid.amount/1000),false,true));
+                    }
+                    int s = tInputList.size();
+                    for(int q = 0; q < s; q++)
+                        tInputList.add(GT_ModHandler.getIC2Item("cell", 64));
+                    tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
+                    tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                    if(tRecipe==null||tRecipe.mOutputs.length>0&&GT_Utility.areStacksEqual(tRecipe.mOutputs[0],GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L),true))
+                        return false;
+                }
                 if(tRecipe == null)
                     return false;
                 if (GT_Mod.gregtechproxy.mLowGravProcessing && tRecipe.mSpecialValue == -100 && !isValidForLowGravity(tRecipe,getBaseMetaTileEntity().getWorld().provider.dimensionId))
@@ -283,6 +297,18 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
             this.mMaxProgresstime = tRecipe.mDuration;
             this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
             this.mEfficiencyIncrease = 10000;
+            if (tRecipe.mEUt <= 16) {
+                this.mEUt = (tRecipe.mEUt * (1 << tTier - 1) * (1 << tTier - 1));
+                this.mMaxProgresstime = (tRecipe.mDuration / (1 << tTier - 1));
+            } else {
+                this.mEUt = tRecipe.mEUt;
+                this.mMaxProgresstime = tRecipe.mDuration;
+                while (this.mEUt <= V[tTier - 1] * map.mAmperage) {
+                    this.mEUt *= 4;
+                    this.mMaxProgresstime /= 2;
+                    break;
+                }
+            }
             this.mEUt *= i;
             if (this.mEUt > 0) {
                 this.mEUt = (-this.mEUt);
