@@ -8,7 +8,9 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicHull;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
 import gregtech.api.net.GT_Packet_Block_Event;
 import gregtech.api.net.GT_Packet_ExtendedBlockEvent;
 import gregtech.api.objects.GT_IconContainer;
@@ -39,12 +41,14 @@ import java.util.Arrays;
 
 import static gregtech.api.enums.GT_Values.NW;
 
-public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicMachine {
+public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
 
     private static ArrayList<Fluid> allowedFluids = new ArrayList<>();
     private FluidStack fluid = null;
+    private int mProgresstime = 0;
+
     public GT_MetaTileEntity_Well(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 0, "Slowly pumps up underbedrock water", 0, 0, "Default.png", "",
+        super(aID, aName, aNameRegional, aTier, 0, "Slowly pumps up underbedrock water",
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_SIDE_ACTIVE")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_SIDE")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_FRONT_ACTIVE")),
@@ -55,16 +59,16 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicMachine {
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_BOTTOM")));
     }
 
-    public GT_MetaTileEntity_Well(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {
-        super(aName, aTier, 0, aDescription, aTextures, 0, 0, aGUIName, aNEIName);
+    public GT_MetaTileEntity_Well(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
+        super(aName, aTier, 0, aDescription, aTextures);
     }
 
-    public GT_MetaTileEntity_Well(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {
-        super(aName, aTier, 0, aDescription, aTextures, 0, 0, aGUIName, aNEIName);
+    public GT_MetaTileEntity_Well(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
+        super(aName, aTier, 0, aDescription, aTextures);
     }
 
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_Well(this.mName, this.mTier, this.mDescriptionArray, this.mTextures, this.mGUIName, this.mNEIName);
+        return new GT_MetaTileEntity_Well(this.mName, this.mTier, this.mDescriptionArray, this.mTextures);
     }
 
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
@@ -117,12 +121,15 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicMachine {
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if(aSide == 0 && aActive) {
             if(fluid == null)
-                return super.getTexture(aBaseMetaTileEntity,aSide,aFacing,aColorIndex,aActive,aRedstone);
+                return mTextures[5][aColorIndex + 1];
             mTextures[4][aColorIndex + 1][0] = new GT_RenderedTexture(new GT_IconContainer(fluid.getFluid().getStillIcon(), null, null));
             return mTextures[4][aColorIndex + 1];
         }
-        return super.getTexture(aBaseMetaTileEntity, aSide, aFacing, aColorIndex, aActive, aRedstone);
+        return mTextures[aSide == 0 ? 7 : aSide == 1 ?  aActive ? 4 : 5 : aSide > 1 && aSide < 6 ?  3 : 4][aColorIndex + 1];
+
     }
+
+
 
     @Override
     public void receiveExtendedBlockEvent(int aID, int aValue) {
@@ -153,27 +160,25 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicMachine {
                     if(i == 4)
                         rTextures[i][c + 1] = new ITexture[]{ new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/DEFAULT_FLUID")), aTextures[i]}; //null for fluid texture
                     else
-                        rTextures[i][c + 1] = new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][c + 1], aTextures[i]};
+                        rTextures[i][c + 1] = new ITexture[]{aTextures[i]};
                 }
             }
-
-        for (byte c = -1; c < 16; c++) {
-            if (rTextures[0][c + 1] == null) rTextures[0][c + 1] = getSideFacingActive(c);
-            if (rTextures[1][c + 1] == null) rTextures[1][c + 1] = getSideFacingInactive(c);
-            if (rTextures[2][c + 1] == null) rTextures[2][c + 1] = getFrontFacingActive(c);
-            if (rTextures[3][c + 1] == null) rTextures[3][c + 1] = getFrontFacingInactive(c);
-            if (rTextures[4][c + 1] == null) rTextures[4][c + 1] = getTopFacingActive(c);
-            if (rTextures[5][c + 1] == null) rTextures[5][c + 1] = getTopFacingInactive(c);
-            if (rTextures[6][c + 1] == null) rTextures[6][c + 1] = getBottomFacingActive(c);
-            if (rTextures[7][c + 1] == null) rTextures[7][c + 1] = getBottomFacingInactive(c);
-            if (rTextures[8][c + 1] == null) rTextures[8][c + 1] = getBottomFacingPipeActive(c);
-            if (rTextures[9][c + 1] == null) rTextures[9][c + 1] = getBottomFacingPipeInactive(c);
-            if (rTextures[10][c + 1] == null) rTextures[10][c + 1] = getTopFacingPipeActive(c);
-            if (rTextures[11][c + 1] == null) rTextures[11][c + 1] = getTopFacingPipeInactive(c);
-            if (rTextures[12][c + 1] == null) rTextures[12][c + 1] = getSideFacingPipeActive(c);
-            if (rTextures[13][c + 1] == null) rTextures[13][c + 1] = getSideFacingPipeInactive(c);
-        }
         return rTextures;
+    }
+
+    @Override
+    public boolean onWrenchRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        return false;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+        return true;
+    }
+
+    @Override
+    public boolean isAccessAllowed(EntityPlayer aPlayer) {
+        return true;
     }
 
     @Override
@@ -223,5 +228,35 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicMachine {
 
         }
         return true;
+    }
+
+    @Override
+    public boolean doesFillContainers() {
+        return false;
+    }
+
+    @Override
+    public boolean doesEmptyContainers() {
+        return false;
+    }
+
+    @Override
+    public boolean canTankBeFilled() {
+        return false;
+    }
+
+    @Override
+    public boolean canTankBeEmptied() {
+        return false;
+    }
+
+    @Override
+    public boolean displaysItemStack() {
+        return false;
+    }
+
+    @Override
+    public boolean displaysStackSize() {
+        return false;
     }
 }
