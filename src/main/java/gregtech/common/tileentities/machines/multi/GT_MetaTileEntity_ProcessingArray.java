@@ -198,7 +198,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
             tTier = 8;
         }
 
-        if(processFluidCells&&!(map.mUnlocalizedName.equals("gt.recipe.centrifuge")||map.mUnlocalizedName.equals("gt.recipe.electrolyzer")))
+        if(processFluidCells&&!(map.mUnlocalizedName.equals("gt.recipe.centrifuge")||map.mUnlocalizedName.equals("gt.recipe.electrolyzer")||map.mUnlocalizedName.equals("gt.recipe.mixer")))
             return false;
         
         if(!mMachine.equals(mInventory[1].getUnlocalizedName()))mLastRecipe=null;
@@ -301,7 +301,6 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 while (this.mEUt <= V[tTier - 1] * map.mAmperage) {
                     this.mEUt *= 4;
                     this.mMaxProgresstime /= 2;
-                    break;
                 }
             }
             this.mEUt *= i;
