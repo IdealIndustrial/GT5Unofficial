@@ -75,7 +75,7 @@ public class Behaviour_ProspectorsBook
         return aList;
     }
 
-    private static void prospectOils(String aOil, World aWorld, int aX, int aZ) {
+    private static String prospectWater(World aWorld, int aX, int aZ) {
 
         FluidStack tFluid = null;
 
@@ -101,8 +101,8 @@ public class Behaviour_ProspectorsBook
                                 if (!tFluids.containsKey(cInts)) {
                                     tFluids.put(cInts, tFluid);
                                 }
-                                if(tFluid!=null&&tFluid.getUnlocalizedName().equals("tile.water"))
-                                    aOil = (""+(xChunk+x*6)+"|"+(zChunk+z*6)+"|"+tFluid.getLocalizedName());
+                                if(tFluid!=null&&GT_Utility.areFluidsEqual(tFluid, new FluidStack(FluidRegistry.WATER,100)))
+                                    return (""+(xChunk+x*6)+"|"+(zChunk+z*6)+"|"+tFluid.getLocalizedName());
 
                             }
                         }
@@ -114,6 +114,7 @@ public class Behaviour_ProspectorsBook
                 }
             }
         } catch (Exception e) {/*Do nothing*/}
+        return "";
     }
 
     private static void prospectOres(Map<String,ArrayList<int[]>> aAllOres,Map<String, Integer> aNearOres, Map<String, Integer> aMiddleOres, Map<String, Integer> aFarOres, World aWorld, int aX, int aY, int aZ) {
@@ -197,8 +198,8 @@ public class Behaviour_ProspectorsBook
         prospectOres(allOres,tNearOres, tMiddleOres, tFarOres, aWorld, aX, aY, aZ);
 
         // prospecting oils
-        String tOil = "";
-        prospectOils(tOil, aWorld, aX, aZ);
+        String tOil =  prospectWater(aWorld, aX, aZ);
+
 
 
 
@@ -269,7 +270,7 @@ public class Behaviour_ProspectorsBook
             tPageText = "";
             if(aOil!=""){
                 String[] aWater = aOil.split("\\|");
-                tPageText += "It seems that there is underground water source at " + getDirectionZ(Integer.valueOf(aWater[1])*16-tilePos[2]) +" "+ getDirectionX(Integer.valueOf(aWater[0])*16-tilePos[0]);
+                tPageText += "It seems that there is underground water source at " + getDirectionZ(Integer.valueOf(aWater[1])*16-tilePos[2]) +" "+ getDirectionX(Integer.valueOf(aWater[0])*16-tilePos[0]) + " ";
             }
             tPageText += "now I'm leaving this place, may be sombody will find my diary and read it";
             tTagList.appendTag(new NBTTagString(tPageText));
