@@ -18,7 +18,10 @@ public class GT_Log {
     public static PrintStream pal = null;
     public static File mLogFile;
     public static File mOreDictLogFile;
-    public static File mPlayerActivityLogFile;
+    public static File mPlayerActivityLogFile;    
+    //For Small Boilers
+	public static PrintStream exp = new LogBuffer();
+	public static File mExplosionLog;	
 
     public static class LogBuffer extends PrintStream {
         public final List<String> mBufferedOreDictLog = new ArrayList<String>();
