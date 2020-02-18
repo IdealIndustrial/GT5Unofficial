@@ -20,9 +20,7 @@ public class GT_Log {
     public static File mOreDictLogFile;
     public static File mPlayerActivityLogFile;    
     //For Small Boilers
-	public static PrintStream exp = new LogBuffer();
-	public static File mExplosionLog;	
-
+    public static PrintStream exp = new LogBuffer();
     public static class LogBuffer extends PrintStream {
         public final List<String> mBufferedOreDictLog = new ArrayList<String>();
 
