@@ -107,6 +107,14 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.CompressedFireclay.set(addItem(tLastID = 110, "Compressed Fireclay", "Brick-shaped"));
         ItemList.Firebrick.set(addItem(tLastID = 111, "Firebrick", "Heat resistant"));
         
+        ItemList.OakScheme.set(addItem(tLastID = 192, "Oak Scheme", "Used for farm"));
+		ItemList.DarkOakScheme.set(addItem(tLastID = 193, "Dark Oak Scheme", "Used for farm"));
+		ItemList.JungleScheme.set(addItem(tLastID = 194, "Jungle Scheme", "Used for farm"));
+		ItemList.AcaciaScheme.set(addItem(tLastID = 195, "Acacia Scheme", "Used for farm"));
+		ItemList.SpruceScheme.set(addItem(tLastID = 196, "Spruce Scheme", "Used for farm"));
+		ItemList.BirchScheme.set(addItem(tLastID = 197, "Birch Scheme", "Used for farm"));		
+		ItemList.RubberScheme.set(addItem(tLastID = 198, "Rubber Scheme", "Used for farm"));
+        
         ItemList.Arrow_Head_Glass_Emtpy.set(addItem(tLastID = 200, "Empty Glass Arrow Head", "Fill with Potions before use", new Object[]{new TC_Aspects.TC_AspectStack(TC_Aspects.TELUM, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.VACUOS, 1L)}));
         ItemList.Arrow_Head_Glass_Poison.set(addItem(tLastID = 201, "Poison Glass Arrow Head", "Glass Arrow filled with Poison", new Object[]{new TC_Aspects.TC_AspectStack(TC_Aspects.TELUM, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.VENENUM, 1L)}));
         ItemList.Arrow_Head_Glass_Poison_Long.set(addItem(tLastID = 202, "Poison Glass Arrow Head", "Glass Arrow filled with stretched Poison", new Object[]{new TC_Aspects.TC_AspectStack(TC_Aspects.TELUM, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.VENENUM, 1L)}));
