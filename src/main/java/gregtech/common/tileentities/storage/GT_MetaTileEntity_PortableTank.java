@@ -115,7 +115,7 @@ public class GT_MetaTileEntity_PortableTank extends GT_MetaTileEntity_BasicTank 
 
 	@Override
 	public int getCapacity() {
-		return (int) (Math.pow(2, this.mTier) * 64000);
+		return (int) (Math.pow(2, this.mTier) * 32000);
 	}
 
 	@Override
