@@ -1272,8 +1272,10 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.PyrolyseOven.set(new GT_MetaTileEntity_PyrolyseOven(1159, "multimachine.pyro", "Pyrolyse Oven").getStackForm(1));
         GT_ModHandler.addCraftingRecipe(ItemList.PyrolyseOven.get(1L, new Object[0]), bitsd, new Object[]{"WEP", "EME", "WCP", 'M', ItemList.Hull_MV, 'W', ItemList.Electric_Piston_MV, 'P', OrePrefixes.wireGt04.get(Materials.Cupronickel), 'E', OrePrefixes.circuit.get(Materials.Good), 'C', ItemList.Electric_Pump_MV});
 
+        ItemList.UniversalFarm.set(new GT_MetaTileEntity_UniversalFarm(1168, "multimachine.universalfarm", "Universal Farm").getStackForm(1));
+        GT_ModHandler.addCraftingRecipe(ItemList.UniversalFarm.get(1L, new Object[0]), bitsd, new Object[]{"ROR", "CHC", "PWP",'H', ItemList.Hull_MV,'W', OrePrefixes.cableGt02.get(Materials.Copper),'C', OrePrefixes.circuit.get(Materials.Good),'P', ItemList.Electric_Pump_MV,'R', ItemList.Robot_Arm_MV,'O', OreDictNames.craftingDiamondBlade});
 
-        ItemList.OilCracker.set(new GT_MetaTileEntity_OilCracker(1160, "multimachine.cracker", "Oil Cracking Unit").getStackForm(1));
+	ItemList.OilCracker.set(new GT_MetaTileEntity_OilCracker(1160, "multimachine.cracker", "Oil Cracking Unit").getStackForm(1));
         GT_ModHandler.addCraftingRecipe(ItemList.OilCracker.get(1L, new Object[0]), bitsd, new Object[]{aTextWireCoil, "EME", aTextWireCoil, 'M', ItemList.Hull_HV, 'W', ItemList.Casing_Coil_Cupronickel, 'E', OrePrefixes.circuit.get(Materials.Advanced), 'C', ItemList.Electric_Pump_HV});
 
         ItemList.MicroTransmitter_HV.set(new GT_MetaTileEntity_MicrowaveEnergyTransmitter(1161, "basicmachine.microtransmitter.03", "HV Microwave Energy Transmitter", 3).getStackForm(1L));
