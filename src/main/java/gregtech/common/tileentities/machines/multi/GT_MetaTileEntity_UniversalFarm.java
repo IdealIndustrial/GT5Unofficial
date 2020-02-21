@@ -46,15 +46,15 @@ public class GT_MetaTileEntity_UniversalFarm extends GT_MetaTileEntity_MultiBloc
                 "Controller Block for the Universal Farm",
                 "Produces woods and saplings and etc.",
                 "Size(WxHxD): 5x5x4 (Hollow), Controller (Bottom center)",
-				"3x1x3 of Steel Pipe Casing (At the center of the bottom layer)",
-				"3x1x3 of Reinforced Glass (At the center of the top layer)",
-                "1x Input Hatch/Bus (Any casing)",
-                "1x Output Hatch/Bus (Any casing)",
-                "1x Maintenance Hatch (Any casing)",
-                "1x Energy Hatch (Any casing)",
-				"Put circuit in to Input Bus",
+		"3x1x3 of Steel Pipe Casing (At the center of the bottom layer)",
+		"3x1x3 of Reinforced Glass (At the center of the top layer)",
+                "1x Input Hatch/Bus (Bottom layer)",
+                "1x Output Hatch/Bus (Bottom layer)",
+                "1x Maintenance Hatch (Bottom layer)",
+                "1x Energy Hatch (Bottom layer)",
+		"Put circuit and Scheme in to Input Bus",
                 "ULV Machine Casings for the rest (58 at least!)"
-				};
+		};
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
