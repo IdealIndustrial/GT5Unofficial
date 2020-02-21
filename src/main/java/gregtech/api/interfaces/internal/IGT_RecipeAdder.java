@@ -639,7 +639,10 @@ public interface IGT_RecipeAdder {
      * @param aEUt
      */
     public boolean addPyrolyseRecipe(ItemStack aInput, FluidStack aFluidInput, int intCircuit, ItemStack aOutput, FluidStack aFluidOutput, int aDuration, int aEUt);
-
+    
+    //Farm Recipes
+    public boolean addFarmRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack[] aOutputs, int[] aChances, int aDuration, int aEUt);
+	
     /**
      * Adds Oil Cracking Recipe
      *
