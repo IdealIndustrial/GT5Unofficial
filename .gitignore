@@ -11,7 +11,6 @@ thumbs.db
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.txt
@@ -80,3 +79,4 @@ gradlew.bat
 # Linux
 *~
 
+gradle/wrapper/gradle-wrapper.jar

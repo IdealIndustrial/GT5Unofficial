@@ -2,6 +2,10 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
+            name = "MavenRepo"
+            url = "https://repo.maven.apache.org/maven2"
+        }
+        maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
@@ -45,90 +49,36 @@ configurations {
     compile.extendsFrom provided, embedded
 }
 
-repositories {
-    maven {
-        name 'Forge'
-        url 'http://files.minecraftforge.net/maven'
-    }
-    maven {
-        name = "chickenbones"
-        url = "http://chickenbones.net/maven/"
-    }
-    maven {
-        name = "ic2, forestry"
-        url = "http://maven.ic2.player.to/"
-    }
-    maven { // EnderIO & EnderCore
-        name 'tterrag Repo'
-        url "http://maven.tterrag.com"
-    }
-    maven { // TConstruct
-        name 'DVS1 Maven FS'
-        url 'http://dvs1.progwml6.com/files/maven'
-    }
-
-    maven { // AppleCore
-        url "http://www.ryanliptak.com/maven/"
-    }
-    ivy {
-        name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-    }
-    ivy {
-        name 'CoFHLib'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhlib.cf}/[module]-[revision].[ext]"
-    }
-    ivy {
-        name 'CoFHCore'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhcore.cf}/[module]-[revision].[ext]"
-    }
-    ivy {
-        name 'Railcraft'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.railcraft.cf}/[module]_[revision].[ext]"
-    }
-	ivy {
-        name 'IC2NuclearControl'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.nc.cf}/[module]-[revision].[ext]"
-    }
-		ivy {
-        name 'ImmersiveEngineering'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.immeng.cf}/[module]-[revision].[ext]"
-    }
-		ivy {
-        name 'magneticraft'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.magneticraft.cf}/[module]-[revision].[ext]"
-    }
-}
+repositories {}
 
 dependencies {
-//    compile fileTree(dir: 'libs', include: '*.jar')
 
-    compile "tconstruct:TConstruct:${config.minecraft.version}-${config.tconstruct.version}:deobf"
-    provided ("appeng:appliedenergistics2:${config.ae2.version}:dev") {
-        exclude module: '*'
-    }
-    provided "codechicken:CodeChickenLib:${config.minecraft.version}-${config.codechickenlib.version}:dev"
-	provided "codechicken:CodeChickenCore:${config.minecraft.version}-${config.codechickencore.version}:dev"
-    provided "codechicken:NotEnoughItems:${config.minecraft.version}-${config.nei.version}:dev"
-    provided "codechicken:Translocator:${config.minecraft.version}-${config.translocators.version}:dev"
-    provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-    provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
-    provided "applecore:AppleCore:${config.applecore.version}:api"
-    provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
-    provided ("com.enderio:EnderIO:${config.enderio.version}:dev") {
-        transitive = false
-    }
-    provided name: 'buildcraft', version: config.buildcraft.version, classifier: "dev", ext: 'jar'
-    provided name: 'CoFHLib', version: config.cofhlib.version, ext: 'jar'
-    provided name: 'CoFHCore', version: config.cofhcore.version, ext: 'jar'
-    provided name: 'Railcraft', version: config.railcraft.version, ext: 'jar'
-    provided name: 'IC2NuclearControl', version: config.nc.version, ext: 'jar'
-    provided name: 'ImmersiveEngineering', version: config.immeng.version, ext: 'jar'
-    provided name: 'magneticraft', version: config.magneticraft.version, ext: 'jar'
-//    compile files("libs/Galacticraft-API-1.7-${config.gc.version}.jar")
-//    compile files("libs/GalacticraftCore-Dev-${config.gc.version}.jar")
-    provided name: "Galacticraft-API", version: config.gc.version, ext: 'jar'
-    provided name: "GalacticraftCore-Dev", version: config.gc.version, ext: 'jar'
+    compile files("libs/CoFHCore-[1.7.10]3.0.3-303-dev.jar")
+    compile files("libs/CoFHLib-[1.7.10]1.0.3-175-dev.jar")
+    compile files("libs/CodeChickenCore-1.7.10-1.0.3.23-dev.jar")
+    compile files("libs/ForgeMultipart-1.7.10-1.2.0.345-universal.jar")
+    compile files("libs/GT Scanner Mod-1.5.4.jar")
+    compile files("libs/GalacticraftCore-Dev-1.7-3.0.12.504.jar")
+    compile files("libs/IC2NuclearControl-2.4.4a.jar")
+    compile files("libs/ImmersiveEngineering-0.7.7-deobf.jar")
+    compile files("libs/MicdoodleCore-Dev-1.7-3.0.12.504.jar")
+    compile files("libs/NotEnoughItems1.7.10-1.0.5.111.jar")
+    compile files("libs/Railcraft_1.7.10-9.12.3.0-unofficial-dev.jar")
+    compile files("libs/Translocator-1.7.10-1.1.2.16-dev.jar")
+    compile files("libs/appliedenergistics2-rv2-beta-33-dev.jar")
+    compile files("libs/magneticraft-0.6.1-final.jar")
+    compile files("libs/buildcraft-7.1.17-builders.jar")
+    compile files("libs/buildcraft-7.1.17-core.jar")
+    compile files("libs/buildcraft-7.1.17-silicon.jar")
+    compile files("libs/buildcraft-7.1.17-transport.jar")
+    compile files("libs/buildcraft-compat-7.1.5.jar")
+    compile files("libs/EnderCore-1.7.10-0.2.0.36_beta.jar")
+    compile files("libs/EnderIO-1.7.10-2.3.0.424_beta.jar")
+    compile files("libs/forestry_1.7.10-4.2.15.63.jar")
+    compile files("libs/AppleCore-mc1.7.10-1.3.1.jar")
+    compile files("libs/industrialcraft-2-2.2.828-experimental-reactor-fix.jar")
+    compile files("libs/CodeChickenLib-1.7.10-1.1.3.138-universal.jar")
+    compile files("libs/TConstruct-1.7.10-1.8.9.12-GTNH.jar")
 }
 
 processResources
@@ -161,8 +111,7 @@ task devJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'dev'
     manifest {
-        //attributes 'FMLCorePlugin': 'WhateverLoaderClass'
-        //attributes 'FMLCorePluginContainsFMLMod': 'true'
+
     }
 }
 
