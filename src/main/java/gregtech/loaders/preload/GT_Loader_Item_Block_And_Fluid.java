@@ -616,7 +616,7 @@ public class GT_Loader_Item_Block_And_Fluid
         GT_Mod.gregtechproxy.addFluid("potion.icetea", "Ice Tea", null, 1, 255, ItemList.ThermosCan_Ice_Tea.get(1L, new Object[0]), ItemList.ThermosCan_Empty.get(1L, new Object[0]), 250);
 
         FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidRegistry.getFluidStack("potion.poison.strong", 750), ItemList.IC2_Spray_WeedEx.get(1L, new Object[0]), ItemList.Spray_Empty.get(1L, new Object[0])));
-
+        FluidContainerRegistry.registerFluidContainer(Materials.Acetone.getFluid(2304L), ItemList.Solvent_Spray.get(1L, new Object[0]), ItemList.Spray_Empty.get(1L, new Object[0]));
 
         FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidRegistry.getFluidStack("potion.poison", 125), ItemList.Arrow_Head_Glass_Poison.get(1L, new Object[0]), ItemList.Arrow_Head_Glass_Emtpy.get(1L, new Object[0])));
         FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidRegistry.getFluidStack("potion.poison.long", 125), ItemList.Arrow_Head_Glass_Poison_Long.get(1L, new Object[0]), ItemList.Arrow_Head_Glass_Emtpy.get(1L, new Object[0])));
