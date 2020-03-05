@@ -293,6 +293,13 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
             addItemBehavior(32000 + tLastID, tBehaviour);
             addItemBehavior(32001 + tLastID, tBehaviour);
         }
+
+        ItemList.Solvent_Spray.set(addItem(tLastID = 407, "Solvent Spray", "Full", new Object[0]));
+        ItemList.Solvent_Spray_Used.set(addItem(tLastID = 408, "Solvent Spray", "Used", new Object[]{SubTag.INVISIBLE}));
+        IItemBehaviour<GT_MetaBase_Item> sBehaviour = new Behaviour_Spray_Solvent(ItemList.Spray_Empty.get(1L, new Object[0]), ItemList.Solvent_Spray_Used.get(1L, new Object[0]), ItemList.Solvent_Spray.get(1L, new Object[0]), 128L);
+        addItemBehavior(32407, sBehaviour);
+        addItemBehavior(32408, sBehaviour);
+
         ItemList.Tool_Matches.set(addItem(tLastID = 471, "Match", "", new Object[]{new TC_Aspects.TC_AspectStack(TC_Aspects.IGNIS, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.VACUOS, 1L)}));
         ItemList.Tool_MatchBox_Used.set(addItem(tLastID = 472, "Match Box", "This is not a Car", new Object[]{new TC_Aspects.TC_AspectStack(TC_Aspects.IGNIS, 2L), new TC_Aspects.TC_AspectStack(TC_Aspects.POTENTIA, 1L), SubTag.INVISIBLE}));
         ItemList.Tool_MatchBox_Full.set(addItem(tLastID = 473, "Match Box (Full)", "This is not a Car", new Object[]{new TC_Aspects.TC_AspectStack(TC_Aspects.IGNIS, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.POTENTIA, 2L)}));
