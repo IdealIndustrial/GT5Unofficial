@@ -169,18 +169,7 @@ public class Behaviour_ProspectorsBook
                     return tMaterial.mDefaultLocalName;
                 }
             }
-        } else {
-            if(true)
-            return null;
-            int tMetaID = aWorld.getBlockMetadata(x, y, z);
-            ItemData tAssotiation = GT_OreDictUnificator.getAssociation(new ItemStack(tBlock, 1, tMetaID));
-
-            if ((tAssotiation != null) && (tAssotiation.mPrefix.toString().startsWith("ore"))) {
-                putOre(map,tAssotiation.mMaterial.mMaterial.mDefaultLocalName,x,y,z);
-                return tAssotiation.mMaterial.mMaterial.mDefaultLocalName;
-            }
         }
-
         return null;
     }
 
@@ -196,7 +185,6 @@ public class Behaviour_ProspectorsBook
 
     public static ItemStack getBook(World aWorld, int aX, int aY, int aZ, Random aRandom){
         ItemStack aStack = ItemList.ProspectorsBook.get(1);
-        ItemStack tDataStick = ItemList.Tool_DataStick.get(1L);
 
         HashMap<String, Integer> tNearOres = new HashMap<String, Integer>();
         HashMap<String, Integer> tMiddleOres = new HashMap<String, Integer>();
@@ -205,25 +193,8 @@ public class Behaviour_ProspectorsBook
 
         prospectOres(allOres,tNearOres, tMiddleOres, tFarOres, aWorld, aX, aY, aZ);
 
-        // prospecting oils
         String tOil =  prospectWater(aWorld, aX, aZ);
 
-
-
-
-       /* GT_Utility.ItemNBT.setAdvancedProspectionData((byte)2,
-                tDataStick,
-                aX,
-                (short)aY,
-                aZ,
-                aWorld.provider.dimensionId,
-                tOils,
-                GT_Utility.sortByValueToList(tNearOres),
-                GT_Utility.sortByValueToList(tMiddleOres),
-                GT_Utility.sortByValueToList(tFarOres),
-                near, middle, radius);
-        GT_Utility.ItemNBT.convertProspectionData(tDataStick);
-        aStack.setTagCompound(tDataStick.getTagCompound());*/
         new StoryGenerator(aRandom,allOres,aStack,tOil,new int[]{aX,aY,aZ});
         return aStack;
     }
@@ -271,7 +242,6 @@ public class Behaviour_ProspectorsBook
         private final String[] ands = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.ands", "and then|also").split("\\|");
         private final String[] laters = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.laters", "Later today I|In 2 hours I|Some time after I").split("\\|");
 
-
         Random random;
 
         HashSet<Integer> alreadyUsedMine = new HashSet<>();
@@ -290,7 +260,6 @@ public class Behaviour_ProspectorsBook
                 if(orePositions == null||orePositions.size()==0)
                     continue;
                 int[] position = orePositions.get(aRandom.nextInt(orePositions.size()));
-              //  tPageText = genDay(day,oreKey,position,tilePos,random);
                 tPageText = EnumChatFormatting.BOLD+ "Day "+day +EnumChatFormatting.RESET + "\n" + getRandomRutineEvent(random);
                 tTagList.appendTag(new NBTTagString(tPageText));
                 tPageText = laters[random.nextInt(laters.length)] + " "
@@ -312,7 +281,6 @@ public class Behaviour_ProspectorsBook
             tNBT.setString("title", "Written long time ago");
             tNBT.setTag("pages", tTagList);
             aBook.setTagCompound(tNBT);
-            //why i leave diary here
         }
 
         private String genDay(int aDay, String oreName, int[] orePosition, int[] tilePosition, Random random){
@@ -385,6 +353,5 @@ public class Behaviour_ProspectorsBook
             else
                 return (aX)+ " m to East";
         }
-
     }
 }

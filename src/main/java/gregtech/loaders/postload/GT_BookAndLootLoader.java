@@ -131,14 +131,12 @@ public class GT_BookAndLootLoader
         ChestGenHooks.addItem("strongholdCorridor", new WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.arrowGtWood, Materials.DamascusSteel, 1L), 16, 48, 6));
         ChestGenHooks.addItem("strongholdCorridor", new WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.arrowGtWood, Materials.SterlingSilver, 1L), 8, 24, 6));
 
-        ChestGenHooks.addItem("bonusChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
-       // ChestGenHooks.addItem("dungeonChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
-      //  ChestGenHooks.addItem("pyramidDesertyChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
-      //  ChestGenHooks.addItem("pyramidJungleChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
-      //  ChestGenHooks.addItem("mineshaftCorridor", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
-        ChestGenHooks.addItem("villageBlacksmith", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
-      //  ChestGenHooks.addItem("strongholdCrossing", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
-      //  ChestGenHooks.addItem("strongholdCorridor", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+        ChestGenHooks.addItem("bonusChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 1, 1, 16));
+        ChestGenHooks.addItem("dungeonChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 1, 1, 6));
+        ChestGenHooks.addItem("pyramidDesertyChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 1, 1, 6));
+        ChestGenHooks.addItem("pyramidJungleChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 1, 1, 6));
+        ChestGenHooks.addItem("mineshaftCorridor", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 1, 1, 6));
+        ChestGenHooks.addItem("villageBlacksmith", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 1, 1, 6));
 
     }
 }
