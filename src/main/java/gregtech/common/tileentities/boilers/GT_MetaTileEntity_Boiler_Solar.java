@@ -160,7 +160,6 @@ public class GT_MetaTileEntity_Boiler_Solar
                         this.mHadNoWater = true;
                     } else {
                         if (this.mHadNoWater) {
-                            GT_Log.exp.println("Boiler "+this.mName+" had no Water!");
                             aBaseMetaTileEntity.doExplosion(2048L);
                             return;
                         }
