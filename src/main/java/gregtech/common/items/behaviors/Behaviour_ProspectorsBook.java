@@ -227,12 +227,32 @@ public class Behaviour_ProspectorsBook
         private final String[] caveEvents = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.caveevents",
                 "met some cave spiders today, my luck is good though I'm still alive |" +
                 "found some malachite ore, I need a bit more iron to forge a new pickaxe|" +
-                "tried to dig deeper, I almost swam in lava").split("\\|");
+                "tried to dig deeper, I almost swam in lava| "+
+                "When expanding the mine came across a cluster of gravel above me, I was almost buried alive.| " +
+                "In mine flooded one of lava lake with water. I hope one day I dig up enough diamonds or cobalt to mine resulting obsidian.| " +
+                "The trip to the mine turned out to be very productive -again-, I had to finish due to a lack of torches.| " +
+                "Throughout my stay in the mine, I was annoyed by the peep of bats. It's pisses me off.| " +
+                "In the old mine, I came across a railroad. I’m thinking about getting a minecart.| " +
+                "In mine unearthed the nest of silverfish. Argh, they are small and weak, but there are so many.| " +
+                "Dug a passage into canyon. It's huge and dark, with few waterfall of lava, need to observe it better next time.| " +
+                "In the cave I found some mushrooms. Looks like for dinner, I'll have mushroom soup.| " +
+                "I dug up so deep that I came across a rock that I had never seen before. It's dark gray and appears to be even harder than obsidian.| " +
+                "I found a chest in an abandoned mine, inside was gold armor for horse. Who and why could leave it?").split("\\|");
 
         private final String[] rutineEvents = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.rutineevents",
                 "Milked my cow -again-, milk can heal every injury!|" +
                 "Harvested some wheat and baked bread -again-, delicious |" +
-                "Axed oak and got some apples -again- .. what?!").split("\\|");
+                "Axed oak and got some apples -again- .. what?!|"+
+                "Today I met \"crossed out\" -again-, he looks sick: his skin has turned green, I hope it’s not contagious|" +
+                "-again- Met a frightened and dirty pig, she was saddled. What's wrong with you people?|" +
+                "-again- Someone painted one of my sheep pink, what a jerk.|" +
+                "This night -again- slimes from the swamps kept me awake. I need to move away from here.|" +
+                "-again- Half a day chasing a chicken, what a shame. Still not seen a single rooster.|" +
+                "-again- Spent a few buckets of water to wash redstone dust today. Eh, it would be great if someone did this for me.|" +
+                "Sold the ore I mine to Villagers -again-. Seems our relationship is improving: prices have become more profitable.|" +
+                "I -again- found an octopus, which trying to get out of the shallow. When I helped him out, he was so scared that dropped his ink bag.|" +
+                "Met a woman in a weird hat -again-. She turned out to be a sweet lady and treated me to a drink of her own preparation.|" +
+                "Today I saw a herd of donkeys -again-. I thinking of catching one to make it easier еo transport more ore from the mine.").split("\\|");
 
         private final String[] oreFindEvents = GT_LanguageManager.addStringLocalization("gt.prospectorsbook.orefindevents",
                 "I found some -name- ore traces|" +
@@ -262,7 +282,13 @@ public class Behaviour_ProspectorsBook
                 if(orePositions == null||orePositions.size()==0)
                     continue;
                 int[] position = orePositions.get(aRandom.nextInt(orePositions.size()));
-                tPageText = genDay(day,oreKey,position,tilePos,random);
+              //  tPageText = genDay(day,oreKey,position,tilePos,random);
+                tPageText = EnumChatFormatting.BOLD+ "Day "+day +EnumChatFormatting.RESET + "\n" + getRandomRutineEvent(random);
+                tTagList.appendTag(new NBTTagString(tPageText));
+                tPageText = laters[random.nextInt(laters.length)] + " "
+                        + getRandomMineEvent(random)+" "+ands[random.nextInt(ands.length)]+" "
+                        +getRandomOreFoundEvent(random, oreKey)+" "
+                        +getOrePositionRelative(position,tilePos);
                 tTagList.appendTag(new NBTTagString(tPageText));
                 day+=1+random.nextInt(5);
 
@@ -270,7 +296,7 @@ public class Behaviour_ProspectorsBook
             tPageText = "";
             if(aOil!=""){
                 String[] aWater = aOil.split("\\|");
-                tPageText += "It seems that there is underground water source at " + getDirectionZ(Integer.valueOf(aWater[1])*16-tilePos[2]) +" "+ getDirectionX(Integer.valueOf(aWater[0])*16-tilePos[0]) + " ";
+                tPageText += "It seems that there is underground water source at " + getDirectionZ(Integer.valueOf(aWater[1])*16-tilePos[2]) +" and "+ getDirectionX(Integer.valueOf(aWater[0])*16-tilePos[0]) + " ";
             }
             tPageText += "now I'm leaving this place, may be sombody will find my diary and read it";
             tTagList.appendTag(new NBTTagString(tPageText));
@@ -326,7 +352,7 @@ public class Behaviour_ProspectorsBook
         }
 
         private String getRandomOreFoundEvent(Random random, String ore){
-            int event = random.nextInt(rutineEvents.length);
+            int event = random.nextInt(oreFindEvents.length);
             String out = oreFindEvents[event].replaceAll("-name-",ore);
             return out;
         }
@@ -334,7 +360,7 @@ public class Behaviour_ProspectorsBook
         private String getOrePositionRelative(int[] orePosition, int[] tilePosition){
             int aX = orePosition[0] - tilePosition[0];
             int aZ = orePosition[2] - tilePosition[2];
-            return "in "+getGroundLevel(orePosition[1]) + getDirectionZ(aZ) + " and " + getDirectionX(aX);
+            return "in "+getGroundLevel(orePosition[1])+ " "+ getDirectionZ(aZ) + " and " + getDirectionX(aX);
 
         }
 
