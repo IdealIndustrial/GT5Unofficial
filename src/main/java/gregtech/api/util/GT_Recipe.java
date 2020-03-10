@@ -562,6 +562,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map sHammerRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(200), "gt.recipe.hammer", "Hammer", null, RES_PATH_GUI + "basicmachines/Hammer", 1, 1, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sAmplifiers = new GT_Recipe_Map(new HashSet<GT_Recipe>(10), "gt.recipe.uuamplifier", "UU Amplifier", null, RES_PATH_GUI + "basicmachines/Amplifabricator", 1, 0, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sMassFabFakeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(10), "gt.recipe.massfab", "Mass Fabrication", null, RES_PATH_GUI + "basicmachines/Massfabricator", 1, 0, 1, 0, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map_Disassembler sDisassemblerRecipes = new GT_Recipe_Map_Disassembler();
         public static final GT_Recipe_Map_Fuel sDieselFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(10), "gt.recipe.dieselgeneratorfuel", "Diesel Generator Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
         public static final GT_Recipe_Map_Fuel sTurbineFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(10), "gt.recipe.gasturbinefuel", "Gas Turbine Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
         public static final GT_Recipe_Map_Fuel sHotFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(10), "gt.recipe.thermalgeneratorfuel", "Thermal Generator Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, false);
@@ -1662,6 +1663,37 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
 			}
 
     	}
+    }
+
+    public static class GT_Recipe_Map_Disassembler extends GT_Recipe_Map {
+
+        public GT_Recipe_Map_Disassembler() {
+            super(new HashSet<GT_Recipe>(1000),"gt.recipe.disassembler","Disassembling",null,RES_PATH_GUI + "basicmachines/Disassembler", 1, 9,1,0,1, E, 1, E,true, false);
+        }
+
+        public static ArrayList<GT_Shaped_Recipe> recipeCache = new ArrayList<>(1000);
+
+        public static boolean cacheRecipe(GT_Shaped_Recipe aRecipe){
+           return  recipeCache.add(aRecipe);
+        }
+
+        public static void initCachedRecipes(){
+            boolean f = true;
+            for(GT_Shaped_Recipe recipe: recipeCache){
+                Object[] aInputs = recipe.getInput();
+                ItemStack[] rOutputs = new ItemStack[aInputs.length];
+                for(byte i = 0; i< rOutputs.length; i++){
+                    if(aInputs[i] instanceof ItemStack){
+                        rOutputs[i] = (ItemStack)aInputs[i];
+                    }else if(aInputs[i] instanceof  ArrayList && ((ArrayList)aInputs[i]).size()>0 && ((ArrayList)aInputs[i]).get(0) instanceof ItemStack){
+                        rOutputs[i] = (ItemStack)((ArrayList)aInputs[i]).get(0);
+                    }
+                }
+                if(rOutputs.length>0)
+                    RA.addDisassemblerRecipe(recipe.getRecipeOutput(),rOutputs,2400,16);
+            }
+            return;
+        }
     }
 
     public static class GT_Recipe_WithAlt extends GT_Recipe {

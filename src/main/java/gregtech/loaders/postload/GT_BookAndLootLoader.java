@@ -4,6 +4,7 @@ import gregtech.GT_Mod;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
+import gregtech.api.objects.GT_WeightedRandomChestContent;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_OreDictUnificator;
 import net.minecraft.init.Items;
@@ -129,5 +130,15 @@ public class GT_BookAndLootLoader
         ChestGenHooks.addItem("strongholdCorridor", new WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.toolHeadAxe, Materials.DamascusSteel, 1L), 1, 4, 6));
         ChestGenHooks.addItem("strongholdCorridor", new WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.arrowGtWood, Materials.DamascusSteel, 1L), 16, 48, 6));
         ChestGenHooks.addItem("strongholdCorridor", new WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.arrowGtWood, Materials.SterlingSilver, 1L), 8, 24, 6));
+
+        ChestGenHooks.addItem("bonusChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+       // ChestGenHooks.addItem("dungeonChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+      //  ChestGenHooks.addItem("pyramidDesertyChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+      //  ChestGenHooks.addItem("pyramidJungleChest", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+      //  ChestGenHooks.addItem("mineshaftCorridor", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+        ChestGenHooks.addItem("villageBlacksmith", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+      //  ChestGenHooks.addItem("strongholdCrossing", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+      //  ChestGenHooks.addItem("strongholdCorridor", new GT_WeightedRandomChestContent(GT_OreDictUnificator.get(OrePrefixes.crateGtDust, Materials.Chrome, 1L), 2, 4, 100));
+
     }
 }

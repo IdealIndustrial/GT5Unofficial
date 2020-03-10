@@ -1,10 +1,12 @@
 package gregtech.api.metatileentity.implementations;
 
+import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
@@ -100,7 +102,9 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public boolean isFluidInputAllowed(FluidStack aFluid) {
-        return mRecipeMap == null || mRecipeMap.containsInput(aFluid);
+        ItemStack iss = GT_ModHandler.getIC2Item("cell",1);
+        ItemStack is = GT_Utility.fillFluidContainer(aFluid, iss,false,true);
+        return mRecipeMap == null || mRecipeMap.containsInput(aFluid) || mRecipeMap.containsInput(is);
     }
 
     @Override
