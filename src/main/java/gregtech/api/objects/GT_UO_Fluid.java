@@ -51,11 +51,11 @@ public class GT_UO_Fluid {
 			return null;
 		}
 	}
-	
+
 	public int getRandomAmount(Random aRandom){//generates some random ass number that correlates to extraction speeds
-		int div = (int)Math.floor(Math.pow((MaxAmount-MinAmount)*100.d*DIVIDER, 0.2d));
-		int min = (int)Math.floor(Math.pow(MinAmount*100.d*DIVIDER, 0.2d));
-        double amount = min+aRandom.nextInt(div)+aRandom.nextDouble();
-        return (int) (Math.pow(amount, 5) / 100);//reverses the computation above
+		double min = Math.pow((MinAmount*100.d*DIVIDER),0.2);
+		double max = Math.pow(MaxAmount*100.d*DIVIDER,0.2);
+		double amount = Math.pow(min +(max == 0 ? 0 : (double)aRandom.nextInt((int)(10000*(max-min)))/10000),5);
+		return (int) (amount / 100);//reverses the computation above
 	}
 }

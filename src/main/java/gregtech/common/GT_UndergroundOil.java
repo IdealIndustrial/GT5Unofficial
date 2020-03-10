@@ -51,7 +51,9 @@ public class GT_UndergroundOil {
         if(tInts==null) tInts=getDefaultChunkDataOnCreation();//init if null
         else if(tInts[GTOIL]==0){//FAST stop
             //can return 0 amount stack for info :D
-            return readOrDrainCoefficient>=0 ? null : new FluidStack(FluidRegistry.getFluid(tInts[GTOILFLUID]),0);
+            if(tInts[GTOILFLUID]==Integer.MAX_VALUE)
+                tInts[GTOILFLUID] = 1;
+            return readOrDrainCoefficient >= 0 ? null : new FluidStack(FluidRegistry.getFluid(tInts[GTOILFLUID]), 0);
         }
 
         //GEN IT TO GET OBJECT...
