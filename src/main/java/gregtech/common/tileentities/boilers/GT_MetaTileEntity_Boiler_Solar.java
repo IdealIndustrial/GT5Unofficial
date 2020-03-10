@@ -148,4 +148,9 @@ public class GT_MetaTileEntity_Boiler_Solar
             aBaseMetaTileEntity.setActive(this.mProcessingEnergy > 0);
         }
     }
+
+
+    public int getCapacity() {
+        return 32000;
+    }
 }
