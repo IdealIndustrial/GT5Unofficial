@@ -1,16 +1,20 @@
 package gregtech.common.tileentities.machines.basic;
 
+import gregtech.GT_Mod;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
 
 public class GT_MetaTileEntity_Disassembler
         extends GT_MetaTileEntity_BasicMachine {
@@ -32,42 +36,57 @@ public class GT_MetaTileEntity_Disassembler
 
     public int checkRecipe() {
         if ((getInputAt(0) != null) && (isOutputEmpty())) {
-        	if(GT_Utility.areStacksEqual(getInputAt(0), new ItemStack(Items.egg))){
-        		getInputAt(0).stackSize -= 1;
+            if (GT_Utility.areStacksEqual(getInputAt(0), new ItemStack(Items.egg))) {
+                getInputAt(0).stackSize -= 1;
                 this.mEUt = (16 * (1 << this.mTier - 1) * (1 << this.mTier - 1));
                 this.mMaxProgresstime = 2400;
                 this.mMaxProgresstime = this.mMaxProgresstime >> (mTier);
-                if (getBaseMetaTileEntity().getRandomNumber(100) < (this.mTier+1)) {
+                if (getBaseMetaTileEntity().getRandomNumber(100) < (this.mTier + 1)) {
                     this.mOutputItems[0] = ItemList.Circuit_Chip_Stemcell.get(1, new Object[0]);
+                }
+                return 2;
+            }
+            else if (GT_Mod.gregtechproxy.disassemblerRecipeMapOn&& !(getInputAt(0).getItem() instanceof GT_MetaGenerated_Tool)){
+                int f = super.checkRecipe();
+                for (int i = 0; i < this.mOutputItems.length; i++) {
+                    if (!(getBaseMetaTileEntity().getRandomNumber(100) < 50 + 10 * this.mTier)) {
+                        this.mOutputItems[i] = null;
                     }
-        		return 2;
-        	}
-            NBTTagCompound tNBT = getInputAt(0).getTagCompound();
-            if (tNBT != null) {
-                tNBT = tNBT.getCompoundTag("GT.CraftingComponents");
+                }
+                return f;
+            }else {
+                NBTTagCompound tNBT = getInputAt(0).getTagCompound();
                 if (tNBT != null) {
-                    this.mEUt = (16 * (1 << this.mTier - 1) * (1 << this.mTier - 1));
-                    this.mMaxProgresstime = 80;
-                    for (int i = 0; i < this.mOutputItems.length; i++) {
-                        if (getBaseMetaTileEntity().getRandomNumber(100) < 50 + 10 * this.mTier) {
-                            this.mOutputItems[i] = GT_Utility.loadItem(tNBT, "Ingredient." + i);
-                            if (this.mOutputItems[i] != null) {
-                                this.mMaxProgresstime *= 1.7;
+                    tNBT = tNBT.getCompoundTag("GT.CraftingComponents");
+                    if (tNBT != null) {
+                        this.mEUt = (16 * (1 << this.mTier - 1) * (1 << this.mTier - 1));
+                        this.mMaxProgresstime = 80;
+                        for (int i = 0; i < this.mOutputItems.length; i++) {
+                            if (getBaseMetaTileEntity().getRandomNumber(100) < 50 + 10 * this.mTier) {
+                                this.mOutputItems[i] = GT_Utility.loadItem(tNBT, "Ingredient." + i);
+                                if (this.mOutputItems[i] != null) {
+                                    this.mMaxProgresstime *= 1.7;
+                                }
                             }
                         }
+                        if (this.mTier > 5) {
+                            this.mMaxProgresstime = this.mMaxProgresstime >> (mTier - 5);
+                        }
+                        if (mMaxProgresstime == 80) {
+                            return 0;
+                        }
+                        getInputAt(0).stackSize -= 1;
+                        return 2;
                     }
-                    if(this.mTier>5){
-                    	this.mMaxProgresstime = this.mMaxProgresstime >> (mTier-5);
-                    }
-                    if(mMaxProgresstime==80){
-                    	return 0;
-                    }
-                    getInputAt(0).stackSize -= 1;
-                    return 2;
                 }
             }
         }
         return 0;
+    }
+
+    @Override
+    public GT_Recipe.GT_Recipe_Map getRecipeList() {
+        return GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes;
     }
 
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
