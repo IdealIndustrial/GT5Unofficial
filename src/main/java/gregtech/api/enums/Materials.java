@@ -425,7 +425,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     public static Materials Endstone = new Materials(808, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 255, 255, 255, 0, "Endstone", "Endstone", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeYellow);
     public static Materials Netherrack = new Materials(807, TextureSet.SET_DULL, 		1.0F, 0, 0, 1, 200, 0, 0, 0, "Netherrack", "Netherrack", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeRed);
     public static Materials SoulSand = new Materials(-1, TextureSet.SET_DULL, 			1.0F, 0, 0, 1, 255, 255, 255, 0, "Soulsand", "Soulsand", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeBrown);
-
+    public static Materials EndSteel = new Materials(401, TextureSet.SET_METALLIC , 12.0F, 2000, 4, 1|2|64|128, 223,217,165,0,"EndSteel","End Steel" , 0, 0, 940, 3600, true, false, 3, 1, 1, Dyes.dyeYellow , 1, Arrays.asList(new MaterialStack(DarkSteel, 1), new MaterialStack(Tungsten, 1), new MaterialStack(Endstone, 1)));
     /**
      * First Degree Compounds
      */
