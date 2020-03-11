@@ -13,6 +13,7 @@ import gregtech.api.metatileentity.BaseMetaTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import appeng.api.AEApi;
 import appeng.api.storage.IExternalStorageHandler;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
@@ -49,6 +50,11 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_TieredMach
     }
 
     @Override
+    public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
+        return new GT_MetaTileEntity_QuantumChest(mName, mTier, mDescriptionArray, mTextures);
+    }
+
+    @Override
     public boolean isFacingValid(byte aFacing) {
         return true;
     }
@@ -61,11 +67,6 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_TieredMach
     @Override
     public boolean isValidSlot(int aIndex) {
         return true;
-    }
-
-    @Override
-    public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_QuantumChest(mName, mTier, mDescriptionArray, mTextures);
     }
 
     @Override
@@ -90,57 +91,95 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_TieredMach
 
         if (getBaseMetaTileEntity().isServerSide() && getBaseMetaTileEntity().isAllowedToWork()) {
             if ((getItemCount() <= 0)) {
-                this.mItemStack = null;
-                this.mItemCount = 0;
+                setItemStack(null);
+                setItemCount(0);
             }
-            if (this.mItemStack == null && this.mInventory[0] != null) {
-                this.mItemStack = mInventory[0].copy();
+            if (getItemStack() == null && mInventory[0] != null) {
+                setItemStack(mInventory[0].copy());
             }
-            if ((this.mInventory[0] != null) && (this.mItemCount < getMaxItemCount()) && GT_Utility.areStacksEqual(this.mInventory[0], this.mItemStack)) {
-                this.mItemCount += this.mInventory[0].stackSize;
-                if (this.mItemCount > getMaxItemCount()) {
-                    this.mInventory[0].stackSize = (this.mItemCount - getMaxItemCount());
-                    this.mItemCount = getMaxItemCount();
+            int count = getItemCount();
+            ItemStack stack = getItemStack();
+            if ((mInventory[0] != null) && (count < getMaxItemCount()) && GT_Utility.areStacksEqual(mInventory[0], stack)) {
+                count += mInventory[0].stackSize;
+                if (count > getMaxItemCount()) {
+                    mInventory[0].stackSize = (count - getMaxItemCount());
+                    count = getMaxItemCount();
                 } else {
-                    this.mInventory[0] = null;
+                    mInventory[0] = null;
                 }
             }
-            if (this.mInventory[1] == null && mItemStack != null) {
-                this.mInventory[1] = mItemStack.copy();
-                this.mInventory[1].stackSize = Math.min(mItemStack.getMaxStackSize(), this.mItemCount);
-                this.mItemCount -= this.mInventory[1].stackSize;
-            } else if ((this.mItemCount > 0) && GT_Utility.areStacksEqual(this.mInventory[1], this.mItemStack) && this.mInventory[1].getMaxStackSize() > this.mInventory[1].stackSize) {
-                int tmp = Math.min(this.mItemCount, this.mInventory[1].getMaxStackSize() - this.mInventory[1].stackSize);
-                this.mInventory[1].stackSize += tmp;
-                this.mItemCount -= tmp;
+            if (mInventory[1] == null && stack != null) {
+                mInventory[1] = stack.copy();
+                mInventory[1].stackSize = Math.min(stack.getMaxStackSize(), count);
+                count -= mInventory[1].stackSize;
+            } else if ((count > 0) && GT_Utility.areStacksEqual(mInventory[1], stack) && mInventory[1].getMaxStackSize() > mInventory[1].stackSize) {
+                int tmp = Math.min(count, mInventory[1].getMaxStackSize() - mInventory[1].stackSize);
+                mInventory[1].stackSize += tmp;
+                count -= tmp;
             }
-            if (this.mItemStack != null) {
-                this.mInventory[2] = this.mItemStack.copy();
-                this.mInventory[2].stackSize = Math.min(mItemStack.getMaxStackSize(), this.mItemCount);
+            setItemCount(count);
+            if (stack != null) {
+                mInventory[2] = stack.copy();
+                mInventory[2].stackSize = Math.min(stack.getMaxStackSize(), count);
             } else {
-                this.mInventory[2] = null;
+                mInventory[2] = null;
             }
         }
     }
 
-    private int getItemCount() {
-        return this.mItemCount;
+    protected int getItemCount(){
+        return mItemCount;
+    }
+    public void setItemCount(int aCount){
+        mItemCount = aCount;
+    }
+    protected ItemStack getItemStack(){
+        return mItemStack;
+    }
+    protected void setItemStack(ItemStack s){
+        mItemStack = s;
     }
 
-    public void setItemCount(int aCount) {
-        this.mItemCount = aCount;
-    }
-
+    @Override
     public int getProgresstime() {
-        return this.mItemCount + (this.mInventory[0] == null ? 0 : this.mInventory[0].stackSize) + (this.mInventory[1] == null ? 0 : this.mInventory[1].stackSize);
+        return getItemCount() + (mInventory[0] == null ? 0 : mInventory[0].stackSize) + (mInventory[1] == null ? 0 : mInventory[1].stackSize);
     }
 
+    @Override
     public int maxProgresstime() {
         return getMaxItemCount();
     }
 
+    protected static int CommonSizeCompute(int tier){
+        switch(tier){
+            case 1:
+                return    4000000;
+            case 2:
+                return    8000000;
+            case 3:
+                return   16000000;
+            case 4:
+                return   32000000;
+            case 5:
+                return   64000000;
+            case 6:
+                return  128000000;
+            case 7:
+                return  256000000;
+            case 8:
+                return  512000000;
+            case 9:
+                return 1024000000;
+            case 10:
+                return 2147483640;
+            default:
+                return 0;
+        }
+    }
+
+    @Override
     public int getMaxItemCount() {
-        return (int) (((Math.pow(6, mTier)) * 270000) - 128);
+        return CommonSizeCompute(mTier);
     }
 
     @Override
@@ -150,26 +189,30 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_TieredMach
 
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return aIndex==0&&(mInventory[0]==null||GT_Utility.areStacksEqual(this.mInventory[0], aStack));
+        return aIndex==0&&(mInventory[0]==null||GT_Utility.areStacksEqual(mInventory[0], aStack));
     }
-
+    protected String chestName(){
+        return "Quantum Chest";
+    }
     @Override
     public String[] getInfoData() {
 
-        if (mItemStack == null) {
+        if (getItemStack() == null) {
             return new String[]{
-                    "Quantum Chest",
+                    EnumChatFormatting.BLUE + chestName() + EnumChatFormatting.RESET,
                     "Stored Items:",
-                    "No Items",
-                    Integer.toString(0),
-                    Integer.toString(getMaxItemCount())};
+                    EnumChatFormatting.GOLD+ "No Items"+ EnumChatFormatting.RESET,
+                    EnumChatFormatting.GREEN + "0" + EnumChatFormatting.RESET+" "+
+                            EnumChatFormatting.YELLOW + Integer.toString(getMaxItemCount())+ EnumChatFormatting.RESET
+            };
         }
         return new String[]{
-                "Quantum Chest",
+                EnumChatFormatting.BLUE + chestName() + EnumChatFormatting.RESET,
                 "Stored Items:",
-                mItemStack.getDisplayName(),
-                Integer.toString(mItemCount),
-                Integer.toString(getMaxItemCount())};
+                EnumChatFormatting.GOLD + getItemStack().getDisplayName() + EnumChatFormatting.RESET,
+                EnumChatFormatting.GREEN + Integer.toString(getItemCount()) + EnumChatFormatting.RESET+" "+
+                        EnumChatFormatting.YELLOW + Integer.toString(getMaxItemCount())+ EnumChatFormatting.RESET
+        };
     }
 
     @Override
@@ -179,17 +222,17 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_TieredMach
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
-        aNBT.setInteger("mItemCount", this.mItemCount);
-        if (this.mItemStack != null)
-            aNBT.setTag("mItemStack", this.mItemStack.writeToNBT(new NBTTagCompound()));
+        aNBT.setInteger("mItemCount", getItemCount());
+        if (getItemStack() != null)
+            aNBT.setTag("mItemStack", getItemStack().writeToNBT(new NBTTagCompound()));
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         if (aNBT.hasKey("mItemCount"))
-            this.mItemCount = aNBT.getInteger("mItemCount");
+            setItemCount(aNBT.getInteger("mItemCount"));
         if (aNBT.hasKey("mItemStack"))
-            this.mItemStack = ItemStack.loadItemStackFromNBT((NBTTagCompound) aNBT.getTag("mItemStack"));
+            setItemStack(ItemStack.loadItemStackFromNBT((NBTTagCompound) aNBT.getTag("mItemStack")));
     }
 
     @Override
@@ -209,46 +252,47 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_TieredMach
         final ItemStack inputStack = input.getItemStack();
         if (inputStack == null)
             return null;
-        if (mItemStack != null) {
-            if (GT_Utility.areStacksEqual(mItemStack, inputStack)) {
-                if (input.getStackSize() + mItemCount > getMaxItemCount())
-                    return createOverflowStack(input.getStackSize() + mItemCount, mode);
-                else
-                    mItemCount += input.getStackSize();
+        ItemStack storedStack = getItemStack();
+        if (storedStack != null) {
+            if (GT_Utility.areStacksEqual(storedStack, inputStack)) {
+                if (input.getStackSize() + getItemCount() > getMaxItemCount())
+                    return createOverflowStack(input.getStackSize() + getItemCount(), mode);
+                else if (mode != appeng.api.config.Actionable.SIMULATE)
+                    setItemCount(getItemCount() + (int)input.getStackSize());
                 return null;
             } else
                 return input;
         } else {
-            if (mode == Actionable.MODULATE)
-                mItemStack = inputStack.copy();
+            if (mode != Actionable.SIMULATE)
+                setItemStack(inputStack.copy());
             if (input.getStackSize() > getMaxItemCount())
                 return createOverflowStack(input.getStackSize(), mode);
-            else if (mode == Actionable.MODULATE)
-                mItemCount = (int) input.getStackSize();
+            else if (mode != Actionable.SIMULATE)
+                setItemCount((int)input.getStackSize());
             return null;
         }
     }
 
     private IAEItemStack createOverflowStack(long size, Actionable mode) {
-        final IAEItemStack overflow = AEItemStack.create(mItemStack);
+        final IAEItemStack overflow = AEItemStack.create(getItemStack());
         overflow.setStackSize(size - getMaxItemCount());
-        if (mode == Actionable.MODULATE)
-            mItemCount = getMaxItemCount();
+        if (mode != Actionable.SIMULATE)
+            setItemCount(getMaxItemCount());
         return overflow;
     }
 
     @Override
     public IAEItemStack extractItems( final IAEItemStack request, final Actionable mode, final BaseActionSource src ) {
-        if (request.equals(mItemStack)) {
-            if (request.getStackSize() >= mItemCount) {
-                AEItemStack result = AEItemStack.create(mItemStack);
-                result.setStackSize(mItemCount);
-                if (mode == Actionable.MODULATE)
-                    mItemCount = 0;
+        if (request.equals(getItemStack())) {
+            if (request.getStackSize() >= getItemCount()) {
+                AEItemStack result = AEItemStack.create(getItemStack());
+                result.setStackSize(getItemCount());
+                if (mode != Actionable.SIMULATE)
+                    setItemCount(0);
                 return result;
             } else {
-                if (mode == Actionable.MODULATE)
-                    mItemCount -= (int) request.getStackSize();
+                if (mode != Actionable.SIMULATE)
+                    setItemCount(getItemCount() - (int) request.getStackSize());
                 return request.copy();
             }
         }
@@ -264,9 +308,10 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_TieredMach
     @Override
     public IItemList<IAEItemStack> getAvailableItems(final IItemList<IAEItemStack> out )
     {
-        if (mItemStack != null) {
-            AEItemStack s = AEItemStack.create(mItemStack);
-            s.setStackSize(mItemCount);
+        ItemStack storedStack = getItemStack();
+        if (storedStack != null) {
+            AEItemStack s = AEItemStack.create(storedStack);
+            s.setStackSize(getItemCount());
             out.add(s);
         }
         return out;
@@ -287,6 +332,6 @@ public class GT_MetaTileEntity_QuantumChest extends GT_MetaTileEntity_TieredMach
         }
     }
     public static void registerAEIntegration() {
-        AEApi.instance().registries().externalStorage().addExternalStorageInterface( new AEHandler() );
+        AEApi.instance().registries().externalStorage().addExternalStorageInterface( new GT_MetaTileEntity_QuantumChest.AEHandler() );
     }
 }
