@@ -43,7 +43,7 @@ public class Behaviour_ProspectorsBook
     public static HashSet<String> prospectingOres = new HashSet<>();
 
     static {
-        radius = 225;
+        radius = 144;
         near = radius / 3;
         near = near + near % 2; // making near value even;
         middle = near * 2;

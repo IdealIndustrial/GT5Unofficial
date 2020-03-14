@@ -9,6 +9,7 @@ import gregtech.api.objects.MaterialStack;
 import gregtech.api.util.*;
 import gregtech.common.items.behaviors.Behaviour_Arrow;
 import gregtech.common.items.behaviors.Behaviour_ProspectorsBook;
+import gregtech.common.items.behaviors.Behaviour_ProspectorsBook_Creative;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -48,7 +49,8 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
         ItemList.GelledToluene.set(addItem(tLastID = 10, "Gelled Toluene", "Raw Explosive", new Object[]{}));
 
         ItemList.ProspectorsBook.set(addItem(tLastID = 11, "Miner's Diary", "Tells a story of unknown miner ", new Object[]{new Behaviour_ProspectorsBook()}));
-        
+        ItemList.ProspectorsBookCreative.set(addItem(tLastID = 12,"Miner's Diary Generator","", new Object[]{new Behaviour_ProspectorsBook_Creative()}));
+
         ItemList.Bottle_Purple_Drink.set(addItem(tLastID = 100, "Purple Drink", "How about Lemonade. Or some Ice Tea? I got Purple Drink!", new Object[]{new GT_FoodStat(8, 0.2F, EnumAction.drink, ItemList.Bottle_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.moveSlowdown.id, 400, 1, 90}), new TC_Aspects.TC_AspectStack(TC_Aspects.VITREUS, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.AQUA, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.VINCULUM, 1L)}));
         ItemList.Bottle_Grape_Juice.set(addItem(tLastID = 101, "Grape Juice", "This has a cleaning effect on your internals.", new Object[]{new GT_FoodStat(4, 0.2F, EnumAction.drink, ItemList.Bottle_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.hunger.id, 400, 1, 60}), new TC_Aspects.TC_AspectStack(TC_Aspects.VITREUS, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.AQUA, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.SANO, 1L)}));
         ItemList.Bottle_Wine.set(addItem(tLastID = 102, "Wine", "Ordinary", new Object[]{new GT_FoodStat(2, 0.2F, EnumAction.drink, ItemList.Bottle_Empty.get(1L, new Object[0]), GregTech_API.sDrinksAlwaysDrinkable, false, false, new int[]{Potion.confusion.id, 400, 1, 60, Potion.heal.id, 0, 0, 60, Potion.poison.id, 200, 1, 5}), new TC_Aspects.TC_AspectStack(TC_Aspects.VITREUS, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.VENENUM, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.SANO, 1L)}));
