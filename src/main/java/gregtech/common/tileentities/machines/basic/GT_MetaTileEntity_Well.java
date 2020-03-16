@@ -46,9 +46,13 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
     private static ArrayList<Fluid> allowedFluids = new ArrayList<>();
     private FluidStack fluid = null;
     private int mProgresstime = 0;
+    private static double mEfficiency = 1f;
 
     public GT_MetaTileEntity_Well(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 0, "Slowly pumps up underbedrock water",
+        super(aID, aName, aNameRegional, aTier, 0, new String[]{
+                "Slowly pumps up underbedrock water",
+                "Needs clear "
+                },
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_SIDE_ACTIVE")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_SIDE")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_FRONT_ACTIVE")),
@@ -83,6 +87,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
         if(mProgresstime>=60){
             mProgresstime = 0;
             FluidStack fs = GT_UndergroundOil.undergroundOil(getBaseMetaTileEntity(),1f);
+            fs.amount *= mEfficiency;
             if(isFluidAllowed(fs.getFluid()) && testForAir()) {
                 if(fluid == null)
                     fluid = fs;
@@ -110,6 +115,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
         String s =  aConfig.get(ConfigCategories.machineconfig,"well.allowedFluids","water|oil");
+        mEfficiency = aConfig.get(ConfigCategories.machineconfig,"well.efficiency",1.0f);
         String[] fs = s.split("\\|");
         for(String str : fs){
             allowedFluids.add(FluidRegistry.getFluid(str));
