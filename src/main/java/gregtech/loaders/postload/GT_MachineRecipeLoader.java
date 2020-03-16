@@ -53,7 +53,7 @@ public class GT_MachineRecipeLoader implements Runnable {
     private final static String aTextEBXL = "ExtrabiomesXL"; private final static String aTextTCGTPage = "gt.research.page.1.";
     private final static Boolean isNEILoaded = Loader.isModLoaded("NotEnoughItems");
     
-    public void run() {
+    public void run() {		//Write new recipes in run2, this method is full
         GT_Log.out.println("GT_Mod: Adding non-OreDict Machine Recipes.");
         try {
             GT_Utility.removeSimpleIC2MachineRecipe(GT_Values.NI, ic2.api.recipe.Recipes.metalformerExtruding.getRecipes(), ItemList.Cell_Empty.get(3L, new Object[0]));
