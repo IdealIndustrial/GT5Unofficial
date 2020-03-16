@@ -211,7 +211,7 @@ public class Behaviour_ProspectorsBook
                 "tried to dig deeper, I almost swam in lava| "+
                 "When expanding the mine came across a cluster of gravel above me, I was almost buried alive.| " +
                 "In mine flooded one of lava lake with water. I hope one day I dig up enough diamonds or cobalt to mine resulting obsidian.| " +
-                "The trip to the mine turned out to be very productive -again-, I had to finish due to a lack of torches.| " +
+                "The trip to the mine turned out to be very productive , I had to finish due to a lack of torches.| " +
                 "Throughout my stay in the mine, I was annoyed by the peep of bats. It's pisses me off.| " +
                 "In the old mine, I came across a railroad. I’m thinking about getting a minecart.| " +
                 "In mine unearthed the nest of silverfish. Argh, they are small and weak, but there are so many.| " +
