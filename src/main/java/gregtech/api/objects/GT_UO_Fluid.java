@@ -3,6 +3,7 @@ package gregtech.api.objects;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import org.lwjgl.Sys;
 
 import java.util.Random;
 
@@ -55,7 +56,7 @@ public class GT_UO_Fluid {
 	public int getRandomAmount(Random aRandom){//generates some random ass number that correlates to extraction speeds
 		double min = Math.pow((MinAmount*100.d*DIVIDER),0.2);
 		double max = Math.pow(MaxAmount*100.d*DIVIDER,0.2);
-		double amount = Math.pow(min +(max == 0 ? 0 : (double)aRandom.nextInt((int)(10000*(max-min)))/10000),5);
+		double amount = Math.pow(min +(max == 0 ? 0 : (double)aRandom.nextInt((int)(10000*(max-min)+1))/10000),5);
 		return (int) (amount / 100);//reverses the computation above
 	}
 }

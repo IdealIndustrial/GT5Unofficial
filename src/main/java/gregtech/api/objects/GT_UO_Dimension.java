@@ -30,13 +30,16 @@ public class GT_UO_Dimension {
 	
 	public GT_UO_Fluid getRandomFluid (Random aRandom) {
 		int random = aRandom.nextInt(1000);
+		GT_UO_Fluid f = null;
 		for (BiMap.Entry<String, GT_UO_Fluid> fl : fFluids.entrySet()) {
 			int chance = fl.getValue().Chance*1000/maxChance;
-			if (random<=chance) return fl.getValue();
+			if (random<=chance)
+				return fl.getValue();
 			//System.out.println("GT UO "+fl.getValue().Registry+" Chance:"+chance+" Random:"+random);
 			random-=chance;
+			f = fl.getValue();
 		}
-		return null;
+		return f;
 	}
 
 }
