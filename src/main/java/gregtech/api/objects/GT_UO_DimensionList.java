@@ -54,6 +54,7 @@ public class GT_UO_DimensionList {
 		SetConfigValues("Overworld", "0", "liquid_medium_oil", "liquid_medium_oil", 0, 625, 20, 5);
 		SetConfigValues("Overworld", "0", "liquid_heavy_oil", "liquid_heavy_oil", 0, 625, 20, 4);
 		SetConfigValues("Overworld", "0", "oil", "oil", 0, 625, 20, 5);
+		SetConfigValues("Nether", "-1", "lava", "lava", 0, 625, 100, 5);
 		SetConfigValues("Moon", "Moon", "helium-3", "helium-3", 24, 128, 100, 1);
 	}
 	
@@ -66,9 +67,10 @@ public class GT_UO_DimensionList {
 		fConfig.setCategoryComment(fCategory, "Config Underground Fluids (Delete this Category for regenerate)");
 		fConfig.setCategoryComment(fCategory+".Default", "Set Default Generating (Use this Category for Default settings)");
 		fConfig.setCategoryComment(fCategory+".Overworld", "Set Overworld Generating");
+		fConfig.setCategoryComment(fCategory+".Nether", "Set Nether Generating");
 		fConfig.setCategoryComment(fCategory+".Moon", "Set Moon Generating");
 		
-		int[] BlackList = {-1,1};
+		int[] BlackList = {1};
 		BlackList = aConfig.get(fCategory, "DimBlackList", BlackList, "Dimension IDs Black List").getIntList();
 		java.util.Arrays.sort(BlackList);
 		
