@@ -15,10 +15,7 @@ import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
 import gregtech.api.objects.XSTR;
 import gregtech.api.util.*;
-import gregtech.common.GT_DummyWorld;
-import gregtech.common.GT_Network;
-import gregtech.common.GT_Proxy;
-import gregtech.common.GT_RecipeAdder;
+import gregtech.common.*;
 import gregtech.common.blocks.GT_Block_Ores_Abstract;
 import gregtech.common.entities.GT_Entity_Arrow;
 import gregtech.common.entities.GT_Entity_Arrow_Potion;
@@ -300,6 +297,7 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.costlyCableConnection = tMainConfig.get("general", "CableConnectionRequiresSolderingMaterial", false).getBoolean(false);
         gregtechproxy.mHardRadonRecipe = tMainConfig.get("general","HardRadonRecipe",false).getBoolean(false);
         gregtechproxy.disassemblerRecipeMapOn = tMainConfig.get("general","DisasssemblerRecipeMapEnabled", true).getBoolean(true);
+        gregtechproxy.enableFixQuestsCommand = tMainConfig.get("general", "EnableUpdateQuestsCommand", false).getBoolean(false);
 
         GT_LanguageManager.i18nPlaceholder = tMainConfig.get("general", "UsePlaceholderForMaterialNamesInLangFile", true).getBoolean(true);
 
@@ -1060,6 +1058,8 @@ public class GT_Mod implements IGT_Mod {
                 GT_OreDictUnificator.setStack(tOutput);
             }
         }
+        if(gregtechproxy.enableFixQuestsCommand)
+            aEvent.registerServerCommand(new CommandFixQuests());
         GregTech_API.mServerStarted = true;
         GT_Log.out.println("GT_Mod: ServerStarting-Phase finished!");
         GT_Log.ore.println("GT_Mod: ServerStarting-Phase finished!");

@@ -220,6 +220,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean mMoreComplicatedChemicalRecipes = false;
     public boolean mHardRadonRecipe = true;
     public boolean disassemblerRecipeMapOn = false;
+    public boolean enableFixQuestsCommand = false;
 
     
     public GT_Proxy() {
