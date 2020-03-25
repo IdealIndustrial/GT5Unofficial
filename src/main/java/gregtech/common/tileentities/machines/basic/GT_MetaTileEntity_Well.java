@@ -50,8 +50,10 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
 
     public GT_MetaTileEntity_Well(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 0, new String[]{
-                "Slowly pumps up underbedrock water",
-                "Needs clear "
+                "Requires an empty line to bedrock underneath",
+                "Allows the extraction of deep fluids",
+                "Filling rate depends on the volume of the field",
+                "Squeeze out a liquid in a bucket or a single cell"
                 },
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_SIDE_ACTIVE")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/well/OVERLAY_SIDE")),
@@ -144,17 +146,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
         else if(aID == 130)
             fluid = null;
     }
-
-    /*for (int i = 0; i < aTextures.length - 1; i++)
-            if (aTextures[i] != null) for (byte c = -1; c < 16; c++) {
-                if (rTextures[i][c + 1] == null) {
-                    if(i == 4) {
-                        rTextures[i][c + 1] = new ITexture[]{ null, aTextures[i]}; //null for fluid texture
-                    }
-                    else
-                        rTextures[i][c + 1] = new ITexture[]{aTextures[i]};
-                }
-            }*/
+    
     @Override
     public ITexture[][][] getTextureSet(ITexture[] aTextures) {
         ITexture[][][] rTextures = new ITexture[14][17][];
