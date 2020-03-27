@@ -1067,7 +1067,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Tin						.addOreByProducts(Iron					, Zinc					);
         Antimony				.addOreByProducts(Zinc					, Iron					);
         Silver					.addOreByProducts(Lead					, Sulfur				);
-        Lead					.addOreByProducts(Silver				, Sulfur				);
+        Lead					.addOreByProducts(Silver				, Bismuth				);
         Thorium					.addOreByProducts(Uranium				, Lead					);
         Plutonium				.addOreByProducts(Uranium				, Lead					);
         Electrum				.addOreByProducts(Gold					, Silver				);
