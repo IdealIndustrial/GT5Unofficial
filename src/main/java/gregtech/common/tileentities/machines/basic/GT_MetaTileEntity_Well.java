@@ -90,7 +90,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
             mProgresstime = 0;
             FluidStack fs = GT_UndergroundOil.undergroundOil(getBaseMetaTileEntity(),1f);
             fs.amount *= mEfficiency;
-            if(isFluidAllowed(fs.getFluid()) && testForAir()) {
+            if(isFluidAllowed(fs.getFluid())) {
                 if(fluid == null)
                     fluid = fs;
                 else
@@ -215,18 +215,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
         fluid = FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag("fFluid"));
     }
 
-    public boolean testForAir(){
-        int i = -1;
-        Block tBlock =getBaseMetaTileEntity().getBlockOffset(0,i,0);
-        while(tBlock!= Blocks.bedrock){
-            if(!tBlock.isAir(getBaseMetaTileEntity().getWorld(),getBaseMetaTileEntity().getXCoord(),getBaseMetaTileEntity().getYCoord()+i,getBaseMetaTileEntity().getZCoord()))
-                return false;
-            i--;
-            tBlock = getBaseMetaTileEntity().getBlockOffset(0,i,0);
 
-        }
-        return true;
-    }
 
     @Override
     public boolean doesFillContainers() {
