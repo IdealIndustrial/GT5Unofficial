@@ -60,6 +60,8 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
                 "1x Output Hatch (One of base casings)",
                 "1x Maintenance Hatch (One of base casings)",
                 "1x " + VN[getMinTier()] + "+ Energy Hatch (Any bottom layer casing)",
+		"At a base voltage = "+ VN[getMinTier()] + ", pumps 50% of nominal volume per cycle.",
+		"Increases pumped volume by 25% on each voltage tier over base.",
                 "Working on " + getRangeInChunks() + " * " + getRangeInChunks() + " chunks",
                 "Use Programmed Circuits to ignore near exhausted oil field"};
     }
