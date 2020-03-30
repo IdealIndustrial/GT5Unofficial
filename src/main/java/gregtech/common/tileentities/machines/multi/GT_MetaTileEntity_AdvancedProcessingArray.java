@@ -56,7 +56,9 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                 "1x Maintenance Hatch (Any casing)",
                 "1x Energy Hatch (Any casing)",
                 "Robust HSS-G Machine Casings for the rest (70 at least!)",
-                "Place up to 64 Single Block GT Machines into the Controller Inventory"};
+                "Place up to 16 Single Block GT Machines into the Controller Inventory",
+                "Screwdriver rightclick to process all buses separately",
+                "Screwdriver rightclick while sneaking enables fluid autocanning"};
     }
 
     @Override
