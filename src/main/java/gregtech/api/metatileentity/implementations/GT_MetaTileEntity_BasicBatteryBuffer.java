@@ -317,7 +317,7 @@ public class GT_MetaTileEntity_BasicBatteryBuffer extends GT_MetaTileEntity_Tier
         return new String[]{
                 EnumChatFormatting.YELLOW+getLocalName()+EnumChatFormatting.RESET,
                 "Stored Items:",
-                EnumChatFormatting.YELLOW+GT_Utility.formatNumbers(mStored) +EnumChatFormatting.RESET+ " EU / "+
+                EnumChatFormatting.YELLOW+GT_Utility.formatNumbers(mStored) +EnumChatFormatting.RESET+ " EU",
                 EnumChatFormatting.GREEN+GT_Utility.formatNumbers(mMax) +EnumChatFormatting.RESET+ " EU",
                 "Average input:",
                 EnumChatFormatting.GOLD+GT_Utility.formatNumbers(getBaseMetaTileEntity().getAverageElectricInput())+" EU/t",
