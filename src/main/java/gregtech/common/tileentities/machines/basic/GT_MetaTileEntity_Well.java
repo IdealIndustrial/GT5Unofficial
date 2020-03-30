@@ -50,7 +50,6 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
 
     public GT_MetaTileEntity_Well(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 0, new String[]{
-                "Requires an empty line to bedrock underneath",
                 "Allows the extraction of deep fluids",
                 "Filling rate depends on the volume of the field",
                 "Squeeze out a liquid in a bucket or a single cell"
