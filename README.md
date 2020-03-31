@@ -13,7 +13,7 @@ and in [II Modpack release](https://yadi.sk/d/y6jW8SH6mjuAV)
 ## Installation
 
 GT5-II like GT5U requires IndustrialCraft2-experimental. Version 2.2.780-experimental or newer is recommended.
-Latest forde version for 1.7.10 is recommended.
+Latest Forge version for 1.7.10 is recommended.
 Place the downloaded jar file into your mods/ folder.
 
 ## Issues
