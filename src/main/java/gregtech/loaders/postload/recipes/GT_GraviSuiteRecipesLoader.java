@@ -37,6 +37,21 @@ public class GT_GraviSuiteRecipesLoader implements Runnable {
 			'E', GT_ModHandler.getModItem("IC2","itemBatCrystal", 1L, GT_Values.W),  
 			'W', OrePrefixes.wireGt04.get(Materials.Platinum), 
 			'P', OrePrefixes.circuit.get(Materials.Data)});
+	    
+	    GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "ultimateLappack", 1, GT_Values.W));
+            GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("GraviSuite", "ultimateLappack", 1, GT_Values.W), 
+			new Object[]{"LPL", "LJL", "LSL", 
+			'P', OrePrefixes.plateAlloy.get(Materials.Iridium), 
+			'J', GT_ModHandler.getModItem("IC2","itemArmorEnergypack", 1L, GT_Values.W), 
+			'L', GT_ModHandler.getModItem("IC2","itemBatLamaCrystal", 1L, GT_Values.W),  
+			'S', GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem",1L, 1)});
+			
+            GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("GraviSuite", "ultimateLappack", 1, GT_Values.W), 
+			new Object[]{"LPL", "LJL", "LSL", 
+			'P', OrePrefixes.plateAlloy.get(Materials.Iridium), 
+			'J', GT_ModHandler.getModItem("GraviSuite", "advLappack", 1L, GT_Values.W), 
+			'L', GT_ModHandler.getModItem("IC2","itemBatLamaCrystal", 1L, GT_Values.W),  
+			'S', GT_ModHandler.getModItem("GraviSuite", "itemSimpleItem",1L, 1)});	    
             
             GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "advJetpack", 1, GT_Values.W));
             GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("GraviSuite", "advJetpack", 1, GT_Values.W), 
