@@ -5,6 +5,8 @@ import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.util.GT_ModHandler;
+import gregtech.api.enums.ItemList;
+import gregtech.api.enums.ToolDictNames;
 
 public class GT_GraviSuiteRecipesLoader implements Runnable {
 
