@@ -80,3 +80,6 @@ gradlew.bat
 # Linux
 *~
 
+# Libs
+!/libs/*
+

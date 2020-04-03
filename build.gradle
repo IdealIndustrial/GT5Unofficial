@@ -1,14 +1,18 @@
 buildscript {
     repositories {
         mavenCentral()
+		maven {
+			name = "MavenRepo"
+			url = "https://repo.maven.apache.org/maven2"
+		}
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
+       /* maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        }*/
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
@@ -50,10 +54,10 @@ repositories {
         name 'Forge'
         url 'http://files.minecraftforge.net/maven'
     }
-    maven {
+    /*maven {
         name = "chickenbones"
         url = "http://chickenbones.net/maven/"
-    }
+    }*/
     maven {
         name = "ic2, forestry"
         url = "http://maven.ic2.player.to/"
@@ -100,16 +104,16 @@ dependencies {
 //${config.ae2.version}:dev") {
       //  exclude module: '*'
   //  }
-    provided "codechicken:CodeChickenLib:${config.minecraft.version}-${config.codechickenlib.version}:dev"
+   /* provided "codechicken:CodeChickenLib:${config.minecraft.version}-${config.codechickenlib.version}:dev"
 	provided "codechicken:CodeChickenCore:${config.minecraft.version}-${config.codechickencore.version}:dev"
-    provided "codechicken:NotEnoughItems:${config.minecraft.version}-${config.nei.version}:dev"
+    provided "codechicken:NotEnoughItems:${config.minecraft.version}-${config.nei.version}:dev"*/
     provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
     provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
     provided "applecore:AppleCore:${config.applecore.version}:api"
-    provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
-    provided ("com.enderio:EnderIO:${config.enderio.version}:dev") {
+  //  provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
+ /*   provided ("com.enderio:EnderIO:${config.enderio.version}:dev") {
         transitive = false
-    }
+    }*/
     provided name: 'buildcraft', version: config.buildcraft.version, classifier: "dev", ext: 'jar'
     // provided name: 'CoFHLib', version: config.cofhlib.version, ext: 'jar'
     // provided name: 'CoFHCore', version: config.cofhcore.version, ext: 'jar'
