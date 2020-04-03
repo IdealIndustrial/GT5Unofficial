@@ -7,6 +7,7 @@ import gregtech.api.enums.*;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
+import gregtech.api.util.GT_Utility;
 import ic2.core.Ic2Items;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -147,6 +148,17 @@ public class GT_IndustialCraftRecipesLoader implements Runnable {
         GT_ModHandler.removeRecipe(GT_ModHandler.getIC2Item("miningPipe", 8));
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getIC2Item("miningPipe", 1), new Object[]{"hPf", 'P', OrePrefixes.pipeSmall.get(Materials.Steel)});
         GT_Values.RA.addWiremillRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeTiny, Materials.Steel, 1), GT_ModHandler.getIC2Item("miningPipe", 1), 200, 16);
+        
+        //More recipes for mining pipe
+		GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeTiny, Materials.Steel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 1), 1, 64);
+        GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeSmall, Materials.Steel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 2), 4, 64);
+        GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Steel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 4), 8, 64);
+        GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeLarge, Materials.Steel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 8), 16, 64);
+        GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeHuge, Materials.Steel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 16), 32, 64);
+        GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeTiny, Materials.StainlessSteel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 8), 4, 120);
+        GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeSmall, Materials.StainlessSteel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 16), 8, 120);
+        GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.StainlessSteel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 32), 16, 120);
+        GT_Values.RA.addExtruderRecipe(GT_OreDictUnificator.get(OrePrefixes.pipeLarge, Materials.StainlessSteel, 1L), ItemList.Shape_Extruder_Pipe_Tiny.get(0L), GT_ModHandler.getIC2Item("miningPipe", 64), 32, 120);
 
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getIC2Item("luminator", 16L), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{"RTR", "GHG", "GGG", 'H', OrePrefixes.cell.get(Materials.Helium), 'T', OrePrefixes.ingot.get(Materials.Tin), 'R', OrePrefixes.ingot.get(Materials.Iron), 'G', new ItemStack(Blocks.glass, 1)});
         GT_ModHandler.addCraftingRecipe(GT_ModHandler.getIC2Item("luminator", 16L), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{"RTR", "GHG", "GGG", 'H', OrePrefixes.cell.get(Materials.Mercury), 'T', OrePrefixes.ingot.get(Materials.Tin), 'R', OrePrefixes.ingot.get(Materials.Iron), 'G', new ItemStack(Blocks.glass, 1)});
@@ -236,5 +248,52 @@ public class GT_IndustialCraftRecipesLoader implements Runnable {
         if (GregTech_API.sRecipeFile.get(ConfigCategories.Recipes.disabledrecipes, "QBoots", false)) {
             GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("quantumBoots", 1L));
         }
+        //Ic2 ArmorBatpack/Energypack/NightvisionGoggles
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1L));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorAdvBatpack", 1L));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorEnergypack", 1L));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemAdvBat", 1L));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemNightvisionGoggles", 1L));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorJetpackElectric", 1, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2", "itemArmorJetpack", 1L));
+        GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, GT_Values.W), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"RCR", "RAR", "RTR", 'R', GT_ModHandler.getModItem("IC2", "itemBatREDischarged", 1, 0), 'C', OrePrefixes.circuit.get(Materials.Basic), 'A',  ItemList.IC2_Item_Casing_Steel,  'T', OrePrefixes.wireGt02.get(Materials.Tin)});
+        GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorAdvBatpack", 1, GT_Values.W), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"RCR", "RAR", "RTR", 'R', GT_ModHandler.getModItem("IC2", "itemAdvBat", 1, GT_Values.W), 'C', OrePrefixes.circuit.get(Materials.Good), 'A',  GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, GT_Values.W),  'T', OrePrefixes.wireGt04.get(Materials.AnnealedCopper)});
+        GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorEnergypack", 1, GT_Values.W), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"CSC", "EXE", "STS", 'E', GT_ModHandler.getModItem("IC2", "itemBatCrystal", 1, GT_Values.W), 'C', OrePrefixes.circuit.get(Materials.Advanced), 'X',  GT_ModHandler.getModItem("IC2", "itemArmorAdvBatpack", 1, GT_Values.W),  'T', OrePrefixes.wireGt08.get(Materials.Gold), 'S', ItemList.IC2_Item_Casing_Steel});
+        GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorJetpackElectric", 1, GT_Values.W), new Object[] {"SCS", "MBM", "EWE", 'S', ItemList.IC2_Item_Casing_Steel,  'C', OrePrefixes.circuit.get(Materials.Advanced),  'M', ItemList.Electric_Motor_HV,  'B', GT_ModHandler.getModItem("IC2", "itemArmorBatpack", 1, GT_Values.W), 'W', OrePrefixes.wireGt04.get(Materials.AnnealedCopper), 'E', OrePrefixes.rotor.get(Materials.StainlessSteel)});
+        GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemArmorJetpack", 1, GT_Values.W), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[] {"SXS", "TCT", "EZE", 'S', ItemList.IC2_Item_Casing_Steel,  'X', OrePrefixes.circuit.get(Materials.Advanced),  'T', ItemList.Large_Fluid_Cell_Steel.get(1), 'C', GT_ModHandler.getModItem("IC2", "reactorCoolantSix", 1, 1), 'Z', OrePrefixes.pipeMedium.get(Materials.Steel), 'E', OrePrefixes.rotor.get(Materials.StainlessSteel)});
+        GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("IC2", "itemNightvisionGoggles", 1, GT_Values.W), new Object[] {"AXA", "RBR", "SdS", 'A', GT_ModHandler.getModItem("IC2", "reactorHeatSwitchDiamond", 1, 1),  'X', OrePrefixes.screw.get(Materials.StainlessSteel),  'B', OrePrefixes.bolt.get(Materials.StainlessSteel), 'R', OrePrefixes.ring.get(Materials.StainlessSteel), 'S', OrePrefixes.lens.get(Materials.Olivine)});
+        //Ic2 ChargeCrystal
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2","itemBatChargeRE", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2","itemBatChargeAdv", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2","itemBatChargeCrystal", 1L, GT_Values.W));
+        GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("IC2","itemBatChargeLamaCrystal", 1L, GT_Values.W));
+
+		GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_ModHandler.getModItem("IC2", "blockElectric", 1L, 0), 
+		ItemList.Sensor_LV.get(1, new Object(){}),
+		GT_ModHandler.getModItem("IC2", "reactorHeatSwitch", 1L, 1),
+		GT_Utility.getIntegratedCircuit(3)}, 
+		Materials.SolderingAlloy.getMolten(144L), 
+		GT_ModHandler.getModItem("IC2", "itemBatChargeRE", 1L, 0), 200, 30);
+		
+		GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_ModHandler.getModItem("IC2", "blockElectric", 1L, 7),
+		ItemList.Sensor_MV.get(1, new Object(){}),
+		GT_ModHandler.getModItem("IC2", "reactorHeatSwitch", 1L, 1),
+		GT_Utility.getIntegratedCircuit(3)},
+		Materials.SolderingAlloy.getMolten(288L), 
+		GT_ModHandler.getModItem("IC2", "itemBatChargeAdv", 1L, 0), 200, 120);
+		
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_ModHandler.getModItem("IC2", "blockElectric", 1L, 1),
+		ItemList.Sensor_HV.get(1, new Object(){}),
+		GT_ModHandler.getModItem("IC2", "reactorHeatSwitchSpread", 1L, 1),
+		GT_Utility.getIntegratedCircuit(3)},
+		Materials.SolderingAlloy.getMolten(576L), 
+		GT_ModHandler.getModItem("IC2", "itemBatChargeCrystal", 1L, 0), 200, 480);
+		
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_ModHandler.getModItem("IC2", "blockElectric", 1L, 2),
+		ItemList.Sensor_EV.get(1, new Object(){}),
+		GT_ModHandler.getModItem("IC2", "reactorHeatSwitchDiamond", 1L, 1),
+		GT_Utility.getIntegratedCircuit(3)},
+		Materials.SolderingAlloy.getMolten(1440L), 
+		GT_ModHandler.getModItem("IC2", "itemBatChargeLamaCrystal", 1L, 0), 200, 1920);	        
     }
 }
