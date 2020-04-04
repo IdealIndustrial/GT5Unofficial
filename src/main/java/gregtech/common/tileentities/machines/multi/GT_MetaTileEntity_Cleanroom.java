@@ -35,11 +35,16 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 "Controller Block for the Cleanroom",
                 "Min(WxHxD): 3x4x3 (Hollow), Max(WxHxD): 15x15x15 (Hollow)",
                 "Controller (Top center)",
-                "Top besides contoller and edges Filter Machine Casings",
-                "1 Reinforced Door (keep closed for 100% efficency",
-                "1x LV+ Energy Hatch(40EU/t startup, 4EU/t keepup), 1x Maintainance Hatch",
-                "Up to 10 Machine Hulls to transfer Items & Energy through walls",
-                "Remaining Blocks Plascrete"};
+                "Top besides contoller and edges: Filter Casings",
+                "1 Reinforced Door (keep closed for 100% efficency)",
+				"1x LV or 1x MV Energy Hatch, 1x Maintainance Hatch",
+				"Up to 20 Machine Hull Item & Energy transfer through walls",
+				"Remaining Blocks: Plascrete, 20 min",
+				GT_Values.cleanroomGlass+"% of the Plascrete can be Reinforced Glass (min 20 Plascrete still apply)",
+				"Consumes 40 EU/t when first turned on and 4 EU/t once at 100% efficiency",
+				"An energy hatch accepts up to 2A, so you can use 2A LV or 1A MV",
+				"2 LV batteries + 1 LV generator or 1 MV generator",
+				"Make sure your Energy Hatch matches!"};
     }
 
     public boolean checkRecipe(ItemStack aStack) {
@@ -56,6 +61,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         int mDoorCount = 0;
         int mHullCount = 0;
         int mPlascreteCount = 0;
+        int mGlassCount = 0;
         boolean doorState = false;
         mUpdate = 100;
         for (int i = 1; i < 8; i++) {
@@ -101,6 +107,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                             }
                         } else if (tBlock == GregTech_API.sBlockReinforced && tMeta == 2) {
                             mPlascreteCount++;
+                        } else if (tBlock != null && tBlock.getUnlocalizedName().equals("blockAlloyGlass")){
+							++mGlassCount;    
                         } else {
                             IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(dX, dY, dZ);
                             if ((!addMaintenanceToMachineList(tTileEntity, 82)) && (!addEnergyInputToMachineList(tTileEntity, 82))) {
@@ -152,6 +160,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         for(byte i = 0 ; i<6 ; i++){
         	byte t = (byte) Math.max(1, (byte)(15/(10000f / mEfficiency)));
         aBaseMetaTileEntity.setInternalOutputRedstoneSignal(i, t);
+		float ratio = (((float)mPlascreteCount)/100f)* GT_Values.cleanroomGlass;
+        return mPlascreteCount>=20 && mGlassCount < (int) Math.floor(ratio);            
         }
         
         return true;
