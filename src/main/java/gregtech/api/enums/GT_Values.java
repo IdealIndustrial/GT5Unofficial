@@ -112,4 +112,8 @@ public class GT_Values {
      * If you have to give something a World Parameter but there is no World... (Dummy World)
      */
     public static World DW;
+    /**
+     * This will set the percentage how much ReinforcedGlass is Allowed in Cleanroom Walls.
+     */
+    public static float cleanroomGlass = 35.0f;    
 }
