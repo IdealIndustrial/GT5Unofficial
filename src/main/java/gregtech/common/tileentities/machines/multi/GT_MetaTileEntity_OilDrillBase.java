@@ -11,10 +11,16 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.lang.Math;
 
 import static gregtech.api.enums.GT_Values.VN;
 import static gregtech.common.GT_UndergroundOil.undergroundOil;
 import static gregtech.common.GT_UndergroundOil.undergroundOilReadInformation;
+
+import net.minecraft.util.EnumChatFormatting;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
+import static gregtech.api.enums.GT_Values.VN;
+import net.minecraft.util.StatCollector;
 
 public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_DrillerBase {
 
@@ -87,21 +93,21 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
 
     @Override
     protected boolean workingAtBottom(ItemStack aStack, int xDrill, int yDrill, int zDrill, int xPipe, int zPipe, int yHead, int oldYHead) {
-    	switch (tryLowerPipe(true)) {
-    	case 0: workState = STATE_DOWNWARD; setElectricityStats(); return true;
-    	case 3: workState = STATE_UPWARD; return true;
-    	}
-    	
-    	if (reachingVoidOrBedrock() && tryFillChunkList()) {
-    		float speed = .5F+(GT_Utility.getTier(getMaxInputVoltage()) - getMinTier()) *.25F;
+        switch (tryLowerPipe(true)) {
+            case 0: workState = STATE_DOWNWARD; setElectricityStats(); return true;
+            case 3: workState = STATE_UPWARD; return true;
+        }
+        
+        if (reachingVoidOrBedrock() && tryFillChunkList()) {
+            float speed = .5F+(GT_Utility.getTier(getMaxInputVoltage()) - getMinTier()) *.25F;
             FluidStack tFluid = pumpOil(speed);
             if (tFluid != null && tFluid.amount > getTotalConfigValue()){
                 this.mOutputFluids = new FluidStack[]{tFluid};
                 return true;
             }
-    	}
-    	workState = STATE_UPWARD;
-    	return true;
+        }
+        workState = STATE_UPWARD;
+        return true;
     }
 
     private boolean tryFillChunkList(){
@@ -111,14 +117,15 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
             if (tFluid == null) return false;
             mOilId = tFluid.getFluidID();
         }
+        
         tOil = new FluidStack(FluidRegistry.getFluid(mOilId), 0);
 
         if (mOilFieldChunks.isEmpty()) {
             Chunk tChunk = getBaseMetaTileEntity().getWorld().getChunkFromBlockCoords(getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
             int range = getRangeInChunks();
-            int xChunk = (tChunk.xPosition / range) * range - ((tChunk.xPosition < 0 && tChunk.xPosition % range != 0) ? range : 0);
-            int zChunk = (tChunk.zPosition / range) * range - ((tChunk.zPosition < 0 && tChunk.zPosition % range != 0) ? range : 0);
-
+            int xChunk = Math.floorDiv(tChunk.xPosition,range) * range;
+            int zChunk = Math.floorDiv(tChunk.zPosition,range) * range;
+            
             for (int i = 0; i < range; i++) {
                 for (int j = 0; j < range; j++) {
                     tChunk = getBaseMetaTileEntity().getWorld().getChunkFromChunkCoords(xChunk + i, zChunk + j);
@@ -128,20 +135,51 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
                     }
                 }
             }
-        }
-        if (mOilFieldChunks.isEmpty()) return false;
-        return true;
+		}
+        return !mOilFieldChunks.isEmpty();		
     }
 
-    private FluidStack pumpOil(float speed){
+    private FluidStack pumpOil(float speed) {
         if (mOilId <= 0) return null;
+        
         FluidStack tFluid, tOil;
         tOil = new FluidStack(FluidRegistry.getFluid(mOilId), 0);
+        ArrayList<Chunk> emptyChunks = new ArrayList<Chunk>();
+        
         for (Chunk tChunk : mOilFieldChunks) {
-        	tFluid = undergroundOil(tChunk, speed);
-            if (tFluid == null) mOilFieldChunks.remove(tChunk);
+            tFluid = undergroundOil(tChunk, speed);
+            if (tFluid == null || tFluid.amount<1) emptyChunks.add(tChunk);
             if (tOil.isFluidEqual(tFluid)) tOil.amount += tFluid.amount;
         }
+        
+        for(Chunk tChunk : emptyChunks) {
+            mOilFieldChunks.remove(tChunk);
+        }
+        
         return tOil.amount == 0 ? null : tOil;
     }
+    @Override
+    public String[] getInfoData() {
+
+    long storedEnergy=0;
+    long maxEnergy=0;
+    for(GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) {
+        if (isValidMetaTileEntity(tHatch)) {
+            storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
+            maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+        }
+    }
+
+    return new String[]{
+    		StatCollector.translateToLocal("GT5U.multiblock.Progress")+": " +EnumChatFormatting.GREEN + Integer.toString(mProgresstime/20) + EnumChatFormatting.RESET +" s / "+
+		EnumChatFormatting.YELLOW + Integer.toString(mMaxProgresstime/20) + EnumChatFormatting.RESET +" s",
+		StatCollector.translateToLocal("GT5U.multiblock.energy")+": " +EnumChatFormatting.GREEN + Long.toString(storedEnergy) + EnumChatFormatting.RESET +" EU / "+
+		EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET +" EU",
+		StatCollector.translateToLocal("GT5U.multiblock.usage")+": "+EnumChatFormatting.RED + Integer.toString(-mEUt) + EnumChatFormatting.RESET + " EU/t"+" "+EnumChatFormatting.YELLOW+VN[GT_Utility.getTier(getMaxInputVoltage())]+ EnumChatFormatting.RESET,
+		StatCollector.translateToLocal("GT5U.multiblock.problems")+": "+
+		EnumChatFormatting.RED+ (getIdealStatus() - getRepairStatus())+EnumChatFormatting.RESET+
+		" "+StatCollector.translateToLocal("GT5U.multiblock.efficiency")+": "+
+		EnumChatFormatting.YELLOW+Float.toString(mEfficiency / 100.0F)+EnumChatFormatting.RESET + " %"
+		};
+	}
 }
