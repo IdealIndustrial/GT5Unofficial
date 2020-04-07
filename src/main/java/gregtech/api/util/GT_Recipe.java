@@ -262,6 +262,13 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         }
     }
 
+    public GT_Recipe(ItemStack aInput1, ItemStack aOutput1, int aDuration, int aEUt, int VACUUM) {
+        this(true, new ItemStack[]{aInput1}, new ItemStack[]{aOutput1}, null, null, null, null, Math.max(aDuration, 1), aEUt, 0);
+        if (mInputs.length > 0 && mOutputs[0] != null) {
+            GT_Recipe_Map.sVacuumRecipes.addRecipe(this);
+        }
+    }	
+	
     public static void reInit() {
         GT_Log.out.println("GT_Mod: Re-Unificating Recipes.");
         for (GT_Recipe_Map tMapEntry : GT_Recipe_Map.sMappings) tMapEntry.reInit();
@@ -542,7 +549,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map sBlastRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(500), "gt.recipe.blastfurnace", "Blast Furnace", null, RES_PATH_GUI + "basicmachines/Default", 2, 2, 1, 0, 1, "Heat Capacity: ", 1, " K", false, true);
         public static final GT_Recipe_Map sPrimitiveBlastRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(500), "gt.recipe.primitiveblastfurnace", "Primitive Blast Furnace", null, RES_PATH_GUI + "basicmachines/Default", 3, 3, 1, 0, 1, E, 1, E, false, true);
         public static final GT_Recipe_Map sImplosionRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(50), "gt.recipe.implosioncompressor", "Implosion Compressor", null, RES_PATH_GUI + "basicmachines/Default", 2, 2, 2, 0, 1, E, 1, E, true, true);
-        public static final GT_Recipe_Map sVacuumRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(100), "gt.recipe.vacuumfreezer", "Vacuum Freezer", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 1, 0, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sVacuumRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(500), "gt.recipe.vacuumfreezer", "Vacuum Freezer", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sChemicalRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(100), "gt.recipe.chemicalreactor", "Chemical Reactor", null, RES_PATH_GUI + "basicmachines/ChemicalReactor", 2, 2, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sMultiblockChemicalRecipes = new GT_Recipe_Map_LargeChemicalReactor();
         public static final GT_Recipe_Map sDistillationRecipes = new GT_Recipe_Map_DistillationTower();

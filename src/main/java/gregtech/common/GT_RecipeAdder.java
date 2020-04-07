@@ -478,6 +478,17 @@ public class GT_RecipeAdder
         return false;
     }
 
+    public boolean addVacuumFreezerRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration, int aEUt) {
+        if ((aInput1 == null) || (aOutput1 == null)) {
+            return false;
+        }
+        if ((aDuration = GregTech_API.sRecipeFile.get("vacuumfreezer", aInput1, aDuration)) <= 0) {
+            return false;
+        }
+        new GT_Recipe(aInput1, aOutput1, aDuration, aEUt, 0);//Since all other methods are taken
+        return true;
+    }	
+	
     public boolean addVacuumFreezerRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration) {
         if ((aInput1 == null) || (aOutput1 == null)) {
             return false;
