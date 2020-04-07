@@ -74,6 +74,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -216,6 +218,10 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean ic2EnergySourceCompat = true;
     public boolean costlyCableConnection = false;
     public boolean mMoreComplicatedChemicalRecipes = false;
+    public boolean mHardRadonRecipe = true;
+    public boolean disassemblerRecipeMapOn = false;
+    public boolean enableFixQuestsCommand = false;
+
     
     public GT_Proxy() {
         GameRegistry.registerFuelHandler(this);
@@ -1770,13 +1776,22 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public void activateOreDictHandler() {
+        final Logger GT_FML_LOGGER = LogManager.getLogger("GregTech");
         this.mOreDictActivated = true;
         ProgressManager.ProgressBar progressBar = ProgressManager.push("Register materials", mEvents.size());
+        int sizeStep = mEvents.size()/20-1;
+        int size = 5;
         OreDictEventContainer tEvent;
         for (Iterator i$ = this.mEvents.iterator(); i$.hasNext(); registerRecipes(tEvent)) {
             tEvent = (OreDictEventContainer) i$.next();
-            
+            sizeStep--;
             progressBar.step(tEvent.mMaterial == null ? "" : tEvent.mMaterial.toString());
+            if( sizeStep == 0 )
+            {
+                GT_FML_LOGGER.info("Baking : " + size + "%", new Object[0]);
+                sizeStep = mEvents.size()/20-1;
+                size += 5;
+            }
         }
         ProgressManager.pop(progressBar);
     }

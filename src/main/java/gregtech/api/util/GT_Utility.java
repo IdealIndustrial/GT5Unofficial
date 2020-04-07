@@ -531,6 +531,17 @@ public class GT_Utility {
         return 0;
     }
 
+    public  static  byte moveSomeItemStacks(Object aTileEntity1, Object aTileEntity2, byte aGrabFrom, byte aPutTo, List<ItemStack> aFilter, boolean aInvertFilter, byte aMaxTargetStackSize, byte aMinTargetStackSize, byte aMaxMoveAtOnce, byte aMinMoveAtOnce, byte aTimes) {
+        byte movedItems = 0;
+        if (aTileEntity1 instanceof IInventory){
+            for (byte i = 0; i < aTimes; i++) {
+                movedItems += moveOneItemStack((IInventory) aTileEntity1, aTileEntity2, aGrabFrom, aPutTo, aFilter, aInvertFilter, aMaxTargetStackSize, aMinTargetStackSize, aMaxMoveAtOnce, aMinMoveAtOnce, true);
+            }
+            return movedItems;
+        }
+        return 0;
+    }
+
     /**
      * This is only because I needed an additional Parameter for the Double Chest Check.
      */
@@ -2152,7 +2163,10 @@ public class GT_Utility {
             ArrayList<String> tOilsTransformed = new ArrayList<String>(aOils.size());
             for (String aStr : aOils) {
             	String[] aStats = aStr.split(",");
-            	tOilsTransformed.add(aStats[0] + ": " + aStats[1] + "L " + aStats[2]);
+            	if(aStats[1].equals("0-0"))
+            	    tOilsTransformed.add(aStats[0] + ": Nothing");
+                else
+            	    tOilsTransformed.add(aStats[0] + ": " + aStats[1] + "L " + aStats[2]);
             }
             
             tNBT.setString("prospection_oils", joinListToString(tOilsTransformed));
