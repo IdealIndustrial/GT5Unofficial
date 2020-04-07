@@ -217,6 +217,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean gt6Cable = true;
     public boolean ic2EnergySourceCompat = true;
     public boolean costlyCableConnection = false;
+    public boolean mEasyEnderIOMaterialsRecipe = false;	
     public boolean mMoreComplicatedChemicalRecipes = false;
     public boolean mHardRadonRecipe = true;
     public boolean disassemblerRecipeMapOn = false;

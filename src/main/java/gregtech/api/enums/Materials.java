@@ -470,6 +470,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     Endstone = new Materials(808, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 255, 255, 255, 0, "Endstone", "Endstone", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeYellow);
     Netherrack = new Materials(807, TextureSet.SET_DULL, 		1.0F, 0, 0, 1, 200, 0, 0, 0, "Netherrack", "Netherrack", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeRed);
     SoulSand = new Materials(-1, TextureSet.SET_DULL, 			1.0F, 0, 0, 1, 255, 255, 255, 0, "Soulsand", "Soulsand", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeBrown);
+    
     /**
      * First Degree Compounds
      */
@@ -807,7 +808,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     PulsatingIron           = new Materials( 378, TextureSet.SET_METALLIC , 6.0F,256,3, 1|2|64|128,128, 246, 155,   0,   "PulsatingIron","Pulsating Iron",0,0,-1, 1800,  true, false,   4,   1,   1, Dyes.dyeLime, 1, Arrays.asList(new MaterialStack(Iron, 1), new MaterialStack(EnderPearl, 1), new MaterialStack(RedstoneAlloy, 1)));
     Enderium                = new Materials( 321, TextureSet.SET_DULL , 8.0F,   1500,3, 1|2|64|128,89, 145, 135,   0,   "Enderium","Enderium",0,0,4500, 4500,true, false,1,   1,   1, Dyes.dyeGreen, 1, Arrays.asList(new MaterialStack(EnderiumBase, 2), new MaterialStack(Thaumium, 1), new MaterialStack(EnderPearl, 1)), Arrays.asList(new TC_AspectStack(TC_Aspects.METALLUM, 2), new TC_AspectStack(TC_Aspects.ALIENIS, 1)));
     DarkSteel               = new Materials( 364, TextureSet.SET_METALLIC , 8.0F, 512,3, 1|2|64|128,80,70,  80,   0,   "DarkSteel","Dark Steel",0,0,-1, 1800,true, false,3,   1,   1, Dyes.dyePurple, 1, Arrays.asList(new MaterialStack(ElectricalSteel, 1), new MaterialStack(Coal, 1), new MaterialStack(Obsidian, 1)));
-	EndSteel				= new Materials(401, TextureSet.SET_METALLIC , 12.0F, 2688,4, 1|2|64|128, 223,217,165,0,"EndSteel","End Steel" , 0, 0, 940, 3600, true, false, 3, 1, 1, Dyes.dyeYellow , 1, Arrays.asList(new MaterialStack(DarkSteel, 1), new MaterialStack(Tungsten, 1), new MaterialStack(Endstone, 1)));
+	  EndSteel				        = new Materials(401, TextureSet.SET_METALLIC , 12.0F, 2688,4, 1|2|64|128, 223,217,165,0,"EndSteel","End Steel" , 0, 0, 940, 3600, true, false, 3, 1, 1, Dyes.dyeYellow , 1, Arrays.asList(new MaterialStack(DarkSteel, 1), new MaterialStack(Tungsten, 1), new MaterialStack(Endstone, 1)));
 
     
     /**
