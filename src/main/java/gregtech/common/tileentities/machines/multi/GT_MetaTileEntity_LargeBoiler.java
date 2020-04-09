@@ -47,7 +47,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 "3x4x3 of " +getCasingMaterial()+ " " +getCasingBlockType()+ " (Above Fireboxes, hollow, Min 24!)",
                 "1x3x1 of " +getCasingMaterial()+ " Pipe Casings (Inside the Hollow Machine Casings/Plated Bricks)",
                 "1x Fuel Input Hatch/Bus (Any Firebox)",
-                "1x Water Input Hatch (Any Firebox)",
+                "1x Water(Distilled Water) Input Hatch (Any Firebox)",
                 "1x Steam Output Hatch (Any Casing)",
                 "1x Maintenance Hatch (Any Firebox)",
                 "1x Muffler Hatch (Any Firebox)",
