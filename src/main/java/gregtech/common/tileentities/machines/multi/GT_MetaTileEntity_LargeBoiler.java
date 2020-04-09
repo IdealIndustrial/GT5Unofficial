@@ -49,8 +49,8 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 "1x Fuel Input Hatch/Bus (Any Firebox)",
                 "1x Input Hatch instead any Firebox for Water / Distilled Water",
                 "1x Steam Output Hatch (Any Casing)",
-                "1x Maintenance Hatch (Any Firebox)",
-                "1x Muffler Hatch (Any Firebox)",
+                "1x Maintenance Hatch instead any Firebox",
+                "1x Muffler Hatch instead any Firebox",
                 "Diesel fuels have 1/4 efficiency",
                 String.format("Takes %.2f seconds to heat up", 500.0 / getEfficiencyIncrease()),
                 "Causes up to " + 20 * getPollutionPerTick(null) + " Pollution per second"};
