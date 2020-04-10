@@ -22,7 +22,7 @@ import gregtech.common.entities.GT_Entity_Arrow_Potion;
 import gregtech.common.items.armor.components.LoadArmorComponents;
 import gregtech.common.items.behaviors.Behaviour_DataOrb;
 import gregtech.common.tileentities.machines.basic.GT_MetaTileEntity_Massfabricator;
-import gregtech.common.tileentities.storage.GT_MetaTileEntity_QuantumChest;
+import gregtech.common.tileentities.storage.GT_MetaTileEntity_DigitalChestBase;
 import gregtech.loaders.load.GT_CoverBehaviorLoader;
 import gregtech.loaders.load.GT_FuelLoader;
 import gregtech.loaders.load.GT_ItemIterator;
@@ -299,7 +299,7 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.mHardRadonRecipe = tMainConfig.get("general","HardRadonRecipe",false).getBoolean(false);
         gregtechproxy.disassemblerRecipeMapOn = tMainConfig.get("general","DisasssemblerRecipeMapEnabled", true).getBoolean(true);
         gregtechproxy.enableFixQuestsCommand = tMainConfig.get("general", "EnableUpdateQuestsCommand", false).getBoolean(false);
-        gregtechproxy.mEasyEnderIOMaterialsRecipe = tMainConfig.get("general","EasyEnderIOMaterialsRecipe",false).getBoolean(false);   
+        gregtechproxy.mEasyEnderIOMaterialsRecipe = tMainConfig.get("general","EasyEnderIOMaterialsRecipe",false).getBoolean(false);
         GT_LanguageManager.i18nPlaceholder = tMainConfig.get("general", "UsePlaceholderForMaterialNamesInLangFile", true).getBoolean(true);
 
         Materials[] tDisableOres = new Materials[]{Materials.Chrome, Materials.Naquadria, Materials.Silicon, Materials.Cobalt, Materials.Cadmium, Materials.Indium, Materials.Tungsten,
@@ -728,7 +728,7 @@ public class GT_Mod implements IGT_Mod {
             }
         }
         if (Loader.isModLoaded(MOD_ID_AE)) {
-            GT_MetaTileEntity_QuantumChest.registerAEIntegration();
+			GT_MetaTileEntity_DigitalChestBase.registerAEIntegration();
         }
         String tName = "";
         if (GregTech_API.sRecipeFile.get(ConfigCategories.Recipes.disabledrecipes, aTextIC2 + (tName = "blastfurnace"), true)) {
@@ -886,7 +886,6 @@ public class GT_Mod implements IGT_Mod {
                     GT_Recipe.GT_Recipe_Map.sReplicatorFakeRecipes.addFakeRecipe(false, null, ISmat0, ISmat1, new FluidStack[]{Materials.UUMatter.getFluid(tMaterial.getMass())}, null, (int) (tMaterial.getMass() * 512L), 32, 0);
                 }
             }
-
         }
         GT_Recipe.GT_Recipe_Map.sOrganicReplicatorFakeRecipes.addFakeRecipe(false,(new ItemStack[]{ItemList.IC2_Crop_Seeds.getWithName(1,"Instance seeds to duplicate(does not get consumed in progress)",new Object[0])}),(new ItemStack[]{ItemList.IC2_Crop_Seeds.getWithName(1,"Duplicated seeds; Chance equals efficiency")}),null, (new FluidStack[]{Materials.UUMatter.getFluid(1L)}),null,200,32,0);
         if (!GT_MetaTileEntity_Massfabricator.sRequiresUUA) GT_Recipe.GT_Recipe_Map.sMassFabFakeRecipes.addFakeRecipe(false, null, null, null, null, new FluidStack[]{Materials.UUMatter.getFluid(1L)}, GT_MetaTileEntity_Massfabricator.sDurationMultiplier, 256, 0);
@@ -905,7 +904,7 @@ public class GT_Mod implements IGT_Mod {
         
         addSolidFakeLargeBoilerFuels();
         GT_Recipe.GT_Recipe_Map_Disassembler.initCachedRecipes();
-        
+
         achievements = new GT_Achievements();
         GT_Log.out.println("GT_Mod: Loading finished, deallocating temporary Init Variables.");
         GregTech_API.sBeforeGTPreload = null;
