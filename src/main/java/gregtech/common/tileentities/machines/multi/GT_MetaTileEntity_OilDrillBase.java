@@ -87,7 +87,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
         this.mEfficiencyIncrease = 10000;
         int tier = Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
         this.mEUt = -3 * (1 << (tier << 1));
-        this.mMaxProgresstime = (workState == STATE_AT_BOTTOM ? (1280 * getRangeInChunks() * getRangeInChunks() / (1 << getMinTier())) : 80) / (1 << tier);
+        this.mMaxProgresstime = (workState == STATE_AT_BOTTOM ? 320 : 80) / (1 << tier);
         this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
     }
 
@@ -99,7 +99,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
         }
         
         if (reachingVoidOrBedrock() && tryFillChunkList()) {
-            float speed = .5F+(GT_Utility.getTier(getMaxInputVoltage()) - getMinTier()) *.25F;
+            float speed = 1f/getMinTier()/(getMinTier()>2?2:1);
             FluidStack tFluid = pumpOil(speed);
             if (tFluid != null && tFluid.amount > getTotalConfigValue()){
                 this.mOutputFluids = new FluidStack[]{tFluid};
