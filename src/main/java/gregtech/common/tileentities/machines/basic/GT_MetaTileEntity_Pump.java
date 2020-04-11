@@ -48,7 +48,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
                         "Pumping Area: " + (RADIUS[aTier]* 2 + 1) + "x" + (RADIUS[aTier] * 2 + 1),
                 "Uses: "+ENERGY[aTier]+" EU per tick",
                 "Pumps one fluid block each "+SPEED[aTier]+" ticks"}
-                                ,2,1,"Miner.png",
+                                ,2,2,"Pump.png",
                 new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ADV_PUMP),
                 new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ADV_PUMP),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/miner/OVERLAY_FRONT_ACTIVE")), new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/miner/OVERLAY_FRONT")),
