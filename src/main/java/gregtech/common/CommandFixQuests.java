@@ -28,12 +28,12 @@ public class CommandFixQuests extends CommandBase implements ICommandSender {
 
     @Override
     public String getCommandUsage(ICommandSender p_71518_1_) {
-        return null;
+        return "updates quests";
     }
 
     @Override
     public String getCommandSenderName() {
-        return null;
+        return "server";
     }
 
     @Override
