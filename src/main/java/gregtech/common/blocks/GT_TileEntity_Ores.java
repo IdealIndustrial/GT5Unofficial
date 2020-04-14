@@ -107,12 +107,7 @@ public class GT_TileEntity_Ores extends TileEntity implements ITexturedTileEntit
             } else if (!tBlock.isReplaceableOreGen(aWorld, aX, aY, aZ, Blocks.stone)) {
                 return false;
             }
-            aWorld.setBlock(aX, aY, aZ, tOreBlock, getHarvestData((short) aMetaData, ((GT_Block_Ores_Abstract) tOreBlock).getBaseBlockHarvestLevel(aMetaData % 16000 / 1000)), 0);
-            TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-            if ((tTileEntity instanceof GT_TileEntity_Ores)) {
-                ((GT_TileEntity_Ores) tTileEntity).mMetaData = ((short) aMetaData);
-                ((GT_TileEntity_Ores) tTileEntity).mNatural = true;
-            }
+            GT_Block_Ores_Abstract.setOreBlock(aWorld, aX, aY, aZ, (GT_Block_Ores_Abstract) tOreBlock, aMetaData);
             return true;
         }
         return false;
