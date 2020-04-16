@@ -274,4 +274,14 @@ public abstract class GT_MetaTileEntity_Buffer extends GT_MetaTileEntity_TieredM
     public boolean allowGeneralRedstoneOutput(){
     	return true;
     }
+
+    @Override
+    public boolean onWrenchRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        aWrenchingSide = GT_Utility.getOppositeSide(aWrenchingSide);
+        if (getBaseMetaTileEntity().isValidFacing(aWrenchingSide)) {
+            getBaseMetaTileEntity().setFrontFacing(aWrenchingSide);
+            return true;
+        }
+        return false;
+    }
 }
