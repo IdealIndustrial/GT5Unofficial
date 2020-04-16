@@ -17,7 +17,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
 public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBase {
-    private int mHeatingCapacity = 0;
     private int sizeX;
     private int sizeY;
     private int sizeZ;
