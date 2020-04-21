@@ -8,9 +8,7 @@ import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
-import gregtech.loaders.postload.recipes.GT_GraviSuiteRecipesLoader;
-import gregtech.loaders.postload.recipes.GT_IndustialCraftRecipesLoader;
-import gregtech.loaders.postload.recipes.GT_RailcraftRecipesLoader;
+import gregtech.loaders.postload.recipes.*;
 import ic2.core.Ic2Items;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -30,6 +28,8 @@ public class GT_CraftingRecipeLoader implements Runnable {
             new GT_RailcraftRecipesLoader().run();
         if (Loader.isModLoaded("GraviSuite"))
             new GT_GraviSuiteRecipesLoader().run();
+        if (Loader.isModLoaded("Forestry"))
+            new GT_ForestryRecipesLoader().run();
 
 
 
