@@ -15,8 +15,15 @@ public class GT_ForestryRecipesLoader implements Runnable {
 
     @Override
     public void run() {
+	    
+	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 0));
+	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 2));
+	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 3));
+	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 4));
+	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 5));	    
+	    
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
-			GT_OreDictUnificator.get(OrePrefixes.itemCasing,Materials.Copper, 4L), 
+			ItemList.IC2_Item_Casing_Copper.get(4L), 
 			GT_OreDictUnificator.get(OrePrefixes.screw,Materials.Steel, 4L), 
 			GT_ModHandler.getModItem(aTextForestry, "thermionicTubes", 1L, 1),
 			GT_ModHandler.getModItem("minecraft", "stonebrick", 1L, 0), 
