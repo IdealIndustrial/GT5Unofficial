@@ -785,6 +785,6 @@ public class GT_CraftingRecipeLoader implements Runnable {
 
         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Ball.get(0), new FluidStack(FluidRegistry.getFluid("molten.borosilicateglass"), 144), ItemList.VOLUMETRIC_FLASK.get(1), 44, 24);
 
-        GT_ModHandler.addCraftingRecipe(ItemList.Machine_Well.get(1L), bits, new Object[]{"SPS","WQW","BVB",'S',GT_OreDictUnificator.get(OrePrefixes.gearGt,Materials.Wood,1),'P', new ItemStack(Items.stick,1),'W', new ItemStack(Blocks.planks,1),'Q', new ItemStack(Items.string,1), 'B',new ItemStack(Blocks.cobblestone,1),'V',new ItemStack(Items.bucket,1)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_Well.get(1L), bits, new Object[]{"SPS","WQW","BVB",'S',GT_OreDictUnificator.get(OrePrefixes.gearGt,Materials.Wood,1),'P', new ItemStack(Items.stick,1),'W', GT_OreDictUnificator.get(OrePrefixes.plank, Materials.Wood, 1L),'Q', new ItemStack(Items.string,1), 'B',new ItemStack(Blocks.cobblestone,1),'V',new ItemStack(Items.bucket,1)});
     }
 }
