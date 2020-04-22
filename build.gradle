@@ -16,7 +16,6 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-	    classpath "de.undercouch:gradle-download-task:3.1.2"
     }
 }
 
@@ -157,16 +156,6 @@ task devJar(type: Jar) {
     manifest {
         //attributes 'FMLCorePlugin': 'WhateverLoaderClass'
         //attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
-}
-
-task resolveAllDependencies {
-    description "Resolves all transitive dependencies (e.g. to build offline later)."
-
-    doLast {
-        configurations.all {
-            it.resolve()
-        }
     }
 }
 
