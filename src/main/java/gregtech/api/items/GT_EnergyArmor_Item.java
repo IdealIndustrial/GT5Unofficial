@@ -53,6 +53,12 @@ public class GT_EnergyArmor_Item extends ItemArmor implements ISpecialArmor {
         setCreativeTab(GregTech_API.TAB_GREGTECH);
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        ItemStack tCharged = new ItemStack(this, 1), tUncharged = new ItemStack(this, 1, getMaxDamage());
+        GT_ModHandler.chargeElectricItem(tCharged, Integer.MAX_VALUE, Integer.MAX_VALUE, true, false);
+
+        codechicken.nei.api.API.hideItem(tCharged);
+        codechicken.nei.api.API.hideItem(tUncharged);
     }
 
     private static void setCharge(ItemStack aStack) {

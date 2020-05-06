@@ -64,6 +64,7 @@ public class ModularArmor_Item extends ItemArmor implements ISpecialArmor, IGogg
 		setMaxDamage(mMaxDamage);
 		repairMaterial = Items.leather;
 		openGuiNr = gui;
+		codechicken.nei.api.API.hideItem(new ItemStack(this,1));
 	}
 
 	@Override
