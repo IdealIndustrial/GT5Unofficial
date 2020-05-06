@@ -234,10 +234,10 @@ public class ItemComb extends Item {
 		tComb = getStackForType(CombType.CHROME);
 		addProcess(tComb,Materials.Chrome,50);
 		addProcess(tComb,Materials.Ruby,100);
-		addProcess(tComb,Materials.Chromite,50);
-		addProcess(tComb,Materials.Redstone,100);
-		addProcess(tComb, Materials.Neodymium, 100);
-		addProcess(tComb, Materials.Bastnasite, 100);
+		//addProcess(tComb,Materials.Chromite,50);
+		//addProcess(tComb,Materials.Redstone,100);
+		//addProcess(tComb, Materials.Neodymium, 100);
+		//addProcess(tComb, Materials.Bastnasite, 100);
 		tComb = getStackForType(CombType.TUNGSTEN);
 		addProcess(tComb,Materials.Tungstate,100);
 		addProcess(tComb,Materials.Scheelite,100);
