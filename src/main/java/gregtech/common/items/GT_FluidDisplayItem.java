@@ -17,6 +17,8 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import java.util.Objects;
+import java.util.stream.Stream;
 import java.util.List;
 
 @SuppressWarnings({"rawtypes","unchecked"})
