@@ -19,8 +19,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import java.util.List;
 
-public class GT_FluidDisplayItem
-        extends GT_Generic_Item {
+@SuppressWarnings({"rawtypes","unchecked"})
+public class GT_FluidDisplayItem extends GT_Generic_Item {
     public GT_FluidDisplayItem() {
         super("GregTech_FluidDisplay", "Fluid Display", null);
         ItemList.Display_Fluid.set(this);
@@ -49,8 +49,12 @@ public class GT_FluidDisplayItem
     }
 
     public IIcon getIconFromDamage(int aMeta) {
-        Fluid tFluid = FluidRegistry.getFluid(aMeta);
-        return tFluid == null ? FluidRegistry.WATER.getStillIcon() : tFluid.getStillIcon();
+         return Stream.of(FluidRegistry.getFluid(aMeta), FluidRegistry.WATER)
+                .filter(Objects::nonNull)
+                .map(Fluid::getStillIcon)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 
     @SideOnly(Side.CLIENT)
