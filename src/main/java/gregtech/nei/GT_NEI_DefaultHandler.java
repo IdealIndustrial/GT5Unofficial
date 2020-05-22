@@ -14,6 +14,7 @@ import gregtech.GT_Mod;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
+import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -30,9 +31,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 public class GT_NEI_DefaultHandler
@@ -44,6 +43,13 @@ public class GT_NEI_DefaultHandler
         GuiContainerManager.addInputHandler(new GT_RectHandler());
         GuiContainerManager.addTooltipHandler(new GT_RectHandler());
     }
+
+    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<CachedDefaultRecipe>>> inputMaps = new HashMap<>();
+    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<CachedDefaultRecipe>>> outputMaps = new HashMap<>();
+
+    protected HashMap<GT_ItemStack,List<CachedDefaultRecipe>> inputRecipes;
+    protected HashMap<GT_ItemStack,List<CachedDefaultRecipe>> outputRecipes;
+    protected boolean isFilled = false;
 
     protected final GT_Recipe.GT_Recipe_Map mRecipeMap;
 
@@ -83,7 +89,58 @@ public class GT_NEI_DefaultHandler
         }
     }
 
+    public void fillInputMapIn(){
+        inputRecipes = inputMaps.get(mRecipeMap);
+        if(inputRecipes == null) {
+            inputRecipes = new HashMap<>();
+            for (GT_Recipe tRecipe : getSortedRecipes()) {
+                CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
+                for (PositionedStack tStck : tNEIRecipe.mOutputs) {
+                    ArrayList<ItemStack> tResults = new ArrayList<>();
+                    tResults.addAll(Arrays.asList(tStck.items));
+                    for (ItemStack t : tResults) {
+                        List<CachedDefaultRecipe> r = inputRecipes.get(new GT_ItemStack(t));
+                        if (r == null)
+                            r = new ArrayList<>();
+                        r.add(tNEIRecipe);
+                        inputRecipes.put(new GT_ItemStack(t), r);
+                    }
+
+                }
+            }
+            inputMaps.put(mRecipeMap,inputRecipes);
+
+        }
+
+    }
+
+    public void fillInputMapOut(){
+        outputRecipes = outputMaps.get(mRecipeMap);
+        if(outputRecipes == null) {
+            outputRecipes = new HashMap<>();
+            for (GT_Recipe tRecipe : getSortedRecipes()) {
+                CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
+                for (PositionedStack tStck : tNEIRecipe.mInputs) {
+                    ArrayList<ItemStack> tResults = new ArrayList<>();
+                    tResults.addAll(Arrays.asList(tStck.items));
+                    for (ItemStack t : tResults) {
+                        List<CachedDefaultRecipe> r = outputRecipes.get(new GT_ItemStack(t));
+                        if (r == null)
+                            r = new ArrayList<>();
+                        r.add(tNEIRecipe);
+                        outputRecipes.put(new GT_ItemStack(t), r);
+                    }
+
+                }
+            }
+            outputMaps.put(mRecipeMap,inputRecipes);
+
+        }
+
+    }
+
     public void loadCraftingRecipes(ItemStack aResult) {
+        fillInputMapIn();
         ItemData tPrefixMaterial = GT_OreDictUnificator.getAssociation(aResult);
 
         ArrayList<ItemStack> tResults = new ArrayList();
@@ -103,7 +160,16 @@ public class GT_NEI_DefaultHandler
                 }
             }
         }
-        for (GT_Recipe tRecipe : getSortedRecipes()) {
+        for(ItemStack t : tResults){
+            List<CachedDefaultRecipe> r = inputRecipes.get(new GT_ItemStack(t));
+            if(r!=null)
+                for(CachedDefaultRecipe q : r){
+                    if(!arecipes.contains(q))
+                    arecipes.addAll(r);
+                }
+
+        }
+        /*for (GT_Recipe tRecipe : getSortedRecipes()) {
             if (!tRecipe.mHidden) {
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (ItemStack tStack : tResults) {
@@ -113,11 +179,12 @@ public class GT_NEI_DefaultHandler
                     }
                 }
             }
-        }
-        CachedDefaultRecipe tNEIRecipe;
+        }*/
     }
 
     public void loadUsageRecipes(ItemStack aInput) {
+
+        fillInputMapOut();
         ItemData tPrefixMaterial = GT_OreDictUnificator.getAssociation(aInput);
 
         ArrayList<ItemStack> tInputs = new ArrayList();
@@ -137,6 +204,16 @@ public class GT_NEI_DefaultHandler
                 }
             }
         }
+        for(ItemStack t : tInputs){
+            List<CachedDefaultRecipe> r = outputRecipes.get(new GT_ItemStack(t));
+            if(r!=null)
+                for(CachedDefaultRecipe q : r){
+                    if(!arecipes.contains(q))
+                        arecipes.addAll(r);
+                }
+
+        }
+        /*
         for (GT_Recipe tRecipe : getSortedRecipes()) {
             if (!tRecipe.mHidden) {
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
@@ -147,8 +224,7 @@ public class GT_NEI_DefaultHandler
                     }
                 }
             }
-        }
-        CachedDefaultRecipe tNEIRecipe;
+        }*/
     }
 
     public String getOverlayIdentifier() {
