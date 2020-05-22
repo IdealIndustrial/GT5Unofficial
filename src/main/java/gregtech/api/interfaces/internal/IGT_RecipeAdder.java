@@ -387,6 +387,7 @@ public interface IGT_RecipeAdder {
      * @return
      */
     public boolean addOreWasherRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, int aDuration, int aEUt);
+    public boolean addOreWasherRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt);
 
     /**
      * Adds an Implosion Compressor Recipe
@@ -569,6 +570,7 @@ public interface IGT_RecipeAdder {
      * Adds a Recipe for the Autoclave
      */
     public boolean addAutoclaveRecipe(ItemStack aInput, FluidStack aFluid, ItemStack aOutput, int aChance, int aDuration, int aEUt);
+    public boolean addAutoclaveRecipe(ItemStack aInput1,ItemStack aInput2, FluidStack aInputFluid, ItemStack aOutput, FluidStack aOutputFluid, int aChance, int aDuration, int aEUt);
 
     /**
      * Adds a Recipe for the Autoclave
@@ -668,6 +670,8 @@ public interface IGT_RecipeAdder {
 
 
     public boolean addDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutputs, int aDuration, int aEUt);
+
+    public boolean addFilterRecipe(FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt);
 
     /**
      * Adds a Sound to the Sonictron9001

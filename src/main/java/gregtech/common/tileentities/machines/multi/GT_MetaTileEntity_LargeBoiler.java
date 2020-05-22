@@ -28,6 +28,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     private int integratedCircuitConfig = 0; //Steam output is reduced by 1000L per config
     private int excessFuel = 0; //Eliminate rounding errors for fuels that burn half items
     private int excessProjectedEU = 0; //Eliminate rounding errors from throttling the boiler
+    private float water;
 
     public GT_MetaTileEntity_LargeBoiler(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -51,6 +52,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 "1x Steam Output Hatch instead any Casing",
                 "1x Maintenance Hatch instead any Firebox",
                 "1x Muffler Hatch instead any Firebox",
+                "Firstly Consumes Distilled Water, Secondly Water",
                 "Diesel fuels have 1/4 efficiency",
                 String.format("Takes %.2f seconds to heat up", 500.0 / getEfficiencyIncrease()),
                 "Causes up to " + 20 * getPollutionPerTick(null) + " Pollution per second"};
@@ -173,8 +175,11 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 mEfficiency = Math.max(0, Math.min(mEfficiency + mSuperEfficencyIncrease, getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
             int tGeneratedEU = (int) (this.mEUt * 2L * this.mEfficiency / 10000L);
             if (tGeneratedEU > 0) {
-                long amount = (tGeneratedEU + 160) / 160;
-                if (depleteInput(Materials.Water.getFluid(amount)) || depleteInput(GT_ModHandler.getDistilledWater(amount))) {
+                water = water + tGeneratedEU/160f;
+                int amount = (int) water;
+                water = water - amount;
+
+                if (depleteInput(GT_ModHandler.getDistilledWater(amount))||depleteInput(Materials.Water.getFluid(amount))) {
                     addOutput(GT_ModHandler.getSteam(tGeneratedEU));
                 } else {
                     explodeMultiblock();

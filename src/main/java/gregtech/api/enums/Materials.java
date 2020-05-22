@@ -69,7 +69,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
 	Basalt,GarnetRed,GarnetYellow,Marble,Sugar,Thaumium,Vinteum,Vis,Redrock,PotassiumFeldspar,Biotite,GraniteBlack,GraniteRed,Chrysotile,Realgar,VanadiumMagnetite,BasalticMineralSand,GraniticMineralSand,
 	GarnetSand,QuartzSand,Bastnasite,Pentlandite,Spodumene,Pollucite,Tantalite,Lepidolite,Glauconite,GlauconiteSand,Vermiculite,Bentonite,FullersEarth,Pitchblende,Monazite,Malachite,Mirabilite,Mica,Trona,Barite,Gypsum,Alunite,Dolomite,
 	Wollastonite,Zeolite,Kyanite,Kaolinite,Talc,Soapstone,Concrete,IronMagnetic,SteelMagnetic,NeodymiumMagnetic,TungstenCarbide,VanadiumSteel,HSSG,HSSE,HSSS,DilutedSulfuricAcid,EpoxidFiberReinforced,NitrousOxide,AntiKnock,GasolineRegular,
-	GasolinePremium,RedstoneAlloy,Soularium,ConductiveIron,ElectricalSteel,EnergeticAlloy,VibrantAlloy,PulsatingIron,Enderium,DarkSteel,EndSteel,
+	GasolinePremium,RedstoneAlloy,Soularium,ConductiveIron,ElectricalSteel,EnergeticAlloy,VibrantAlloy,PulsatingIron,Enderium,DarkSteel,EndSteel,DirtyWater,DirtyWater2,
 
 	//Deprecated
 	IridiumAndSodiumOxide,Palygorskite,Adamantine,Ashes,DarkAshes,Abyssal,Adamant,AluminumBrass,Aluminum,NaturalAluminum,NaturalAluminium,Americum,Beryl,BlackGranite,CalciumCarbonate,
@@ -796,6 +796,10 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     AntiKnock = new MaterialBuilder(994, TextureSet.SET_FLUID, "Ethyl Tert-Butyl Ether").addCell().addFluid().setRGB(255, 255, 255).setColor(Dyes.dyeWhite).constructMaterial();
     GasolineRegular = new MaterialBuilder(997, TextureSet.SET_FLUID, "Gasoline").addCell().addFluid().setRGB(255,165,0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(384).constructMaterial();
     GasolinePremium = new MaterialBuilder(998, TextureSet.SET_FLUID, "High Octane Gasoline").addCell().addFluid().setRGB(255,165,0).setColor(Dyes.dyeOrange).setFuelType(MaterialBuilder.DIESEL).setFuelPower(768).constructMaterial();
+    DirtyWater = new MaterialBuilder(15, TextureSet.SET_FLUID, "Dirty Water").addCell().addFluid().setRGB(82,39,20).setColor(Dyes.dyeBrown).constructMaterial();
+    DirtyWater2 = new MaterialBuilder(16, TextureSet.SET_FLUID, "Muddy Water").addCell().addFluid().setRGB(82,51,74).setColor(Dyes.dyeBrown).constructMaterial();
+
+
     /**
      * Materials Ender IO
      */
