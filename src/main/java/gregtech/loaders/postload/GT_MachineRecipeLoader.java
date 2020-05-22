@@ -2437,6 +2437,10 @@ if(Loader.isModLoaded("Railcraft")){
             		Materials.SolderingAlloy.getMolten(2880),
             }, ItemList.FusionComputer_UV.get(1,o), 1000, 90000);
 
+            GT_Values.RA.addFilterRecipe(Materials.DirtyWater.getFluid(1000L), Materials.Water.getFluid(1000L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.SiliconDioxide,5),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Phosphate,3),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Calcite,2)},250,12);
+            GT_Values.RA.addFilterRecipe(Materials.DirtyWater2.getFluid(1000L), Materials.Water.getFluid(1000L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Saltpeter,4),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.PotassiumFeldspar,1)},500,12);
+            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeSmall, Materials.Copper,1),GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Paper,16),GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Carbon,8)},null,ItemList.SimpleFluidFilter.get(4),80,8);
+            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeSmall, Materials.Plastic,1),GT_ModHandler.getIC2Item("carbonFiber", 8), ItemList.Circuit_Parts_GlassFiber.get(32)},null,ItemList.FluidFilterItem.get(4),80,48);
             if (GregTech_API.sThaumcraftCompat != null) {
                 String tKey = "GT_WOOD_TO_CHARCOAL";
                 GT_LanguageManager.addStringLocalization(aTextTCGTPage + tKey, "You have discovered a way of making charcoal magically instead of using regular ovens for this purpose.<BR><BR>To create charcoal from wood you first need an air-free environment, some vacuus essentia is needed for that, then you need to incinerate the wood using ignis essentia and wait until all the water inside the wood is burned away.<BR><BR>This method however doesn't create creosote oil as byproduct.");
@@ -3123,7 +3127,8 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Benzene.getFluid(12000), Materials.Chlorine.getGas(2000), Materials.Water.getFluid(3000)}, new FluidStack[]{Materials.Phenol.getFluid(13000), Materials.HydrochloricAcid.getFluid(2000), Materials.DilutedHydrochloricAcid.getFluid(2000)}, null, 560, 30);
         GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.SodiumHydroxide.getDust(1), GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Benzene.getFluid(12000), Materials.Chlorine.getGas(2000)}, new FluidStack[]{Materials.Phenol.getFluid(13000), Materials.HydrochloricAcid.getFluid(2000)}, null, 560, 30);
 
-
+        GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.Chlorine.getCells(1),GT_Utility.getIntegratedCircuit(11),Materials.Benzene.getFluid(6000),Materials.Chlorobenzene.getFluid(6000),Materials.HydrochloricAcid.getCells(1),null,240,30);
+        GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(11)},new FluidStack[]{Materials.Chlorine.getGas(1000),Materials.Benzene.getFluid(6000)},new FluidStack[]{Materials.Chlorobenzene.getFluid(6000),Materials.HydrochloricAcid.getFluid(1000)},null,240,30);
 	}
 
 	private void addChemicalRecipesShared(){
