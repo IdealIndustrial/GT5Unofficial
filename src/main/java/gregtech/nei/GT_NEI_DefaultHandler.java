@@ -94,6 +94,8 @@ public class GT_NEI_DefaultHandler
         if(inputRecipes == null) {
             inputRecipes = new HashMap<>();
             for (GT_Recipe tRecipe : getSortedRecipes()) {
+                if(tRecipe.mHidden)
+                    continue;
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (PositionedStack tStck : tNEIRecipe.mOutputs) {
                     ArrayList<ItemStack> tResults = new ArrayList<>();
@@ -119,6 +121,8 @@ public class GT_NEI_DefaultHandler
         if(outputRecipes == null) {
             outputRecipes = new HashMap<>();
             for (GT_Recipe tRecipe : getSortedRecipes()) {
+                if(tRecipe.mHidden)
+                    continue;
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (PositionedStack tStck : tNEIRecipe.mInputs) {
                     ArrayList<ItemStack> tResults = new ArrayList<>();
