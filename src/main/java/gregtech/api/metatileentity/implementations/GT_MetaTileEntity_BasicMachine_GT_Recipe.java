@@ -1,6 +1,7 @@
 package gregtech.api.metatileentity.implementations;
 
 import gregtech.api.enums.*;
+import static gregtech.api.util.GT_OreDictUnificator.isItemStackInstanceOf;
 import gregtech.api.gui.GT_Container_BasicMachine;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
 import gregtech.api.interfaces.ITexture;
@@ -650,11 +651,17 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
             default:
                 int tID = getBaseMetaTileEntity().getMetaTileID();
                 if (tID >= 211 && tID <= 218) {// assemblers IDs
-                    if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "circuitBasic")) return true; // allow input all LV-circuits for assemblers
-                    if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "circuitAdvanced")) return true; // allow input all HV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitBasic")) return true; // allow input all LV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitGood")) return true; // allow input all MV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitAdvanced")) return true; // allow input all HV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitData")) return true; // allow input all EV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitElite")) return true; // allow input all IV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitMaster")) return true; // allow input all LuV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitUltimate")) return true; // allow input all ZPM-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitSuperconductor")) return true; // allow input all UV-circuits for assemblers
+                    if (isItemStackInstanceOf(aStack, "circuitInfinite")) return true; // allow input all UHV-circuits for assemblers                    
                 }
                 return getRecipeList().containsInput(aStack);
-
         }
     }
 
