@@ -16,6 +16,7 @@ public class ProcessingCrushedOre implements gregtech.api.interfaces.IOreRecipeR
 		OrePrefixes.crushedPurified.add(this);
 		OrePrefixes.crushed.add(this);
 		OrePrefixes.dustImpure.add(this);
+		OrePrefixes.dustPure.add(this);	    
     }
 
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
@@ -32,6 +33,12 @@ public class ProcessingCrushedOre implements gregtech.api.interfaces.IOreRecipeR
 				GT_Values.RA.addAutoclaveRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), Materials.Water.getFluid(10L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null,10000, 4, 8);
 				GT_Values.RA.addAutoclaveRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_ModHandler.getDistilledWater(10L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, 10000, 4, 8);
 				break;
+			case dustPure:
+                                GT_Values.RA.addAutoclaveRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), Materials.Water.getFluid(10L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), Materials.DirtyWater2.getFluid(10L),10000, 4, 8);
+				GT_Values.RA.addAutoclaveRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_ModHandler.getDistilledWater(10L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), Materials.DirtyWater2.getFluid(10L), 10000, 4, 8);
+				GT_Values.RA.addAutoclaveRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), Materials.Water.getFluid(10L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null,10000, 4, 8);
+				GT_Values.RA.addAutoclaveRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_ModHandler.getDistilledWater(10L), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, 10000, 4, 8);
+				break;				
 			case crushedCentrifuged:
 				GT_Values.RA.addForgeHammerRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 1L), 10, 16);
 				GT_ModHandler.addPulverisationRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, GT_Utility.selectItemInList(2, aMaterial.mMacerateInto, aMaterial.mOreByProducts), 1L), 10, false);
