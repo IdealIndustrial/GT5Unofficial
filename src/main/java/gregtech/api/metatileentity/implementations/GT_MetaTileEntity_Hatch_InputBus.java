@@ -167,6 +167,6 @@ public class GT_MetaTileEntity_Hatch_InputBus extends GT_MetaTileEntity_Hatch {
 
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return aSide == getBaseMetaTileEntity().getFrontFacing() && (mRecipeMap == null || mRecipeMap.containsInput(aStack));
+        return aSide == aBaseMetaTileEntity.getFrontFacing();
     }
 }
