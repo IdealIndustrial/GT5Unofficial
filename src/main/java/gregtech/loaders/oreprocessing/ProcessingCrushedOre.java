@@ -22,22 +22,22 @@ public class ProcessingCrushedOre implements gregtech.api.interfaces.IOreRecipeR
     public void registerOre(OrePrefixes aPrefix, Materials aMaterial, String aOreDictName, String aModName, ItemStack aStack) {
 		switch (aPrefix) {
 			case crushed:
-                                GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 1L), null, null, Materials.Water.getFluid(10L), Materials.DirtyWater.getFluid(10L), 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 1L), null, null, GT_ModHandler.getDistilledWater(10L), Materials.DirtyWater.getFluid(10L), 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 1L), null, null, Materials.Water.getFluid(10L), null, 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 1L), null, null, GT_ModHandler.getDistilledWater(10L), null, 4, 8);				
+                                GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 1L), Materials.Water.getFluid(10L), Materials.DirtyWater.getFluid(10L), 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 1L),  GT_ModHandler.getDistilledWater(10L), Materials.DirtyWater.getFluid(10L), 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 1L),  Materials.Water.getFluid(10L), null, 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.crushedPurified, aMaterial, 1L),  GT_ModHandler.getDistilledWater(10L), null, 4, 8);				
 				break;
 			case dustImpure:
-                                GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, null, Materials.Water.getFluid(10L), Materials.DirtyWater2.getFluid(10L), 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, null, GT_ModHandler.getDistilledWater(10L), Materials.DirtyWater2.getFluid(10L), 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, null, Materials.Water.getFluid(10L), null, 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, null, GT_ModHandler.getDistilledWater(10L), null, 4, 8);
+                                GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L),  Materials.Water.getFluid(10L), Materials.DirtyWater2.getFluid(10L), 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L),  GT_ModHandler.getDistilledWater(10L), Materials.DirtyWater2.getFluid(10L), 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L),  Materials.Water.getFluid(10L), null, 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L),  GT_ModHandler.getDistilledWater(10L), null, 4, 8);
 				break;
 			case dustPure:	
-                                GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, null, Materials.Water.getFluid(10L), Materials.DirtyWater2.getFluid(10L), 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, null, GT_ModHandler.getDistilledWater(10L), Materials.DirtyWater2.getFluid(10L), 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, null, Materials.Water.getFluid(10L), null, 4, 8);
-				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L), null, null, GT_ModHandler.getDistilledWater(10L), null, 4, 8);
+                                GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L),  Materials.Water.getFluid(10L), Materials.DirtyWater2.getFluid(10L), 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(1), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L),  GT_ModHandler.getDistilledWater(10L), Materials.DirtyWater2.getFluid(10L), 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L),  Materials.Water.getFluid(10L), null, 4, 8);
+				GT_Values.RA.addOreWasherRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}),  GT_Utility.getIntegratedCircuit(2), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial, 1L),  GT_ModHandler.getDistilledWater(10L), null, 4, 8);
 				break;
 			case crushedCentrifuged:
 				GT_Values.RA.addForgeHammerRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), GT_OreDictUnificator.get(OrePrefixes.dust, aMaterial.mMacerateInto, 1L), 10, 16);
