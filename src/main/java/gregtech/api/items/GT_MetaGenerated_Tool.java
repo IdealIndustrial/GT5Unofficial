@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderio.api.tool.ITool;
 import forestry.api.arboriculture.IToolGrafter;
 import gregtech.GT_Mod;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.GregTech_API;
 import gregtech.api.enchants.Enchantment_Radioactivity;
 import gregtech.api.enums.Materials;
@@ -328,8 +329,12 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
             if (getToolStats(new ItemStack(this, 1, i)) != null) {
                 ItemStack tStack = new ItemStack(this, 1, i);
                 isItemStackUsable(tStack);
-                aList.add(tStack);
-                aList.add(getToolWithStats(i,1,Materials.Neutronium,Materials.Neutronium,null));
+                //aList.add(tStack); //View without damage
+                if (i >= 100 && i <=169) { //Id for gt ore scaners
+                    aList.add(getToolWithStats(i,1,Materials.Neutronium,Materials.Neutronium, new long[]{81920000L, GT_Values.V[5], 5L, 81920000L}));
+                } else {
+                    aList.add(getToolWithStats(i, 1, Materials.Neutronium, Materials.Neutronium, null));
+                }
             }
         }
     }
