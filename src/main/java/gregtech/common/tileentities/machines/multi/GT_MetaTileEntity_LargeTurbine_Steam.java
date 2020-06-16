@@ -38,13 +38,12 @@ public class GT_MetaTileEntity_LargeTurbine_Steam extends GT_MetaTileEntity_Larg
                 "Controller Block for the Large Steam Turbine",
                 "Size(WxHxD): 3x3x4 (Hollow), Controller (Front centered)",
                 "1x Steam Input Hatch (Side centered)",
-                "1x Output Hatch (Bottom centered)",
+                "Optional Output Hatch for Distilled Water (Side centered)",
                 "1x Maintenance Hatch (Side centered)",
                 "1x Dynamo Hatch (Back centered)",
                 "Turbine Casings for the rest (24 at least!)",
                 "Needs a Turbine Item (Inside controller GUI)",
-                "Energy Output depending on Rotor: 60-3360EU/t",
-                "Can output Distilled Water"};
+                "Energy Output depending on Rotor: 60-3360EU/t"};
     }
 
     @Override
