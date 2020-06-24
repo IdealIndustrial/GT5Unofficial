@@ -9,10 +9,12 @@ import gregtech.api.objects.GT_RenderedTexture;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.text.NumberFormat;
+
 public class GT_MetaTileEntity_QuantumTank
         extends GT_MetaTileEntity_BasicTank {
     public GT_MetaTileEntity_QuantumTank(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 3, "Stores " + ((int) (Math.pow(6, aTier) * 267000)) + "L of fluid");
+        super(aID, aName, aNameRegional, aTier, 3, "Stores " + NumberFormat.getNumberInstance().format((int) (Math.pow(6, aTier) * 267000)) + "L of fluid");
     }
 
     public GT_MetaTileEntity_QuantumTank(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
