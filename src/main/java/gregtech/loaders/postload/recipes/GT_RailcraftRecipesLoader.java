@@ -19,12 +19,12 @@ public class GT_RailcraftRecipesLoader implements Runnable {
     @Override
     public void run() {
         
-		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 0));
-		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 1));
-		GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 2));
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Emitter_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.RedAlloy, 4L),ItemList.Circuit_Board_Coated.get(1L)},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 0), 120, 5);
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Sensor_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Gold, 4L),ItemList.Circuit_Board_Coated.get(1L)},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 1), 120, 5);
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Sensor_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Electrum, 4L),ItemList.Circuit_Board_Coated.get(1L)},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 2), 120, 5);
+	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 0));
+	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 1));
+	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 2));
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Emitter_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.RedAlloy, 4L),ItemList.Circuit_Board_Coated.get(1L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L, new Object[0])},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 0), 120, 5);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Sensor_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Gold, 4L),ItemList.Circuit_Board_Coated.get(1L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L, new Object[0])},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 1), 120, 5);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Sensor_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Electrum, 4L),ItemList.Circuit_Board_Coated.get(1L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L, new Object[0])},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 2), 120, 5);
        
         GT_ModHandler.addRollingMachineRecipe(GT_ModHandler.getModItem("Railcraft", "post.metal.light.blue", 8L), new Object[]{aTextIron2, " X ", aTextIron2, 'X', OrePrefixes.ingot.get(Materials.Aluminium).toString()});
         GT_ModHandler.addRollingMachineRecipe(GT_ModHandler.getModItem("Railcraft", "post.metal.purple", 64L), new Object[]{aTextIron2, " X ", aTextIron2, 'X', OrePrefixes.ingot.get(Materials.Titanium).toString()});
