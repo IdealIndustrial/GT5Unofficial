@@ -432,6 +432,17 @@ public class GT_RecipeAdder
         return true;
     }
 
+    public boolean addOreWasherRecipe(ItemStack aInput1 ,ItemStack aInput2, ItemStack aOutput1, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt) {
+        if ((aInput1 == null) || (aFluidInput == null) || ((aOutput1 == null))) {
+            return false;
+        }
+        if ((aDuration = GregTech_API.sRecipeFile.get("orewasher", aInput1, aDuration)) <= 0) {
+            return false;
+        }
+        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput1, aInput2}, new ItemStack[]{aOutput1}, null, new FluidStack[]{aFluidInput},  new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
+        return true;
+    }	
+	
     public boolean addImplosionRecipe(ItemStack aInput1, int aInput2, ItemStack aOutput1, ItemStack aOutput2) {
         if ((aInput1 == null) || (aOutput1 == null)) {
             return false;
