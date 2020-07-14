@@ -16,10 +16,7 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
+import gregtech.api.util.*;
 import gregtech.common.gui.GT_GUIContainer_FusionReactor;
 import gregtech.common.gui.GT_GUIContainer_PrimitiveBlastFurnace;
 import net.minecraft.client.Minecraft;
@@ -875,7 +872,11 @@ public class GT_NEI_DefaultHandler
                     tStartIndex++;
             }
             if ((aRecipe.mFluidInputs.length > 0) && (aRecipe.mFluidInputs[0] != null) && (aRecipe.mFluidInputs[0].getFluid() != null)) {
-                this.mInputs.add(new FixedPositionedStack(GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[0], true), 48, 52));
+                ItemStack f = GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[0], true);
+                if(aRecipe.mDistWaterUnificate&&aRecipe.mFluidInputs[0].isFluidEqual(GT_ModHandler.getWater(1))){
+                    f.setStackDisplayName(GT_ModHandler.getWater(1).getLocalizedName()+"/"+GT_ModHandler.getDistilledWater(1).getLocalizedName());
+                }
+                this.mInputs.add(new FixedPositionedStack(f, 48, 52));
                 if ((aRecipe.mFluidInputs.length > 1) && (aRecipe.mFluidInputs[1] != null) && (aRecipe.mFluidInputs[1].getFluid() != null)) {
                     this.mInputs.add(new FixedPositionedStack(GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[1], true), 30, 52));
                 }
