@@ -4,6 +4,7 @@ import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.common.items.behaviors.Behaviour_Sense;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,8 +42,15 @@ public class GT_Tool_Sense
             for (int i = -2; i < 3; i++) {
                 for (int j = -2; j < 3; j++) {
                     for (int k = -2; k < 3; k++) {
-                        if (((i != 0) || (j != 0) || (k != 0)) && (aStack.getItem().getDigSpeed(aStack, aPlayer.worldObj.getBlock(aX + i, aY + j, aZ + k), aPlayer.worldObj.getBlockMetadata(aX + i, aY + j, aZ + k)) > 0.0F) && (((EntityPlayerMP) aPlayer).theItemInWorldManager.tryHarvestBlock(aX + i, aY + j, aZ + k))) {
-                            rConversions++;
+                        if (!((aEvent.world.getBlock(aX + i, aY + j, aZ + k) == Blocks.leaves) ||
+                                (aEvent.world.getBlock(aX + i, aY + j, aZ + k) == Blocks.leaves2))) {
+                        } else {
+                            if (((i != 0) || (j != 0) || (k != 0)) && (aStack.getItem().getDigSpeed(aStack,
+                                    aPlayer.worldObj.getBlock(aX + i, aY + j, aZ + k),
+                                    aPlayer.worldObj.getBlockMetadata(aX + i, aY + j, aZ + k)) > 0.0F) &&
+                                    (((EntityPlayerMP) aPlayer).theItemInWorldManager.tryHarvestBlock(aX + i, aY + j, aZ + k))) {
+                                rConversions++;
+                            }
                         }
                     }
                 }
