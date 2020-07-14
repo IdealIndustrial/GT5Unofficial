@@ -3186,7 +3186,10 @@ if(Loader.isModLoaded("Railcraft")){
 
     	GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{Materials.Carbon.getDust(2), GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.Hydrogen.getGas(4000), Materials.Oxygen.getGas(2000)}, new FluidStack[]{Materials.AceticAcid.getFluid(8000)}, null, 480, 30);
     	GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)}, new FluidStack[]{Materials.CarbonMonoxide.getGas(4000), Materials.Hydrogen.getGas(4000)}, new FluidStack[]{Materials.AceticAcid.getFluid(8000)}, null, 320, 30);
-
+        //AceticAcid		
+    	GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.Hydrogen.getCells(1), GT_Utility.getIntegratedCircuit(24), Materials.CarbonMonoxide.getGas(1000), Materials.AceticAcid.getFluid(2000), Materials.Empty.getCells(1), GT_Values.NI, 85, 30);
+    	GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.CarbonMonoxide.getCells(1), GT_Utility.getIntegratedCircuit(24), Materials.Hydrogen.getGas(1000), Materials.AceticAcid.getFluid(2000), Materials.Empty.getCells(1), GT_Values.NI, 85, 30);
+		
         GT_Values.RA.addFermentingRecipe(Materials.Biomass.getFluid(100), Materials.FermentedBiomass.getFluid(100), 150, false);
         if(!GregTech_API.mIC2Classic){
             GT_Values.RA.addFermentingRecipe(new FluidStack(FluidRegistry.getFluid("ic2biomass"), 100), Materials.FermentedBiomass.getFluid(100), 150, false);
