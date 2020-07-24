@@ -32,7 +32,7 @@ public class ProcessingModSupport implements gregtech.api.interfaces.IMaterialHa
             Materials.BasalticMineralSand.mHasParentMod = false;
             Materials.Borax.mHasParentMod = false;
             Materials.CassiteriteSand.mHasParentMod = false;
-            Materials.Chromite.mHasParentMod = false;
+            //Materials.Chromite.mHasParentMod = false;
             Materials.Chrysotile.mHasParentMod = false;
             Materials.Diatomite.mHasParentMod = false;
             Materials.FullersEarth.mHasParentMod = false;
