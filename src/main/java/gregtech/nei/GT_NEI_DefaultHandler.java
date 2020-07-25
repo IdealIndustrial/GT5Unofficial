@@ -42,11 +42,11 @@ public class GT_NEI_DefaultHandler
         GuiContainerManager.addTooltipHandler(new GT_RectHandler());
     }
 
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<CachedDefaultRecipe>>> inputMaps = new HashMap<>();
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<CachedDefaultRecipe>>> outputMaps = new HashMap<>();
+    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<GT_Recipe>>> inputMaps = new HashMap<>();
+    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<GT_Recipe>>> outputMaps = new HashMap<>();
 
-    protected HashMap<GT_ItemStack,List<CachedDefaultRecipe>> inputRecipes;
-    protected HashMap<GT_ItemStack,List<CachedDefaultRecipe>> outputRecipes;
+    protected HashMap<GT_ItemStack,List<GT_Recipe>> inputRecipes;
+    protected HashMap<GT_ItemStack,List<GT_Recipe>> outputRecipes;
     protected boolean isFilled = false;
 
     protected final GT_Recipe.GT_Recipe_Map mRecipeMap;
@@ -99,10 +99,10 @@ public class GT_NEI_DefaultHandler
                     ArrayList<ItemStack> tResults = new ArrayList<>();
                     tResults.addAll(Arrays.asList(tStck.items));
                     for (ItemStack t : tResults) {
-                        List<CachedDefaultRecipe> r = inputRecipes.get(new GT_ItemStack(t));
+                        List<GT_Recipe> r = inputRecipes.get(new GT_ItemStack(t));
                         if (r == null)
                             r = new ArrayList<>();
-                        r.add(tNEIRecipe);
+                        r.add(tNEIRecipe.mRecipe);
                         inputRecipes.put(new GT_ItemStack(t), r);
                     }
 
@@ -126,10 +126,10 @@ public class GT_NEI_DefaultHandler
                     ArrayList<ItemStack> tResults = new ArrayList<>();
                     tResults.addAll(Arrays.asList(tStck.items));
                     for (ItemStack t : tResults) {
-                        List<CachedDefaultRecipe> r = outputRecipes.get(new GT_ItemStack(t));
+                        List<GT_Recipe> r = outputRecipes.get(new GT_ItemStack(t));
                         if (r == null)
                             r = new ArrayList<>();
-                        r.add(tNEIRecipe);
+                        r.add(tNEIRecipe.mRecipe);
                         outputRecipes.put(new GT_ItemStack(t), r);
                     }
 
@@ -163,11 +163,12 @@ public class GT_NEI_DefaultHandler
             }
         }
         for(ItemStack t : tResults){
-            List<CachedDefaultRecipe> r = inputRecipes.get(new GT_ItemStack(t));
-            if(r!=null)
-                for(CachedDefaultRecipe q : r){
+            List<GT_Recipe> res = inputRecipes.get(new GT_ItemStack(t));
+            if(res!=null)
+                for(GT_Recipe r : res){
+                    CachedDefaultRecipe q = new CachedDefaultRecipe(r);
                     if(!arecipes.contains(q))
-                    arecipes.addAll(r);
+                        arecipes.add(q);
                 }
 
         }
@@ -207,11 +208,12 @@ public class GT_NEI_DefaultHandler
             }
         }
         for(ItemStack t : tInputs){
-            List<CachedDefaultRecipe> r = outputRecipes.get(new GT_ItemStack(t));
-            if(r!=null)
-                for(CachedDefaultRecipe q : r){
+            List<GT_Recipe> res = outputRecipes.get(new GT_ItemStack(t));
+            if(res!=null)
+                for(GT_Recipe r : res){
+                    CachedDefaultRecipe q = new CachedDefaultRecipe(r);
                     if(!arecipes.contains(q))
-                        arecipes.addAll(r);
+                        arecipes.add(q);
                 }
 
         }
@@ -913,7 +915,12 @@ public class GT_NEI_DefaultHandler
         public List<PositionedStack> getOtherStacks() {
             return this.mOutputs;
         }
-    } 
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof CachedDefaultRecipe && ((CachedDefaultRecipe)o).mRecipe.equals(mRecipe);
+        }
+    }
     
     public String trans(String aKey, String aEnglish){
     	return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_"+aKey, aEnglish, false);
