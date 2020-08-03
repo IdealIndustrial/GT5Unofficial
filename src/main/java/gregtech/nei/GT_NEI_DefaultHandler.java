@@ -14,7 +14,7 @@ import gregtech.GT_Mod;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
-import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.objects.GT_NEIItemStack;
 import gregtech.api.objects.ItemData;
 import gregtech.api.util.*;
 import gregtech.common.gui.GT_GUIContainer_FusionReactor;
@@ -42,11 +42,11 @@ public class GT_NEI_DefaultHandler
         GuiContainerManager.addTooltipHandler(new GT_RectHandler());
     }
 
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<GT_Recipe>>> inputMaps = new HashMap<>();
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<GT_Recipe>>> outputMaps = new HashMap<>();
+    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> inputMaps = new HashMap<>();
+    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> outputMaps = new HashMap<>();
 
-    protected HashMap<GT_ItemStack,List<GT_Recipe>> inputRecipes;
-    protected HashMap<GT_ItemStack,List<GT_Recipe>> outputRecipes;
+    protected HashMap<GT_NEIItemStack,List<GT_Recipe>> inputRecipes;
+    protected HashMap<GT_NEIItemStack,List<GT_Recipe>> outputRecipes;
     protected boolean isFilled = false;
 
     protected final GT_Recipe.GT_Recipe_Map mRecipeMap;
@@ -99,11 +99,11 @@ public class GT_NEI_DefaultHandler
                     ArrayList<ItemStack> tResults = new ArrayList<>();
                     tResults.addAll(Arrays.asList(tStck.items));
                     for (ItemStack t : tResults) {
-                        List<GT_Recipe> r = inputRecipes.get(new GT_ItemStack(t));
+                        List<GT_Recipe> r = inputRecipes.get(new GT_NEIItemStack(t));
                         if (r == null)
                             r = new ArrayList<>();
                         r.add(tNEIRecipe.mRecipe);
-                        inputRecipes.put(new GT_ItemStack(t), r);
+                        inputRecipes.put(new GT_NEIItemStack(t), r);
                     }
 
                 }
@@ -126,11 +126,11 @@ public class GT_NEI_DefaultHandler
                     ArrayList<ItemStack> tResults = new ArrayList<>();
                     tResults.addAll(Arrays.asList(tStck.items));
                     for (ItemStack t : tResults) {
-                        List<GT_Recipe> r = outputRecipes.get(new GT_ItemStack(t));
+                        List<GT_Recipe> r = outputRecipes.get(new GT_NEIItemStack(t));
                         if (r == null)
                             r = new ArrayList<>();
                         r.add(tNEIRecipe.mRecipe);
-                        outputRecipes.put(new GT_ItemStack(t), r);
+                        outputRecipes.put(new GT_NEIItemStack(t), r);
                     }
 
                 }
@@ -163,7 +163,7 @@ public class GT_NEI_DefaultHandler
             }
         }
         for(ItemStack t : tResults){
-            List<GT_Recipe> res = inputRecipes.get(new GT_ItemStack(t));
+            List<GT_Recipe> res = inputRecipes.get(new GT_NEIItemStack(t));
             if(res!=null)
                 for(GT_Recipe r : res){
                     CachedDefaultRecipe q = new CachedDefaultRecipe(r);
@@ -172,7 +172,7 @@ public class GT_NEI_DefaultHandler
                 }
 
         }
-        /*for (GT_Recipe tRecipe : getSortedRecipes()) {
+     /*  for (GT_Recipe tRecipe : getSortedRecipes()) {
             if (!tRecipe.mHidden) {
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (ItemStack tStack : tResults) {
@@ -208,7 +208,7 @@ public class GT_NEI_DefaultHandler
             }
         }
         for(ItemStack t : tInputs){
-            List<GT_Recipe> res = outputRecipes.get(new GT_ItemStack(t));
+            List<GT_Recipe> res = outputRecipes.get(new GT_NEIItemStack(t));
             if(res!=null)
                 for(GT_Recipe r : res){
                     CachedDefaultRecipe q = new CachedDefaultRecipe(r);
