@@ -4,11 +4,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.Iterator;
 
@@ -19,7 +21,7 @@ import java.util.Iterator;
  */
 public class GT_Container_BasicMachine extends GT_Container_BasicTank {
 
-    public boolean mFluidTransfer = false, mItemTransfer = false, mStuttering = false;
+    public boolean mFluidTransfer = false, mItemTransfer = false, mStuttering = false, fluidChange = false;;
 
     public GT_Container_BasicMachine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
         super(aInventoryPlayer, aTileEntity);
@@ -180,8 +182,26 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
     public ItemStack slotClick(int aSlotIndex, int aMouseclick, int aShifthold, EntityPlayer aPlayer) {
         switch (aSlotIndex) {
             case 0:
-                if (mTileEntity.getMetaTileEntity() == null) return null;
-                ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidTransfer = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidTransfer;
+                if (aShifthold == 0) {
+                    if (mTileEntity.getMetaTileEntity() == null) return null;
+                    ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidTransfer = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidTransfer;
+                }
+
+                if (aShifthold == 1) {
+                    ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange;
+                    ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1 = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid;
+                    ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2 = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidOut;
+                    if (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange) {
+                        ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2;
+                        ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidOut = ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1;
+                        ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).fluidChange = false;
+                        GT_Utility.sendChatToPlayer(aPlayer, (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1 == null ? null : EnumChatFormatting.RED +  ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid1.getLocalizedName() + EnumChatFormatting.RESET +  " on Output Slot"));
+                        GT_Utility.sendChatToPlayer(aPlayer, (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2 == null ? null : EnumChatFormatting.GREEN + ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid2.getLocalizedName() + EnumChatFormatting.RESET + " on Input Slot"));
+                    }
+
+                    if (((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluid == null && ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mFluidOut == null)
+                        GT_Utility.sendChatToPlayer(aPlayer, "No fluids");
+                }
                 return null;
             case 1:
                 if (mTileEntity.getMetaTileEntity() == null) return null;
