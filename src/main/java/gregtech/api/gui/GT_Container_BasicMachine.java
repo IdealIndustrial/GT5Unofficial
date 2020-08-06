@@ -21,7 +21,7 @@ import java.util.Iterator;
  */
 public class GT_Container_BasicMachine extends GT_Container_BasicTank {
 
-    public boolean mFluidTransfer = false, mItemTransfer = false, mStuttering = false, fluidChange = false;;
+    public boolean mFluidTransfer = false, mItemTransfer = false, mStuttering = false, fluidChange = false;
 
     public GT_Container_BasicMachine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
         super(aInventoryPlayer, aTileEntity);
