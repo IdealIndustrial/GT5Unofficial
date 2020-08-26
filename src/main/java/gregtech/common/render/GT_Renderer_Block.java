@@ -3,6 +3,7 @@ package gregtech.common.render;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import gregtech.api.GregTech_API;
+import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -116,6 +117,9 @@ public class GT_Renderer_Block
 
     public static boolean renderStandardBlock(IBlockAccess aWorld, int aX, int aY, int aZ, Block aBlock, RenderBlocks aRenderer) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
+        if(tTileEntity instanceof IFastRenderedTileEntity){
+            return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer, ((IFastRenderedTileEntity)tTileEntity).getTextures());
+        }
         if ((tTileEntity instanceof ITexturedTileEntity)) {
             return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer, new ITexture[][]{((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 0), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 1), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 2), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 3), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 4), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 5)});
         }
@@ -159,11 +163,19 @@ public class GT_Renderer_Block
         if ((tIsCovered[0]) && (tIsCovered[1]) && (tIsCovered[2]) && (tIsCovered[3]) && (tIsCovered[4]) && (tIsCovered[5])) {
             return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer);
         }
-        ITexture[][] tIcons = new ITexture[6][];
-        ITexture[][] tCovers = new ITexture[6][];
-        for (byte i = 0; i < 6; i = (byte) (i + 1)) {
-            tCovers[i] = aTileEntity.getTexture(aBlock, i);
-            tIcons[i] = aTileEntity.getTextureUncovered(i);
+        ITexture[][] tIcons;
+        ITexture[][] tCovers;
+        if(aTileEntity instanceof IFastRenderedTileEntity){
+            tIcons = ((IFastRenderedTileEntity)aTileEntity).getTextures(false);
+            tCovers = ((IFastRenderedTileEntity)aTileEntity).getTextures(true);
+        }
+        else {
+            tIcons = new ITexture[6][];
+            tCovers = new ITexture[6][];
+            for (byte i = 0; i < 6; i = (byte) (i + 1)) {
+                tCovers[i] = aTileEntity.getTexture(aBlock, i);
+                tIcons[i] = aTileEntity.getTextureUncovered(i);
+            }
         }
         if (tConnections == 0) {
             aBlock.setBlockBounds(sp, sp, sp, sp + tThickness, sp + tThickness, sp + tThickness);

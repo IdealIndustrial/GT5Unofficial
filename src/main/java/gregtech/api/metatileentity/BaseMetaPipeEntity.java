@@ -3,6 +3,7 @@ package gregtech.api.metatileentity;
 import cpw.mods.fml.common.FMLLog;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
+import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -201,6 +202,8 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
                             if (getCoverIDAtSide(i) != 0)
                                 if (!mMetaTileEntity.allowCoverOnSide(i, new GT_ItemStack(getCoverIDAtSide(i))))
                                     dropCover(i, i, true);
+                        if(isClientSide())
+                            rebakeMap();
                         worldObj.markTileEntityChunkModified(xCoord, yCoord, zCoord, this);
                         mMetaTileEntity.onFirstTick(this);
                         if (!hasValidMetaTileEntity()) return;
@@ -337,6 +340,7 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
         receiveClientEvent(1, aUpdateData);
         receiveClientEvent(2, aColorData);
         receiveClientEvent(3, aRedstoneData);
+        rebakeMap();
     }
 
     @Override
@@ -356,6 +360,10 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
             issueTextureUpdate();
             switch (aEventID) {
                 case 0:
+                    if(mConnections!=aValue){
+                        mConnections = (byte) aValue;
+                        rebakeMap();
+                    }
                     mConnections = (byte) aValue;
                     break;
                 case 1:
@@ -725,10 +733,47 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
 
     @Override
     public ITexture[] getTexture(Block aBlock, byte aSide) {
-        ITexture rIcon = getCoverTexture(aSide);
-        if (rIcon != null) return new ITexture[]{rIcon};
+        if(getCoverIDAtSide(aSide)!=0)
+            return new ITexture[]{getCoverTexture(aSide)};
         return getTextureUncovered(aSide);
     }
+
+    @Override
+    public ITexture[][] getTextures(boolean aCovered) {
+        return mTextures[aCovered?1:0][mColor];
+    }
+
+    @Override
+    public ITexture[][] getTextures() {
+        return getTextures(false);
+    }
+
+    public ITexture[][][][] mTextures = new ITexture[2][17][6][];
+
+    public void bakeTextureMap(){
+        Block b = worldObj.getBlock(xCoord,yCoord,zCoord);
+        byte q = mColor;
+        for (byte c = 0; c < 17; c++) {
+            mColor = c;
+            for (byte i = 0; i < 6; i++) {
+                mTextures[0][c][i] = getTextureUncovered(i);
+            }
+        }
+        for (byte c = 0; c < 17; c++) {
+            mColor = c;
+            for (byte i = 0; i < 6; i++) {
+                mTextures[1][c][i] = getTexture(b,i);
+            }
+        }
+        mColor = q;
+    }
+
+    @Override
+    public void rebakeMap() {
+        mTextures = new ITexture[2][17][6][];
+        bakeTextureMap();
+    }
+
 
     @Override
     public ITexture[] getTextureUncovered(byte aSide) {

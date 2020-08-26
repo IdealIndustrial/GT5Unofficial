@@ -6,6 +6,7 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_Container_BasicMachine;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
+import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.objects.GT_ItemStack;
@@ -118,10 +119,10 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     
     public boolean setMainFacing(byte aSide){
     	if (!isValidMainFacing(aSide)) return false;
-    	mMainFacing = aSide;
-    	if(getBaseMetaTileEntity().getFrontFacing() == mMainFacing){
+    	if(getBaseMetaTileEntity().getFrontFacing() == aSide){
     		getBaseMetaTileEntity().setFrontFacing(GT_Utility.getOppositeSide(aSide));
     	}
+        mMainFacing = aSide;
         onFacingChange();
         onMachineBlockUpdate();
     	return true;
@@ -536,10 +537,12 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     protected void doDisplayThings() {
         if (mMainFacing < 2 && getBaseMetaTileEntity().getFrontFacing() > 1) {
             mMainFacing = getBaseMetaTileEntity().getFrontFacing();
+           // ((IFastRenderedTileEntity)getBaseMetaTileEntity()).rebakeMap();
         }
         if (mMainFacing >= 2 && !mHasBeenUpdated) {
             mHasBeenUpdated = true;
             getBaseMetaTileEntity().setFrontFacing(getBaseMetaTileEntity().getBackFacing());
+         //   ((IFastRenderedTileEntity)getBaseMetaTileEntity()).rebakeMap();
         }
 
         if (displaysInputFluid()) {
@@ -638,6 +641,10 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
     @Override
     public void onValueUpdate(byte aValue) {
+        if(aValue!=mMainFacing) {
+            mMainFacing = aValue;
+            ((IFastRenderedTileEntity) getBaseMetaTileEntity()).rebakeMap();
+        }
         mMainFacing = aValue;
     }
 

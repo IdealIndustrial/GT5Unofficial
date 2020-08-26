@@ -4,6 +4,7 @@ import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
+import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IEnergyConnected;
@@ -294,6 +295,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                     dropCover(i, i, true);
                         worldObj.markTileEntityChunkModified(xCoord, yCoord, zCoord, this);
                         mMetaTileEntity.onFirstTick(this);
+                        if(aSideClient)
+                            rebakeMap();
                         if (!hasValidMetaTileEntity()) {
                             mRunningThroughTick = false;
                             return;
@@ -606,6 +609,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         receiveClientEvent(1, aTexturePage | 0x80);
         receiveClientEvent(2, aColorData);
         receiveClientEvent(3, aRedstoneData);
+        rebakeMap();
     }
 
     @Deprecated
@@ -630,6 +634,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         receiveClientEvent(1, 0x80);
         receiveClientEvent(2, aColorData);
         receiveClientEvent(3, aRedstoneData);
+        rebakeMap();
     }
 
     @Override
@@ -652,7 +657,10 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             issueTextureUpdate();
             switch (aEventID) {
                 case 0:
-                    mFacing = (byte) (aValue & 7);
+                    if(mFacing!= (aValue&7)) {
+                        mFacing = (byte) (aValue & 7);
+                        rebakeMap();
+                    }
                     mActive = ((aValue & 8) != 0);
                     mRedstone = ((aValue & 16) != 0);
 				    //mLockUpgrade	= ((aValue&32) != 0);
@@ -788,6 +796,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     public void setFrontFacing(byte aFacing) {
         if (isValidFacing(aFacing)) {
             mFacing = aFacing;
+            if(isClientSide())
+                rebakeMap();
             mMetaTileEntity.onFacingChange();
             onMachineBlockUpdate();
         }
@@ -1082,6 +1092,41 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         if (hasValidMetaTileEntity())
             return mMetaTileEntity.getTexture(this, aSide, mFacing, (byte) (mColor - 1), mActive, getOutputRedstoneSignal(aSide) > 0);
         return Textures.BlockIcons.ERROR_RENDERING;
+    }
+
+    @Override
+    public ITexture[][] getTextures() {
+        return mTextures[mActive?1:0][mColor];
+    }
+
+    @Override
+    public ITexture[][] getTextures(boolean tCovered) {
+        return getTextures();
+    }
+
+    public ITexture[][][][] mTextures = new ITexture[2][17][6][];
+
+    public void bakeTextureMap(){
+        Block b = worldObj.getBlock(xCoord,yCoord,zCoord);
+        byte q = mColor;
+        boolean a = mActive;
+        for(int s = 0; s < 2; s++) {
+            mActive = s == 1;
+            for (byte c = 0; c < 17; c++) {
+                mColor = c;
+                for (byte i = 0; i < 6; i++) {
+                    mTextures[s][c][i] = getTexture(b, i);
+                }
+            }
+        }
+        mColor = q;
+        mActive = a;
+    }
+
+    @Override
+    public void rebakeMap() {
+        mTextures = new ITexture[2][17][6][];
+        bakeTextureMap();
     }
 
     private boolean isEnergyInputSide(byte aSide) {
