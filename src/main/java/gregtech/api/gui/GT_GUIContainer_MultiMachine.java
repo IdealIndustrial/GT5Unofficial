@@ -59,8 +59,8 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
                     fontRendererObj.drawString(trans("140", "to (re-)start the Machine"), 10, 24, 16448255);
                     fontRendererObj.drawString(trans("141", "if it doesn't start."), 10, 32, 16448255);
                 } else {
-                    fontRendererObj.drawString(trans("142", "Running perfectly."), 10, 17, 16448255);
-                    fontRendererObj.drawString(trans("145","Progress") + " " + EnumChatFormatting.GREEN + mContainer.mProgressTime/20 + EnumChatFormatting.RESET + " / " + EnumChatFormatting.YELLOW + mContainer.mMaxProgressTime/20 + EnumChatFormatting.RESET + " s",10,26,16448255);
+                    fontRendererObj.drawString(trans("142", "Running perfectly."), 10, 18, 16448255);
+                    fontRendererObj.drawString(trans("145","Progress") + " " + EnumChatFormatting.GREEN + mContainer.mProgressTime/20 + EnumChatFormatting.RESET + " / " + EnumChatFormatting.YELLOW + mContainer.mMaxProgressTime/20 + EnumChatFormatting.RESET + " s",10,28,16448255);
                 }
                 if (mContainer.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_DrillerBase) {
                     ItemStack tItem = mContainer.mTileEntity.getMetaTileEntity().getStackInSlot(1);
@@ -88,8 +88,8 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
         mc.renderEngine.bindTexture(mProgressIcon);
-        drawTexturedModalRect(x+130,y+59,220,0,18,18);
-        drawTexturedModalRect(x+135,y+8,137,6,11,11);
+      //  drawTexturedModalRect(x+130,y+59,220,0,18,18);
+       // drawTexturedModalRect(x+135,y+8,137,6,11,11);
 
         if (this.mContainer != null) {
             if (mContainer.mDisplayErrorCode == 0) {
@@ -106,7 +106,12 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
             }
             if(mContainer.mTileEntity != null){
                 if(mContainer.mAllowedToWork == 1){
-                    drawTexturedModalRect(x+133,y+61,238,41,14,14);
+                    if(mContainer.mProgressTime>0){
+                        drawTexturedModalRect(x+133,y+61,238,41,14,14);
+                    }
+                    else {
+                        drawTexturedModalRect(x+133,y+61,238,26,14,14);
+                    }
                 }
                 else{
                     if(mContainer.mProgressTime>0){
