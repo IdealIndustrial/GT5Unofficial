@@ -103,6 +103,23 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Casing_FrostHazard.get(1L, new Object[0]), bits, new Object[]{"BY ", " M ", "   ", 'M', ItemList.Casing_SolidSteel, 'Y', Dyes.dyeYellow, 'B', Dyes.dyeBlack});
         GT_ModHandler.addCraftingRecipe(ItemList.Casing_NoiseHazard.get(1L, new Object[0]), bits, new Object[]{"   ", " M ", "BY ", 'M', ItemList.Casing_SolidSteel, 'Y', Dyes.dyeYellow, 'B', Dyes.dyeBlack});
 
+        /* Recycling Recipes for EBF Coils */
+        GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_Cupronickel.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.Cupronickel, 8L), GT_Values.NI,GT_Values.NI},null,300,360);
+        GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_Kanthal.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.Kanthal, 8L), GT_Values.NI,GT_Values.NI},null,300,360);
+        GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_Nichrome.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.Nichrome, 8L), GT_Values.NI,GT_Values.NI},null,300,360);
+        GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_TungstenSteel.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.TungstenSteel, 8L), GT_Values.NI,GT_Values.NI},null,300,360);
+        GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_HSSG.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.HSSG, 8L), GT_Values.NI,GT_Values.NI},null,300,360);
+        GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_Naquadah.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.Naquadah, 8L), GT_Values.NI,GT_Values.NI},null,300,360);
+        GT_Values.RA.addArcFurnaceRecipe(ItemList.Casing_Coil_NaquadahAlloy.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.NaquadahAlloy, 8L), GT_Values.NI,GT_Values.NI},null,300,360);
+       
+        GT_Values.RA.addPulveriserRecipe(ItemList.Casing_Coil_Cupronickel.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Cupronickel, 8L), GT_Values.NI,GT_Values.NI},null,1500,80);
+        GT_Values.RA.addPulveriserRecipe(ItemList.Casing_Coil_Kanthal.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Kanthal, 8L), GT_Values.NI,GT_Values.NI},null,1500,80);
+        GT_Values.RA.addPulveriserRecipe(ItemList.Casing_Coil_Nichrome.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Nichrome, 8L), GT_Values.NI,GT_Values.NI},null,1500,80);
+        GT_Values.RA.addPulveriserRecipe(ItemList.Casing_Coil_TungstenSteel.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust,Materials.TungstenSteel, 8L), GT_Values.NI,GT_Values.NI},null,1500,80);
+        GT_Values.RA.addPulveriserRecipe(ItemList.Casing_Coil_HSSG.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust,Materials.HSSG, 8L), GT_Values.NI,GT_Values.NI},null,1500,80);
+        GT_Values.RA.addPulveriserRecipe(ItemList.Casing_Coil_Naquadah.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Naquadah, 8L), GT_Values.NI,GT_Values.NI},null,1500,80);
+        GT_Values.RA.addPulveriserRecipe(ItemList.Casing_Coil_NaquadahAlloy.get(1L),new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust,Materials.NaquadahAlloy, 8L), GT_Values.NI,GT_Values.NI},null,1500,80);
+   	    
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_SolidSteel.get(1L, new Object[0]), bits, new Object[]{ItemList.Casing_Stripes_A});
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_SolidSteel.get(1L, new Object[0]), bits, new Object[]{ItemList.Casing_Stripes_B});
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_SolidSteel.get(1L, new Object[0]), bits, new Object[]{ItemList.Casing_RadioactiveHazard});
