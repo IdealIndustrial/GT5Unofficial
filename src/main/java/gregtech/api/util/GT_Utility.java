@@ -557,7 +557,7 @@ public class GT_Utility {
             for (int i = 0; i < tGrabSlots.length; i++) tGrabSlots[i] = i;
         }
 
-        if (aTileEntity2 != null && aTileEntity2 instanceof IInventory) {
+        if (aTileEntity2 instanceof IInventory) {
             int[] tPutSlots = null;
             if (aTileEntity2 instanceof ISidedInventory)
                 tPutSlots = ((ISidedInventory) aTileEntity2).getAccessibleSlotsFromSide(aPutTo);
@@ -568,20 +568,21 @@ public class GT_Utility {
             }
 
             for (int i = 0; i < tGrabSlots.length; i++) {
-            	byte tMovedItemCount = 0;
-                for (int j = 0; j < tPutSlots.length; j++) {
-                    if (listContainsItem(aFilter, aTileEntity1.getStackInSlot(tGrabSlots[i]), true, aInvertFilter)) {
-                        if (isAllowedToTakeFromSlot(aTileEntity1, tGrabSlots[i], aGrabFrom, aTileEntity1.getStackInSlot(tGrabSlots[i]))) {
-                            if (isAllowedToPutIntoSlot((IInventory) aTileEntity2, tPutSlots[j], aPutTo, aTileEntity1.getStackInSlot(tGrabSlots[i]), aMaxTargetStackSize)) {
+                byte tMovedItemCount = 0;
+                ItemStack tGrabStack = aTileEntity1.getStackInSlot(tGrabSlots[i]);
+                if (listContainsItem(aFilter, tGrabStack, true, aInvertFilter)) {
+                    if (tGrabStack.stackSize >= aMinMoveAtOnce && isAllowedToTakeFromSlot(aTileEntity1, tGrabSlots[i], aGrabFrom, tGrabStack)) {
+                        for (int j = 0; j < tPutSlots.length; j++) {
+                            if (isAllowedToPutIntoSlot((IInventory) aTileEntity2, tPutSlots[j], aPutTo, tGrabStack, aMaxTargetStackSize)) {
                                 tMovedItemCount += moveStackFromSlotAToSlotB(aTileEntity1, (IInventory) aTileEntity2, tGrabSlots[i], tPutSlots[j], aMaxTargetStackSize, aMinTargetStackSize, (byte) (aMaxMoveAtOnce - tMovedItemCount), aMinMoveAtOnce);
-                                if (tMovedItemCount >= aMaxMoveAtOnce) {
-                                	return tMovedItemCount;
-                                }
+                                if (tMovedItemCount >= aMaxMoveAtOnce ||(tMovedItemCount > 0 && aMaxTargetStackSize < 64))
+                                     return tMovedItemCount;
+
                             }
                         }
                     }
                 }
-                if (tMovedItemCount > 0) return tMovedItemCount;
+            if (tMovedItemCount > 0) return tMovedItemCount;
             }
 
             if (aDoCheckChests && aTileEntity1 instanceof TileEntityChest) {
