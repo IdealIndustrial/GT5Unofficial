@@ -8,7 +8,6 @@ import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.common.items.behaviors.Behaviour_Sense;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
-import net.minecraft.init.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

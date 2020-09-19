@@ -51,11 +51,13 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     public FluidStack mOutputFluid;
     public String mGUIName = "", mNEIName = "";
     public GT_MetaTileEntity_MultiBlockBase mCleanroom;
+    public boolean fluidChange = false;
     /**
      * Contains the Recipe which has been previously used, or null if there was no previous Recipe, which could have been buffered
      */
     protected GT_Recipe mLastRecipe = null;
-    private FluidStack mFluidOut;
+    public FluidStack mFluidOut;
+    public FluidStack mFluid1, mFluid2;
 
     /**
      * @param aOverlays 0 = SideFacingActive

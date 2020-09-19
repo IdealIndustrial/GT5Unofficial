@@ -388,6 +388,7 @@ public interface IGT_RecipeAdder {
      */
     public boolean addOreWasherRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, int aDuration, int aEUt);
     public boolean addOreWasherRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt);
+    public boolean addOreWasherRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt);
 
     /**
      * Adds an Implosion Compressor Recipe

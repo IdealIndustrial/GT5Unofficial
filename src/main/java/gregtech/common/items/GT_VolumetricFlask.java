@@ -120,6 +120,7 @@ public class GT_VolumetricFlask extends GT_Generic_Item implements IFluidContain
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister aIconRegister) {
         super.registerIcons(aIconRegister);
         iconWindow = aIconRegister.registerIcon(RES_PATH_ITEM + "gt.Volumetric_Flask.window");

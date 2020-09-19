@@ -11,6 +11,8 @@ import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DrillerBase
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
@@ -22,11 +24,14 @@ import net.minecraft.item.ItemStack;
 public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machine {
 
     String mName = "";
+    ResourceLocation mProgressIcon  = new ResourceLocation(RES_PATH_GUI + "multimachines/"+"Progress.png");
 
     public GT_GUIContainer_MultiMachine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, String aTextureFile) {
         super(new GT_Container_MultiMachine(aInventoryPlayer, aTileEntity), RES_PATH_GUI + "multimachines/" + (aTextureFile == null ? "MultiblockDisplay" : aTextureFile));
         mName = aName;
     }
+
+
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
@@ -54,7 +59,8 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
                     fontRendererObj.drawString(trans("140", "to (re-)start the Machine"), 10, 24, 16448255);
                     fontRendererObj.drawString(trans("141", "if it doesn't start."), 10, 32, 16448255);
                 } else {
-                    fontRendererObj.drawString(trans("142", "Running perfectly."), 10, 16, 16448255);
+                    fontRendererObj.drawString(trans("142", "Running perfectly."), 10, 17, 16448255);
+                    fontRendererObj.drawString(trans("145","Progress") + " " + EnumChatFormatting.GREEN + mContainer.mProgressTime/20 + EnumChatFormatting.RESET + " / " + EnumChatFormatting.YELLOW + mContainer.mMaxProgressTime/20 + EnumChatFormatting.RESET + " s",10,26,16448255);
                 }
                 if (mContainer.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_DrillerBase) {
                     ItemStack tItem = mContainer.mTileEntity.getMetaTileEntity().getStackInSlot(1);
@@ -81,5 +87,39 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+        mc.renderEngine.bindTexture(mProgressIcon);
+        drawTexturedModalRect(x+130,y+59,220,0,18,18);
+        drawTexturedModalRect(x+135,y+8,137,6,11,11);
+
+        if (this.mContainer != null) {
+            if (mContainer.mDisplayErrorCode == 0) {
+                double tBarLength = ((double) mContainer.mProgressTime) / mContainer.mMaxProgressTime;
+                if(mContainer.mMaxProgressTime != 0) {
+                    drawTexturedModalRect(x + 12, y + 61, 0, 226, Math.min(113, (int) (tBarLength * 113)), 13);
+                    drawTexturedModalRect(x + 10, y + 59, 0, 239, 119, 17);
+                }
+                if (mContainer.mActive == 0) {
+                    drawTexturedModalRect(x + 136, y + 9, 238, 0, 9, 9);
+
+                } else
+                    drawTexturedModalRect(x + 136, y + 9, 247, 0, 9, 9);
+            }
+            if(mContainer.mTileEntity != null){
+                if(mContainer.mAllowedToWork == 1){
+                    drawTexturedModalRect(x+133,y+61,238,41,14,14);
+                }
+                else{
+                    if(mContainer.mProgressTime>0){
+                        drawTexturedModalRect(x+133,y+61,238,26,14,14);
+                    }
+                    else {
+                        drawTexturedModalRect(x+133,y+61,238,11,14,14);
+                    }
+                }
+            }
+        }
+
+
     }
+
 }

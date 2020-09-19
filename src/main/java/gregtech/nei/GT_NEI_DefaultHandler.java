@@ -14,12 +14,9 @@ import gregtech.GT_Mod;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
-import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.objects.GT_NEIItemStack;
 import gregtech.api.objects.ItemData;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
+import gregtech.api.util.*;
 import gregtech.common.gui.GT_GUIContainer_FusionReactor;
 import gregtech.common.gui.GT_GUIContainer_PrimitiveBlastFurnace;
 import net.minecraft.client.Minecraft;
@@ -45,11 +42,11 @@ public class GT_NEI_DefaultHandler
         GuiContainerManager.addTooltipHandler(new GT_RectHandler());
     }
 
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<CachedDefaultRecipe>>> inputMaps = new HashMap<>();
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<CachedDefaultRecipe>>> outputMaps = new HashMap<>();
+    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> inputMaps = new HashMap<>();
+    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> outputMaps = new HashMap<>();
 
-    protected HashMap<GT_ItemStack,List<CachedDefaultRecipe>> inputRecipes;
-    protected HashMap<GT_ItemStack,List<CachedDefaultRecipe>> outputRecipes;
+    protected HashMap<GT_NEIItemStack,List<GT_Recipe>> inputRecipes;
+    protected HashMap<GT_NEIItemStack,List<GT_Recipe>> outputRecipes;
     protected boolean isFilled = false;
 
     protected final GT_Recipe.GT_Recipe_Map mRecipeMap;
@@ -102,11 +99,11 @@ public class GT_NEI_DefaultHandler
                     ArrayList<ItemStack> tResults = new ArrayList<>();
                     tResults.addAll(Arrays.asList(tStck.items));
                     for (ItemStack t : tResults) {
-                        List<CachedDefaultRecipe> r = inputRecipes.get(new GT_ItemStack(t));
+                        List<GT_Recipe> r = inputRecipes.get(new GT_NEIItemStack(t));
                         if (r == null)
                             r = new ArrayList<>();
-                        r.add(tNEIRecipe);
-                        inputRecipes.put(new GT_ItemStack(t), r);
+                        r.add(tNEIRecipe.mRecipe);
+                        inputRecipes.put(new GT_NEIItemStack(t), r);
                     }
 
                 }
@@ -129,11 +126,11 @@ public class GT_NEI_DefaultHandler
                     ArrayList<ItemStack> tResults = new ArrayList<>();
                     tResults.addAll(Arrays.asList(tStck.items));
                     for (ItemStack t : tResults) {
-                        List<CachedDefaultRecipe> r = outputRecipes.get(new GT_ItemStack(t));
+                        List<GT_Recipe> r = outputRecipes.get(new GT_NEIItemStack(t));
                         if (r == null)
                             r = new ArrayList<>();
-                        r.add(tNEIRecipe);
-                        outputRecipes.put(new GT_ItemStack(t), r);
+                        r.add(tNEIRecipe.mRecipe);
+                        outputRecipes.put(new GT_NEIItemStack(t), r);
                     }
 
                 }
@@ -166,15 +163,16 @@ public class GT_NEI_DefaultHandler
             }
         }
         for(ItemStack t : tResults){
-            List<CachedDefaultRecipe> r = inputRecipes.get(new GT_ItemStack(t));
-            if(r!=null)
-                for(CachedDefaultRecipe q : r){
+            List<GT_Recipe> res = inputRecipes.get(new GT_NEIItemStack(t));
+            if(res!=null)
+                for(GT_Recipe r : res){
+                    CachedDefaultRecipe q = new CachedDefaultRecipe(r);
                     if(!arecipes.contains(q))
-                    arecipes.addAll(r);
+                        arecipes.add(q);
                 }
 
         }
-        /*for (GT_Recipe tRecipe : getSortedRecipes()) {
+     /*  for (GT_Recipe tRecipe : getSortedRecipes()) {
             if (!tRecipe.mHidden) {
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (ItemStack tStack : tResults) {
@@ -210,11 +208,12 @@ public class GT_NEI_DefaultHandler
             }
         }
         for(ItemStack t : tInputs){
-            List<CachedDefaultRecipe> r = outputRecipes.get(new GT_ItemStack(t));
-            if(r!=null)
-                for(CachedDefaultRecipe q : r){
+            List<GT_Recipe> res = outputRecipes.get(new GT_NEIItemStack(t));
+            if(res!=null)
+                for(GT_Recipe r : res){
+                    CachedDefaultRecipe q = new CachedDefaultRecipe(r);
                     if(!arecipes.contains(q))
-                        arecipes.addAll(r);
+                        arecipes.add(q);
                 }
 
         }
@@ -875,7 +874,11 @@ public class GT_NEI_DefaultHandler
                     tStartIndex++;
             }
             if ((aRecipe.mFluidInputs.length > 0) && (aRecipe.mFluidInputs[0] != null) && (aRecipe.mFluidInputs[0].getFluid() != null)) {
-                this.mInputs.add(new FixedPositionedStack(GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[0], true), 48, 52));
+                ItemStack f = GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[0], true);
+                if(aRecipe.mDistWaterUnificate&&aRecipe.mFluidInputs[0].isFluidEqual(GT_ModHandler.getWater(1))){
+                    f.setStackDisplayName(GT_ModHandler.getWater(1).getLocalizedName()+"/"+GT_ModHandler.getDistilledWater(1).getLocalizedName());
+                }
+                this.mInputs.add(new FixedPositionedStack(f, 48, 52));
                 if ((aRecipe.mFluidInputs.length > 1) && (aRecipe.mFluidInputs[1] != null) && (aRecipe.mFluidInputs[1].getFluid() != null)) {
                     this.mInputs.add(new FixedPositionedStack(GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[1], true), 30, 52));
                 }
@@ -912,7 +915,12 @@ public class GT_NEI_DefaultHandler
         public List<PositionedStack> getOtherStacks() {
             return this.mOutputs;
         }
-    } 
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof CachedDefaultRecipe && ((CachedDefaultRecipe)o).mRecipe.equals(mRecipe);
+        }
+    }
     
     public String trans(String aKey, String aEnglish){
     	return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_"+aKey, aEnglish, false);
