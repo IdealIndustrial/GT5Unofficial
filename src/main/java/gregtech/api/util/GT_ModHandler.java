@@ -125,7 +125,6 @@ public class GT_ModHandler {
     public static List<Integer> sSingleNonBlockDamagableRecipeList_warntOutput = new ArrayList<Integer>(50);
     public static List<Integer> sVanillaRecipeList_warntOutput = new ArrayList<Integer>(50);
     public static final List<IRecipe> sSingleNonBlockDamagableRecipeList_verified = new ArrayList<IRecipe>(1000);
-    private static HashMap<GT_ItemStack, ItemStack> smeltingRecipeCache = new LinkedHashMap<>();
     private static Cache<GT_ItemStack, ItemStack> sSmeltingRecipeCache = CacheBuilder.newBuilder().maximumSize(1000).build();	
 
     static {
