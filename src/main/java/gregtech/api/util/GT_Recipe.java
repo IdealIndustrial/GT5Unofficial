@@ -15,10 +15,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.*;
 
 import java.util.*;
 
@@ -76,6 +73,11 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
      * Used for describing recipes that do not fit the default recipe pattern (for example Large Boiler Fuels)
      */
     private String[] neiDesc = null;
+
+    /**
+     * can water be replaced with distWater
+     */
+    public boolean mDistWaterUnificate = false;
     
     private GT_Recipe(GT_Recipe aRecipe) {
         mInputs = GT_Utility.copyStackArray((Object[]) aRecipe.mInputs);
@@ -333,12 +335,13 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
     public boolean isRecipeInputEqual(boolean aDecreaseStacksizeBySuccess, boolean aDontCheckStackSizes, FluidStack[] aFluidInputs, ItemStack... aInputs) {
         if (mFluidInputs.length > 0 && aFluidInputs == null) return false;
         int amt;
+
         for (FluidStack tFluid : mFluidInputs)
             if (tFluid != null) {
                 boolean temp = true;
                 amt = tFluid.amount;
                 for (FluidStack aFluid : aFluidInputs)
-                    if (aFluid != null && aFluid.isFluidEqual(tFluid)) {
+                    if (aFluid != null && (aFluid.isFluidEqual(tFluid)||mDistWaterUnificate&&areFluidsWater(tFluid,aFluid))) {
                         if (aDontCheckStackSizes) {
                             temp = false;
                             break;
@@ -380,7 +383,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                     if (tFluid != null) {
                         amt = tFluid.amount;
                         for (FluidStack aFluid : aFluidInputs) {
-                            if (aFluid != null && aFluid.isFluidEqual(tFluid)) {
+                            if (aFluid != null && (aFluid.isFluidEqual(tFluid)||mDistWaterUnificate&&areFluidsWater(tFluid,aFluid))) {
                                 if (aDontCheckStackSizes) {
                                     aFluid.amount -= amt;
                                     break;
@@ -425,6 +428,10 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         }
 
         return true;
+    }
+
+    private boolean areFluidsWater(FluidStack aFluidRecipe, FluidStack aFluidReal){
+        return aFluidRecipe.isFluidEqual(GT_ModHandler.getWater(1))&&aFluidReal.isFluidEqual(GT_ModHandler.getDistilledWater(1));
     }
 
     @Override
@@ -507,7 +514,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
          */
         public static final Collection<GT_Recipe_Map> sMappings = new ArrayList<GT_Recipe_Map>();
 
-        public static final GT_Recipe_Map sOreWasherRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(120), "gt.recipe.orewasher", "Ore Washing Plant", null, RES_PATH_GUI + "basicmachines/OreWasher", 1, 3, 1, 1, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sOreWasherRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.orewasher", "Ore Washing Plant", null, RES_PATH_GUI + "basicmachines/OreWasher", 2, 3, 1, 1, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sThermalCentrifugeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(120), "gt.recipe.thermalcentrifuge", "Thermal Centrifuge", null, RES_PATH_GUI + "basicmachines/ThermalCentrifuge", 1, 3, 1, 0, 2, E, 1, E, true, true);
         public static final GT_Recipe_Map sCompressorRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.compressor", "Compressor", null, RES_PATH_GUI + "basicmachines/Compressor", 1, 1, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sExtractorRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(30), "gt.recipe.extractor", "Extractor", null, RES_PATH_GUI + "basicmachines/Extractor", 1, 1, 1, 0, 1, E, 1, E, true, true);
@@ -824,13 +831,17 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             // If the minimal Amount of Items for the Recipe is 0, then it could be a Fluid-Only Recipe, so check that Map too.
             if (mMinimalInputItems == 0 && aFluids != null) for (FluidStack aFluid : aFluids)
                 if (aFluid != null) {
-                    Collection<GT_Recipe>
-                            tRecipes = mRecipeFluidMap.get(aFluid.getFluid());
+                    Collection<GT_Recipe> tRecipes = mRecipeFluidMap.get(aFluid.getFluid());
                     if (tRecipes != null) for (GT_Recipe tRecipe : tRecipes)
                         if (!tRecipe.mFakeRecipe && tRecipe.isRecipeInputEqual(false, aDontCheckStackSizes, aFluids, aInputs))
                             return tRecipe.mEnabled && aVoltage * mAmperage >= tRecipe.mEUt ? tRecipe : null;
                 }
-
+            if(aFluids!=null&&aFluids.length==1&&aFluids[0]!=null&&aFluids[0].isFluidEqual(GT_ModHandler.getDistilledWater(1))) {
+                Collection<GT_Recipe> tRecipes = mRecipeFluidMap.get(FluidRegistry.WATER);
+                if (tRecipes != null) for (GT_Recipe tRecipe : tRecipes)
+                    if (tRecipe.mDistWaterUnificate&&!tRecipe.mFakeRecipe && tRecipe.isRecipeInputEqual(false, aDontCheckStackSizes, aFluids, aInputs))
+                        return tRecipe.mEnabled && aVoltage * mAmperage >= tRecipe.mEUt ? tRecipe : null;
+            }
             // And nothing has been found.
             return null;
         }
@@ -1211,41 +1222,6 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
     }
 
     /**
-     * Special Class for Ore Washer Recipe handling.
-     */
-    public static class GT_Recipe_Map_OreWasher extends GT_Recipe_Map_NonGTRecipes {
-        public GT_Recipe_Map_OreWasher(Collection<GT_Recipe> aRecipeList, String aUnlocalizedName, String aLocalName, String aNEIName, String aNEIGUIPath, int aUsualInputCount, int aUsualOutputCount, int aMinimalInputItems, int aMinimalInputFluids, int aAmperage, String aNEISpecialValuePre, int aNEISpecialValueMultiplier, String aNEISpecialValuePost, boolean aShowVoltageAmperageInNEI, boolean aNEIAllowed) {
-            super(aRecipeList, aUnlocalizedName, aLocalName, aNEIName, aNEIGUIPath, aUsualInputCount, aUsualOutputCount, aMinimalInputItems, aMinimalInputFluids, aAmperage, aNEISpecialValuePre, aNEISpecialValueMultiplier, aNEISpecialValuePost, aShowVoltageAmperageInNEI, aNEIAllowed);
-        }
-
-        @Override
-        public GT_Recipe findRecipe(IHasWorldObjectAndCoords aTileEntity, GT_Recipe aRecipe, boolean aNotUnificated, long aVoltage, FluidStack[] aFluids, ItemStack aSpecialSlot, ItemStack... aInputs) {
-            if (aInputs == null || aInputs.length <= 0 || aInputs[0] == null || aFluids == null || aFluids.length < 1 || !GT_ModHandler.isWater(aFluids[0]))
-                return null;
-            if (aRecipe != null && aRecipe.isRecipeInputEqual(false, true, aFluids, aInputs)) return aRecipe;
-            ItemStack tComparedInput = GT_Utility.copy(aInputs[0]);
-            NBTTagCompound aRecipeMetaData = new NBTTagCompound();
-            ItemStack[] tOutputItems = GT_ModHandler.getMachineOutput(tComparedInput, ic2.api.recipe.Recipes.oreWashing.getRecipes(), true, aRecipeMetaData, null, null, null);
-            return GT_Utility.arrayContainsNonNull(tOutputItems) ? new GT_Recipe(false, new ItemStack[]{GT_Utility.copyAmount(aInputs[0].stackSize - tComparedInput.stackSize, aInputs[0])}, tOutputItems, null, null, new FluidStack[]{new FluidStack(aFluids[0].getFluid(), ((NBTTagCompound) aRecipeMetaData.getTag("return")).getInteger("amount"))}, null, 400, 16, 0) : null;
-        }
-
-        @Override
-        public boolean containsInput(ItemStack aStack) {
-            return GT_Utility.arrayContainsNonNull(GT_ModHandler.getMachineOutput(GT_Utility.copyAmount(64, aStack), ic2.api.recipe.Recipes.oreWashing.getRecipes(), false, new NBTTagCompound(), null, null, null));
-        }
-
-        @Override
-        public boolean containsInput(FluidStack aFluid) {
-            return GT_ModHandler.isWater(aFluid);
-        }
-
-        @Override
-        public boolean containsInput(Fluid aFluid) {
-            return GT_ModHandler.isWater(new FluidStack(aFluid, 0));
-        }
-    }
-
-    /**
      * Special Class for Macerator/RockCrusher Recipe handling.
      */
     public static class GT_Recipe_Map_Macerator extends GT_Recipe_Map {
@@ -1304,6 +1280,29 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                 }
             }
             return rRecipe;
+        }
+    }
+
+    public static class GT_Recipe_Map_OreWasher extends GT_Recipe_Map {
+        public GT_Recipe_Map_OreWasher(Collection<GT_Recipe> aRecipeList, String aUnlocalizedName, String aLocalName, String aNEIName, String aNEIGUIPath, int aUsualInputCount, int aUsualOutputCount, int aMinimalInputItems, int aMinimalInputFluids, int aAmperage, String aNEISpecialValuePre, int aNEISpecialValueMultiplier, String aNEISpecialValuePost, boolean aShowVoltageAmperageInNEI, boolean aNEIAllowed) {
+            super(aRecipeList, aUnlocalizedName, aLocalName, aNEIName, aNEIGUIPath, aUsualInputCount, aUsualOutputCount, aMinimalInputItems, aMinimalInputFluids, aAmperage, aNEISpecialValuePre, aNEISpecialValueMultiplier, aNEISpecialValuePost, aShowVoltageAmperageInNEI, aNEIAllowed);
+        }
+
+        @Override
+        public GT_Recipe findRecipe(IHasWorldObjectAndCoords aTileEntity, GT_Recipe aRecipe, boolean aNotUnificated, long aVoltage, FluidStack[] aFluids, ItemStack aSpecialSlot, ItemStack... aInputs) {
+            if(GT_Utility.areFluidsEqual(aFluids[0],GT_ModHandler.getDistilledWater(1),true))
+                aFluids[0] = GT_ModHandler.getDistilledWater(aFluids[0].amount);
+            return super.findRecipe(aTileEntity, aRecipe, aNotUnificated, aVoltage, aFluids, aSpecialSlot, aInputs);
+        }
+
+        @Override
+        public boolean containsInput(Fluid aFluid) {
+            return aFluid.equals(GT_ModHandler.getWater(1).getFluid())||aFluid.equals(GT_ModHandler.getDistilledWater(1).getFluid());
+        }
+
+        @Override
+        public boolean containsInput(FluidStack aFluid) {
+            return GT_Utility.areFluidsEqual(GT_ModHandler.getWater(1),aFluid,true)||GT_Utility.areFluidsEqual(GT_ModHandler.getDistilledWater(1),aFluid,true);
         }
     }
 

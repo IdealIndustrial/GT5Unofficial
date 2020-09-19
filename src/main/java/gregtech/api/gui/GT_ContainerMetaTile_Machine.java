@@ -17,8 +17,8 @@ import java.util.Iterator;
  */
 public class GT_ContainerMetaTile_Machine extends GT_Container {
 
-    public int mActive = 0, mMaxProgressTime = 0, mProgressTime = 0, mEnergy = 0, mSteam = 0, mSteamStorage = 0, mStorage = 0, mOutput = 0, mInput = 0, mID = 0, mDisplayErrorCode = 0;
-    private int oActive = 0, oMaxProgressTime = 0, oProgressTime = 0, oEnergy = 0, oSteam = 0, oSteamStorage = 0, oStorage = 0, oOutput = 0, oInput = 0, oID = 0, oDisplayErrorCode = 0, mTimer = 0;
+    public int mActive = 0, mMaxProgressTime = 0, mProgressTime = 0, mEnergy = 0, mSteam = 0, mSteamStorage = 0, mStorage = 0, mOutput = 0, mInput = 0, mID = 0, mDisplayErrorCode = 0, mAllowedToWork = 0;
+    private int oActive = 0, oMaxProgressTime = 0, oProgressTime = 0, oEnergy = 0, oSteam = 0, oSteamStorage = 0, oStorage = 0, oOutput = 0, oInput = 0, oID = 0, oDisplayErrorCode = 0, oAllowedToWork = 0, mTimer = 0;
 
     public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
         super(aInventoryPlayer, aTileEntity);
@@ -77,6 +77,7 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
         mProgressTime = mTileEntity.getProgress();
         mMaxProgressTime = mTileEntity.getMaxProgress();
         mActive = mTileEntity.isActive() ? 1 : 0;
+        mAllowedToWork = mTileEntity.isAllowedToWork() ? 1 : 0;
         mTimer++;
 
         Iterator var2 = this.crafters.iterator();
@@ -121,6 +122,9 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
                 var1.sendProgressBarUpdate(this, 19, mSteamStorage & 65535);
                 var1.sendProgressBarUpdate(this, 20, mSteamStorage >>> 16);
             }
+            if (mTimer % 500 == 10 || oAllowedToWork != mAllowedToWork) {
+                var1.sendProgressBarUpdate(this, 21, mAllowedToWork);
+            }
         }
 
         oID = mID;
@@ -134,6 +138,7 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
         oProgressTime = mProgressTime;
         oMaxProgressTime = mMaxProgressTime;
         oDisplayErrorCode = mDisplayErrorCode;
+        oAllowedToWork = mAllowedToWork;
     }
 
     @SideOnly(Side.CLIENT)
@@ -192,6 +197,8 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
             case 20:
                 mSteamStorage = mSteamStorage & 65535 | par2 << 16;
                 break;
+            case 21:
+                mAllowedToWork = par2;
         }
     }
 

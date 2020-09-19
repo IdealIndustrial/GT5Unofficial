@@ -28,6 +28,7 @@ import gregtech.common.gui.GT_GUIContainerVolumetricFlask;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
+import gregtech.common.items.behaviors.Behaviour_ProspectorsBook;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -372,10 +373,6 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         ItemList.IC2_ReBattery.set(GT_ModHandler.getIC2Item("reBattery", 1L));
         ItemList.IC2_AdvBattery.set(GT_ModHandler.getIC2Item("advBattery", 1L));
         ItemList.IC2_EnergyCrystal.set(GT_ModHandler.getIC2Item("energyCrystal", 1L));
-        ItemList.IC2_LapotronCrystal.set(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
-
-        ItemList.IC2_LapotronCrystal.set(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
-        ItemList.IC2_LapotronCrystal.set(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
         ItemList.IC2_LapotronCrystal.set(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
 
         ItemList.Tool_Sword_Bronze.set(GT_ModHandler.getIC2Item("bronzeSword", 1L));
@@ -1325,6 +1322,14 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                         }
                         if (this.mInventoryUnification) {
                             GT_OreDictUnificator.setStack(true, tStack);
+                        }
+                        if (GT_Utility.areStacksEqual(ItemList.ProspectorsBook.get(1), tStack, true)) {
+                            NBTTagCompound tNBT = tStack.getTagCompound();
+                            if(tNBT != null){
+                                if(!tNBT.getBoolean("inited")){
+                                    aEvent.player.inventory.setInventorySlotContents(i, Behaviour_ProspectorsBook.getBook(aEvent.player.worldObj,tNBT.getInteger("x"), tNBT.getInteger("y"), tNBT.getInteger("z"),new XSTR(aEvent.player.worldObj.getSeed())));
+                                }
+                            }
                         }
                     }
                 }
