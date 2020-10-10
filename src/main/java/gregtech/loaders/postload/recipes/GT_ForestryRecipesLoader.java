@@ -76,6 +76,22 @@ public class GT_ForestryRecipesLoader implements Runnable {
     GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 4));
     GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 5));	    
 
+		ItemStack basic = blocks.farm.get(BlockFarmType.BASIC, 1);
+		ItemStack gearbox = blocks.farm.get(BlockFarmType.GEARBOX, 1);
+		ItemStack hatch = blocks.farm.get(BlockFarmType.HATCH, 1);
+		ItemStack valve = blocks.farm.get(BlockFarmType.VALVE, 1);
+		ItemStack control = blocks.farm.get(BlockFarmType.CONTROL, 1);
+
+		for (EnumFarmBlockTexture block : EnumFarmBlockTexture.values()) {
+			NBTTagCompound compound = new NBTTagCompound();
+			block.saveToCompound(compound);
+
+			basic.setTagCompound(compound);
+			gearbox.setTagCompound(compound);
+			hatch.setTagCompound(compound);
+			valve.setTagCompound(compound);
+			control.setTagCompound(compound);	    
+	    
     GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
 			ItemList.IC2_Item_Casing_Copper.get(4L), 
 			GT_OreDictUnificator.get(OrePrefixes.screw,Materials.Steel, 4L), 
