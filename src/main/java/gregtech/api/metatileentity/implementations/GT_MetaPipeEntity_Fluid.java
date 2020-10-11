@@ -44,6 +44,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
     public final boolean mGasProof;
     public final FluidStack[] mFluids;
     public byte mLastReceivedFrom = 0, oLastReceivedFrom = 0;
+    public boolean mStructurePart = false;
     /**
      * Bitmask for whether disable fluid input form each side.
      */
@@ -230,7 +231,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
 
             if (!GT_Mod.gregtechproxy.gt6Pipe || mCheckConnections) checkConnections();
 
-            boolean shouldDistribute = (oLastReceivedFrom == mLastReceivedFrom);
+            boolean shouldDistribute = (oLastReceivedFrom == mLastReceivedFrom) && !mStructurePart;
             for (int i = 0, j = aBaseMetaTileEntity.getRandomNumber(mPipeAmount); i < mPipeAmount; i++) {
                 int index = (i + j) % mPipeAmount;
                 if (mFluids[index] != null && mFluids[index].amount <= 0) mFluids[index] = null;
@@ -380,6 +381,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
 
     @Override
     public boolean canConnect(byte aSide, TileEntity tTileEntity) {
+        if (mStructurePart && getBaseMetaTileEntity().getBlockAtSide(aSide) == GregTech_API.sBlockCasings8) return true;
         if (tTileEntity == null) return false;
 
         final byte tSide = (byte)ForgeDirection.getOrientation(aSide).getOpposite().ordinal();

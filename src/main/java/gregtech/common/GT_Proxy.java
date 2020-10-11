@@ -29,6 +29,7 @@ import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
 import gregtech.common.items.behaviors.Behaviour_ProspectorsBook;
+import gregtech.nei.GT_NEI_DefaultHandler;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -605,6 +606,10 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                 }
             }
         } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            GT_NEI_DefaultHandler.inputMaps = new HashMap<>();
+            GT_NEI_DefaultHandler.outputMaps = new HashMap<>();
+        }
 
         dimensionWiseChunkData.clear();//!!! IMPORTANT for map switching...
         dimensionWisePollution.clear();//!!! IMPORTANT for map switching...
