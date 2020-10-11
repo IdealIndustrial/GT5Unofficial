@@ -194,11 +194,12 @@ public abstract class GT_MetaTileEntity_BasicGenerator extends GT_MetaTileEntity
             inputOverride++;
         else
             inputOverride--;
+        int c = getCapacity()/1000;
         if(inputOverride<0)
-            inputOverride=0;
-        if(inputOverride>15)
-            inputOverride = 15;
-        GT_Utility.sendChatToPlayer(aPlayer,"max allowed capacity is: "+(getCapacity()-inputOverride*1000));
+            inputOverride+= c;
+        if(inputOverride>c)
+            inputOverride -= c;
+        GT_Utility.sendChatToPlayer(aPlayer,"max allowed capacity is: "+((c-inputOverride)*1000));
     }
 
     @Override
