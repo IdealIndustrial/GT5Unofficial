@@ -42,8 +42,8 @@ public class GT_NEI_DefaultHandler
         GuiContainerManager.addTooltipHandler(new GT_RectHandler());
     }
 
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> inputMaps = new HashMap<>();
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> outputMaps = new HashMap<>();
+    public static HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> inputMaps = new HashMap<>();
+    public static HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> outputMaps = new HashMap<>();
 
     protected HashMap<GT_NEIItemStack,List<GT_Recipe>> inputRecipes;
     protected HashMap<GT_NEIItemStack,List<GT_Recipe>> outputRecipes;
@@ -290,7 +290,7 @@ public class GT_NEI_DefaultHandler
 				drawText(10, 73, trans("152","Total: ") + NumberFormat.getNumberInstance().format((long)tDuration * tEUt) + " EU", -16777216);
 				drawText(10, 83, trans("153","Usage: ") + NumberFormat.getNumberInstance().format(tEUt) + " EU/t", -16777216);
 				if (this.mRecipeMap.mShowVoltageAmperageInNEI) {
-					drawText(10, 93, trans("154","Voltage: ") + NumberFormat.getNumberInstance().format(tEUt / this.mRecipeMap.mAmperage) + " EU ("+GT_Values.VN[GT_Utility.getTier(tEUt / this.mRecipeMap.mAmperage)]+")", -16777216);
+					drawText(10, 93, trans("154","Voltage: ") + NumberFormat.getNumberInstance().format(tEUt / this.mRecipeMap.mAmperage) + " EU ("+GT_Values.VN[GT_Utility.getTier(tEUt / this.mRecipeMap.mAmperage) < 16 ? 1 : GT_Utility.getTier(tEUt / this.mRecipeMap.mAmperage)]+")", -16777216);
 					drawText(10, 103, trans("155","Amperage: ") + this.mRecipeMap.mAmperage, -16777216);
 				} else {
 					drawText(10, 93, trans("156","Voltage: unspecified"), -16777216);
