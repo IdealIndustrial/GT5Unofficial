@@ -108,7 +108,7 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
 
     @Override
     public ITexture getBaseTexture() {
-        return Textures.BlockIcons.MACHINE_CASINGS[1][51+getTier()];
+        return Textures.BlockIcons.casingTexturePages[1][51+getTier()];
     }
 
     @Override

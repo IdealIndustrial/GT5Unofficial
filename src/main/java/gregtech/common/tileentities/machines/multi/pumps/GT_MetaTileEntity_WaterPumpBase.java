@@ -102,14 +102,13 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     }
 
     double waterToOutput = 0f;
-
     @Override
     public boolean onRunningTick(ItemStack aStack) {
         double tOut = getOutputRate()*(mEfficiency/10000) + waterToOutput;
         int rOut = (int)tOut;
         waterToOutput = tOut - rOut;
         addOutput(GT_ModHandler.getWater(rOut));
-        return true;
+        return super.onRunningTick(aStack);
     }
 
     @Override
