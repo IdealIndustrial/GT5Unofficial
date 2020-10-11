@@ -20,11 +20,24 @@ public class GT_Block_Casings8
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Chemically Inert Machine Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".1.name", "PTFE Pipe Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".2.name", "Robust HSS-G Machine Casing");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".10.name", "Primitive Pump Filter");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".11.name", "Simple Pump Filter");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".12.name", "Advanced Pump Filter");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".13.name", "Advanced Pump Filter II");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".14.name", "Advanced Pump Filter III");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".15.name", "Advanced Pump Filter IV");
 
 
         ItemList.Casing_Chemically_Inert.set(new ItemStack(this, 1, 0));
         ItemList.Casing_Pipe_Polytetrafluoroethylene.set(new ItemStack(this, 1, 1));
         ItemList.Casing_RobustHSSG.set(new ItemStack(this,1,2));
+
+        ItemList.Casing_Filter_ULV.set(new ItemStack(this, 1, 10));
+        ItemList.Casing_Filter_LV.set(new ItemStack(this, 1, 11));
+        ItemList.Casing_Filter_MV.set(new ItemStack(this, 1, 12));
+        ItemList.Casing_Filter_HV.set(new ItemStack(this, 1, 13));
+        ItemList.Casing_Filter_EV.set(new ItemStack(this, 1, 14));
+        ItemList.Casing_Filter_IV.set(new ItemStack(this, 1, 15));
 
         //ids 3 - 9 are used for pumps overlays
         Textures.BlockIcons.casingTexturePages[1][51] = new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_PUMP_ULV);
@@ -44,6 +57,19 @@ public class GT_Block_Casings8
                 return Textures.BlockIcons.MACHINE_CASING_PIPE_POLYTETRAFLUOROETHYLENE.getIcon();
             case 2:
                 return Textures.BlockIcons.MACHINE_CASING_ROBUST_HSSG.getIcon();
+            case 10:
+                return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_ULV.getIcon();
+            case 11:
+                return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_LV.getIcon();
+            case 12:
+                return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_MV.getIcon();
+            case 13:
+                return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_HV.getIcon();
+            case 14:
+                return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_EV.getIcon();
+            case 15:
+                return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_IV.getIcon();
+
         }
         return Textures.BlockIcons.MACHINE_CASING_ROBUST_TUNGSTENSTEEL.getIcon();
     }

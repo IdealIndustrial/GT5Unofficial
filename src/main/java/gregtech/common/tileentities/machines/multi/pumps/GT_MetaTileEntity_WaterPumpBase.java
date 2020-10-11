@@ -5,6 +5,7 @@ import gnu.trove.list.array.TIntArrayList;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Fluid;
@@ -20,6 +21,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenRiver;
@@ -203,7 +205,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     public boolean checkHead(ArrayList<GT_MetaPipeEntity_Fluid> aPipes, int aDepth, GT_MetaPipeEntity_Fluid aCurrentNode, int aSide){
         if (aDepth > getMaxPipeLength())
             return false;
-        if (aCurrentNode.mCapacity/20f < getOutputRate())
+        if (aCurrentNode.mCapacity < getOutputRate())
             return false;
         int tSide = GT_Utility.getOppositeSide(aSide);
         int nextSide = -1;
@@ -331,19 +333,22 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     	return true;
     }
 
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
-        if (aSide == 0 || aSide == 1) {
-            return new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.BLOCK_PLASCRETE),
-                    new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_TOP_CLEANROOM_ACTIVE : Textures.BlockIcons.OVERLAY_TOP_CLEANROOM)};
+    public abstract ITexture getBaseTexture();
 
-        }
+    public abstract IIconContainer getInputFacing();
+
+    public abstract IIconContainer[] getFacings();
+
+
+
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
-            return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[16], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_ASSEMBLY_LINE_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_ASSEMBLY_LINE)};
+            return new ITexture[]{getBaseTexture(), new GT_RenderedTexture(getFacings()[aActive ? 0 : 1])};
         }
         if (aSide == mMainFacing) {
-            return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[16], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_IN)};
+            return new ITexture[]{getBaseTexture(), new GT_RenderedTexture(getInputFacing())};
         }
-        return new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.BLOCK_PLASCRETE)};
+        return new ITexture[]{getBaseTexture()};
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {

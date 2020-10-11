@@ -1,11 +1,15 @@
 package gregtech.common.tileentities.machines.multi.pumps;
 
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.Textures;
+import gregtech.api.interfaces.IIconContainer;
+import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Frame;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
+import gregtech.api.objects.GT_RenderedTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -100,6 +104,23 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
             return true;
         }
         return tMetaTile instanceof GT_MetaPipeEntity_Frame && ((GT_MetaPipeEntity_Frame) tMetaTile).mMaterial == getFrameMaterial();
+    }
+
+    @Override
+    public ITexture getBaseTexture() {
+        return Textures.BlockIcons.MACHINE_CASINGS[1][51+getTier()];
+    }
+
+    @Override
+    public IIconContainer getInputFacing() {
+        return Textures.BlockIcons.OVERLAY_PIPE_IN;
+    }
+
+    private static IIconContainer[] mFaces = new IIconContainer[]{Textures.BlockIcons.OVERLAY_ELECTRIC_PUMP_ACTIVE, Textures.BlockIcons.OVERLAY_ELECTRIC_PUMP_INACTIVE};
+
+    @Override
+    public IIconContainer[] getFacings() {
+        return mFaces;
     }
 
 }

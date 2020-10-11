@@ -1,13 +1,17 @@
 package gregtech.common.tileentities.machines.multi.pumps;
 
+import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.Textures;
+import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Frame;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
+import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_ModHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -67,7 +71,7 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
 
     public boolean checkRecipe(ItemStack aStack) {
 
-        if (!depleteInput(GT_ModHandler.getSteam(400)))
+        if (!depleteInput(GT_ModHandler.getSteam(200)))
             return false;
         this.mEfficiencyIncrease = 10000;
         this.mMaxProgresstime = 10;
@@ -100,9 +104,27 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
     }
 
 
+
+
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-      // check machine
         return super.checkMachine(aBaseMetaTileEntity, aStack);
+    }
+
+    @Override
+    public ITexture getBaseTexture() {
+        return new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_PUMP_ULV);
+    }
+
+    @Override
+    public IIconContainer getInputFacing() {
+        return Textures.BlockIcons.OVERLAY_PIPE_IN;
+    }
+
+    private  static IIconContainer[] mFaces = new IIconContainer[]{Textures.BlockIcons.OVERLAY_PRIMITIVE_PUMP_ACTIVE, Textures.BlockIcons.OVERLAY_PRIMITIVE_PUMP_INACTIVE};
+
+    @Override
+    public IIconContainer[] getFacings() {
+        return mFaces;
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
