@@ -38,7 +38,7 @@ import static gregtech.api.util.GT_Utility.getFakePlayer;
 public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
 
     static {
-        RADIUS = new int[]{8, 10, 20, 60,180,40,48,56,64,72,80};
+        RADIUS = new int[]{8, 10, 20, 40,80,160,48,56,64,72,80};
         SPEED = new int[]{80, 80, 40, 20, 10, 5,5,2,2,2,2};
         ENERGY = new int[]{8, 4, 16, 64, 256, 1024, 2048 ,32768,131072,524288};
     }
