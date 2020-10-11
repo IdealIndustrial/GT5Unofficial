@@ -68,6 +68,8 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Credit_Platinum.set(addItem(tLastID = 15, "Industrial Platinum Credit", "512 Credits", new Object[0]));
         ItemList.Credit_Osmium.set(addItem(tLastID = 16, "Industrial Osmium Credit", "4096 Credits", new Object[0]));
 
+        ItemList.ItemWaterProofUpgrade.set(addItem(tLastID = 17, "Water proof upgrade", "makes target waterproof!"));
+        addItemBehavior(32017,new Behaviour_WaterProofUpgrade());
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Coin_Chocolate.get(1L, new Object[0]), new Object[]{OrePrefixes.dust.get(Materials.Cocoa), OrePrefixes.dust.get(Materials.Milk), OrePrefixes.dust.get(Materials.Sugar), OrePrefixes.foil.get(Materials.Gold)});
 
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Credit_Copper.get(8L, new Object[0]), GT_ModHandler.RecipeBits.KEEPNBT | GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{ItemList.Credit_Iron});
@@ -808,7 +810,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
 
         ItemList.ZPM2.set(addItem(tLastID = 605, "Ultimate Battery", "Fill this to win minecraft", new Object[]{new TC_Aspects.TC_AspectStack(TC_Aspects.ELECTRUM, 64L), new TC_Aspects.TC_AspectStack(TC_Aspects.VITREUS, 16L), new TC_Aspects.TC_AspectStack(TC_Aspects.POTENTIA, 64L)}));
         setElectricStats(32000 + tLastID, Long.MAX_VALUE, GT_Values.V[8], 8L, -3L, true);
-
+        addItemBehavior(32000 + tLastID, new Behaviour_UB());
     }
 
     public boolean onEntityItemUpdate(EntityItem aItemEntity) {

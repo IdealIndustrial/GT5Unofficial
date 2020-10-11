@@ -99,6 +99,7 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
         actualTexture=(byte)(aValue & 0x7F);
         mMachineBlock=actualTexture;
         mTexturePage=0;
+        getBaseMetaTileEntity().rebakeMap();
     }
 
     @Override

@@ -125,4 +125,5 @@ public interface IGregTechTileEntity extends ITexturedTileEntity, IGearEnergyTil
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ);
 
     public void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider);
+
 }

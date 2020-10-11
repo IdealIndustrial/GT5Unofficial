@@ -3,7 +3,6 @@ package gregtech.api.metatileentity;
 import cpw.mods.fml.common.FMLLog;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
-import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -745,7 +744,12 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
 
     @Override
     public ITexture[][] getTextures() {
-        return getTextures(false);
+        return getTextures(true);
+    }
+
+    @Override
+    public ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers) {
+        return new ITexture[0][]; //pipe render is too hard. I'll do it on day...
     }
 
     public ITexture[][][][] mTextures = new ITexture[2][17][6][];
@@ -1429,4 +1433,5 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     public void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider) {
         mMetaTileEntity.onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
     }
+
 }

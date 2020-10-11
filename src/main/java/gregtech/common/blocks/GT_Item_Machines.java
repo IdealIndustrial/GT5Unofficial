@@ -15,6 +15,7 @@ import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,11 +26,13 @@ import java.util.List;
 
 public class GT_Item_Machines
         extends ItemBlock {
+    public static Item INSTANCE;
     public GT_Item_Machines(Block par1) {
         super(par1);
         setMaxDamage(0);
         setHasSubtypes(true);
         setCreativeTab(GregTech_API.TAB_GREGTECH);
+        INSTANCE = this;
     }
 
     public void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean par4) {
@@ -75,6 +78,9 @@ public class GT_Item_Machines
             }
             NBTTagCompound aNBT = aStack.getTagCompound();
             if (aNBT != null) {
+                if(aNBT.getBoolean("mWaterProof")){
+                    aList.add(GT_LanguageManager.addStringLocalization("GT_WATERPROOF","Is Water Proof", !GregTech_API.sPostloadFinished));
+                }
                 if (aNBT.getBoolean("mMuffler")) {
                     aList.add(GT_LanguageManager.addStringLocalization("GT_TileEntity_MUFFLER", "has Muffler Upgrade", !GregTech_API.sPostloadFinished ));
                 }
