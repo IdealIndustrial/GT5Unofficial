@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.objects.GT_CopiedBlockTexture;
+import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_LanguageManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -20,9 +21,18 @@ public class GT_Block_Casings8
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".1.name", "PTFE Pipe Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".2.name", "Robust HSS-G Machine Casing");
 
+
         ItemList.Casing_Chemically_Inert.set(new ItemStack(this, 1, 0));
         ItemList.Casing_Pipe_Polytetrafluoroethylene.set(new ItemStack(this, 1, 1));
         ItemList.Casing_RobustHSSG.set(new ItemStack(this,1,2));
+
+        //ids 3 - 9 are used for pumps overlays
+        Textures.BlockIcons.casingTexturePages[1][51] = new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_PUMP_ULV);
+        Textures.BlockIcons.casingTexturePages[1][52] = new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_PUMP_LV);
+        Textures.BlockIcons.casingTexturePages[1][53] = new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_PUMP_MV);
+        Textures.BlockIcons.casingTexturePages[1][54] = new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_PUMP_HV);
+        Textures.BlockIcons.casingTexturePages[1][55] = new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_PUMP_EV);
+        Textures.BlockIcons.casingTexturePages[1][56] = new GT_RenderedTexture(Textures.BlockIcons.MACHINE_CASING_PUMP_IV);
     }
     @Override
     @SideOnly(Side.CLIENT)

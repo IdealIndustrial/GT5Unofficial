@@ -24,6 +24,9 @@ import gregtech.common.tileentities.machines.GT_MetaTileEntity_BasicHull_Steel;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_BasicHull_SteelBricks;
 import gregtech.common.tileentities.machines.basic.*;
 import gregtech.common.tileentities.machines.multi.*;
+import gregtech.common.tileentities.machines.multi.pumps.GT_MetaTileEntity_WaterPumpBase;
+import gregtech.common.tileentities.machines.multi.pumps.GT_MetaTileEntity_WaterPumpElectric;
+import gregtech.common.tileentities.machines.multi.pumps.GT_MetaTileEntity_WaterPumpPrimitive;
 import gregtech.common.tileentities.machines.steam.*;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_Locker;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_QuantumChest;
@@ -1363,6 +1366,13 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Machine_DigitalTransformer_MAX.set(new GT_MetaTileEntity_Digital_Transformer(12188, "basicmachine.d_transformer.tier.09", "MAX Adjustable Transformer", 9,"ULV -> MAX (Use Soft Mallet to invert)").getStackForm(1L));
 
         ItemList.Machine_Well.set(new GT_MetaTileEntity_Well(12189, "basicmachine.well", "Well", 0).getStackForm(1));
+
+        ItemList.Machine_WaterPump_UVL.set(new GT_MetaTileEntity_WaterPumpPrimitive(12190, "multimachine.multi.waterpump.0", "Primitive Water Pump").getStackForm(1));
+        ItemList.Machine_WaterPump_LV.set(new GT_MetaTileEntity_WaterPumpElectric(12191, "multimachine.multi.waterpump.1", "Electric Water Pump", 1).getStackForm(1));
+        ItemList.Machine_WaterPump_MV.set(new GT_MetaTileEntity_WaterPumpElectric(12192, "multimachine.multi.waterpump.2", "Advanced Electric Water Pump", 2).getStackForm(1));
+        ItemList.Machine_WaterPump_HV.set(new GT_MetaTileEntity_WaterPumpElectric(12193, "multimachine.multi.waterpump.3", "Advanced Electric Water Pump II", 3).getStackForm(1));
+        ItemList.Machine_WaterPump_EV.set(new GT_MetaTileEntity_WaterPumpElectric(12194, "multimachine.multi.waterpump.4", "Advanced Electric Water Pump III", 4).getStackForm(1));
+        ItemList.Machine_WaterPump_IV.set(new GT_MetaTileEntity_WaterPumpElectric(12195, "multimachine.multi.waterpump.5", "Advanced Electric Water Pump IV", 5).getStackForm(1));
     }
 
     private static void run4() {

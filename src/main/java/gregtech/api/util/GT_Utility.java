@@ -1641,6 +1641,8 @@ public class GT_Utility {
 
         ArrayList<String> tList = new ArrayList<String>();
         int rEUAmount = 0;
+        tList.add("Biome real: "+aWorld.getBiomeGenForCoords(aX, aZ).biomeName);
+        tList.add("Biome by generator: "+aWorld.provider.worldChunkMgr.getBiomeGenAt(aX, aZ).biomeName);
 
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
 

@@ -39,8 +39,8 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
 
     static {
         RADIUS = new int[]{8, 10, 20, 60,180,40,48,56,64,72,80};
-        SPEED = new int[]{160, 160, 80, 40,20,10,5,2,2,2,2};
-        ENERGY = new int[]{8, 2, 8, 32,128,512,8192,32768,131072,524288};
+        SPEED = new int[]{80, 80, 40, 20, 10, 5,5,2,2,2,2};
+        ENERGY = new int[]{8, 4, 16, 64, 256, 1024, 2048 ,32768,131072,524288};
     }
 
     public GT_MetaTileEntity_Pump(int aID, String aName, String aNameRegional, int aTier) {
