@@ -8,6 +8,7 @@ import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
+import gregtech.loaders.postload.recipes.GT_ForestryRecipesLoader;
 import gregtech.loaders.postload.recipes.GT_GraviSuiteRecipesLoader;
 import gregtech.loaders.postload.recipes.GT_IndustialCraftRecipesLoader;
 import gregtech.loaders.postload.recipes.GT_RailcraftRecipesLoader;
@@ -21,7 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class GT_CraftingRecipeLoader implements Runnable {
     private final static String aTextIron1 = "X X";
     private final static String aTextIron2 = "XXX";
-    private final static String aTextRailcraft = "Railcraft";
+    private final static String aTextRailcraft = "Railcraft",  aTextForestry = "Forestry";
 
     public void run() {
 
@@ -30,6 +31,8 @@ public class GT_CraftingRecipeLoader implements Runnable {
             new GT_RailcraftRecipesLoader().run();
         if (Loader.isModLoaded("GraviSuite"))
             new GT_GraviSuiteRecipesLoader().run();
+        if (Loader.isModLoaded(aTextForestry))
+            new GT_ForestryRecipesLoader().run();
 
 
 
