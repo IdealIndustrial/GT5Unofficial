@@ -58,16 +58,28 @@ public class GT_Block_Casings8
             case 2:
                 return Textures.BlockIcons.MACHINE_CASING_ROBUST_HSSG.getIcon();
             case 10:
+                if (aSide == 1)
+                    return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_ULV_UP.getIcon();
                 return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_ULV.getIcon();
             case 11:
+                if (aSide == 1)
+                    return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_LV_UP.getIcon();
                 return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_LV.getIcon();
             case 12:
+                if (aSide == 1)
+                    return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_MV_UP.getIcon();
                 return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_MV.getIcon();
             case 13:
+                if (aSide == 1)
+                    return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_HV_UP.getIcon();
                 return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_HV.getIcon();
             case 14:
+                if (aSide == 1)
+                    return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_EV_UP.getIcon();
                 return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_EV.getIcon();
             case 15:
+                if (aSide == 1)
+                    return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_IV_UP.getIcon();
                 return Textures.BlockIcons.MACHINE_CASING_PUMP_FILTER_IV.getIcon();
 
         }
