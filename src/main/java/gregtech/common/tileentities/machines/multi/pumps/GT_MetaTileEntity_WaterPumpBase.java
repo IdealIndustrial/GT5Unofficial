@@ -3,6 +3,7 @@ package gregtech.common.tileentities.machines.multi.pumps;
 import cpw.mods.fml.common.Optional;
 import gnu.trove.list.array.TIntArrayList;
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.IIconContainer;
@@ -24,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenRiver;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -39,11 +41,13 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     public static HashMap<Integer,HashMap<Long, GT_MetaTileEntity_WaterPumpBase>> mPumps = new HashMap<>();
     public ArrayList<GT_MetaTileEntity_WaterPumpBase> mConnectedPumps = new ArrayList<>(2);
     public ArrayList<GT_MetaPipeEntity_Fluid> mPipes = new ArrayList<>();
+    public GT_MetaPipeEntity_Fluid mPipe = null;
     public double mEfficiency = 0;
     public int mWaterSurface = 0;
     public int mHeadX = 0, mHeadY = -1, mHeadZ = 0;
     public int mFilledPipes = 0;
     public int mMainFacing = 2;
+    public boolean mRiver = false;
 
     public GT_MetaTileEntity_WaterPumpBase(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -79,18 +83,6 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         super.saveNBTData(aNBT);
     }
 
-    public String[] getDescription() {
-        return new String[]{
-                "Controller Block for the Cleanroom",
-                "Min(WxHxD): 3x4x3 (Hollow), Max(WxHxD): 15x15x15 (Hollow)",
-                "Controller (Top center)",
-                "Top besides contoller and edges Filter Machine Casings",
-                "1 Reinforced Door (keep closed for 100% efficency",
-                "1x LV+ Energy Hatch(40EU/t startup, 4EU/t keepup), 1x Maintainance Hatch",
-                "Up to 10 Machine Hulls to transfer Items & Energy through walls",
-                "Remaining Blocks Plascrete"};
-    }
-
     public boolean checkRecipe(ItemStack aStack) {
 
         if (!depleteInput(GT_ModHandler.getSteam(200)))
@@ -107,8 +99,14 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         double tOut = getOutputRate()*(mEfficiency/10000) + waterToOutput;
         int rOut = (int)tOut;
         waterToOutput = tOut - rOut;
-        addOutput(GT_ModHandler.getWater(rOut));
+        addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
         return super.onRunningTick(aStack);
+    }
+
+    public boolean checkBiome(BiomeGenBase aBiome) {
+        if (aBiome instanceof BiomeGenRiver && mRiver)
+            return true;
+        return aBiome instanceof BiomeGenOcean && !mRiver;
     }
 
     @Override
@@ -120,6 +118,11 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
                mFilledPipes++;
            aLiquid.amount -= aConsume;
         }
+        if (mFilledPipes == mPipes.size()) {
+            int aConsume = mPipe.fill_default(ForgeDirection.DOWN, aLiquid, true);
+            if(aConsume <= 0)
+                mFilledPipes++;
+        }
         return super.addOutput(aLiquid);
     }
 
@@ -129,16 +132,12 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         tTiles[0] = tBase.getTileEntityAtSide(aDir);
         tTiles[1] = tBase.getTileEntityAtSide((byte)1);
         tTiles[2] = tBase.getTileEntityOffset(ForgeDirection.getOrientation(aDir).offsetX, 1, ForgeDirection.getOrientation(aDir).offsetZ);
-        for (TileEntity t : tTiles) {
-            if (!addToStructure(t, false))
-                return false;
-        }
-        for (TileEntity t : tTiles)
-            addToStructure(t, true);
-        return true;
+        if(!addToStructure(tTiles[0], tTiles[1], tTiles[2], false))
+            return false;
+        return addToStructure(tTiles[0], tTiles[1], tTiles[2], true);
     }
 
-    public abstract boolean addToStructure(TileEntity aTileEntity, boolean aDoAdd);
+    public abstract boolean addToStructure(TileEntity aTileEntityInput, TileEntity aTileEntityPipe, TileEntity aTileEntityOutput,  boolean aDoAdd);
 
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         mScrewdriver = mWrench = mCrowbar = mHardHammer = mSoftHammer = mSolderingTool = true;
@@ -158,6 +157,19 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
             }
         }
         if (tDir == -1 || tDir == mMainFacing)
+            return false;
+
+        TileEntity aPipe = aBaseMetaTileEntity.getTileEntityAtSide((byte)1);
+        if (aPipe instanceof IGregTechTileEntity && ((IGregTechTileEntity)aPipe).getMetaTileEntity() instanceof GT_MetaPipeEntity_Fluid) {
+            GT_MetaPipeEntity_Fluid qPipe = (GT_MetaPipeEntity_Fluid)((IGregTechTileEntity)aPipe).getMetaTileEntity();
+            qPipe.mStructurePart = true;
+            for (byte i = 0; i < 6; i++)
+                qPipe.disconnect(i);
+            qPipe.connect((byte)0);
+            qPipe.connect(tDir);
+            mPipe = qPipe;
+        }
+        else
             return false;
 
 
@@ -180,8 +192,15 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
 
         int aX = getHeadX(), aZ = getHeadZ();
         BiomeGenBase tBiome = aBaseMetaTileEntity.getWorld().getBiomeGenForCoords(aX,aZ);
-        if ( !(tBiome instanceof BiomeGenRiver) )
+        if (tBiome instanceof BiomeGenRiver) {
+            mRiver = true;
+        }
+        else if(tBiome instanceof BiomeGenOcean) {
+            mRiver = false;
+        }
+        else {
             return false;
+        }
        /* if (mPumps.get(aBaseMetaTileEntity.getWorld().provider.dimensionId) != null &&
                 mPumps.get(aBaseMetaTileEntity.getWorld().provider.dimensionId).get(((long)aX) << 32 + (aZ)) != null)
             return false;*/
@@ -202,7 +221,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     }
 
     public boolean checkHead(ArrayList<GT_MetaPipeEntity_Fluid> aPipes, int aDepth, GT_MetaPipeEntity_Fluid aCurrentNode, int aSide){
-        if (aDepth > getMaxPipeLength())
+        if (aDepth > getPipeLength())
             return false;
         if (aCurrentNode.mCapacity < getOutputRate())
             return false;
@@ -257,7 +276,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
 
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection aSide) {
-        if (aSide.ordinal() != getBaseMetaTileEntity().getFrontFacing() && aSide.ordinal() == mMainFacing)
+        if (aSide.ordinal() != getBaseMetaTileEntity().getFrontFacing() && aSide.ordinal() == mMainFacing || aSide == ForgeDirection.UP)
             return super.getTankInfo(aSide);
         return new FluidTankInfo[0];
     }
@@ -271,8 +290,8 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
             return;
         long tPosition = (((long)aX) << 32) + aZ;
         World tWorld = getBaseMetaTileEntity().getWorld();
-        if (aDepth != 0 && (aPassedPositions.contains(tPosition) || !(tWorld.getBiomeGenForCoords(aX, aZ) instanceof BiomeGenRiver) ||
-                (tWorld.getBlock(aX, getHeadY(), aZ) != Blocks.water)&&!(tWorld.getBlock(aX, getHeadY(), aZ) == GregTech_API.sBlockCasings8 && tWorld.getBlockMetadata(aX,getHeadY(),aZ)==2)))
+        if (aDepth != 0 && (aPassedPositions.contains(tPosition) || !checkBiome(tWorld.getBiomeGenForCoords(aX, aZ)) ||
+                (tWorld.getBlock(aX, getHeadY(), aZ) != Blocks.water)&&!(tWorld.getBlock(aX, getHeadY(), aZ) == GregTech_API.sBlockCasings8 && tWorld.getBlockMetadata(aX,getHeadY(),aZ)>=10)))
             return;
         mWaterSurface++;
 
@@ -296,8 +315,10 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
             d.onRemoved(this);
         for(GT_MetaPipeEntity_Fluid tPipe : mPipes)
             tPipe.mStructurePart = false;
+        if (mPipe != null)
+            mPipe.mStructurePart = false;
         if(mPumps.get(getBaseMetaTileEntity().getWorld().provider.dimensionId) != null)
-            mPumps.get(getBaseMetaTileEntity().getWorld().provider.dimensionId).remove((((long)getBaseMetaTileEntity().getXCoord()) << 32) + getBaseMetaTileEntity().getZCoord());
+            mPumps.get(getBaseMetaTileEntity().getWorld().provider.dimensionId).remove((((long)getHeadX()) << 32) + getHeadZ());
     }
 
     @Override
@@ -420,40 +441,14 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     public void recalculateEfficiency( ){
         mEfficiency = 10000f;
         if (mConnectedPumps.size() > 0)
-            mEfficiency *= (16f-(float)mConnectedPumps.size() + 1f)/16;
-        if (mWaterSurface < 128)
-            mEfficiency *= (float)getSurfaceBlocksCount()/128;
+            mEfficiency *= (16f-(float)mConnectedPumps.size() - 1f)/16;
+        if (mWaterSurface < getSurfaceBlocksCount())
+            mEfficiency *= ((float)mWaterSurface)/getSurfaceBlocksCount();
     }
 
     @Override
     public String[] getInfoData() {
-        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (mEfficiency / 100.0F) + "%", "Water surface covered: "+(Math.min(Integer.MAX_VALUE,mWaterSurface))+ "/2000 blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
+        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (mEfficiency / 100.0F) + "%", "Water surface covered: "+(Math.min(getSurfaceBlocksCount(),mWaterSurface)) + "/" + getSurfaceBlocksCount()+ " blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
     }
 
-   /* public static class PumpDistance {
-        public GT_MetaTileEntity_WaterPump mPump;
-        public int mDistance;
-
-        public PumpDistance(GT_MetaTileEntity_WaterPump aPump, int aDistance) {
-            mPump = aPump;
-            mDistance = aDistance;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PumpDistance that = (PumpDistance) o;
-            return  mPump == that.mPump;
-        }
-
-        public void add(GT_MetaTileEntity_WaterPump aPumpToAdd){
-            mPump.onAdded(new PumpDistance(aPumpToAdd, mDistance));
-        }
-
-        public void remove(GT_MetaTileEntity_WaterPump aPumpToRemove) {
-            mPump.onRemoved(new PumpDistance(aPumpToRemove, mDistance));
-        }
-
-    }*/
 }

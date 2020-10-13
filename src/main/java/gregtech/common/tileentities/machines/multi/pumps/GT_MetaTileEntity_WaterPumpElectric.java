@@ -6,9 +6,7 @@ import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Frame;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_RenderedTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,23 +23,26 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
     public GT_MetaTileEntity_WaterPumpElectric(String aName, int aTier) {
         super(aName);
         mTier = aTier;
+        mTierMaterials = new Materials[]{Materials.Bronze, Materials.Steel,  Materials.StainlessSteel, Materials.Titanium, Materials.TungstenSteel};
     }
 
     @Override
     public String[] getDescription() {
         return new String[]{
-                "Controller Block for the Primitive Water Pump",
+                "Controller Block for the Electric Water Pump",
                 "2x2x1 or 1x2x2",
                 "Controller (any down corner)",
-                "Energy hatch (any casing)",
-                "Output hatch for water (any casing)",
-                getFrameMaterial().mLocalizedName + " frame box (any casing)",
+                "Energy hatch (down layer near controller)",
+                getFrameMaterial().mLocalizedName + " fluid pipe (on top of the controller)",
+                "Output hatch for water (next to " + getFrameMaterial().mLocalizedName + " pipe)",
                 "Input side of controller connects to pipe",
                 "Pipe (up to " + getPipeLength() + " blocks length) connects to Filter",
-                "Filter placed in top water block of river (or Ocean)",
+                "Pipe fluid capacity must be enough to transfer "+ getOutputRate()*20+ " l per second",
+                "Filter placed in top water block of river (or Ocean, then outputs salt water)",
                 "In case pump is situated in ocean it will output salt water",
                 "Must cover " + getSurfaceBlocksCount() + " blocks of water surface in radius of " + getRadius(),
-                "For each other pump in work radius will decrease efficiency"
+                "For each other pump in work radius will decrease efficiency",
+                "Some pipes may connect only after all structure is assembled"
         };
     }
 
@@ -57,11 +58,26 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
         return true;
     }
 
+    @Override
+    public boolean addToStructure(TileEntity aTileEntityInput, TileEntity aTileEntityPipe, TileEntity aTileEntityOutput, boolean aDoAdd) {
+        if (aTileEntityInput instanceof IGregTechTileEntity && ((IGregTechTileEntity)aTileEntityInput).getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Energy &&
+                aTileEntityOutput instanceof IGregTechTileEntity && ((IGregTechTileEntity)aTileEntityOutput).getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Output &&
+                aTileEntityPipe instanceof IGregTechTileEntity && ((IGregTechTileEntity)aTileEntityPipe).getMetaTileEntity() instanceof GT_MetaPipeEntity_Fluid &&
+                ((GT_MetaPipeEntity_Fluid)((IGregTechTileEntity)aTileEntityPipe).getMetaTileEntity()).mMaterial == getFrameMaterial()) {
+            if (aDoAdd) {
+                addToMachineList((IGregTechTileEntity) aTileEntityInput, 128 + 51 + getTier());
+                addToMachineList((IGregTechTileEntity) aTileEntityOutput, 128 + 51 + getTier());
+            }
+            return true;
+        }
+        return false;
+    }
+
     public int getTier() {
         return mTier;
     }
 
-    public static Materials[] mTierMaterials = new Materials[]{Materials.Steel, Materials.Aluminium, Materials.StainlessSteel, Materials.Titanium, Materials.TungstenSteel};
+    public static Materials[] mTierMaterials = new Materials[]{Materials.Bronze, Materials.Steel,  Materials.StainlessSteel, Materials.Titanium, Materials.TungstenSteel};
 
     public Materials getFrameMaterial() {
         return mTierMaterials[getTier()-1];
@@ -79,7 +95,7 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
 
     @Override
     public int getPipeLength() {
-        return 10+2*getTier();
+        return 10+4*getTier();
     }
 
     @Override
@@ -92,7 +108,6 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
         return 10+getTier();
     }
 
-    @Override
     public boolean addToStructure(TileEntity aTileEntity, boolean aDoAdd) {
         if (!(aTileEntity instanceof IGregTechTileEntity))
             return false;
