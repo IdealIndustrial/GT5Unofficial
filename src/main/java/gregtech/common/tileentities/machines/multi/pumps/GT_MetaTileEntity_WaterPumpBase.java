@@ -210,6 +210,10 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         mWaterSurface = 0;
         mPumps.computeIfAbsent(aBaseMetaTileEntity.getWorld().provider.dimensionId, k -> new HashMap<>());
         fillList(tAffectedPumps, new HashSet<>(), getHeadX(), getHeadZ(), 0);
+        for (GT_MetaTileEntity_WaterPumpBase p : tAffectedPumps) {
+            if((Math.abs(getHeadX() - p.getHeadX()) <= 4) || Math.abs(getHeadZ() - p.getHeadZ()) <= 4)
+                return false;
+        }
         for(GT_MetaTileEntity_WaterPumpBase d : tAffectedPumps) {
             d.onAdded(this);
         }
@@ -301,7 +305,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         GT_MetaTileEntity_WaterPumpBase tPumpInChunk = mPumps.get(tWorld.provider.dimensionId).get(tPosition);
         if (tPumpInChunk != null && tPumpInChunk != this)
             aAffectedPumps.add(tPumpInChunk);
-        //tWorld.setBlock(aX, getBaseMetaTileEntity().getYCoord()+10, aZ, Blocks.wool, 10, 2);
+        tWorld.setBlock(aX, getBaseMetaTileEntity().getYCoord()+10, aZ, Blocks.wool, 10, 2);
         fillList(aAffectedPumps, aPassedPositions, aX + 1, aZ, aDepth);
         fillList(aAffectedPumps, aPassedPositions, aX, aZ + 1, aDepth);
         fillList(aAffectedPumps, aPassedPositions, aX - 1, aZ, aDepth);
@@ -441,7 +445,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     public void recalculateEfficiency( ){
         mEfficiency = 10000f;
         if (mConnectedPumps.size() > 0)
-            mEfficiency *= (16f-(float)mConnectedPumps.size() - 1f)/16;
+            mEfficiency *= 1f / ((float)mConnectedPumps.size());
         if (mWaterSurface < getSurfaceBlocksCount())
             mEfficiency *= ((float)mWaterSurface)/getSurfaceBlocksCount();
     }
