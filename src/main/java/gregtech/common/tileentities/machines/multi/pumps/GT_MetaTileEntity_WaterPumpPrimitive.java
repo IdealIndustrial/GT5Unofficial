@@ -53,19 +53,19 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
     public String[] getDescription() {
         return new String[]{
                 "Controller Block for the Primitive Water Pump",
-                "2x2x1 or 1x2x2",
+                "Structure 2x2x1",
                 "Controller (any down corner)",
                 "Input hatch for steam (down layer near controller)",
                 "Bronze fluid pipe (on top of the controller)",
                 "Output hatch for water (next to bronze pipe)",
                 "Input side of controller connects to pipe",
-                "Pipe (up to 10 blocks length) connects to Filter",
+                "Pipe (up to 10 blocks length) connects to Intake",
                 "Pipe fluid capacity must be enough to transfer "+ getOutputRate()*20+ " l per second",
-                "Filter placed in top water block of river (or Ocean, then output salt water)",
-                "In case pump is situated in ocean it will output salt water",
+                "Intake is situated in top layer of water source (river for water or ocean for salt water)",
                 "Must cover 128 blocks of water surface in radius of 16",
                 "For each other pump in work radius will decrease efficiency",
-                "Some pipes may connect only after all structure is assembled"
+                "Some pipes may connect only after all structure is assembled",
+                "River and Ocean are Minecraft Biomes"
         };
     }
 

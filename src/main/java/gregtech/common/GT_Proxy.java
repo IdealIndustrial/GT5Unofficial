@@ -22,6 +22,7 @@ import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.net.GT_Packet_Pollution;
 import gregtech.api.objects.*;
 import gregtech.api.util.*;
+import gregtech.common.blocks.GT_Item_Machines;
 import gregtech.common.entities.GT_Entity_Arrow;
 import gregtech.common.gui.GT_ContainerVolumetricFlask;
 import gregtech.common.gui.GT_GUIContainerVolumetricFlask;
@@ -223,7 +224,8 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean mMoreComplicatedChemicalRecipes = false;
     public boolean mHardRadonRecipe = true;
     public boolean disassemblerRecipeMapOn = false;
-    public boolean enableFixQuestsCommand = false;
+    public boolean enableFixQuestsCommand = true;
+    public boolean allowDisableToolTips = false;
 
     
     public GT_Proxy() {
@@ -583,6 +585,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                         new Object[]{"XXX", "XXX", "XXX", 'X', OrePrefixes.dustTiny.get(aMaterial)});
             }
         }
+        GT_Item_Machines.postInit();
     }
 
     public void onServerStarting() {

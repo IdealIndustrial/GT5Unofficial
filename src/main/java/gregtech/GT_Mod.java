@@ -299,6 +299,7 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.mHardRadonRecipe = tMainConfig.get("general","HardRadonRecipe",false).getBoolean(false);
         gregtechproxy.disassemblerRecipeMapOn = tMainConfig.get("general","DisasssemblerRecipeMapEnabled", true).getBoolean(true);
         gregtechproxy.enableFixQuestsCommand = tMainConfig.get("general", "EnableUpdateQuestsCommand", false).getBoolean(false);
+        gregtechproxy.allowDisableToolTips = tMainConfig.get("general", "AllowDisablingLargeTooltips", true).getBoolean(true);
         gregtechproxy.mEasyEnderIOMaterialsRecipe = tMainConfig.get("general","EasyEnderIOMaterialsRecipe",false).getBoolean(false);
         GT_LanguageManager.i18nPlaceholder = tMainConfig.get("general", "UsePlaceholderForMaterialNamesInLangFile", true).getBoolean(true);
 
