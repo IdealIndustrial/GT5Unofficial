@@ -51,16 +51,15 @@ public class GT_MetaTileEntity_OrganicReplicator extends GT_MetaTileEntity_Basic
                 int aGain = ItemCropSeed.getGainFromStack(aStack);
                 int aGrowth = ItemCropSeed.getGrowthFromStack(aStack);
                 int aResistance = ItemCropSeed.getResistanceFromStack(aStack);
-                CropCard v= Crops.instance.getCropCard(aStack);
+                CropCard v = Crops.instance.getCropCard(aStack);
                 int aCropTier = v.tier();
                 int UUMConsume =  Math.round((aCropTier*4+aGain+aGrowth+aResistance)*UUMatterMultiplier);
                 if(UUMConsume>tFluid.amount)
                     return 0;
-                this.mEUt = ((int) gregtech.api.enums.GT_Values.V[this.mTier]);
+                this.mEUt = ((int) gregtech.api.enums.GT_Values.V[this.mTier])*15/16;
                 this.mMaxProgresstime = (aCropTier+1)*EUMultiplier/ (1 << this.mTier - 1);
                 //setFillableStack(new FluidStack(getFillableStack().fluid,Math.round(getFillableStack().amount-(aCropTier*4+aGain+aGrowth+aResistance)*UUMatterMultiplier)));
-                FluidStack f = tFluid;
-                f.amount = ((int) (f.amount - UUMConsume));
+                tFluid.amount = ((int) (tFluid.amount - UUMConsume));
                 this.mOutputItems[0] = GT_Utility.copyAmount(1L, new Object[]{aStack});
                 this.mOutputItems[0].setTagCompound(tNBT);
                 if(getBaseMetaTileEntity().getRandomNumber(100) > efficiency){
