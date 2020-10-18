@@ -30,7 +30,7 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
     public String[] getDescription() {
         return new String[]{
                 "Controller Block for the Electric Water Pump",
-                "2x2x1 or 1x2x2",
+                "Structure 2x2x1",
                 "Controller (any down corner)",
                 "Energy hatch (down layer near controller)",
                 getFrameMaterial().mLocalizedName + " fluid pipe (on top of the controller)",
