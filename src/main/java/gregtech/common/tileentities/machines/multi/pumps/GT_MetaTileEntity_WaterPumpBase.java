@@ -305,7 +305,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         GT_MetaTileEntity_WaterPumpBase tPumpInChunk = mPumps.get(tWorld.provider.dimensionId).get(tPosition);
         if (tPumpInChunk != null && tPumpInChunk != this)
             aAffectedPumps.add(tPumpInChunk);
-        tWorld.setBlock(aX, getBaseMetaTileEntity().getYCoord()+10, aZ, Blocks.wool, 10, 2);
+        //tWorld.setBlock(aX, getBaseMetaTileEntity().getYCoord()+10, aZ, Blocks.wool, 10, 2);
         fillList(aAffectedPumps, aPassedPositions, aX + 1, aZ, aDepth);
         fillList(aAffectedPumps, aPassedPositions, aX, aZ + 1, aDepth);
         fillList(aAffectedPumps, aPassedPositions, aX - 1, aZ, aDepth);
