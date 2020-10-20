@@ -1373,6 +1373,48 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Machine_WaterPump_HV.set(new GT_MetaTileEntity_WaterPumpElectric(12193, "multimachine.multi.waterpump.3", "Advanced Electric Water Pump II", 3).getStackForm(1));
         ItemList.Machine_WaterPump_EV.set(new GT_MetaTileEntity_WaterPumpElectric(12194, "multimachine.multi.waterpump.4", "Advanced Electric Water Pump III", 4).getStackForm(1));
         ItemList.Machine_WaterPump_IV.set(new GT_MetaTileEntity_WaterPumpElectric(12195, "multimachine.multi.waterpump.5", "Advanced Electric Water Pump IV", 5).getStackForm(1));
+
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_WaterPump_UVL.get(1L),bitsd,new Object[]{"PBP", "WHW", "PBP",
+		'B', OrePrefixes.pipeMedium.get(Materials.Bronze),
+		'W', OrePrefixes.pipeMedium.get(Materials.Wood),
+		'P', OreDictNames.craftingPiston,
+		'H', ItemList.Hull_Bronze}
+		);
+		
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_WaterPump_LV.get(1L),bitsd,new Object[]{"PCP", "BHB", "PCP",
+		'B', OrePrefixes.pipeMedium.get(Materials.Bronze),
+		'C', OrePrefixes.circuit.get(Materials.Basic), 
+		'H', ItemList.Hull_LV,
+		'P', ItemList.Electric_Pump_LV}
+		);
+		
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_WaterPump_MV.get(1L),bitsd,new Object[]{"PCP", "BHB", "PCP",
+		'B', OrePrefixes.pipeMedium.get(Materials.Steel),
+		'C', OrePrefixes.circuit.get(Materials.Good),
+		'H', ItemList.Hull_MV,
+		'P', ItemList.Electric_Pump_MV}
+		);
+
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_WaterPump_HV.get(1L),bitsd,new Object[]{"PCP", "BHB", "PCP",
+		'B', OrePrefixes.pipeMedium.get(Materials.StainlessSteel),
+		'C', OrePrefixes.circuit.get(Materials.Advanced),
+		'H', ItemList.Hull_HV,
+		'P', ItemList.Electric_Pump_HV}
+		);		
+
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_WaterPump_EV.get(1L),bitsd,new Object[]{"PCP", "BHB", "PCP",
+		'B', OrePrefixes.pipeMedium.get(Materials.Titanium),
+		'C', OrePrefixes.circuit.get(Materials.Data),
+		'H', ItemList.Hull_EV,
+		'P', ItemList.Electric_Pump_EV}
+		);
+
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_WaterPump_IV.get(1L),bitsd,new Object[]{"PCP", "BHB", "PCP",
+		'B', OrePrefixes.pipeMedium.get(Materials.TungstenSteel),
+		'C', OrePrefixes.circuit.get(Materials.Elite),
+		'H', ItemList.Hull_IV,
+		'P', ItemList.Electric_Pump_IV}
+		);	    
     }
 
     private static void run4() {
