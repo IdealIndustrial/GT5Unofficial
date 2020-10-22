@@ -1961,6 +1961,15 @@ public class GT_Utility {
         return formatter.format(aNumber);
     }
 
+    public static String formatNumbers(double aNumber) {
+        DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        String toString = String.format("%.2f ", aNumber);
+        aNumber = Double.parseDouble(toString);
+        DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+        symbols.setGroupingSeparator(' ');
+        return formatter.format(aNumber);
+    }
+
     /*
      * Check if stack has enough items of given type and subtract from stack, if there's no creative or 111 stack.
      */
