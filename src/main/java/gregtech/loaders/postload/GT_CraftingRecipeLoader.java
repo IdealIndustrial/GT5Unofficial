@@ -786,5 +786,8 @@ public class GT_CraftingRecipeLoader implements Runnable {
         GT_Values.RA.addFluidSolidifierRecipe(ItemList.Shape_Mold_Ball.get(0), new FluidStack(FluidRegistry.getFluid("molten.borosilicateglass"), 144), ItemList.VOLUMETRIC_FLASK.get(1), 44, 24);
 
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Well.get(1L), bits, new Object[]{"SPS","WQW","BVB",'S',GT_OreDictUnificator.get(OrePrefixes.gearGt,Materials.Wood,1),'P', new ItemStack(Items.stick,1),'W', OrePrefixes.plank.get(Materials.Wood), 'Q', new ItemStack(Items.string,1), 'B', OrePrefixes.stoneCobble,'V',new ItemStack(Items.bucket,1)});
+
+        GT_ModHandler.addCraftingRecipe(ItemList.PrimitiveFluidFilterItem.get(1L), bits, new Object[]{"PSP","WOW","PSP", 'P', OrePrefixes.plate.get(Materials.Paper), 'S', Items.string, 'W', new ItemStack(Blocks.wool, 1, GT_Values.W), 'O', OrePrefixes.pipe.get(Materials.Wood) });
+        GT_ModHandler.addCraftingRecipe(ItemList.Casing_Filter_ULV.get(1L), bits, new Object[]{"RFR","FPF","RFR", 'R', OrePrefixes.ring.get(Materials.Tin), 'F', ItemList.PrimitiveFluidFilterItem.get(1L), 'P', OrePrefixes.pipe.get(Materials.Wood)});
     }
 }
