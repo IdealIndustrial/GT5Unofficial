@@ -299,7 +299,7 @@ public class GT_NEI_DefaultHandler
 			}
 			if (tDuration > 0) {
 //				drawText(10, 113, trans("158","Time: ") + (tDuration < 20 ? "< 1" : Integer.valueOf(tDuration / 20)) + trans("161"," secs"), -16777216);
-				drawText(10, 113, trans("158","Time: ")+String.format("%.2f " + trans("161"," secs"), 0.05F * tDuration), -16777216);
+				drawText(10, 113, trans("158","Time: ") + GT_Utility.formatNumbers(0.05F * tDuration) + trans("161"," secs"), -16777216);
 			}
 			int tSpecial = ((CachedDefaultRecipe) this.arecipes.get(aRecipeIndex)).mRecipe.mSpecialValue;
 			if (tSpecial == -100 && GT_Mod.gregtechproxy.mLowGravProcessing) {
