@@ -69,4 +69,9 @@ public class GT_MetaTileEntity_RockBreaker
         }
         return 0;
     }
+
+    @Override
+    public boolean isWaterProofByDefault() {
+        return true;
+    }
 }
