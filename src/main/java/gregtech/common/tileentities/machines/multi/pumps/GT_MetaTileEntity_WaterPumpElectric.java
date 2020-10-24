@@ -42,7 +42,8 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
                 "In case pump is situated in ocean it will output salt water",
                 "Must cover " + getSurfaceBlocksCount() + " blocks of water surface in radius of " + getRadius(),
                 "For each other pump in work radius will decrease efficiency",
-                "Some pipes may connect only after all structure is assembled"
+                "Some pipes may connect only after all structure is assembled",
+                "River and Ocean are Minecraft Biomes"
         };
     }
 

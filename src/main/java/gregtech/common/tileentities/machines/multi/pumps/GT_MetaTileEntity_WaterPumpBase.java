@@ -352,11 +352,6 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
 
     }
 
-    @Override
-    public boolean allowGeneralRedstoneOutput(){
-    	return true;
-    }
-
     public abstract ITexture getBaseTexture();
 
     public abstract IIconContainer getInputFacing();
