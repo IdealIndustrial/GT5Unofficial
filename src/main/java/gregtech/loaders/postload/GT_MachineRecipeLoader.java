@@ -1827,15 +1827,16 @@ if(Loader.isModLoaded("Railcraft")){
         else
             GT_Values.RA.addChemicalRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot,Materials.Plutonium, 6), null, null, Materials.Radon.getGas(100), GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Plutonium, 6), 12000, 8);
         
-	    //Reed to PlantBall
+	//Reed to PlantBall
         GT_Values.RA.addCompressorRecipe(new ItemStack(Items.reeds, 8, 32767), ItemList.IC2_Plantball.get(1L), 300, 2);
 
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipe, Materials.Bronze, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Bronze, 4L), ItemList.SimpleFluidFilterItem.get(4L)},null, ItemList.Casing_Filter_LV.get(1), 160, 16);
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipe, Materials.Steel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Steel, 8L), ItemList.SimpleFluidFilterItem.get(16L)},null, ItemList.Casing_Filter_MV.get(1), 160, 64);
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipe, Materials.StainlessSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.StainlessSteel, 4L), ItemList.FluidFilterItem.get(4L)},null, ItemList.Casing_Filter_HV.get(1), 160, 256);
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipe, Materials.Titanium, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Titanium, 8L), ItemList.FluidFilterItem.get(16L)},null, ItemList.Casing_Filter_EV.get(1), 160, 1024);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Bronze, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Bronze, 4L), ItemList.SimpleFluidFilterItem.get(4L)},null, ItemList.Casing_Filter_LV.get(1), 160, 16);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Steel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Steel, 8L), ItemList.SimpleFluidFilterItem.get(16L)},null, ItemList.Casing_Filter_MV.get(1), 160, 64);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.StainlessSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.StainlessSteel, 4L), ItemList.FluidFilterItem.get(4L)},null, ItemList.Casing_Filter_HV.get(1), 160, 256);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Titanium, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Titanium, 8L), ItemList.FluidFilterItem.get(16L)},null, ItemList.Casing_Filter_EV.get(1), 160, 1024);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.TungstenSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.TungstenSteel, 8L), ItemList.FluidFilterItem.get(16L)},null, ItemList.Casing_Filter_IV.get(1), 160, 1024);
 
-	    GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 3L), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(500L), Materials.Concrete.getMolten(576L), GT_Values.NI, 20, 16);
+	GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 3L), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(500L), Materials.Concrete.getMolten(576L), GT_Values.NI, 20, 16);
         GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 3L), GT_Values.NI, GT_Values.NI, GT_ModHandler.getDistilledWater(500L), Materials.Concrete.getMolten(576L), GT_Values.NI, 20, 16);
 
         GT_Values.RA.addCentrifugeRecipe(new ItemStack(Items.golden_apple, 1, 1), GT_Values.NI, GT_Values.NF, Materials.Methane.getGas(4608L), new ItemStack(Items.gold_ingot, 64), GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, GT_Values.NI, null, 9216, 5);
