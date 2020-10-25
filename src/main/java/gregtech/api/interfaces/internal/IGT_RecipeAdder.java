@@ -674,6 +674,8 @@ public interface IGT_RecipeAdder {
 
     public boolean addFilterRecipe(FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt);
 
+    public boolean addReplicatorRecipe(ItemStack aInput, ItemStack aOutput, boolean aMetaGeneratedItem, int aScanDuration, int aScanEUt, int aMatterAmount, int aReplicationDuration, int aReplicationEUt);
+
     /**
      * Adds a Sound to the Sonictron9001
      * you should NOT call this in the preInit-Phase!

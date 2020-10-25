@@ -96,7 +96,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         mHidden = aRecipe.mHidden;
     }
 
-    protected GT_Recipe(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs, Object aSpecialItems, int[] aChances, FluidStack[] aFluidInputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt, int aSpecialValue) {
+    public GT_Recipe(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs, Object aSpecialItems, int[] aChances, FluidStack[] aFluidInputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt, int aSpecialValue) {
         if (aInputs == null) aInputs = new ItemStack[0];
         if (aOutputs == null) aOutputs = new ItemStack[0];
         if (aFluidInputs == null) aFluidInputs = new FluidStack[0];
@@ -523,9 +523,11 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
         public static final GT_Recipe_Map sMicrowaveRecipes = new GT_Recipe_Map_Microwave(new HashSet<GT_Recipe>(0), "gt.recipe.microwave", "Microwave", "smelting", RES_PATH_GUI + "basicmachines/E_Furnace", 1, 1, 1, 0, 1, E, 1, E, true, false);
 
         public static final GT_Recipe_Map sScannerFakeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(300), "gt.recipe.scanner", "Scanner", null, RES_PATH_GUI + "basicmachines/Scanner", 1, 1, 1, 0, 1, E, 1, E, true, true);
+        public static final GT_Recipe_Map sScannerRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(10), "gt.recipe.scanner.t", "Scanner", null, RES_PATH_GUI + "basicmachines/Scanner", 1, 1, 1, 0, 1, E, 1, E, true, false); //used to find custom recipes, for NEI fake recipes are still used
         public static final GT_Recipe_Map sRockBreakerFakeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(3), "gt.recipe.rockbreaker", "Rock Breaker", null, RES_PATH_GUI + "basicmachines/RockBreaker", 1, 1, 0, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sByProductList = new GT_Recipe_Map(new HashSet<GT_Recipe>(1000), "gt.recipe.byproductlist", "Ore Byproduct List", null, RES_PATH_GUI + "basicmachines/Default", 1, 6, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sReplicatorFakeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(100), "gt.recipe.replicator", "Replicator", null, RES_PATH_GUI + "basicmachines/Replicator", 0, 1, 0, 1, 1, E, 1, E, true, true);
+        public static final HashMap<String, GT_Recipe> sReplicatorRecipes = new HashMap<>(10);//only for finding recipes, for NEI fake map is still used
         public static final GT_Recipe_Map sOrganicReplicatorFakeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(1),"gt.recipe.organicreplicator","Organic Replicator", null,RES_PATH_GUI + "basicmachines/OrganicReplicator",1,1,1,1,1,E,1,E,true,true);
          //public static final GT_Recipe_Map sAssemblylineFakeRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(30), "gt.recipe.scanner", "Scanner", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 1, 0, 1, E, 1, E, true, true);
         public static final GT_Recipe_Map sAssemblylineVisualRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(30), "gt.recipe.fakeAssemblylineProcess", "Assemblyline Process", null, RES_PATH_GUI + "FakeAssemblyline", 1, 1, 1, 0, 1, E, 1, E, true, false);

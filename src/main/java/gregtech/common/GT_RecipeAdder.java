@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
@@ -14,15 +15,14 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.interfaces.internal.IGT_RecipeAdder;
 import gregtech.api.objects.GT_FluidStack;
 import gregtech.api.objects.ItemData;
-import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.*;
 import gregtech.api.util.GT_Recipe.GT_Recipe_AssemblyLine;
-import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_IntegratedCircuit_Item;
+import gregtech.common.items.behaviors.Behaviour_DataOrb;
 import mods.railcraft.common.blocks.aesthetics.cube.EnumCube;
 import mods.railcraft.common.items.RailcraftToolItems;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -1154,7 +1154,34 @@ public class GT_RecipeAdder
         return true;
 	}
 
-	private boolean areItemsAndFluidsBothNull(ItemStack[] items, FluidStack[] fluids){
+    @Override
+    public boolean addReplicatorRecipe(ItemStack aInput, ItemStack aOutput, boolean aMetaGeneratedItem, int aScanDuration, int aScanEUt, int aMatterAmount, int aReplicationDuration, int aReplicationEUt) {
+        if (aInput == null || aOutput == null)
+            return false;
+
+        ItemStack aOrb = ItemList.Tool_DataOrb.get(1);
+        Behaviour_DataOrb.setDataTitle(aOrb, "Substance-Scan");
+        String s = aOutput.getDisplayName();
+        if (aMetaGeneratedItem) {
+            if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+                s = GT_Assemblyline_Server.lServerNames.get(aOutput.getDisplayName());
+                if (s == null)
+                    s = aOutput.getDisplayName();
+            } else {
+                s = Materials.getLocalizedNameForItem(GT_LanguageManager.getTranslation(s), aOutput.getItemDamage() % 1000);
+            }
+        }
+        Behaviour_DataOrb.setDataName(aOrb, s);
+	    ItemStack[] aInputs = new ItemStack[]{aInput}, tOrb = new ItemStack[]{aOrb};
+
+        GT_Recipe.GT_Recipe_Map.sScannerFakeRecipes.addFakeRecipe(false, aInputs, tOrb, ItemList.Tool_DataOrb.get(1L, new Object[0]), null, null,  aScanDuration, aScanEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sScannerRecipes.addRecipe(true, aInputs, null, null, null, null,  aScanDuration, aScanEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sReplicatorFakeRecipes.addFakeRecipe(false, null, aInputs, tOrb, new FluidStack[]{Materials.UUMatter.getFluid(aMatterAmount)}, null, aReplicationDuration, aReplicationEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sReplicatorRecipes.put(aOutput.getUnlocalizedName(), new GT_Recipe(true, null, new ItemStack[]{aOutput}, null, null, new FluidStack[]{Materials.UUMatter.getFluid(aMatterAmount)}, null, aReplicationDuration, aReplicationEUt, 0 ));
+        return true;
+    }
+
+    private boolean areItemsAndFluidsBothNull(ItemStack[] items, FluidStack[] fluids){
     	boolean itemsNull = true;
     	if (items != null) {
     		for (ItemStack itemStack : items) {

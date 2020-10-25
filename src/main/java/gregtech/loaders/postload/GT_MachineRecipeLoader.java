@@ -2770,9 +2770,9 @@ if(Loader.isModLoaded("Railcraft")){
                 ItemList.Transformer_MAX_UV.get(1L),
                 ItemList.Machine_DigitalTransformer_UV.get(2L),
                 ItemList.Cover_Screen.get(1L)}, OrePrefixes.circuit.get(Materials.Infinite), 4, GT_Values.NF, ItemList.Machine_DigitalTransformer_MAX.get(1L), 50, 1920);
-	    GT_Values.RA.addRepl
+        GT_Values.RA.addReplicatorRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.NetherStar, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.NetherStar, 1),  true, 13824000, 32, 10000, 6912000, 32);
     }
-	
+
 	private void addChemicalRecipesSimple(){
 		GT_Values.RA.addChemicalRecipe(Materials.Ethylene.getCells(1),   Materials.AceticAcid.getCells(2), Materials.Methanol.getFluid(1000),   Materials.Glue.getFluid(4000), Materials.Empty.getCells(3), 240);
 		GT_Values.RA.addChemicalRecipe(Materials.AceticAcid.getCells(2), Materials.Methanol.getCells(1),   Materials.Ethylene.getGas(1000),     Materials.Glue.getFluid(4000), Materials.Empty.getCells(3), 240);

@@ -12,6 +12,7 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.items.GT_MetaGenerated_Item_X32;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.objects.GT_RenderedTexture;
@@ -28,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.fluids.FluidStack;
 
 public class GT_MetaTileEntity_Scanner
         extends GT_MetaTileEntity_BasicMachine {
@@ -116,6 +118,25 @@ public class GT_MetaTileEntity_Scanner
                     Behaviour_DataOrb.setDataName(this.mOutputItems[0], tData.mMaterial.mMaterial.mElement.name());
                     this.mMaxProgresstime = ((int) (tData.mMaterial.mMaterial.getMass() * 8192L / (1 << this.mTier - 1)));
                     this.mEUt = (32 * (1 << this.mTier - 1) * (1 << this.mTier - 1));
+                    return 2;
+                }
+                if ((mLastRecipe = GT_Recipe.GT_Recipe_Map.sScannerRecipes.findRecipe(getBaseMetaTileEntity(), false, GT_Values.V[9], new FluidStack[0], getAllInputs())) != null) {
+                    getSpecialSlot().stackSize -= 1;
+                    this.mOutputItems[0] = ItemList.Tool_DataOrb.get(1L, new Object[0]);
+                    Behaviour_DataOrb.setDataTitle(this.mOutputItems[0], "Substance-Scan");
+                    String s = aStack.getDisplayName();
+                    if (s.endsWith(".name")) {
+                        if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+                            s = GT_Assemblyline_Server.lServerNames.get(aStack.getDisplayName());
+                            if (s == null)
+                                s = aStack.getDisplayName();
+                        }
+                    }
+                    Behaviour_DataOrb.setDataName(this.mOutputItems[0], s);
+                    Behaviour_DataOrb.setDataID(this.mOutputItems[0], aStack.getUnlocalizedName());
+                    aStack.stackSize -= 1;
+                    this.mMaxProgresstime = ((mLastRecipe.mDuration / (1 << this.mTier - 1)));
+                    this.mEUt = (mLastRecipe.mEUt * (1 << this.mTier - 1) * (1 << this.mTier - 1));
                     return 2;
                 }
             }
