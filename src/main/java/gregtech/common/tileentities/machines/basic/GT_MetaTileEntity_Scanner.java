@@ -229,7 +229,7 @@ public class GT_MetaTileEntity_Scanner
                         for(int i=0;i<tRecipe.mInputs.length;i++){
                             if (tRecipe.mOreDictAlt[i] != null) {
                                 int count = 0;
-                                StringBuilder tBuilder = new StringBuilder("Input Bus "+(i+1)+": ");
+                                StringBuilder tBuilder = new StringBuilder("Input Bus "+(i+1)+": \n");
                                 for (ItemStack tStack : tRecipe.mOreDictAlt[i]) {
                                     if (tStack != null) {
                                         s=tStack.getDisplayName();
@@ -252,7 +252,7 @@ public class GT_MetaTileEntity_Scanner
                                     if (s==null)
                                         s=tRecipe.mInputs[i].getDisplayName();
                                 }
-                                tNBTList.appendTag(new NBTTagString("Input Bus "+(i+1)+": "+tRecipe.mInputs[i].stackSize+" "+s));
+                                tNBTList.appendTag(new NBTTagString("Input Bus "+(i+1)+": \n"+tRecipe.mInputs[i].stackSize+" "+s));
                             }
                         }
                         for(int i=0;i<tRecipe.mFluidInputs.length;i++){
@@ -263,7 +263,7 @@ public class GT_MetaTileEntity_Scanner
                                     if (s==null)
                                         s=tRecipe.mFluidInputs[i].getLocalizedName();
                                 }
-                                tNBTList.appendTag(new NBTTagString("Input Hatch "+(i+1)+": "+tRecipe.mFluidInputs[i].amount+"L "+s));
+                                tNBTList.appendTag(new NBTTagString("Input Hatch "+(i+1)+": \n"+tRecipe.mFluidInputs[i].amount+"L "+s));
                             }
                         }
                         tNBT.setTag("pages", tNBTList);

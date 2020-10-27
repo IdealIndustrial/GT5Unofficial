@@ -1834,7 +1834,10 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Steel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Steel, 8L), ItemList.SimpleFluidFilterItem.get(16L)},null, ItemList.Casing_Filter_MV.get(1), 160, 64);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.StainlessSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.StainlessSteel, 4L), ItemList.FluidFilterItem.get(4L)},null, ItemList.Casing_Filter_HV.get(1), 160, 256);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Titanium, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Titanium, 8L), ItemList.FluidFilterItem.get(16L)},null, ItemList.Casing_Filter_EV.get(1), 160, 1024);
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.TungstenSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.TungstenSteel, 8L), ItemList.FluidFilterItem.get(16L)},null, ItemList.Casing_Filter_IV.get(1), 160, 1024);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.TungstenSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.TungstenSteel, 8L), ItemList.FluidFilterItem.get(64L)},null, ItemList.Casing_Filter_IV.get(1), 160, 1024);
+
+
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.TungstenSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.TungstenSteel, 8L), ItemList.FluidFilterItem.get(64L)},null, ItemList.Casing_Filter_IV.get(1), 160, 1024);
 
 	GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 3L), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(500L), Materials.Concrete.getMolten(576L), GT_Values.NI, 20, 16);
         GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 3L), GT_Values.NI, GT_Values.NI, GT_ModHandler.getDistilledWater(500L), Materials.Concrete.getMolten(576L), GT_Values.NI, 20, 16);
@@ -2450,8 +2453,8 @@ if(Loader.isModLoaded("Railcraft")){
             		Materials.SolderingAlloy.getMolten(2880),
             }, ItemList.FusionComputer_UV.get(1,o), 1000, 90000);
 
-            GT_Values.RA.addFilterRecipe(Materials.DirtyWater.getFluid(1000L), Materials.Water.getFluid(1000L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.SiliconDioxide,5),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Phosphate,3),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Calcite,2)},250,12);
-            GT_Values.RA.addFilterRecipe(Materials.DirtyWater2.getFluid(1000L), Materials.Water.getFluid(1000L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Saltpeter,4),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.PotassiumFeldspar,1)},500,12);
+            GT_Values.RA.addFilterRecipe(Materials.DirtyWater.getFluid(1000L), Materials.Water.getFluid(1000L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.SiliconDioxide,5),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Phosphate,3),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Calcite,2)},100,12);
+            GT_Values.RA.addFilterRecipe(Materials.DirtyWater2.getFluid(1000L), Materials.Water.getFluid(1000L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Saltpeter,4),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.PotassiumFeldspar,1)},100,12);
             GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeSmall, Materials.Copper,1),GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Paper,16),GT_OreDictUnificator.get(OrePrefixes.dust,Materials.Carbon,8)},null,ItemList.SimpleFluidFilterItem.get(4),80,8);
             GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeSmall, Materials.Plastic,1),GT_ModHandler.getIC2Item("carbonFiber", 8), ItemList.Circuit_Parts_GlassFiber.get(32)},null,ItemList.FluidFilterItem.get(4),80,48);
             if (GregTech_API.sThaumcraftCompat != null) {
