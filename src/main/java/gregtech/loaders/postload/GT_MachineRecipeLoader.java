@@ -1836,9 +1836,6 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Titanium, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Titanium, 8L), ItemList.FluidFilterItem.get(16L)},null, ItemList.Casing_Filter_EV.get(1), 160, 1024);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.TungstenSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.TungstenSteel, 8L), ItemList.FluidFilterItem.get(64L)},null, ItemList.Casing_Filter_IV.get(1), 160, 1024);
 
-
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.TungstenSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.TungstenSteel, 8L), ItemList.FluidFilterItem.get(64L)},null, ItemList.Casing_Filter_IV.get(1), 160, 1024);
-
 	GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 3L), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(500L), Materials.Concrete.getMolten(576L), GT_Values.NI, 20, 16);
         GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Quicklime, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 3L), GT_Values.NI, GT_Values.NI, GT_ModHandler.getDistilledWater(500L), Materials.Concrete.getMolten(576L), GT_Values.NI, 20, 16);
 
