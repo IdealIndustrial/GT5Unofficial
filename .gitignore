@@ -71,5 +71,9 @@ classes/
 # Linux
 *~
 
+#profiling
+*.jfr
+
 # Libs
 !/libs/*
+/libs/runtimeMods/*
