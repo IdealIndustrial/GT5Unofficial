@@ -51,6 +51,7 @@ public class GT_Item_Machines
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean par4) {
         try {
             int tDamage = getDamage(aStack);
@@ -118,6 +119,10 @@ public class GT_Item_Machines
                             aList.add(tTranslated.equals("") ? tDescription : tTranslated);}
                         }else i++;
                     }
+                }
+                if (tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_BasicMachine_GT_Recipe) {
+                    if (tTileEntity.getMetaTileEntity().getCapacity() > 0)
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_Fluid_CAPACITY", "Fluid Tank: ", !GregTech_API.sPostloadFinished) + tTileEntity.getMetaTileEntity().getCapacity() + "L");
                 }
                 if (tTileEntity.getEUCapacity() > 0L) {
                     if (tTileEntity.getInputVoltage() > 0L) {
