@@ -63,21 +63,11 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
 
     public String[] getDescription() {
         return new String[]{
-        		"Place, activate with explosives ("
-                        + "8 Glyceryl, "
-                        + "32 TNT or "
-                        + "16 ITNT), use Data Stick",
+        		"Activate with explosives:",
+                "32 TNT, 16 Indastrial TNT, 8 Glyceryl",
+                "Use Data Stick for save data",
                 "Ore prospection area 191x191 blocks",
                 "Oil prospection area 3x3 oilfields"};
-    }
-
-    protected GT_MetaTileEntity_AdvSeismicProspector(String aName, int aTier, String aDescription, ITexture[][][] aTextures,
-            String aGUIName, String aNEIName, int aNear, int aMiddle, int aRadius, int aStep) {
-        super(aName, aTier, 1, aDescription, aTextures, 1, 1, aGUIName, aNEIName);
-        radius = aRadius;
-        near = aNear;
-        middle = aMiddle;
-        step = aStep;
     }
 
     protected GT_MetaTileEntity_AdvSeismicProspector(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures,
