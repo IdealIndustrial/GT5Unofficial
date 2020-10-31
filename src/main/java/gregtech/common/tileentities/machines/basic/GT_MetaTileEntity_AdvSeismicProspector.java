@@ -64,7 +64,7 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
     public String[] getDescription() {
         return new String[]{
         		"Activate with explosives:",
-                "32 TNT, 16 Indastrial TNT, 8 Glyceryl",
+                "32 TNT, 16 Industrial TNT, 8 Glyceryl",
                 "Use Data Stick for save data",
                 "Ore prospection area 191x191 blocks",
                 "Oil prospection area 3x3 oilfields"};
