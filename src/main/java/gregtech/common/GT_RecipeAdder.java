@@ -453,18 +453,18 @@ public class GT_RecipeAdder
             return false;
         }
         int tExplosives = aInput2 > 0 ? aInput2 < 64 ? aInput2 : 64 : 1;
-        int tGunpowder = tExplosives * 2;
-        int tDynamite = Math.max(1, tExplosives / 2);
+        int tGunpowder = Math.max(1, tExplosives/2);
+        int tDynamite = Math.max(1, tExplosives);
         int tTNT = Math.max(1, tExplosives/2);
         int tITNT = Math.max(1, tExplosives/4);
-        //new GT_Recipe(aInput1, aInput2, aOutput1, aOutput2);
-        if(tGunpowder<65){
-        	GT_Recipe.GT_Recipe_Map.sImplosionRecipes.addRecipe(true, new ItemStack[]{aInput1, ItemList.Block_Powderbarrel.get(tGunpowder, new Object[0])}, new ItemStack[]{aOutput1, aOutput2}, null, null, null, null, 20, 30, 0);
-        }
-        if(tDynamite<17){
+        //new GT_Recipe(aInput1, aInput2, aOutput1, aOutput2)
+        if(tDynamite<65){
         	GT_Recipe.GT_Recipe_Map.sImplosionRecipes.addRecipe(true, new ItemStack[]{aInput1, GT_ModHandler.getIC2Item("dynamite", tDynamite, null)}, new ItemStack[]{aOutput1, aOutput2}, null, null, null, null, 20, 30, 0);
         }
-        GT_Recipe.GT_Recipe_Map.sImplosionRecipes.addRecipe(true, new ItemStack[]{aInput1, new ItemStack(Blocks.tnt,tTNT)}, new ItemStack[]{aOutput1, aOutput2}, null, null, null, null, 20, 30, 0);
+        if(tTNT<65) {
+            GT_Recipe.GT_Recipe_Map.sImplosionRecipes.addRecipe(true, new ItemStack[]{aInput1, ItemList.Block_Powderbarrel.get(tGunpowder, new Object[0])}, new ItemStack[]{aOutput1, aOutput2}, null, null, null, null, 20, 30, 0);
+            GT_Recipe.GT_Recipe_Map.sImplosionRecipes.addRecipe(true, new ItemStack[]{aInput1, new ItemStack(Blocks.tnt,tTNT)}, new ItemStack[]{aOutput1, aOutput2}, null, null, null, null, 20, 30, 0);
+        }
         GT_Recipe.GT_Recipe_Map.sImplosionRecipes.addRecipe(true, new ItemStack[]{aInput1, GT_ModHandler.getIC2Item("industrialTnt", tITNT, null)}, new ItemStack[]{aOutput1, aOutput2}, null, null, null, null, 20, 30, 0);
         
         return true;
