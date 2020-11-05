@@ -38,7 +38,7 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
     public String[] getDescription() {
         return new String[]{
                 "Activate with explosives:",
-                "8 Dynamite, 4 TNT or Powderbarrel, 2 Industrial TNT, 1 Glyceryl",
+                "8 Dynamite or Powderbarrel, 4 TNT, 2 Industrial TNT, 1 Glyceryl",
                 "Use Data Stick for save data"};
     }
 
@@ -55,7 +55,7 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
         if (aBaseMetaTileEntity.isServerSide()) {
             ItemStack aStack = aPlayer.getCurrentEquippedItem();
             if (!ready && (aStack != null) && (
-            		(aStack.getItem() == Item.getItemFromBlock(Blocks.tnt) && aStack.stackSize > 3 ) ||
+            		(aStack.getItem() == Item.getItemFromBlock(Blocks.tnt) && aStack.stackSize > 7 ) ||
             		(aStack.getItem() == ItemList.Block_Powderbarrel.getItem() && aStack.stackSize > 3 ) ||
             		(aStack.getItem() == Ic2Items.industrialTnt.getItem()  && aStack.stackSize > 1 ) ||
             		(aStack.getItem() == Ic2Items.dynamite.getItem()  	   && aStack.stackSize > 7 ) ||
@@ -65,7 +65,7 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
                 	if(aStack.getItem() == Item.getItemFromBlock(Blocks.tnt)){
                     aStack.stackSize -= 4;
                 	}else if(aStack.getItem() == ItemList.Block_Powderbarrel.getItem()){
-                    aStack.stackSize -= 4;
+                    aStack.stackSize -= 8;
                 	}else if(aStack.getItem() == Ic2Items.industrialTnt.getItem()){
                     aStack.stackSize -= 2;
                     }else if(aStack.getItem() == Ic2Items.dynamite.getItem()){
