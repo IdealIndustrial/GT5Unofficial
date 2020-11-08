@@ -170,7 +170,7 @@ public class GT_MetaTileEntity_Scanner
                 }
 
             }
-            if (getSpecialSlot() == null && ItemList.Tool_DataStick.isStackEqual(aStack, false, true)) {
+            if (getSpecialSlot() == null && (ItemList.Tool_DataStick.isStackEqual(aStack, false, true) || ItemList.Tool_CD.isStackEqual(aStack, false, true))) {
                 if (GT_Utility.ItemNBT.getBookTitle(aStack).equals("Raw Prospection Data")) {
                     GT_Utility.ItemNBT.setBookTitle(aStack, "Analyzed Prospection Data");
                     GT_Utility.ItemNBT.convertProspectionData(aStack);
