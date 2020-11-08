@@ -1389,7 +1389,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                     return addRecipe(new GT_Recipe(true, new ItemStack[]{GT_Utility.copyAmount(1, aInputs[0])}, new ItemStack[]{tOutput}, null, null, new FluidStack[]{new FluidStack(aFluids[0].getFluid(), (int) L)}, null, 32, 2, 0), false, false, true);
             } else {
                 if (aInputs[0].getItem() == Items.paper) {
-                    if (!ItemList.Tool_DataStick.isStackEqual(aSpecialSlot, false, true)) return null;
+                    if (!(ItemList.Tool_DataStick.isStackEqual(aSpecialSlot, false, true) || ItemList.Tool_CD.isStackEqual(aSpecialSlot,false,true))) return null;
                     NBTTagCompound tNBT = aSpecialSlot.getTagCompound();
                     if (tNBT == null || GT_Utility.isStringInvalid(tNBT.getString("title")) || GT_Utility.isStringInvalid(tNBT.getString("author")))
                         return null;
@@ -1686,8 +1686,26 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
            return  recipeCache.add(aRecipe);
         }
 
+        static HashMap<ItemData, ItemStack> mWorstSubItemsMap = new HashMap<>();
+        static ArrayList<ItemStack> mUnificateAllTo = new ArrayList<>();
+
+        static void putToMap(ItemStack aStack) {
+            ItemData tData = GT_OreDictUnificator.getAssociation(aStack);
+            if (tData != null)
+                mWorstSubItemsMap.put(tData, aStack);
+
+        }
+
+        static void initSubItemsMap() {
+            putToMap(ItemList.Circuit_Microprocessor.get(1));
+        }
+
+        public static ItemStack getWorstForStack(ItemStack aStack) {
+            return mWorstSubItemsMap.get(GT_OreDictUnificator.getAssociation(aStack));
+        }
+
         public static void initCachedRecipes(){
-            boolean f = true;
+            initSubItemsMap();
             for(GT_Shaped_Recipe recipe: recipeCache){
                 Object[] aInputs = recipe.getInput();
                 ItemStack[] rOutputs = new ItemStack[aInputs.length];
@@ -1695,7 +1713,11 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                     if(aInputs[i] instanceof ItemStack){
                         rOutputs[i] = (ItemStack)aInputs[i];
                     }else if(aInputs[i] instanceof  ArrayList && ((ArrayList)aInputs[i]).size()>0 && ((ArrayList)aInputs[i]).get(0) instanceof ItemStack){
-                        rOutputs[i] = (ItemStack)((ArrayList)aInputs[i]).get(0);
+                        ItemStack tStack = getWorstForStack((ItemStack)((ArrayList)aInputs[i]).get(0));
+                        if (tStack == null)
+                            rOutputs[i] = (ItemStack)((ArrayList)aInputs[i]).get(0);
+                        else
+                            rOutputs[i] = tStack;
                     }
                 }
                 if(rOutputs.length>0)
