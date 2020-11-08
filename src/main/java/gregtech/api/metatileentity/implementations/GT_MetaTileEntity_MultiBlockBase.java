@@ -904,4 +904,16 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
         return false;
     }
+
+    /**
+     * gets invoked when player closes one of multiblock hatches
+     * works properly only if structure allows only one multiblock per hatch
+     * to get notified set Filed {@link GT_MetaTileEntity_Hatch#mMultiblock} to this
+     * and set Filed {@link GT_MetaTileEntity_Hatch#mNotifyMultiblockOnUpdate} to true
+     * @param aContainer is closed hatch
+     */
+
+    public void onContainersUpdated(GT_MetaTileEntity_Hatch aContainer) {
+        /* */
+    }
 }

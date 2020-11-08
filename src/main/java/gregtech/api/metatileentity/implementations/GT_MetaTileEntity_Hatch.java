@@ -11,6 +11,8 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
     public byte mMachineBlock = 0;
     private byte mTexturePage = 0;
     private byte actualTexture = 0;
+    public boolean mNotifyMultiblockOnUpdate = false; // only onemultiblock can be handled
+    public GT_MetaTileEntity_MultiBlockBase mMultiblock = null;
 
     public GT_MetaTileEntity_Hatch(int aID, String aName, String aNameRegional, int aTier, int aInvSlotCount, String aDescription, ITexture... aTextures) {
         super(aID, aName, aNameRegional, aTier, aInvSlotCount, aDescription, aTextures);
@@ -74,6 +76,13 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
         if(mTexturePage!=0 && GT_Values.GT.isServerSide())
             actualTexture|=0x80;//<- lets just hope no one needs the correct value for that on server
         mMachineBlock=actualTexture;
+    }
+
+    @Override
+    public void onCloseGUI() {
+        super.onCloseGUI();
+        if (mNotifyMultiblockOnUpdate && mMultiblock != null)
+            mMultiblock.onContainersUpdated(this);
     }
 
     /**
