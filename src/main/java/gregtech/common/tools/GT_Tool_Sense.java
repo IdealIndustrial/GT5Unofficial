@@ -49,8 +49,7 @@ public class GT_Tool_Sense
                 for (int j = -2; j < 3; j++) {
                     for (int k = -2; k < 3; k++) {
                         Block gBlock = aEvent.world.getBlock(aX + i, aY + j, aZ + k);
-                        if (!(gBlock instanceof BlockLeaves)) {
-                        } else {
+                        if (gBlock instanceof BlockLeaves) {
                             if (((i != 0) || (j != 0) || (k != 0)) && (aStack.getItem().getDigSpeed(aStack,
                                     aPlayer.worldObj.getBlock(aX + i, aY + j, aZ + k),
                                     aPlayer.worldObj.getBlockMetadata(aX + i, aY + j, aZ + k)) > 0.0F) &&
