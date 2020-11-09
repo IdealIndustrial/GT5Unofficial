@@ -96,15 +96,7 @@ public class GT_NEI_DefaultHandler
                     continue;
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (PositionedStack tStck : tNEIRecipe.mOutputs) {
-                    ArrayList<ItemStack> tResults = new ArrayList<>();
-                    tResults.addAll(Arrays.asList(tStck.items));
-                    for (ItemStack t : tResults) {
-                        List<GT_Recipe> r = inputRecipes.get(new GT_NEIItemStack(t));
-                        if (r == null)
-                            r = new ArrayList<>();
-                        r.add(tNEIRecipe.mRecipe);
-                        inputRecipes.put(new GT_NEIItemStack(t), r);
-                    }
+                    putInMap(tNEIRecipe, tStck, inputRecipes);
 
                 }
             }
@@ -123,15 +115,7 @@ public class GT_NEI_DefaultHandler
                     continue;
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (PositionedStack tStck : tNEIRecipe.mInputs) {
-                    ArrayList<ItemStack> tResults = new ArrayList<>();
-                    tResults.addAll(Arrays.asList(tStck.items));
-                    for (ItemStack t : tResults) {
-                        List<GT_Recipe> r = outputRecipes.get(new GT_NEIItemStack(t));
-                        if (r == null)
-                            r = new ArrayList<>();
-                        r.add(tNEIRecipe.mRecipe);
-                        outputRecipes.put(new GT_NEIItemStack(t), r);
-                    }
+                    putInMap(tNEIRecipe, tStck, outputRecipes);
 
                 }
             }
@@ -139,6 +123,17 @@ public class GT_NEI_DefaultHandler
 
         }
 
+    }
+
+    private void putInMap(CachedDefaultRecipe aNEIRecipe, PositionedStack tStck, HashMap<GT_NEIItemStack, List<GT_Recipe>> aOutputRecipes) {
+        for (ItemStack t : tStck.items) {
+            List<GT_Recipe> r = aOutputRecipes.get(new GT_NEIItemStack(t));
+            if (r == null)
+                r = new ArrayList<>();
+            if (!r.contains(aNEIRecipe.mRecipe))
+                r.add(aNEIRecipe.mRecipe);
+            aOutputRecipes.put(new GT_NEIItemStack(t), r);
+        }
     }
 
     public void loadCraftingRecipes(ItemStack aResult) {
