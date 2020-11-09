@@ -11,7 +11,7 @@ public abstract class GT_MetaTileEntity_Hatch extends GT_MetaTileEntity_BasicTan
     public byte mMachineBlock = 0;
     private byte mTexturePage = 0;
     private byte actualTexture = 0;
-    public boolean mNotifyMultiblockOnUpdate = false; // only onemultiblock can be handled
+    public boolean mNotifyMultiblockOnUpdate = false; // only one multiblock can be handled
     public GT_MetaTileEntity_MultiBlockBase mMultiblock = null;
 
     public GT_MetaTileEntity_Hatch(int aID, String aName, String aNameRegional, int aTier, int aInvSlotCount, String aDescription, ITexture... aTextures) {
