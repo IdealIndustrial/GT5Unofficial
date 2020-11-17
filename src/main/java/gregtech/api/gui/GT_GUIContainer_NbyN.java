@@ -2,6 +2,7 @@ package gregtech.api.gui;
 
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import net.minecraft.entity.player.InventoryPlayer;
+import sun.reflect.generics.tree.ByteSignature;
 
 import static gregtech.api.enums.GT_Values.RES_PATH_GUI;
 
@@ -12,11 +13,9 @@ public class GT_GUIContainer_NbyN extends GT_GUIContainerMetaTile_Machine {
     public GT_GUIContainer_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, int N) {
         super(new GT_Container_NbyN(aInventoryPlayer, aTileEntity, N), RES_PATH_GUI + N + "by" + N + ".png");
         mName = aName;
-        ySize = 197 + (N - 5) * 18;
-        if(N>6) N = 6;
-        xSize = 182 + (N - 5) * 18;// 182 196
-
-
+        // TODO not work normal for tier <= 4, why?
+        xSize = N == 5 ? 182 : N >= 6 ? 196 : 176;
+        ySize = N >= 5 ? 197 + (N - 5) * 18 : 166;
     }
     public GT_GUIContainer_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, String aBackground, int N) {
         super(new GT_Container_NbyN(aInventoryPlayer, aTileEntity, N), RES_PATH_GUI + aBackground + N +"by" + N + ".png");
