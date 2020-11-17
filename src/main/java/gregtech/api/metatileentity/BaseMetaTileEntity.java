@@ -1252,7 +1252,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         return false;
     }
 
-    protected boolean hasValidMetaTileEntity() {
+    protected boolean hasValidMetaTileEntity() { //definitely overused method
         return mMetaTileEntity != null && mMetaTileEntity.getBaseMetaTileEntity() == this;
     }
 
@@ -1629,7 +1629,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     @Override
-    public byte getInputRedstoneSignal(byte aSide) {
+    public byte getInputRedstoneSignal(byte aSide) { //why this thing is checked every tick everywhere??
         return (byte) (worldObj.getIndirectPowerLevelTo(getOffsetX(aSide, 1), getOffsetY(aSide, 1), getOffsetZ(aSide, 1), aSide) & 15);
     }
 
