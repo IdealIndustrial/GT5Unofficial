@@ -12,7 +12,7 @@ public class GT_Container_NbyN extends GT_ContainerMetaTile_Machine {
     public GT_Container_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int N) {
         super(aInventoryPlayer, aTileEntity, N == 5 ? 3 : 12, (N - 4) * 18 + 12, false);
         n = N;
-
+        mSupplier = Slot::new;
         if (mTileEntity != null && mTileEntity.getMetaTileEntity() != null) {
             addSlots(aInventoryPlayer);
             if (doesBindPlayerInventory()) bindPlayerInventory(aInventoryPlayer);
@@ -24,20 +24,12 @@ public class GT_Container_NbyN extends GT_ContainerMetaTile_Machine {
     }
 
 
-    public GT_Container_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int N, SlotSupplier<? extends Slot> aSupplier) {
-        this(aInventoryPlayer, aTileEntity, N);
-        if (mSupplier == null)
-            mSupplier = Slot::new;
-        mSupplier = aSupplier;
-    }
-
     @Override
     public void addSlots(InventoryPlayer aInventoryPlayer) {
-        int x = n == 5 || n == 6 ? 47 : n == 7 ? 38 : 29;
-        int y = n == 5 ? 20 : n == 6 ? 20 : n == 7 ? 20 : 20;
+        int x = n == 5 || n == 6 ? 47 : n == 7 ? 38 : n <=4 ? 80 - (n - 1) * 9 : 29;
+        int y = n >= 5 ? 20 : 35 - (n - 1) * 9;
         for (int j = 0; j < n; j++) {
             for (int i = 0; i < n; i++) {
-                int a = n * j + i, b = 53 + i * 18, c = 8 + j * 18;
                 addSlotToContainer(mSupplier.provide(mTileEntity, n * j + i, x + i * 18, y + j * 18));
             }
         }
