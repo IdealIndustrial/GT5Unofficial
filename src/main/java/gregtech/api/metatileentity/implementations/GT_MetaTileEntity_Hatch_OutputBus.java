@@ -98,18 +98,7 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
 
     @Override
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        switch (mTier) {
-            case 0:
-                return new GT_Container_1by1(aPlayerInventory, aBaseMetaTileEntity);
-            case 1:
-                return new GT_Container_2by2(aPlayerInventory, aBaseMetaTileEntity);
-            case 2:
-                return new GT_Container_3by3(aPlayerInventory, aBaseMetaTileEntity);
-            case 3:
-                return  new GT_Container_4by4(aPlayerInventory, aBaseMetaTileEntity);
-            default:
-                return new GT_Container_NbyN(aPlayerInventory, aBaseMetaTileEntity, mTier<=6?mTier+1:8);
-        }
+        return new GT_Container_NbyN(aPlayerInventory, aBaseMetaTileEntity, mTier<=6?mTier+1:8);
     }
 
     @Override

@@ -71,9 +71,9 @@ public class GT_MetaTileEntity_Hatch_DataAccess extends GT_MetaTileEntity_Hatch 
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
     	switch (mTier) {
     	case 4:
-    		return new GT_Container_2by2(aPlayerInventory, aBaseMetaTileEntity);
+    		return new GT_Container_NbyN(aPlayerInventory, aBaseMetaTileEntity, 2);
     	default:
-    		return new GT_Container_4by4(aPlayerInventory, aBaseMetaTileEntity);
+    		return new GT_Container_NbyN(aPlayerInventory, aBaseMetaTileEntity, 4);
     	}
     }
 
