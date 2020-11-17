@@ -5,6 +5,7 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
+import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.objects.GT_FluidStack;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
@@ -1711,8 +1712,14 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                         rOutputs[i] = (ItemStack)((ArrayList)aInputs[i]).get(0);
                     }
                 }
-                if(rOutputs.length>0)
-                    RA.addDisassemblerRecipe(recipe.getRecipeOutput(),rOutputs,2400,16);
+                if(rOutputs.length>0) {
+                    for (int i = 0; i < rOutputs.length; i++) {
+                        if (rOutputs[i] != null && rOutputs[i].getItem() instanceof GT_MetaGenerated_Tool) {
+                            rOutputs[i] = null;
+                        }
+                    }
+                    RA.addDisassemblerRecipe(recipe.getRecipeOutput(), rOutputs, 2400, 16);
+                }
             }
             recipeCache = null;
             mMaterialsSort = null;
