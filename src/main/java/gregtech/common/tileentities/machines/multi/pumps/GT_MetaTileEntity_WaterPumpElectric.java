@@ -37,6 +37,8 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
                 "Output hatch for water (next to " + getFrameMaterial().mLocalizedName + " pipe)",
                 "Input side of controller connects to pipe",
                 "Pipe (up to " + getPipeLength() + " blocks length) connects to Intake",
+                "Uses " + Math.pow(4,getTier()) + " EU/t",
+                "Controller input must be connected to input this pipe",
                 "Pipe fluid capacity must be enough to transfer "+ getOutputRate()*20+ " l per second",
                 "Intake placed in top water block of river (or Ocean, then outputs salt water)",
                 "In case pump is situated in ocean it will output salt water",

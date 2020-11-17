@@ -60,6 +60,8 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
                 "Output hatch for water (next to bronze pipe)",
                 "Input side of controller connects to pipe",
                 "Pipe (up to 10 blocks length) connects to Intake",
+                "Controller input must be connected to input this pipe",
+                "Uses 400l of steam per second",
                 "Pipe fluid capacity must be enough to transfer "+ getOutputRate()*20+ " l per second",
                 "Intake is situated in top layer of water source (river for water or ocean for salt water)",
                 "Must cover 128 blocks of water surface in radius of 16",
