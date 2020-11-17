@@ -93,21 +93,25 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
         return new GT_MetaPipeEntity_Fluid(mName, mThickNess, mMaterial, mCapacity, mHeatResistance, mGasProof, mPipeAmount);
     }
 
+    private static final byte[][] sRestrictionArray = new byte[][]  {
+            {2, 3, 5, 4},
+            {2, 3, 4, 5},
+            {1, 0, 4, 5},
+            {1, 0, 4, 5},
+            {1, 0, 2, 3},
+            {1, 0, 2, 3}
+    };
+
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aConnections, byte aColorIndex, boolean aConnected, boolean aRedstone) {
     	float tThickNess = getThickNess();
     	if (mDisableInput == 0) return new ITexture[]{aConnected ? getBaseTexture(tThickNess, mPipeAmount, mMaterial, aColorIndex) : new GT_RenderedTexture(mMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa))};
         byte tMask = 0;
-        byte[][] sRestrictionArray = new byte[][]{
-        	{2, 3, 5, 4},
-        	{2, 3, 4, 5},
-        	{1, 0, 4, 5},
-        	{1, 0, 4, 5},
-        	{1, 0, 2, 3},
-        	{1, 0, 2, 3}
-        };
+
         if (aSide >= 0 && aSide < 6) {
-            for (byte i = 0; i < 4; i++) if (isInputDisabledAtSide(sRestrictionArray[aSide][i])) tMask |= 1 << i;
+            for (byte i = 0; i < 4; i++)
+                if (isInputDisabledAtSide(sRestrictionArray[aSide][i]))
+                    tMask |= 1 << i;
             //Full block size renderer flips side 5 and 2  textures, flip restrictor textures to compensate
             if (tThickNess >= 0.99F && (aSide == 5 || aSide == 2))
                 if (tMask > 3 && tMask < 12)
@@ -151,6 +155,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
     @Override
     public void onValueUpdate(byte aValue) {
     	mDisableInput = aValue;
+        getBaseMetaTileEntity().rebakeMap();
     }
 
     @Override

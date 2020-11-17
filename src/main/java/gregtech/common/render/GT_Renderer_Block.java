@@ -159,7 +159,7 @@ public class GT_Renderer_Block
         }
         boolean[] tIsCovered = new boolean[6];
         for (byte i = 0; i < 6; i = (byte) (i + 1)) {
-            tIsCovered[i] = (aTileEntity.getCoverIDAtSide(i) != 0 ? true : false);
+            tIsCovered[i] = (aTileEntity.getCoverIDAtSide(i) != 0);
         }
         if ((tIsCovered[0]) && (tIsCovered[1]) && (tIsCovered[2]) && (tIsCovered[3]) && (tIsCovered[4]) && (tIsCovered[5])) {
             return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer);
