@@ -32,11 +32,14 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
     boolean ready = false;
 
     public GT_MetaTileEntity_SeismicProspector(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 1, "Place, activate with explosives(8 Dynamite, 1 Glyceryl, 4 TNT or 2 ITNT), use Data Stick", 1, 1, "Default.png", "", new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_ROCK_BREAKER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_ROCK_BREAKER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_ROCK_BREAKER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_ROCK_BREAKER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_ROCK_BREAKER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_ROCK_BREAKER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_ROCK_BREAKER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_ROCK_BREAKER)});
+        super(aID, aName, aNameRegional, aTier, 1, "", 1, 1, "Default.png", "", new ITexture[]{new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_ROCK_BREAKER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_SIDE_ROCK_BREAKER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_ROCK_BREAKER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_TOP_ROCK_BREAKER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_ROCK_BREAKER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FRONT_ROCK_BREAKER), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_ROCK_BREAKER_ACTIVE), new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_BOTTOM_ROCK_BREAKER)});
     }
 
-    public GT_MetaTileEntity_SeismicProspector(String aName, int aTier, String aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {
-        super(aName, aTier, 1, aDescription, aTextures, 1, 1, aGUIName, aNEIName);
+    public String[] getDescription() {
+        return new String[]{
+                "Activate with explosives:",
+                "8 Dynamite or Powderbarrel, 4 TNT, 2 Industrial TNT, 1 Glyceryl",
+                "Use Data Stick for save data"};
     }
 
     public GT_MetaTileEntity_SeismicProspector(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {
@@ -52,7 +55,8 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
         if (aBaseMetaTileEntity.isServerSide()) {
             ItemStack aStack = aPlayer.getCurrentEquippedItem();
             if (!ready && (aStack != null) && (
-            		(aStack.getItem() == Item.getItemFromBlock(Blocks.tnt) && aStack.stackSize > 3 ) || 
+            		(aStack.getItem() == Item.getItemFromBlock(Blocks.tnt) && aStack.stackSize > 3 ) ||
+            		(aStack.getItem() == ItemList.Block_Powderbarrel.getItem() && aStack.stackSize > 7 ) ||
             		(aStack.getItem() == Ic2Items.industrialTnt.getItem()  && aStack.stackSize > 1 ) ||
             		(aStack.getItem() == Ic2Items.dynamite.getItem()  	   && aStack.stackSize > 7 ) ||
             		(GT_OreDictUnificator.getItemData(aStack).mMaterial.mMaterial == Materials.Glyceryl  && aStack.stackSize > 0 )
@@ -60,6 +64,8 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
                 if ((!aPlayer.capabilities.isCreativeMode) && (aStack.stackSize != 111)) {
                 	if(aStack.getItem() == Item.getItemFromBlock(Blocks.tnt)){
                     aStack.stackSize -= 4;
+                	}else if(aStack.getItem() == ItemList.Block_Powderbarrel.getItem()){
+                    aStack.stackSize -= 8;
                 	}else if(aStack.getItem() == Ic2Items.industrialTnt.getItem()){
                     aStack.stackSize -= 2;
                     }else if(aStack.getItem() == Ic2Items.dynamite.getItem()){
