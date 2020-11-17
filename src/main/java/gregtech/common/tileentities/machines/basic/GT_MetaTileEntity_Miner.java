@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import static gregtech.api.enums.GT_Values.V;
 
 public class GT_MetaTileEntity_Miner extends GT_MetaTileEntity_BasicDrillerBase {
-    static {
-       RADIUS = new int[]{8, 8, 16, 24};
-       SPEED = new int[]{160, 160, 80, 40};
+
+       protected static int[] RADIUS = new int[]{8, 8, 16, 24},
+       SPEED = new int[]{160, 160, 80, 40},
        ENERGY = new int[]{8, 8, 32, 128};
-    }
+
 
     public GT_MetaTileEntity_Miner(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, new String[]{"Digging ore instead of you", ENERGY[aTier] + " EU/t, " + SPEED[aTier] / 20 + " sec per block",
@@ -57,6 +57,21 @@ public class GT_MetaTileEntity_Miner extends GT_MetaTileEntity_BasicDrillerBase 
             }
         }
         return true;
+    }
+
+    @Override
+    public int getRadius(int aTier) {
+        return RADIUS[aTier];
+    }
+
+    @Override
+    public int getSpeed(int aTier) {
+        return SPEED[aTier];
+    }
+
+    @Override
+    public int getEnergy(int aTier) {
+        return ENERGY[aTier];
     }
 
     @Override
