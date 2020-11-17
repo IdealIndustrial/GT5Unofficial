@@ -26,6 +26,9 @@ public class Behaviour_WaterProofUpgrade
                 BaseMetaTileEntity t = (BaseMetaTileEntity)tile;
                 t.mWaterProof = true;
                 t.sendBlockEvent((byte)8,(byte)1);
+                if (!aPlayer.capabilities.isCreativeMode) {
+                   aStack.stackSize--;
+                }
                 return true;
             }
         }
