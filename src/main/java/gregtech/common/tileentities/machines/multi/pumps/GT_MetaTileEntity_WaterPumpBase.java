@@ -96,11 +96,14 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     double waterToOutput = 0f;
     @Override
     public boolean onRunningTick(ItemStack aStack) {
+        boolean run = super.onRunningTick(aStack);
+        if (!run)
+            return false;
         double tOut = getOutputRate()*(mEfficiency/10000) + waterToOutput;
         int rOut = (int)tOut;
         waterToOutput = tOut - rOut;
         addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
-        return super.onRunningTick(aStack);
+        return true;
     }
 
     public boolean checkBiome(BiomeGenBase aBiome) {
