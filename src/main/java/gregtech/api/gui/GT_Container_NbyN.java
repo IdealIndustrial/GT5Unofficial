@@ -7,12 +7,9 @@ import net.minecraft.inventory.Slot;
 public class GT_Container_NbyN extends GT_ContainerMetaTile_Machine {
 
     int n;
-    SlotSupplier<? extends Slot> mSupplier;
-
-    public GT_Container_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int N) {
-        super(aInventoryPlayer, aTileEntity, N == 5 ? 3 : 12, (N - 4) * 18 + 12, false);
+    public GT_Container_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int N, SlotSupplier<? extends Slot> aSupplier) {
+        super(aInventoryPlayer, aTileEntity, N == 5 ? 3 : 12, (N - 4) * 18 + 12, false, aSupplier);
         n = N;
-
         if (mTileEntity != null && mTileEntity.getMetaTileEntity() != null) {
             addSlots(aInventoryPlayer);
             if (doesBindPlayerInventory()) bindPlayerInventory(aInventoryPlayer);
@@ -20,15 +17,11 @@ public class GT_Container_NbyN extends GT_ContainerMetaTile_Machine {
         } else {
             aInventoryPlayer.player.openContainer = aInventoryPlayer.player.inventoryContainer;
         }
-
     }
 
 
-    public GT_Container_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int N, SlotSupplier<? extends Slot> aSupplier) {
-        this(aInventoryPlayer, aTileEntity, N);
-        if (mSupplier == null)
-            mSupplier = Slot::new;
-        mSupplier = aSupplier;
+    public GT_Container_NbyN(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int N) {
+        this(aInventoryPlayer, aTileEntity, N, Slot::new);
     }
 
     @Override

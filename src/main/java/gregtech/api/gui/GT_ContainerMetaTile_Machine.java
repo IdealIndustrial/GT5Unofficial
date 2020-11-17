@@ -7,6 +7,7 @@ import gregtech.api.util.GT_LanguageManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.Slot;
 
 import java.util.Iterator;
 
@@ -20,8 +21,11 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
     public int mActive = 0, mMaxProgressTime = 0, mProgressTime = 0, mEnergy = 0, mSteam = 0, mSteamStorage = 0, mStorage = 0, mOutput = 0, mInput = 0, mID = 0, mDisplayErrorCode = 0, mAllowedToWork = 0;
     private int oActive = 0, oMaxProgressTime = 0, oProgressTime = 0, oEnergy = 0, oSteam = 0, oSteamStorage = 0, oStorage = 0, oOutput = 0, oInput = 0, oID = 0, oDisplayErrorCode = 0, oAllowedToWork = 0, mTimer = 0;
 
-    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
+    SlotSupplier<? extends Slot> mSupplier;
+
+    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, SlotSupplier<? extends Slot> aSupplier) {
         super(aInventoryPlayer, aTileEntity);
+        mSupplier = aSupplier;
 
         mTileEntity = aTileEntity;
 
@@ -34,9 +38,14 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
         }
     }
 
+    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
+        this(aInventoryPlayer, aTileEntity, Slot::new);
+    }
+
     public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, boolean doesBindInventory) {
         super(aInventoryPlayer, aTileEntity);
         mTileEntity = aTileEntity;
+        mSupplier = Slot::new;
 
         if (mTileEntity != null && mTileEntity.getMetaTileEntity() != null) {
             addSlots(aInventoryPlayer);
@@ -47,9 +56,12 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
         }
     }
 
-    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int aPlayerInventoryXOffset, int aPlayerInventoryYOffset, boolean initEvertyhing) {
+    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int aPlayerInventoryXOffset, int aPlayerInventoryYOffset, boolean initEvertyhing, SlotSupplier<? extends Slot> aSupplier) {
         super(aInventoryPlayer, aTileEntity, aPlayerInventoryXOffset, aPlayerInventoryYOffset);
 
+        mSupplier = aSupplier;
+        if (mSupplier == null)
+            mSupplier = Slot::new;
         mTileEntity = aTileEntity;
 
         if(initEvertyhing) {
