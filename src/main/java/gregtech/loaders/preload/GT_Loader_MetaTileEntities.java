@@ -28,6 +28,7 @@ import gregtech.common.tileentities.machines.multi.pumps.GT_MetaTileEntity_Water
 import gregtech.common.tileentities.machines.multi.pumps.GT_MetaTileEntity_WaterPumpElectric;
 import gregtech.common.tileentities.machines.multi.pumps.GT_MetaTileEntity_WaterPumpPrimitive;
 import gregtech.common.tileentities.machines.steam.*;
+import gregtech.common.tileentities.misc.GT_MetaTileEntity_CreativeTileAccelerator;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_Locker;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_QuantumChest;
 import gregtech.common.tileentities.storage.GT_MetaTileEntity_QuantumTank;
@@ -1415,6 +1416,8 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 		'H', ItemList.Hull_IV,
 		'P', ItemList.Electric_Pump_IV}
 		);
+
+        new GT_MetaTileEntity_CreativeTileAccelerator(12196, "basicmachine.creative.tileaccelerator", "Debug Tile Accelerator", 1);
     }
 
     private static void run4() {
