@@ -40,7 +40,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 "Controller (Top center)",
                 "Top besides contoller and edges Filter Machine Casings",
                 "1 Reinforced Door (keep closed for 100% efficency",
-                "1x LV+ Energy Hatch (1EU/t per 1 block inside), 1x Maintainance Hatch",
+                "1x LV+ Energy Hatch (1EU/t per 1 block inside)",
+                "1x Maintenance Hatch",
                 "Up to 10 Machine Hulls to transfer Items & Energy through walls",
                 "Cleaning time: 10s per 1 block inside for 100% (may be overclocked)",
                 "Remaining Blocks Plascrete"};
@@ -52,15 +53,11 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 
         long tVoltage = getMaxInputVoltage();
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-        this.mMaxProgresstime = ((internalVolume*20) / (1 << tTier - 1));
-
-        if (internalVolume <= 16) {
-            this.mEUt = (internalVolume * (1 << tTier - 1) * (1 << tTier - 1));
-        } else {
-            this.mEUt = internalVolume;
-            while (this.mEUt <= gregtech.api.enums.GT_Values.V[(tTier - 1)]) {
-                this.mEUt *= 4;
-            }
+        this.mMaxProgresstime = internalVolume*2;
+        this.mEUt = internalVolume;
+        while (this.mEUt*4 <= tVoltage) {
+            this.mEUt *= 4;
+            this.mMaxProgresstime /= 2;
         }
         if (this.mEUt > 0) {
             this.mEUt = (-this.mEUt);
