@@ -271,6 +271,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                                     mProgresstime = 0;
                                     mMaxProgresstime = 0;
                                     mEfficiencyIncrease = 0;
+                                    onProcessEnd();
                                     if (aBaseMetaTileEntity.isAllowedToWork()) checkRecipe(mInventory[1]);
                                     if (mOutputFluids != null && mOutputFluids.length > 0) {
                                         if (mOutputFluids.length > 1) {
@@ -334,6 +335,13 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             }
         }
         return true;
+    }
+
+    /**
+     * Called every time the machine successfully ends its work cycle
+     */
+    public void onProcessEnd() {
+        /* do nothing */
     }
 
     /**

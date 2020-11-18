@@ -44,6 +44,8 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
                 "In case pump is situated in ocean it will output salt water",
                 "Must cover " + getSurfaceBlocksCount() + " blocks of water surface in radius of " + getRadius(),
                 "For each other pump in work radius will decrease efficiency",
+                "Also efficiency slowly decrease as intake gets clogged",
+                "Plunger sneaky right click on the controller clears it",
                 "Some pipes may connect only after all structure is assembled",
                 "River and Ocean are Minecraft Biomes"
         };
@@ -134,7 +136,7 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
         return Textures.BlockIcons.OVERLAY_PIPE_IN;
     }
 
-    private static IIconContainer[] mFaces = new IIconContainer[]{Textures.BlockIcons.OVERLAY_ELECTRIC_PUMP_ACTIVE, Textures.BlockIcons.OVERLAY_ELECTRIC_PUMP_INACTIVE};
+    private static final IIconContainer[] mFaces = new IIconContainer[]{Textures.BlockIcons.OVERLAY_ELECTRIC_PUMP_ACTIVE, Textures.BlockIcons.OVERLAY_ELECTRIC_PUMP_INACTIVE};
 
     @Override
     public IIconContainer[] getFacings() {

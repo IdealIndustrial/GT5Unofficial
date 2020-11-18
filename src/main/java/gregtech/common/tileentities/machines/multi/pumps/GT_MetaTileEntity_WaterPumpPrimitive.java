@@ -66,6 +66,8 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
                 "Intake is situated in top layer of water source (river for water or ocean for salt water)",
                 "Must cover 128 blocks of water surface in radius of 16",
                 "For each other pump in work radius will decrease efficiency",
+                "Also efficiency slowly decrease as intake gets clogged",
+                "Plunger sneaky right click on the controller clears it",
                 "Some pipes may connect only after all structure is assembled",
                 "River and Ocean are Minecraft Biomes"
         };

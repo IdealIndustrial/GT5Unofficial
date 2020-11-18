@@ -1,10 +1,7 @@
 package gregtech.common.tileentities.machines.multi.pumps;
 
-import cpw.mods.fml.common.Optional;
-import gnu.trove.list.array.TIntArrayList;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
-import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
@@ -15,14 +12,12 @@ import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
@@ -34,20 +29,19 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.function.Predicate;
 
 public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_MultiBlockBase {
     public static HashMap<Integer,HashMap<Long, GT_MetaTileEntity_WaterPumpBase>> mPumps = new HashMap<>();
     public ArrayList<GT_MetaTileEntity_WaterPumpBase> mConnectedPumps = new ArrayList<>(2);
-    public ArrayList<GT_MetaPipeEntity_Fluid> mPipes = new ArrayList<>();
-    public GT_MetaPipeEntity_Fluid mPipe = null;
-    public double mEfficiency = 0;
+    protected ArrayList<GT_MetaPipeEntity_Fluid> mPipes = new ArrayList<>();
+    protected GT_MetaPipeEntity_Fluid mPipe = null;
+    public double mEfficiency = 0, mEfficiencyRate = 1d;
+    protected int mWorkCycles = 0;
     public int mWaterSurface = 0;
-    public int mHeadX = 0, mHeadY = -1, mHeadZ = 0;
-    public int mFilledPipes = 0;
+    protected int mHeadX = 0, mHeadY = -1, mHeadZ = 0;
+    protected int mFilledPipes = 0;
     public int mMainFacing = 2;
-    public boolean mRiver = false;
+    protected boolean mRiver = false;
 
     public GT_MetaTileEntity_WaterPumpBase(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -74,23 +68,27 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         mMainFacing = aNBT.getInteger("mMainF");
+        mEfficiencyRate = aNBT.getDouble("mEffRate");
+        if (mEfficiencyRate < 0.0000001d)
+            mEfficiencyRate = 1d;
+        mWorkCycles = aNBT.getInteger("mCycles");
         super.loadNBTData(aNBT);
     }
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
         aNBT.setInteger("mMainF", mMainFacing);
+        aNBT.setDouble("mEffRate", mEfficiencyRate);
+        aNBT.setInteger("mCycles", mWorkCycles);
         super.saveNBTData(aNBT);
     }
 
-    public boolean checkRecipe(ItemStack aStack) {
-
-        if (!depleteInput(GT_ModHandler.getSteam(200)))
-            return false;
-        this.mEfficiencyIncrease = 10000;
-        this.mMaxProgresstime = 10;
-        this.mEUt = 0;
-        return true;
+    @Override
+    public void onProcessEnd() {
+        if (++mWorkCycles == 16800) {
+            mWorkCycles = 0;
+            mEfficiencyRate *= 0.99d;
+        }
     }
 
     double waterToOutput = 0f;
@@ -100,6 +98,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         if (!run)
             return false;
         double tOut = getOutputRate()*(mEfficiency/10000) + waterToOutput;
+        tOut *= mEfficiencyRate;
         int rOut = (int)tOut;
         waterToOutput = tOut - rOut;
         addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
@@ -450,7 +449,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
 
     @Override
     public String[] getInfoData() {
-        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (mEfficiency / 100.0F) + "%", "Water surface covered: "+(Math.min(getSurfaceBlocksCount(),mWaterSurface)) + "/" + getSurfaceBlocksCount()+ " blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
+        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (mEfficiency / 100.0F) + "%", "Intake efficiency: " + (int) (mEfficiencyRate * 100) + "%", "Water surface covered: "+(Math.min(getSurfaceBlocksCount(),mWaterSurface)) + "/" + getSurfaceBlocksCount()+ " blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
     }
 
 }
