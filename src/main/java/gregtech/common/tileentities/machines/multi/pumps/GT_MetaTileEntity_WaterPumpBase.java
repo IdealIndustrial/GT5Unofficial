@@ -449,7 +449,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
 
     @Override
     public String[] getInfoData() {
-        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (mEfficiency / 100.0F) + "%", "Intake efficiency: " + (int) (mEfficiencyRate * 100) + "%", "Water surface covered: "+(Math.min(getSurfaceBlocksCount(),mWaterSurface)) + "/" + getSurfaceBlocksCount()+ " blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
+        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (mEfficiency / 100.0F) + "%", "Intake efficiency: " + (int)(mEfficiencyRate * 100) + "." + (int)(mEfficiencyRate*1000)%100 + "%", "Water surface covered: "+(Math.min(getSurfaceBlocksCount(),mWaterSurface)) + "/" + getSurfaceBlocksCount()+ " blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
     }
 
 }
