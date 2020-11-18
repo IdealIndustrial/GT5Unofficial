@@ -22,7 +22,7 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         mTool = ((GT_Container_DataReader)inventorySlots).mTool;
         ItemStack aStick = ((GT_Container_DataReader)inventorySlots).mInventory.getStackInSlot(0);
-        if (!ItemList.Tool_DataStick.isStackEqual(aStick, false, true))
+        if (!ItemList.Tool_DataStick.isStackEqual(aStick, false, true) && !ItemList.Tool_CD.isStackEqual(aStick, false, true))
             return;
         if (mTool == null || mTool.getTagCompound() == null)
             return;

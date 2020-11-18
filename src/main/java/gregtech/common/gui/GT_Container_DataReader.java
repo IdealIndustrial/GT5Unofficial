@@ -51,6 +51,11 @@ public class GT_Container_DataReader extends Container {
     @Override
     public void onContainerClosed(EntityPlayer aPlayer) {
         ItemStack aTool = aPlayer.getHeldItem();
+        saveToNBT(aTool);
+
+    }
+
+    private void saveToNBT(ItemStack aTool) {
         if (GT_Mod.gregtechproxy.isServerSide() && aTool != null && ItemList.Tool_DataReader.isStackEqual(aTool, false, true)) {
             NBTTagCompound tNbt = aTool.getTagCompound();
             if (tNbt == null)
@@ -58,7 +63,6 @@ public class GT_Container_DataReader extends Container {
             mInventory.saveToNBT(tNbt);
             aTool.setTagCompound(tNbt);
         }
-
     }
 
 
@@ -104,15 +108,11 @@ public class GT_Container_DataReader extends Container {
                 nbt = new NBTTagCompound();
             nbt.setBoolean("notify", true);
             mTool.setTagCompound(nbt);
-            if (GT_Mod.gregtechproxy.isServerSide() && mTool != null && ItemList.Tool_DataReader.isStackEqual(mTool, false, true)) {
-                NBTTagCompound tNbt = mTool.getTagCompound();
-                if (tNbt == null)
-                    tNbt = new NBTTagCompound();
-                mInventory.saveToNBT(tNbt);
-                mTool.setTagCompound(tNbt);
-            }
+            saveToNBT(mTool);
             return s;
         }
+        mTool = aPlayer.getHeldItem();
+        saveToNBT(mTool);
 
         return super.slotClick( aSlotIndex,aMouseclick, aShifthold, aPlayer);
     }

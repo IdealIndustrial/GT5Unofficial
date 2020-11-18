@@ -65,7 +65,7 @@ public class Behaviour_DataReader
             nbt.setInteger("prog",  tProgress = nbt.getInteger("prog") + 1);
             if (tProgress >= 1000) {
                 ItemStack tStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("s0"));
-                if (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(aStack, false, true)) {
+                if (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, true)) {
                     if (GT_Utility.ItemNBT.getBookTitle(tStack).equals("Raw Prospection Data")) {
                         GT_Utility.ItemNBT.setBookTitle(tStack, "Analyzed Prospection Data");
                         GT_Utility.ItemNBT.convertProspectionData(tStack);

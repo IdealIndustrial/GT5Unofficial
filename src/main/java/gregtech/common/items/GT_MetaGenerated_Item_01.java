@@ -76,7 +76,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         setElectricStats(32000+tLastID, 100000, GT_Values.V[1], 1, -3, false);
         // 19
         ItemList.Tool_CD.set(addItem(tLastID = 20, "Compact Disc", "Used for reading prospector info (sigle use)"));
-
+        addItemBehavior(32000+tLastID, new Behaviour_CD());
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Coin_Chocolate.get(1L, new Object[0]), new Object[]{OrePrefixes.dust.get(Materials.Cocoa), OrePrefixes.dust.get(Materials.Milk), OrePrefixes.dust.get(Materials.Sugar), OrePrefixes.foil.get(Materials.Gold)});
 
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Credit_Copper.get(8L, new Object[0]), GT_ModHandler.RecipeBits.KEEPNBT | GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{ItemList.Credit_Iron});
