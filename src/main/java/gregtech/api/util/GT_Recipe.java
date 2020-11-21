@@ -1,15 +1,15 @@
 package gregtech.api.util;
 
 import codechicken.nei.PositionedStack;
+import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
 import gregtech.api.items.GT_MetaGenerated_Tool;
-import gregtech.api.objects.GT_FluidStack;
-import gregtech.api.objects.GT_ItemStack;
-import gregtech.api.objects.ItemData;
-import gregtech.api.objects.MaterialStack;
+import gregtech.api.objects.*;
+import gregtech.common.GT_Proxy;
+import gregtech.nei.GT_NEI_DefaultHandler;
 import gregtech.nei.GT_NEI_DefaultHandler.FixedPositionedStack;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -676,8 +676,20 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             aRecipe.mFakeRecipe = aFakeRecipe;
             if (aRecipe.mFluidInputs.length < mMinimalInputFluids && aRecipe.mInputs.length < mMinimalInputItems)
                 return null;
-            if (aCheckForCollisions && findRecipe(null, false, Long.MAX_VALUE, aRecipe.mFluidInputs, aRecipe.mInputs) != null)
-                return null;
+            if (aCheckForCollisions) {
+                GT_Recipe tConflict = findRecipe(null, false, Long.MAX_VALUE, aRecipe.mFluidInputs, aRecipe.mInputs);
+                if (tConflict != null) {
+                    if (GT_Mod.gregtechproxy.debugRecipeConflicts) {
+                        ItemStack tConflictStack = aRecipe.mOutputs == null || aRecipe.mOutputs.length == 0 ? null : aRecipe.mOutputs[0];
+                        if (tConflictStack == null)
+                            return null;
+                        HashMap<GT_NEIItemStack,List<GT_Recipe>> tRecipesMap = GT_Mod.gregtechproxy.mConflictMaps.computeIfAbsent(this, recipe -> new HashMap<>());
+                        List<GT_Recipe> tRecipes = tRecipesMap.computeIfAbsent(new GT_NEIItemStack(tConflictStack), k -> new ArrayList<>());
+                        tRecipes.add(tConflict);
+                    }
+                    return null;
+                }
+            }
             return add(aRecipe);
         }
 

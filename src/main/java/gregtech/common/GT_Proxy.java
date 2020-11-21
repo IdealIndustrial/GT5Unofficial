@@ -142,6 +142,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
             "redalloyInsulated", "infusedteslatiteBundled"}));
     private final DateFormat mDateFormat = DateFormat.getInstance();
     public ArrayList<String> mBufferedPlayerActivity = new ArrayList();
+    public HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> mConflictMaps = new HashMap<>();
     public boolean mHardcoreCables = false;
     public boolean mSmallLavaBoilerEfficiencyLoss = true;
     public boolean mDisableVanillaOres = true;
@@ -230,6 +231,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean disassemblerRecipeMapOn = false;
     public boolean enableFixQuestsCommand = true;
     public boolean allowDisableToolTips = false;
+    public boolean debugRecipeConflicts = true;
 
     
     public GT_Proxy() {
@@ -613,10 +615,6 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                 }
             }
         } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-            GT_NEI_DefaultHandler.inputMaps = new HashMap<>();
-            GT_NEI_DefaultHandler.outputMaps = new HashMap<>();
-        }
 
         dimensionWiseChunkData.clear();//!!! IMPORTANT for map switching...
         dimensionWisePollution.clear();//!!! IMPORTANT for map switching...
@@ -666,6 +664,21 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
     @SubscribeEvent
     public void onClientConnectedToServerEvent(FMLNetworkEvent.ClientConnectedToServerEvent aEvent) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            GT_NEI_DefaultHandler.inputMaps = new HashMap<>();
+            GT_NEI_DefaultHandler.outputMaps = new HashMap<>();
+            if (debugRecipeConflicts) {
+                mConflictMaps.forEach((map, recipes) -> {
+                    HashMap<GT_NEIItemStack, List<GT_Recipe>> inMap = GT_NEI_DefaultHandler.inputMaps.computeIfAbsent(map, m-> new HashMap<>());
+
+
+                    recipes.forEach((stack, recipeList) -> {
+                        List<GT_Recipe> tMapRecipes = inMap.computeIfAbsent(stack, k -> new ArrayList<>());
+                        tMapRecipes.addAll(recipeList);
+                    });
+                });
+            }
+        }
     }
 
     @SubscribeEvent
