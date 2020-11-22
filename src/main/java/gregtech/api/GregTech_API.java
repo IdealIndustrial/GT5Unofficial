@@ -55,7 +55,7 @@ public class GregTech_API {
     /**
      * Fixes the HashMap Mappings for ItemStacks once the Server started
      */
-    public static final Collection<Map<GT_ItemStack, ?>> sItemStackMappings = new ArrayList<Map<GT_ItemStack, ?>>();
+    public static final Collection<Map<? extends GT_ItemStack, ?>> sItemStackMappings = new ArrayList<>();
     public static final Collection<Map<Fluid, ?>> sFluidMappings = new ArrayList<Map<Fluid, ?>>();
     /**
      * The MetaTileEntity-ID-List-Length
@@ -136,7 +136,7 @@ public class GregTech_API {
     /**
      * The List of Hazmat Armors
      */
-    public static final GT_HashSet<GT_ItemStack> sGasHazmatList = new GT_HashSet<GT_ItemStack>(), sBioHazmatList = new GT_HashSet<GT_ItemStack>(), sFrostHazmatList = new GT_HashSet<GT_ItemStack>(), sHeatHazmatList = new GT_HashSet<GT_ItemStack>(), sRadioHazmatList = new GT_HashSet<GT_ItemStack>(), sElectroHazmatList = new GT_HashSet<GT_ItemStack>();
+    public static final GT_HashSet<GT_ItemStack> sGasHazmatList = new GT_HashSet<GT_ItemStack>(), sBioHazmatList = new GT_HashSet<GT_ItemStack>(), sFrostHazmatList = new GT_HashSet<GT_ItemStack>(), sHeatHazmatList = new GT_HashSet<GT_ItemStack>(), sRadioHazmatList = new GT_HashSet<GT_ItemStack>(), sElectroHazmatList = new GT_HashSet<GT_ItemStack>(), sQuantumArmorList = new GT_HashSet<GT_ItemStack>();
     /**
      * The List of Dimensions, which are Whitelisted for the Teleporter. This list should not contain other Planets.
      * Mystcraft Dimensions and other Dimensional Things should be allowed.

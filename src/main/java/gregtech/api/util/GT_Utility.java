@@ -1227,6 +1227,12 @@ public class GT_Utility {
         return true;
     }
 
+    public static boolean isWearingFullQuantumArmor(EntityLivingBase aEntity) {
+        for (byte i = 1; i < 5; i++)
+            if (!isStackInList(aEntity.getEquipmentInSlot(i), GregTech_API.sQuantumArmorList)) return false;
+        return true;
+    }
+
     public static boolean isWearingFullHeatHazmat(EntityLivingBase aEntity) {
         for (byte i = 1; i < 5; i++)
             if (!isStackInList(aEntity.getEquipmentInSlot(i), GregTech_API.sHeatHazmatList)) return false;
@@ -2058,6 +2064,10 @@ public class GT_Utility {
     		return true;
     	}
     	return false;
+    }
+
+    public static <T> void addAllToAll( Collection<T> toAdd, Collection<? extends Collection<T>> addTo) {
+       addTo.forEach(collection -> collection.addAll(toAdd));
     }
 
     public static class ItemNBT {

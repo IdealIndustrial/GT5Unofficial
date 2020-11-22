@@ -683,7 +683,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                         ItemStack tConflictStack = aRecipe.mOutputs == null || aRecipe.mOutputs.length == 0 ? null : aRecipe.mOutputs[0];
                         if (tConflictStack == null)
                             return null;
-                        HashMap<GT_NEIItemStack,List<GT_Recipe>> tRecipesMap = GT_Mod.gregtechproxy.mConflictMaps.computeIfAbsent(this, recipe -> new HashMap<>());
+                        HashMap<GT_NEIItemStack,List<GT_Recipe>> tRecipesMap = GT_Mod.gregtechproxy.mConflictMaps.computeIfAbsent(this, recipe -> {HashMap<GT_NEIItemStack, List<GT_Recipe>>map = new HashMap<>(); GregTech_API.sItemStackMappings.add(map); return map;});
                         List<GT_Recipe> tRecipes = tRecipesMap.computeIfAbsent(new GT_NEIItemStack(tConflictStack), k -> new ArrayList<>());
                         tRecipes.add(tConflict);
                     }

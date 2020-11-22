@@ -5,15 +5,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class GT_NEIItemStack {
-    public final Item mItem;
-    public final byte mStackSize;
-    public final short mMetaData;
+public class GT_NEIItemStack extends GT_ItemStack{
 
     public GT_NEIItemStack(Item aItem, long aStackSize, long aMetaData) {
-        mItem = aItem;
-        mStackSize = (byte) aStackSize;
-        mMetaData = (short) aMetaData;
+        super(aItem, aStackSize, aMetaData);
     }
 
     public GT_NEIItemStack(ItemStack aStack) {

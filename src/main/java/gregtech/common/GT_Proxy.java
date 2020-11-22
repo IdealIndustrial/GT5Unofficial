@@ -1,5 +1,7 @@
 package gregtech.common;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -65,7 +67,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -87,6 +91,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     private static final EnumSet<OreGenEvent.GenerateMinable.EventType> PREVENTED_ORES = EnumSet.of(OreGenEvent.GenerateMinable.EventType.COAL,
@@ -416,39 +422,17 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         OrePrefixes.cellPlasma.mContainerItem = ItemList.Cell_Empty.get(1L, new Object[0]);
         OrePrefixes.cell.mContainerItem = ItemList.Cell_Empty.get(1L, new Object[0]);
 
-        GregTech_API.sFrostHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sFrostHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sFrostHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sFrostHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
+        List<GT_ItemStack> tQuantumList = Stream.of("quantumHelmet", "quantumLeggings","quantumBoots", "quantumBodyarmor").map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+        tQuantumList.add(new GT_ItemStack(new ItemStack(GameRegistry.findItem("GraviSuite","graviChestPlate"), 1, 32767)));
 
-        GregTech_API.sHeatHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sHeatHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sHeatHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sHeatHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
+        List<GT_ItemStack> tHazmatList = Stream.of("hazmatHelmet", "hazmatChestplate", "hazmatLeggings", "hazmatBoots" ).map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+        tHazmatList.addAll(tQuantumList);
 
-        GregTech_API.sBioHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sBioHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sBioHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sBioHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
+        List<GT_ItemStack> tChainList = Stream.of(new ItemStack(Items.chainmail_helmet, 1, 32767), new ItemStack(Items.chainmail_chestplate, 1, 32767), new ItemStack(Items.chainmail_leggings, 1, 32767), new ItemStack(Items.chainmail_boots, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
 
-        GregTech_API.sGasHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sGasHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sGasHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sGasHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-
-        GregTech_API.sRadioHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sRadioHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sRadioHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sRadioHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-
-        GregTech_API.sElectroHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sElectroHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sElectroHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sElectroHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-        GregTech_API.sElectroHazmatList.add(new ItemStack(Items.chainmail_helmet, 1, 32767));
-        GregTech_API.sElectroHazmatList.add(new ItemStack(Items.chainmail_chestplate, 1, 32767));
-        GregTech_API.sElectroHazmatList.add(new ItemStack(Items.chainmail_leggings, 1, 32767));
-        GregTech_API.sElectroHazmatList.add(new ItemStack(Items.chainmail_boots, 1, 32767));
+        GT_Utility.addAllToAll(tHazmatList, Arrays.asList(GregTech_API.sFrostHazmatList, GregTech_API.sHeatHazmatList, GregTech_API.sBioHazmatList, GregTech_API.sElectroHazmatList, GregTech_API.sRadioHazmatList, GregTech_API.sGasHazmatList));
+        GregTech_API.sQuantumArmorList.addAll(tQuantumList);
+        GregTech_API.sElectroHazmatList.addAll(tChainList);
 
         GT_ModHandler.sNonReplaceableItems.add(new ItemStack(Items.bow, 1, 32767));
         GT_ModHandler.sNonReplaceableItems.add(new ItemStack(Items.fishing_rod, 1, 32767));
@@ -1974,5 +1958,23 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     		GregTech_API.causeMachineUpdate(event.world, event.x, event.y, event.z);
     }
 
+    @SubscribeEvent
+    public void onDamagedEvent(LivingHurtEvent event) {
+
+    }
+
+    @SubscribeEvent
+    public void onAttackedEvent(LivingAttackEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            String source = event.source != null ? event.source.damageType != null ?  event.source.damageType : null :null;
+            if (source == null)
+                return;
+            if(DamageSources.isProtected(source, (EntityLivingBase)event.entity)) {
+                event.setCanceled(true);
+            }
+
+        }
+
+    }
 
 }
