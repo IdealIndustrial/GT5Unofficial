@@ -89,6 +89,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -662,6 +663,16 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                     });
                 });
             }
+            try {
+                Class cl = Class.forName("codechicken.nei.recipe.ShapedRecipeHandler");
+                Field uses = cl.getField("usesMap");
+                Field recipe = cl.getField("recipesMap");
+                uses.set(null, new HashMap<>());
+                recipe.set(null, new HashMap<>());
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignored) {
+
+            }
+
         }
     }
 
