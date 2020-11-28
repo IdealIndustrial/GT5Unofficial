@@ -9,6 +9,7 @@ import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_SpawnEventHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayer;
 
 import static gregtech.api.enums.GT_Values.V;
 
