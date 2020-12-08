@@ -1831,6 +1831,8 @@ if(Loader.isModLoaded("Railcraft")){
         
 	//Reed to PlantBall
         GT_Values.RA.addCompressorRecipe(new ItemStack(Items.reeds, 8, 32767), ItemList.IC2_Plantball.get(1L), 300, 2);
+        GT_Values.RA.addCompressorRecipe(GT_Utility.getIntegratedCircuit(0), Materials.Air.getGas(2000), 300, 2);
+        GT_Values.RA.addCompressorRecipe(GT_Utility.getIntegratedCircuit(1), Materials.Air.getGas(4000), 60, 30);
 
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Bronze, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Bronze, 4L), ItemList.SimpleFluidFilterItem.get(4L)},null, ItemList.Casing_Filter_LV.get(1), 160, 16);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Steel, 1L), GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Steel, 8L), ItemList.SimpleFluidFilterItem.get(16L)},null, ItemList.Casing_Filter_MV.get(1), 160, 64);
