@@ -36,8 +36,7 @@ public class GT_MetaTileEntity_Compressor_Bronze
 
     public int checkRecipe() {
         GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sCompressorRecipes.findRecipe(getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[1], null, getAllInputs());
-        if(tRecipe.getFluidOutput(0) != null) return 0;
-        if ((tRecipe != null) && (canOutput(tRecipe.mOutputs)) && (tRecipe.isRecipeInputEqual(true, null, getAllInputs()))) {
+        if ((tRecipe != null) && tRecipe.getFluidOutput(0) == null && (canOutput(tRecipe.mOutputs)) && (tRecipe.isRecipeInputEqual(true, null, getAllInputs()))) {
             this.mOutputItems[0] = tRecipe.getOutput(0);
             this.mEUt = tRecipe.mEUt;
             this.mMaxProgresstime = (tRecipe.mDuration * 2);
