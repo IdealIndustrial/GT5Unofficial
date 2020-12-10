@@ -11,12 +11,15 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachin
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
 public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBase {
-    private int mHeatingCapacity = 0;
+    private int sizeX;
+    private int sizeY;
+    private int sizeZ;
 
     public GT_MetaTileEntity_Cleanroom(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -37,15 +40,28 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 "Controller (Top center)",
                 "Top besides contoller and edges Filter Machine Casings",
                 "1 Reinforced Door (keep closed for 100% efficency",
-                "1x LV+ Energy Hatch(40EU/t startup, 4EU/t keepup), 1x Maintainance Hatch",
+                "1x LV+ Energy Hatch (1EU/t per 1 block inside)",
+                "1x Maintenance Hatch",
                 "Up to 10 Machine Hulls to transfer Items & Energy through walls",
+                "Cleaning time: 10s per 1 block inside for 100% (may be overclocked)",
                 "Remaining Blocks Plascrete"};
     }
 
     public boolean checkRecipe(ItemStack aStack) {
         this.mEfficiencyIncrease = 100;
-        this.mMaxProgresstime = 100;
-        this.mEUt = -4;
+        int internalVolume = (this.sizeX-2)*(this.sizeY-2)*(this.sizeZ-2);
+
+        long tVoltage = getMaxInputVoltage();
+        byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
+        this.mMaxProgresstime = internalVolume*2;
+        this.mEUt = internalVolume;
+        while (this.mEUt*4 <= tVoltage) {
+            this.mEUt *= 4;
+            this.mMaxProgresstime /= 2;
+        }
+        if (this.mEUt > 0) {
+            this.mEUt = (-this.mEUt);
+        }
         return true;
     }
 
@@ -82,6 +98,9 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         if (y > -2) {
             return false;
         }
+        this.sizeX = x*2+1;
+        this.sizeY = -y+1;
+        this.sizeZ = z*2+1;
         for (int dX = -x; dX <= x; dX++) {
             for (int dZ = -z; dZ <= z; dZ++) {
                 for (int dY = 0; dY >= y; dY--) {
@@ -205,5 +224,16 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 
     public boolean explodesOnComponentBreak(ItemStack aStack) {
         return false;
+    }
+
+    @Override
+    public boolean onRunningTick(ItemStack aStack) {
+        if (mEUt < 0) {
+            if (!drainEnergyInput(-this.mEUt)) {
+                stopMachine();
+                return false;
+            }
+        }
+        return true;
     }
 }
