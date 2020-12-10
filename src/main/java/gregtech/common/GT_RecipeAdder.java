@@ -67,6 +67,17 @@ public class GT_RecipeAdder
         return true;
     }
 
+    public boolean addCompressorRecipe(ItemStack aCircuit, FluidStack fOutput, int aDuration, int aEUt) {
+        if ((aCircuit == null) || (fOutput == null)) {
+            return false;
+        }
+        if ((aCircuit != null) && ((aDuration = GregTech_API.sRecipeFile.get("compressor", aCircuit, aDuration)) <= 0)) {
+            return false;
+        }
+        GT_Recipe.GT_Recipe_Map.sCompressorRecipes.addRecipe(true, new ItemStack[]{aCircuit}, null, null, null,  new FluidStack[]{fOutput}, aDuration, aEUt, 0);
+        return true;
+    }
+
     public boolean addCompressorRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration, int aEUt) {
         if ((aInput1 == null) || (aOutput1 == null)) {
                 return false;

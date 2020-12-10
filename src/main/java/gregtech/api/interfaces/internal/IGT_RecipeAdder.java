@@ -59,6 +59,7 @@ public interface IGT_RecipeAdder {
      * @return
      */
     public boolean addCompressorRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration, int aEUt);
+    public boolean addCompressorRecipe(ItemStack aCircuit, FluidStack aOutput, int aDuration, int aEUt);
 
     /**
      * Adds a Electrolyzer Recipe
