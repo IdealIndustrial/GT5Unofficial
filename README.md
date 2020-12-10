@@ -1,6 +1,8 @@
 GT5-II-edition
 ===
 
+![Latest Build](https://github.com/IdealIndustrial/GT5Unofficial/workflows/Java%20CI%20with%20Gradle/badge.svg)
+
 ## About
 
 GT5-II-edition is modified version of GT5-Unofficial. Ideal Industrial Modpack's dev team is maintaining and developing it.
