@@ -16,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
+
 public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBase {
     private int sizeX;
     private int sizeY;
@@ -74,12 +75,26 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         int mPlascreteCount = 0;
         boolean doorState = false;
         mUpdate = 100;
+
+        //detect room X edge
         for (int i = 1; i < 8; i++) {
             Block tBlock = aBaseMetaTileEntity.getBlockOffset(i, 0, 0);
             int tMeta = aBaseMetaTileEntity.getMetaIDOffset(i, 0, 0);
             if (tBlock != GregTech_API.sBlockCasings3 || tMeta != 11) {
                 if (tBlock == GregTech_API.sBlockReinforced || tMeta == 2) {
                     x = i;
+                    break;
+                } else {
+                    return false;
+                }
+            }
+        }
+        //detect room Z edge
+        for (int i = 1; i < 8; i++) {
+            Block tBlock = aBaseMetaTileEntity.getBlockOffset(0, 0, i);
+            int tMeta = aBaseMetaTileEntity.getMetaIDOffset(0, 0, i);
+            if (tBlock != GregTech_API.sBlockCasings3 || tMeta != 11) {
+                if (tBlock == GregTech_API.sBlockReinforced || tMeta == 2) {
                     z = i;
                     break;
                 } else {
@@ -87,6 +102,18 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 }
             }
         }
+        //detect room square for filters
+        for (int i = -x+1; i < x; i++) {
+            for (int j = -z+1; j < z; j++) {
+                if (i == 0 && j == 0) continue;
+                Block tBlock = aBaseMetaTileEntity.getBlockOffset(j, 0, i);
+                int tMeta = aBaseMetaTileEntity.getMetaIDOffset(j, 0, i);
+                if (tBlock != GregTech_API.sBlockCasings3 && tMeta != 11) {
+                    return false;
+                }
+            }
+        }
+
         for (int i = -1; i > -16; i--) {
             Block tBlock = aBaseMetaTileEntity.getBlockOffset(x, i, z);
             int tMeta = aBaseMetaTileEntity.getMetaIDOffset(x, i, z);
