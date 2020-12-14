@@ -1,6 +1,7 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.ConfigCategories;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
@@ -10,6 +11,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicHull;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine_GT_Recipe;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
@@ -21,6 +23,20 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
     private int sizeX;
     private int sizeY;
     private int sizeZ;
+    private static int euPerVent;
+    private static int idleEnergyReduceMultiplier;
+    private static int cleanBlockTimeByVentTicks;
+
+    public void onConfigLoad(GT_Config aConfig){
+        System.out.println("aConfig");
+        super.onConfigLoad(aConfig);
+        euPerVent = aConfig.get(ConfigCategories.machineconfig,"Cleanroom.euPerVent",3);
+        cleanBlockTimeByVentTicks = aConfig.get(ConfigCategories.machineconfig,"Cleanroom.cleanBlockTimeByVentTicks",1600);
+        idleEnergyReduceMultiplier = aConfig.get(ConfigCategories.machineconfig,"Cleanroom.idleEnergyReduceMultiplier",3);
+        System.out.println("euPerVent - " + euPerVent);
+        System.out.println("cleanBlockTimeByVentTicks - " + cleanBlockTimeByVentTicks);
+        System.out.println("idleEnergyReduceMultiplier - " + idleEnergyReduceMultiplier);
+    }
 
     public GT_MetaTileEntity_Cleanroom(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -61,12 +77,12 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
     public boolean checkRecipe(ItemStack aStack) {
         this.mMaxProgresstime = 100;
         int ceilingSquare = (this.sizeX-2)*(this.sizeZ-2);
-        this.mEUt = GregTech_API.euPerVent * ceilingSquare;
+        this.mEUt = euPerVent * ceilingSquare;
         long tVoltage = getMaxInputVoltage();
         byte currentTier = (byte) Math.max(0, GT_Utility.getTier(tVoltage));
         byte requiredTier = (byte) Math.max(0, GT_Utility.getTier(this.mEUt));
         int progressMultiplier = calcProgressMultiplier(currentTier, requiredTier);
-        int reduceEfficiencyGrowing = GregTech_API.cleanBlockTimeByVentTicks * (this.sizeY-2);
+        int reduceEfficiencyGrowing = cleanBlockTimeByVentTicks * (this.sizeY-2);
         int maxEfficiencyGrowing = 1000000;
         if(progressMultiplier > 1) {
             this.mEfficiencyIncrease = (maxEfficiencyGrowing * progressMultiplier) / reduceEfficiencyGrowing;
@@ -75,7 +91,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
             this.mEfficiencyIncrease = maxEfficiencyGrowing / reduceEfficiencyGrowing;
         }
         if(this.mEfficiency >= 10000){
-            this.mEUt /= GregTech_API.IdleEnergyReduceMultiplier;
+            this.mEUt /= idleEnergyReduceMultiplier;
         }
 
         return true;
