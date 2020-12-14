@@ -48,20 +48,31 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 "Remaining Blocks Plascrete"};
     }
 
-    public boolean checkRecipe(ItemStack aStack) {
-        this.mEfficiencyIncrease = 100;
-        int internalVolume = (this.sizeX-2)*(this.sizeY-2)*(this.sizeZ-2);
-
-        long tVoltage = getMaxInputVoltage();
-        byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-        this.mMaxProgresstime = internalVolume*2;
-        this.mEUt = internalVolume;
-        while (this.mEUt*4 <= tVoltage) {
-            this.mEUt *= 4;
-            this.mMaxProgresstime /= 2;
+    private int calcProgressMultiplier(int currentTier, int requiredTier){
+        int multiplier = 1;
+        if (currentTier <= requiredTier) return multiplier;
+        while (currentTier > requiredTier) {
+            requiredTier++;
+            multiplier *= 2;
         }
-        if (this.mEUt > 0) {
-            this.mEUt = (-this.mEUt);
+        return multiplier;
+    }
+
+    public boolean checkRecipe(ItemStack aStack) {
+        this.mMaxProgresstime = 100;
+        int ceilingSquare = (this.sizeX-2)*(this.sizeZ-2);
+        this.mEUt = GregTech_API.euPerVent * ceilingSquare;
+        long tVoltage = getMaxInputVoltage();
+        byte currentTier = (byte) Math.max(0, GT_Utility.getTier(tVoltage));
+        byte requiredTier = (byte) Math.max(0, GT_Utility.getTier(this.mEUt));
+        int progressMultiplier = calcProgressMultiplier(currentTier, requiredTier);
+        int reduceEfficiencyGrowing = GregTech_API.cleanBlockTimeByVentTicks * (this.sizeY-2);
+        int maxEfficiencyGrowing = 1000000;
+        if(progressMultiplier > 1) {
+            this.mEfficiencyIncrease = (maxEfficiencyGrowing * progressMultiplier) / reduceEfficiencyGrowing;
+            this.mEUt *= progressMultiplier * 2;
+        } else {
+            this.mEfficiencyIncrease = maxEfficiencyGrowing / reduceEfficiencyGrowing;
         }
         return true;
     }
@@ -255,11 +266,9 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 
     @Override
     public boolean onRunningTick(ItemStack aStack) {
-        if (mEUt < 0) {
-            if (!drainEnergyInput(-this.mEUt)) {
-                stopMachine();
-                return false;
-            }
+        if (!drainEnergyInput(this.mEUt)) {
+            stopMachine();
+            return false;
         }
         return true;
     }
