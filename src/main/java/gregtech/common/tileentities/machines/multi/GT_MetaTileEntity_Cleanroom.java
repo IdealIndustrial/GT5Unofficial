@@ -74,6 +74,10 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         } else {
             this.mEfficiencyIncrease = maxEfficiencyGrowing / reduceEfficiencyGrowing;
         }
+        if(this.mEfficiency >= 10000){
+            this.mEUt /= GregTech_API.IdleEnergyReduceMultiplier;
+        }
+
         return true;
     }
 

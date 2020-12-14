@@ -212,6 +212,7 @@ public class GT_Mod implements IGT_Mod {
         GregTech_API.sColoredGUI = tMainConfig.get("machines", "colored_guis_when_painted", true).getBoolean(false);
 
         GregTech_API.euPerVent = tMainConfig.get("cleanroom", "EuPerVent", 3).getInt(3);
+        GregTech_API.euPerVent = tMainConfig.get("cleanroom", "IdleEnergyReduceMultiplier", 3).getInt(3);
         GregTech_API.cleanBlockTimeByVentTicks = tMainConfig.get("cleanroom", "CleanBlockTimeByVentTicks", 1600).getInt(1600);
 
         GregTech_API.sTimber = tMainConfig.get(aTextGeneral, "timber_axe", true).getBoolean(true);
