@@ -73,7 +73,7 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "AdvancedProcessingArray.png");
+        return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, trans("gt.blockmachines." + mName + ".guiname", "Advanced P. A."), "AdvancedProcessingArray.png");
     }
 
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {
