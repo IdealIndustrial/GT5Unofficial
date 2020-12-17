@@ -18,6 +18,14 @@ public enum ColorFormat {
         this.prefix = prefix;
     }
 
+    public String format(float input) {
+        return prefix + String.valueOf(input) + EnumChatFormatting.RESET;
+    }
+
+    public String format(int input) {
+        return prefix + String.valueOf(input) + EnumChatFormatting.RESET;
+    }
+
     public String format(String input) {
         return prefix + input + EnumChatFormatting.RESET;
     }

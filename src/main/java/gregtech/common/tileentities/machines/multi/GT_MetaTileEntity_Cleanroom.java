@@ -10,6 +10,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicHull;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine_GT_Recipe;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.objects.ColorFormat;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Recipe;
@@ -17,6 +18,7 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 
 public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBase {
@@ -65,11 +67,11 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 "1x Maintenance Hatch",
                 "A second door is allowed if the base area is at least 7*7",
                 "Remaining Blocks Plascrete or Plascrete Window",
-                String.format("Up to 1/%s of wall blocks can be replaced with Machine", mHullsLessInTimesThanWallsSquare),
+                "Up to 1/"+mHullsLessInTimesThanWallsSquare+" of wall blocks can be replaced with Machine",
                 "Hulls to transfer Items & Energy through walls",
-                String.format("Energy consumption depends on ceiling square, %s eu/t per block", euPerVent),
-                String.format("Cleaning time depends on ceiling height, %s sec per block", (cleanBlockTimeByVentTicks / 20)),
-                String.format("Energy consumption decreases after full cleaning in %s times", idleEnergyReduceMultiplier),
+                "Energy consumption depends on ceiling square, "+euPerVent+" eu/t per block",
+                "Cleaning time depends on ceiling height, "+(cleanBlockTimeByVentTicks / 20)+" sec per block",
+                "Energy consumption decreases after full cleaning in "+idleEnergyReduceMultiplier+" times",
                 "Use Portable Scanner on Controller to get more info"
         };
     }
@@ -256,8 +258,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
     public String[] getInfoData() {
         if(!mMachine) {
             return new String[]{
-                    "------------- \u00A7dCleanroom\u00A7r -------------",
-                    "--\u00A7cIncomplete Structure\u00A7r",
+                    "------------- " + ColorFormat.SPECIAL.format("Cleanroom") + " -------------",
+                    "--" + ColorFormat.BAD.format("Incomplete Structure"),
                     "------------------------------------"
             };
         } else {
@@ -265,13 +267,13 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
             float currentCleanTimeSec = (float)totalCleanTimeSec * (mEfficiency / 10000f);
             int problemsCount = getIdealStatus() - getRepairStatus();
             return new String[]{
-                    "------------- \u00A7dCleanroom\u00A7r -------------",
-                    "--Problems: " + (problemsCount < 1 ? "\u00A7a" : "\u00A7c") + problemsCount + "\u00A7r",
-                    "--Cleaning time: \u00A7b" + String.format("%.0f",currentCleanTimeSec) + " / " + totalCleanTimeSec + "\u00A7r",
-                    "--Energy consumption while cleaning: \u00A7c" + energyConsumptionMax + "\u00A7r",
-                    "--Energy consumption in idle: \u00A76" + energyConsumptionMin + "\u00A7r",
-                    "--Max machine hulls allowed: \u00A72" + mHullsAllowed + "\u00A7r",
-                    "--Efficiency: " + (mEfficiency > 9999 ? "\u00A7a" : "\u00A7e") + (mEfficiency / 100.0F) + "%\u00A7r",
+                    "------------- " + ColorFormat.SPECIAL.format(trans("217","Cleanroom")) + " -------------",
+                    "--" + trans("218", "Problems") + ": " + (problemsCount > 0 ? ColorFormat.BAD.format(problemsCount) : ColorFormat.GOOD.format(problemsCount)),
+                    "--" + trans("219", "Cleaning time") + ": " + ColorFormat.NEUTRAL.format(String.format("%.0f",currentCleanTimeSec) + " / " + totalCleanTimeSec),
+                    "--" + trans("220", "Energy consumption while cleaning") + ": " + ColorFormat.NEUTRAL.format(energyConsumptionMax),
+                    "--" + trans("221", "Energy consumption in idle") + ": " + ColorFormat.NEUTRAL.format(energyConsumptionMin),
+                    "--" + trans("222", "Max machine hulls allowed") + ": " + ColorFormat.NEUTRAL.format(mHullsAllowed),
+                    "--" + trans("223", "Efficiency") + ": " + (mEfficiency > 9999 ? ColorFormat.GOOD.format(mEfficiency / 100.0F) : ColorFormat.BETTER.format(mEfficiency / 100.0F)) + "%",
                     "------------------------------------"
             };
         }

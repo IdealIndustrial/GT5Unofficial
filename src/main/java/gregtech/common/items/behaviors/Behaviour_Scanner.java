@@ -17,6 +17,9 @@ public class Behaviour_Scanner
         extends Behaviour_None {
     public static final IItemBehaviour<GT_MetaBase_Item> INSTANCE = new Behaviour_Scanner();
     private final String mTooltip = GT_LanguageManager.addStringLocalization("gt.behaviour.scanning", "Can scan Blocks in World");
+    private int currentScanModeIdx = 0;
+    private String currentScanMode = "Default";
+    private String[] scanModes = new String[]{"Default", "Multiblock"};
 
     public boolean onItemUseFirst(GT_MetaBase_Item aItem, ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int aSide, float hitX, float hitY, float hitZ) {
         if (((aPlayer instanceof EntityPlayerMP)) && (aItem.canUse(aStack, 20000.0D))) {
@@ -31,6 +34,16 @@ public class Behaviour_Scanner
         }
         GT_Utility.doSoundAtClient((String) GregTech_API.sSoundList.get(Integer.valueOf(108)), 1, 1.0F, aX, aY, aZ);
         return aPlayer instanceof EntityPlayerMP;
+    }
+
+    public ItemStack onItemRightClick(GT_MetaBase_Item aItem, ItemStack aStack, World aWorld, EntityPlayer aPlayer) {
+        currentScanModeIdx++;
+        if(scanModes.length <= currentScanModeIdx){
+            currentScanModeIdx = 0;
+        }
+        currentScanMode = scanModes[currentScanModeIdx];
+        GT_Utility.sendChatToPlayer(aPlayer, "Scanning mode changed to " + currentScanMode);
+        return aStack;
     }
 
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
