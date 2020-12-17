@@ -12,6 +12,8 @@ public enum ColorFormat {
 
     private final EnumChatFormatting prefix;
 
+    public final static DoubleFun DEFAULT = a -> a, MULTIBLOCK_STATUS = d -> d-1999d;
+
     ColorFormat(EnumChatFormatting prefix) {
         this.prefix = prefix;
     }
@@ -20,17 +22,39 @@ public enum ColorFormat {
         return prefix + input + EnumChatFormatting.RESET;
     }
 
-    public static String format(int value, int minValue, int maxValue) {
+    public static String format(int value, int minValue, int maxValue, DoubleFun decider) {
         maxValue -= minValue;
         int tempValue = value - minValue;
 
-        tempValue = (int) (((double) tempValue) / (((double) maxValue) / 10000d));
-        if (tempValue < 2000)
+        tempValue = (int) (decider.decide(((double) tempValue) / (((double) maxValue) / 10000d)));
+        if (tempValue <= 2000)
             return BAD.format(Integer.toString(value));
-        if (tempValue > 8000)
+        if (tempValue >= 8000)
             return GOOD.format(Integer.toString(value));
         return BETTER.format(Integer.toString(value));
     }
+
+    public static String format(int value, int minValue, int maxValue) {
+        return format(value, minValue, maxValue, DEFAULT);
+    }
+
+    interface DoubleFun {
+        /**
+         * accepts value between 0 and 10000, returns modified value
+         * used to control good and bad events
+         * @param regularValue val
+         * @return modified val
+         *
+         * eg.
+         *
+         * you want to modify func that operates between 0 and 6, for 6 and less be Better or Bad
+         * and only 6 be GOOD
+         * than Multiblock_Status is your func
+         *
+         */
+        double decide (double regularValue);
+    }
+
 
 
 }
