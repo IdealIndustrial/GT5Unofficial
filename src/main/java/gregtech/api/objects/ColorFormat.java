@@ -22,20 +22,20 @@ public enum ColorFormat {
         return prefix + input + EnumChatFormatting.RESET;
     }
 
-    public static String format(int value, int minValue, int maxValue, DoubleFun decider) {
+    public static String format(int value, int minValue, int maxValue, int badNormalized, int goodNormalized, DoubleFun decider) {
         maxValue -= minValue;
         int tempValue = value - minValue;
 
         tempValue = (int) (decider.decide(((double) tempValue) / (((double) maxValue) / 10000d)));
-        if (tempValue <= 2000)
+        if (tempValue <= badNormalized)
             return BAD.format(Integer.toString(value));
-        if (tempValue >= 8000)
+        if (tempValue >= goodNormalized)
             return GOOD.format(Integer.toString(value));
         return BETTER.format(Integer.toString(value));
     }
 
     public static String format(int value, int minValue, int maxValue) {
-        return format(value, minValue, maxValue, DEFAULT);
+        return format(value, minValue, maxValue, 2000, 8000, DEFAULT);
     }
 
     interface DoubleFun {
