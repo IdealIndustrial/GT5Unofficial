@@ -127,7 +127,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         int mMaxDoorBlocksCount = 2; // one door contains of two blocks
         int mHullCount = 0;
         openDoorsCount = 0;
-        mUpdate = 100;
+        // mUpdate = 100;
 
         // detect room both X and Z edge
         for (int i = 1; i < 8; i++) {
@@ -329,5 +329,10 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onMachineBlockUpdate() {
+        mUpdate = 15;
     }
 }

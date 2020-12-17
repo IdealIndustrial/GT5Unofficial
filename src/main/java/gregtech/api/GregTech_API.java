@@ -325,6 +325,12 @@ public class GregTech_API {
         return true;
     }
 
+    public static boolean causeMachineUpdate(World aWorld, int aX, int aY, int aZ, int aDelay, int aRadius) {
+        if (!aWorld.isRemote)
+            new GT_Runnable_MachineBlockUpdate(aWorld, aX, aY, aZ, aDelay, aRadius);
+        return true;
+    }
+
     /**
      * Adds a Multi-Machine Block, like my Machine Casings for example.
      * You should call @causeMachineUpdate in @Block.breakBlock and in @Block.onBlockAdded of your registered Block.
