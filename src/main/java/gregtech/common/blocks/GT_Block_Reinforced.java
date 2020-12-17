@@ -71,7 +71,8 @@ public class GT_Block_Reinforced extends GT_Generic_Block {
 
     public String getHarvestTool(int aMeta) {
         if (aMeta == 5 || aMeta == 4 || aMeta == 6 || aMeta == 7) return "axe";
-        return "pickaxe";
+        else if (aMeta == 2) return "wrench";
+        else return "pickaxe";
     }
 
     public int getHarvestLevel(int aMeta) {
