@@ -38,6 +38,10 @@ public enum ColorFormat {
         return format(value, minValue, maxValue, 2000, 8000, DEFAULT);
     }
 
+    public static String format(int value, int minValue, int maxValue, DoubleFun decider) {
+        return format(value, minValue, maxValue, 2000, 8000, decider);
+    }
+
     interface DoubleFun {
         /**
          * accepts value between 0 and 10000, returns modified value
