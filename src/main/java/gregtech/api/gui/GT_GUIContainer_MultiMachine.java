@@ -118,13 +118,13 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
     protected String[] getButtonToolTip() {
         switch (getMode()) {
             case 3:
-                return new String[]{"Running perfectly"};
+                return new String[]{trans("200", "Running perfectly")};
             case 2:
-                return new String[]{"Enabled, waiting for inputs"};
+                return new String[]{trans("201", "Enabled, waiting for inputs")};
             case 1:
-                return new String[]{"Disabled, working last cycle and turning off"};
+                return new String[]{trans("202", "Disabled, working last cycle and turning off")};
             case 0:
-                return new String[]{"Disabled"};
+                return new String[]{trans("203", "Disabled")};
         }
         return new String[0];
     }
