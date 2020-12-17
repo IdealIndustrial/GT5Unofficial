@@ -111,7 +111,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
             // set to mEfficiencyIncrease negative value, multiplied per each open door
             mEfficiencyIncrease = -(mEfficiencyIncrease * openDoorsCount);
         }
-
+        mEUt = -mEUt; // set
         return true;
     }
 
@@ -127,7 +127,6 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         int mMaxDoorBlocksCount = 2; // one door contains of two blocks
         int mHullCount = 0;
         openDoorsCount = 0;
-        // mUpdate = 100;
 
         // detect room both X and Z edge
         for (int i = 1; i < 8; i++) {
@@ -179,13 +178,17 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 
                         Block tBlock = aBaseMetaTileEntity.getBlockOffset(dX, dY, dZ);
                         int tMeta = aBaseMetaTileEntity.getMetaIDOffset(dX, dY, dZ);
+                        IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(dX, dY, dZ);
 
                         if ((dX == -x || dX == x) && (dY == 0 || dY == y) ||
                                 (dX == -x || dX == x) && (dZ == -z || dZ == z) ||
                                 (dZ == -z || dZ == z) && (dY == 0 || dY == y)){
-                            // only Plascrete Blocks allowed for edges
+                            // For edges allowed only Plascrete Blocks / Maintenance hatch / Energy hatch
                             if (tBlock != GregTech_API.sBlockReinforced || tMeta != 2) {
-                                return false;
+                                if ((!addMaintenanceToMachineList(tTileEntity, 82))
+                                        && (!addEnergyInputToMachineList(tTileEntity, 82))) {
+                                    return false;
+                                }
                             }
                         } else if (dY == 0){ // for other blocks on the pot side except edges
                             if(tBlock != GregTech_API.sBlockCasings3 || tMeta != 11) {
@@ -195,11 +198,10 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                         } else if(tBlock == GregTech_API.sBlockReinforced && tMeta == 2) {
                             // do nothing if in other place we meet plascrete blocks
                         } else {
-                            IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(dX, dY, dZ);
                             if ((!addMaintenanceToMachineList(tTileEntity, 82)) && (!addEnergyInputToMachineList(tTileEntity, 82))) {
                                 if (tBlock instanceof ic2.core.block.BlockIC2Door) {
                                     if ((tMeta & 8) == 0) {
-                                        if((Math.abs(dX) > Math.abs(dZ) == ((tMeta & 1) != 0)) != ((tMeta & 4) != 0)) {
+                                        if ((Math.abs(dX) > Math.abs(dZ) == ((tMeta & 1) != 0)) != ((tMeta & 4) != 0)) {
                                             openDoorsCount++;
                                         }
                                     }
@@ -253,16 +255,24 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
     @Override
     public String[] getInfoData() {
         if(!mMachine) {
-            return new String[]{"Incomplete Structure"};
+            return new String[]{
+                    "------------- \u00A7dCleanroom\u00A7r -------------",
+                    "--\u00A7cIncomplete Structure\u00A7r",
+                    "------------------------------------"
+            };
         } else {
             int totalCleanTimeSec = (sizeY - 2) * (cleanBlockTimeByVentTicks / 20);
             float currentCleanTimeSec = (float)totalCleanTimeSec * (mEfficiency / 10000f);
+            int problemsCount = getIdealStatus() - getRepairStatus();
             return new String[]{
-                    "--Problems: " + String.valueOf(getIdealStatus() - getRepairStatus()),
-                    "--Cleaning time: " + String.format("%.0f",currentCleanTimeSec) + " / " + totalCleanTimeSec,
-                    "--Energy consumption (eu/t) min / max: " + energyConsumptionMin + " / " + energyConsumptionMax,
-                    "--Max machine hulls allowed: " + mHullsAllowed,
-                    "--Efficiency: " + (mEfficiency / 100.0F) + "%"
+                    "------------- \u00A7dCleanroom\u00A7r -------------",
+                    "--Problems: " + (problemsCount < 1 ? "\u00A7a" : "\u00A7c") + problemsCount + "\u00A7r",
+                    "--Cleaning time: \u00A7b" + String.format("%.0f",currentCleanTimeSec) + " / " + totalCleanTimeSec + "\u00A7r",
+                    "--Energy consumption while cleaning: \u00A7c" + energyConsumptionMax + "\u00A7r",
+                    "--Energy consumption in idle: \u00A76" + energyConsumptionMin + "\u00A7r",
+                    "--Max machine hulls allowed: \u00A72" + mHullsAllowed + "\u00A7r",
+                    "--Efficiency: " + (mEfficiency > 9999 ? "\u00A7a" : "\u00A7e") + (mEfficiency / 100.0F) + "%\u00A7r",
+                    "------------------------------------"
             };
         }
     }
@@ -324,7 +334,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 
     @Override
     public boolean onRunningTick(ItemStack aStack) {
-        if (!drainEnergyInput(mEUt)) {
+        if (!drainEnergyInput(-mEUt)) {
             stopMachine();
             return false;
         }

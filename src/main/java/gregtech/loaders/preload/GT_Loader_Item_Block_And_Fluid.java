@@ -362,7 +362,7 @@ public class GT_Loader_Item_Block_And_Fluid
         }, OrePrefixes.block, gregtech.api.enums.Textures.BlockIcons.STORAGE_BLOCKS11);
 
         GregTech_API.sBlockReinforced = new GT_Block_Reinforced("gt.blockreinforced");
-        GregTech_API.sBlockGlass = new GT_Block_Glass_Casings("GT_Block_Glass_Casings");
+        GregTech_API.sBlockGlass = new GT_Block_Glass_Casings("gt.blockglass");
 
 
 

@@ -41,19 +41,14 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
     }
 
     public IIcon getIcon(int aSide, int aMeta) {
-        if ((aMeta >= 0) && (aMeta < 16)) {
-            switch (aMeta) {
-                case 0:
-                    return Textures.BlockIcons.BLOCK_PLASCRETE_WINDOW.getIcon();
-            }
+        switch (aMeta) {
+            case 0:
+                return Textures.BlockIcons.BLOCK_PLASCRETE_WINDOW.getIcon();
         }
-        return Textures.BlockIcons.BLOCK_PLASCRETE_WINDOW.getIcon();
+        return Textures.BlockIcons.BLOCK_PLASCRETE_WINDOW.getIcon(); // as default
     }
 
     public float getBlockHardness(World aWorld, int aX, int aY, int aZ) {
-        if (aWorld == null) {
-            return 0.0F;
-        }
         int tMeta = aWorld.getBlockMetadata(aX, aY, aZ);
         if (tMeta == 0) {
             return 40.0F;
