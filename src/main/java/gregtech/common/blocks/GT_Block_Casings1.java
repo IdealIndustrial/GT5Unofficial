@@ -17,6 +17,9 @@ public class GT_Block_Casings1
 	 * Textures.BlockIcons.casingTexturePages[0][0-63] - Gregtech
 	 * Textures.BlockIcons.casingTexturePages[0][64-127] - GT++
 	 * Textures.BlockIcons.casingTexturePages[1][0-127] - Gregtech
+     * * GT_Block_Casings5 - [1][0-15]
+     * * GT_Block_Casings_Abstract - [1][48-56]
+     * * GT_Block_Glass_Casings - [1][16-32]
 	 * Textures.BlockIcons.casingTexturePages[2][0-127] - Free
 	 * Textures.BlockIcons.casingTexturePages[3][0-127] - Free
 	 * Textures.BlockIcons.casingTexturePages[4][0-127] - Free

@@ -2,11 +2,11 @@ package gregtech.api.threads;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.tileentity.IMachineBlockUpdateable;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
@@ -15,20 +15,25 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
     private final int mX, mY, mZ;
     private final World mWorld;
     protected int mTime;
+    protected int mTimer;
     protected boolean mShouldRun = true;
 
     static HashSet<GT_Runnable_MachineBlockUpdate> mWaitingThreads = new HashSet<>();
 
-    public GT_Runnable_MachineBlockUpdate(World aWorld, int aX, int aY, int aZ) {
+    public GT_Runnable_MachineBlockUpdate(World aWorld, int aX, int aY, int aZ, int aDelay, int aRadius) {
         mWorld = aWorld;
         mX = aX;
         mY = aY;
         mZ = aZ;
-        mTime = 50;
+        mTimer = mTime = aDelay;
         if (!mWaitingThreads.contains(this)) {
             mWaitingThreads.add(this);
-            new PathFinder(aWorld, aX, aY, aZ, 2, this).run();
+            new PathFinder(aWorld, aX, aY, aZ, aRadius, this).run();
         }
+    }
+
+    public GT_Runnable_MachineBlockUpdate(World aWorld, int aX, int aY, int aZ) {
+        this(aWorld, aX, aY, aZ, 50, 2);
     }
 
     private static void stepToUpdateMachine(World aWorld, int aX, int aY, int aZ, HashSet<ChunkPosition> aList) {
@@ -36,7 +41,11 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if (tTileEntity instanceof IMachineBlockUpdateable)
             ((IMachineBlockUpdateable) tTileEntity).onMachineBlockUpdate();
-        if (aList.size() < 5 || (tTileEntity instanceof IMachineBlockUpdateable) || GregTech_API.isMachineBlock(aWorld.getBlock(aX, aY, aZ), aWorld.getBlockMetadata(aX, aY, aZ))) {
+        Block b = aWorld.getBlock(aX, aY, aZ);
+        int meta = aWorld.getBlockMetadata(aX, aY, aZ);
+        if (b == GregTech_API.sBlockMachines && meta / 4 == 2)
+            return;
+        if (aList.size() < 5 || (tTileEntity instanceof IMachineBlockUpdateable) || GregTech_API.isMachineBlock(b, meta)) {
             if (!aList.contains(new ChunkPosition(aX + 1, aY, aZ))) stepToUpdateMachine(aWorld, aX + 1, aY, aZ, aList);
             if (!aList.contains(new ChunkPosition(aX - 1, aY, aZ))) stepToUpdateMachine(aWorld, aX - 1, aY, aZ, aList);
             if (!aList.contains(new ChunkPosition(aX, aY + 1, aZ))) stepToUpdateMachine(aWorld, aX, aY + 1, aZ, aList);
@@ -50,7 +59,7 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
         Iterator<GT_Runnable_MachineBlockUpdate> iterator = mWaitingThreads.iterator();
         while (iterator.hasNext()) {
             GT_Runnable_MachineBlockUpdate tThread = iterator.next();
-            if (tThread.mTime-- < 0) {
+            if (tThread.mTimer-- < 0) {
                 if (tThread.mShouldRun)
                     new Thread(tThread).start();
                 iterator.remove();
@@ -69,11 +78,15 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
                 mWorld.provider.dimensionId ==  that.mWorld.provider.dimensionId;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(mX, mY, mZ, mWorld.provider.dimensionId);
+    }
 
     @Override
     public void run() {
         try {
-            stepToUpdateMachine(mWorld, mX, mY, mZ, new HashSet<ChunkPosition>());
+            stepToUpdateMachine(mWorld, mX, mY, mZ, new HashSet<>());
         } catch (Throwable e) {/**/}
     }
 
@@ -103,6 +116,7 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
         public void run() {
             if (find(mDepth)) {
                 mUpdater.mShouldRun = false;
+
             }
         }
 
@@ -129,7 +143,7 @@ public class GT_Runnable_MachineBlockUpdate implements Runnable {
                 if (r.mX == aX && r.mY == aY && r.mZ == aZ &&
                 aWorld.provider.dimensionId == r.mWorld.provider.dimensionId &&
                 !mUpdater.equals(r)) {
-                    r.mTime = 50;
+                    r.mTimer = r.mTime;
                     return true;
                 }
             }
