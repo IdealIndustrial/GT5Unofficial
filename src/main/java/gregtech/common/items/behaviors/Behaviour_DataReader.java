@@ -23,6 +23,11 @@ import java.util.List;
 public class Behaviour_DataReader
         extends Behaviour_HasGui {
 
+    int mTier;
+    public Behaviour_DataReader(int aTier) {
+        mTier = aTier;
+    }
+
     @Override
     public Object getClientGui(EntityPlayer aPlayer, ItemStack aHeldItem, int aData) {
         return new GT_GUIContainer_DataReader(aHeldItem, aPlayer);
@@ -51,10 +56,11 @@ public class Behaviour_DataReader
                 nbt.removeTag("prog");
             }
             nbt.setBoolean("notify", false);
+            aStack.setTagCompound(nbt);
         }
         else if (nbt.getInteger("prog") > 0) {
             int tCharge = nbt.getInteger("GT.ItemCharge");
-            tCharge -= 8;
+            tCharge -= 8 * (1<<(2*(mTier - 2)));
             if (tCharge < 0) {
                 nbt.removeTag("prog");
                 tCharge = 0;
@@ -63,7 +69,7 @@ public class Behaviour_DataReader
             //remove energy
             int tProgress = 0;
             nbt.setInteger("prog",  tProgress = nbt.getInteger("prog") + 1);
-            if (tProgress >= 1000) {
+            if (tProgress >= 1000/ (1 << (mTier-2))) {
                 ItemStack tStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("s0"));
                 if (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, true)) {
                     if (GT_Utility.ItemNBT.getBookTitle(tStack).equals("Raw Prospection Data")) {
@@ -74,15 +80,16 @@ public class Behaviour_DataReader
                     }
                 }
             }
+            aStack.setTagCompound(nbt);
         }
-        aStack.setTagCompound(nbt);
+
     }
 
     @Override
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
         int tProgress = 0;
         if (aStack != null && aStack.getTagCompound() != null && (tProgress = aStack.getTagCompound().getInteger("prog")) > 0) {
-            aList.add("Analyzing data, progress: " + tProgress / 20 + "/50");
+            aList.add("Analyzing data, progress: " + tProgress / 20 + "/" + 50/(1 << (mTier-2)));
             String s = aList.get(2);
             aList.set(2, aList.get(3));
             aList.set(3, s);

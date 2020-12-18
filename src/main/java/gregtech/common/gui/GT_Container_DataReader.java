@@ -23,15 +23,15 @@ public class GT_Container_DataReader extends Container {
     ItemStack mTool;
 
     public GT_Container_DataReader(InventoryPlayer aInventoryPlayer, ItemStack aTool) {
-        bindPlayerInventory(aInventoryPlayer, 0, 80);
+        bindPlayerInventory(aInventoryPlayer, 0, 90);
         mInventory = new GT_ItemInventory(3,false, "Data Reader");
         if (aTool.getTagCompound() != null && GT_Mod.gregtechproxy.isServerSide())
             mInventory.loadFromNBT(aTool.getTagCompound());
-        addSlotToContainer(new GT_Slot_RestrictedContents(mInventory, 0, 8, 84+65, aStack -> ItemList.Tool_DataStick.isStackEqual(aStack, false, true) || ItemList.Tool_CD.isStackEqual(aStack, false, true)));
+        addSlotToContainer(new GT_Slot_RestrictedContents(mInventory, 0, 80, 84+68, aStack -> ItemList.Tool_DataStick.isStackEqual(aStack, false, true) || ItemList.Tool_CD.isStackEqual(aStack, false, true)));
         mRestrictedSlot = aInventoryPlayer.currentItem;
 
-        addSlotToContainer(new GT_Slot_Holo(mInventory, 1, 18+8, 84+65, false, false, 0));
-        addSlotToContainer(new GT_Slot_Holo(mInventory, 2, 2*18+8, 84+65, false, false, 0));
+        addSlotToContainer(new GT_Slot_Holo(mInventory, 1, 2*18+8, 84+68, false, false, 0));
+        addSlotToContainer(new GT_Slot_Holo(mInventory, 2, 6*18+8, 84+68, false, false, 0));
         mTool = aTool;
 
     }
@@ -56,7 +56,7 @@ public class GT_Container_DataReader extends Container {
     }
 
     private void saveToNBT(ItemStack aTool) {
-        if (GT_Mod.gregtechproxy.isServerSide() && aTool != null && ItemList.Tool_DataReader.isStackEqual(aTool, false, true)) {
+        if (GT_Mod.gregtechproxy.isServerSide() && aTool != null && (ItemList.Tool_DataReader_MV.isStackEqual(aTool, false, true)||ItemList.Tool_DataReader_EV.isStackEqual(aTool, false, true))) {
             NBTTagCompound tNbt = aTool.getTagCompound();
             if (tNbt == null)
                 tNbt = new NBTTagCompound();
@@ -119,7 +119,7 @@ public class GT_Container_DataReader extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer aPlayer) {
-        return ItemList.Tool_DataReader.isStackEqual(aPlayer.getHeldItem(), false, true);
+        return ItemList.Tool_DataReader_MV.isStackEqual(aPlayer.getHeldItem(), false, true)||ItemList.Tool_DataReader_EV.isStackEqual(aPlayer.getHeldItem(), false, true);
     }
 
     @Override
