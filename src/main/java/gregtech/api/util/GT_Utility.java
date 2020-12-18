@@ -96,6 +96,7 @@ public class GT_Utility {
     public static boolean TE_CHECK = false, BC_CHECK = false, CHECK_ALL = true, RF_CHECK = false;
     public static Map<GT_PlayedSound, Integer> sPlayedSoundMap = new /*Concurrent*/HashMap<GT_PlayedSound, Integer>();
     private static int sBookCount = 0;
+    public enum ScanModes {DEFAULT, MULTIBLOCK}
 
     static {
         GregTech_API.sItemStackMappings.add(sFilledContainerToData);
@@ -1643,27 +1644,31 @@ public class GT_Utility {
 //    	return null;
 //    }
     
-    public static int getCoordinateScan(ArrayList<String> aList, EntityPlayer aPlayer, World aWorld, int aScanLevel, int aX, int aY, int aZ, int aSide, float aClickX, float aClickY, float aClickZ) {
+    public static int getCoordinateScan(ArrayList<String> aList, EntityPlayer aPlayer, World aWorld, int aScanLevel, ScanModes scanMode, int aX, int aY, int aZ, int aSide, float aClickX, float aClickY, float aClickZ) {
         if (aList == null) return 0;
 
         ArrayList<String> tList = new ArrayList<String>();
         int rEUAmount = 0;
-        tList.add("Biome real: "+aWorld.getBiomeGenForCoords(aX, aZ).biomeName);
-        tList.add("Biome by generator: "+aWorld.provider.worldChunkMgr.getBiomeGenAt(aX, aZ).biomeName);
 
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-
         Block tBlock = aWorld.getBlock(aX, aY, aZ);
 
-        tList.add("----- X: " + aX + " Y: " + aY + " Z: " + aZ + " D: " + aWorld.provider.dimensionId + " -----");
+        if(ScanModes.DEFAULT == scanMode) {
+            tList.add("Biome real: " + aWorld.getBiomeGenForCoords(aX, aZ).biomeName);
+            tList.add("Biome by generator: " + aWorld.provider.worldChunkMgr.getBiomeGenAt(aX, aZ).biomeName);
+            tList.add("----- X: " + aX + " Y: " + aY + " Z: " + aZ + " D: " + aWorld.provider.dimensionId + " -----");
+        }
         try {
-            if (tTileEntity instanceof IInventory)
-                tList.add(trans("162","Name: ") + ((IInventory) tTileEntity).getInventoryName() + trans("163","  MetaData: ") + aWorld.getBlockMetadata(aX, aY, aZ));
-            else
-                tList.add(trans("162","Name: ") + tBlock.getUnlocalizedName() + trans("163","  MetaData: ") + aWorld.getBlockMetadata(aX, aY, aZ));
+            if(ScanModes.DEFAULT == scanMode) {
+                if (tTileEntity instanceof IInventory)
+                    tList.add(trans("162", "Name: ") + ((IInventory) tTileEntity).getInventoryName() + trans("163", "  MetaData: ") + aWorld.getBlockMetadata(aX, aY, aZ));
+                else
+                    tList.add(trans("162", "Name: ") + tBlock.getUnlocalizedName() + trans("163", "  MetaData: ") + aWorld.getBlockMetadata(aX, aY, aZ));
 
-            tList.add(trans("164","Hardness: ") + tBlock.getBlockHardness(aWorld, aX, aY, aZ) + trans("165","  Blast Resistance: ") + tBlock.getExplosionResistance(aPlayer, aWorld, aX, aY, aZ, aPlayer.posX, aPlayer.posY, aPlayer.posZ));
-            if (tBlock.isBeaconBase(aWorld, aX, aY, aZ, aX, aY + 1, aZ)) tList.add(trans("166","Is valid Beacon Pyramid Material"));
+                tList.add(trans("164", "Hardness: ") + tBlock.getBlockHardness(aWorld, aX, aY, aZ) + trans("165", "  Blast Resistance: ") + tBlock.getExplosionResistance(aPlayer, aWorld, aX, aY, aZ, aPlayer.posX, aPlayer.posY, aPlayer.posZ));
+                if (tBlock.isBeaconBase(aWorld, aX, aY, aZ, aX, aY + 1, aZ))
+                    tList.add(trans("166", "Is valid Beacon Pyramid Material"));
+            }
         } catch (Throwable e) {
             if (D1) e.printStackTrace(GT_Log.err);
         }
@@ -1757,7 +1762,7 @@ public class GT_Utility {
                 if (D1) e.printStackTrace(GT_Log.err);
             }
             try {
-                if (tTileEntity instanceof IMachineProgress) {
+                if (ScanModes.DEFAULT == scanMode && tTileEntity instanceof IMachineProgress) {
                     rEUAmount += 400;
                     int tValue = 0;
                     if (0 < (tValue = ((IMachineProgress) tTileEntity).getMaxProgress()))
@@ -1794,14 +1799,14 @@ public class GT_Utility {
                 if (D1) e.printStackTrace(GT_Log.err);
             }
             try {
-                if (tTileEntity instanceof IGregTechTileEntity) {
+                if (ScanModes.DEFAULT == scanMode && tTileEntity instanceof IGregTechTileEntity) {
                     tList.add(trans("186","Owned by: ") + ((IGregTechTileEntity) tTileEntity).getOwnerName());
                 }
             } catch (Throwable e) {
                 if (D1) e.printStackTrace(GT_Log.err);
             }
             try {
-                if (tTileEntity instanceof IGregTechDeviceInformation && ((IGregTechDeviceInformation) tTileEntity).isGivingInformation()) {
+                if ((ScanModes.DEFAULT == scanMode || ScanModes.MULTIBLOCK == scanMode) && tTileEntity instanceof IGregTechDeviceInformation && ((IGregTechDeviceInformation) tTileEntity).isGivingInformation()) {
                     tList.addAll(Arrays.asList(((IGregTechDeviceInformation) tTileEntity).getInfoData()));
                 }
             } catch (Throwable e) {
@@ -1852,18 +1857,18 @@ public class GT_Utility {
         }
 //      if(aPlayer.capabilities.isCreativeMode){
         int[] chunkData = GT_Proxy.dimensionWiseChunkData.get(aWorld.provider.dimensionId).get(aWorld.getChunkFromBlockCoords(aX,aZ).getChunkCoordIntPair());
-        if(chunkData !=null){
+        if(ScanModes.DEFAULT == scanMode && chunkData !=null){
             if(chunkData[GTPOLLUTION]>0){
                 tList.add(trans("202","Pollution in Chunk: ")+EnumChatFormatting.RED+chunkData[GTPOLLUTION]+EnumChatFormatting.RESET+trans("203"," gibbl"));
             }else{
                 tList.add(EnumChatFormatting.GREEN+trans("204","No Pollution in Chunk! HAYO!")+EnumChatFormatting.RESET);
             }
-        }else{
+        }else if(ScanModes.DEFAULT == scanMode){
             tList.add(EnumChatFormatting.GREEN+trans("204","No Pollution in Chunk! HAYO!")+EnumChatFormatting.RESET);
-}
+        }
 
         try {
-            if (tBlock instanceof IDebugableBlock) {
+            if (ScanModes.DEFAULT == scanMode && tBlock instanceof IDebugableBlock) {
                 rEUAmount += 500;
                 ArrayList<String> temp = ((IDebugableBlock) tBlock).getDebugInfo(aPlayer, aX, aY, aZ, 3);
                 if (temp != null) tList.addAll(temp);
