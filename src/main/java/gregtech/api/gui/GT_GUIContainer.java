@@ -56,7 +56,7 @@ public class GT_GUIContainer extends GuiContainer {
         }
     }
 
-    public boolean isTheMouseOverSlot(@NotNull Slot aSlot, int aMouseX, int aMouseY) {
+    public boolean isTheMouseOverSlot(Slot aSlot, int aMouseX, int aMouseY) {
         return aMouseX >= aSlot.xDisplayPosition && aMouseX <= aSlot.xDisplayPosition + 16 && aMouseY >= aSlot.yDisplayPosition && aMouseY <= aSlot.yDisplayPosition + 16;
     }
     /*
