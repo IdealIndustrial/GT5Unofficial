@@ -98,7 +98,7 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
 
             } else if (ready && mMaxProgresstime == 0
                     && aStack != null && aStack.stackSize == 1
-                    && (aStack.getItem() == ItemList.Tool_DataStick.getItem() || ItemList.Tool_CD.isStackEqual(aStack, false, false))) {
+                    && (ItemList.Tool_DataStick.isStackEqual(aStack, false, true) || ItemList.Tool_CD.isStackEqual(aStack, false, false))) {
                 this.ready = false;
 
                 // prospecting ores
