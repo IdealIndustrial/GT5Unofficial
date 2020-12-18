@@ -85,7 +85,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         long tVoltage = getMaxInputVoltage();
         byte currentTier = (byte) Math.max(0, GT_Utility.getTier(tVoltage));
         byte requiredTier = (byte) Math.max(0, GT_Utility.getTier(mEUt));
-        int progressMultiplier = currentTier <= requiredTier ? 1 : 1 << (currentTier - requiredTier)
+        int progressMultiplier = currentTier <= requiredTier ? 1 : 1 << (currentTier - requiredTier);
         int reduceEfficiencyGrowing = cleanBlockTimeByVentTicks * (sizeY-2);
         int maxEfficiencyGrowing = 1000000;
         if(progressMultiplier > 1) {
