@@ -439,10 +439,10 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                     return;
                                 }
 
-                                if (!mWaterProof && !getMetaTileEntity().isWaterProofByDefault() && getRandomNumber(1000) == 0) {
+                                if (!mWaterProof && !getMetaTileEntity().isWaterProofByDefault() && (mTickTimer&1000) == 0 && getRandomNumber(1000) == 0) {
                                     if ((mTickTimer&128) == 128 && Arrays.stream(new Block[]{
                                             worldObj.getBlock(xCoord + 1, yCoord, zCoord), worldObj.getBlock(xCoord - 1, yCoord, zCoord),
-                                            worldObj.getBlock(xCoord, yCoord + 1, zCoord), worldObj.getBlock(xCoord, yCoord - 1, zCoord),
+                                            worldObj.getBlock(xCoord, yCoord + 1, zCoord), 
                                             worldObj.getBlock(xCoord, yCoord, zCoord + 1), worldObj.getBlock(xCoord, yCoord, zCoord - 1)})
                                             .anyMatch( (Block b) -> b == Blocks.water || b == Blocks.flowing_water || b == Blocks.lava || b == Blocks.flowing_lava || b instanceof IFluidBlock)) {
                                         if ((mTickTimer&8) == 8) {
