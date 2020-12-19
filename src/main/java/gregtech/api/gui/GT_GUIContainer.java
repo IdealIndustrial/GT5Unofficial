@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
