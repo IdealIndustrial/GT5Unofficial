@@ -25,9 +25,9 @@ public class GT_MetaTileEntity_CreativeTileAccelerator extends GT_MetaTileEntity
     public GT_MetaTileEntity_CreativeTileAccelerator(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 3, new String[]{
         		"Increases tickrate of tile entity at output side",
-				"Screwdriver-rightclick/Shift-screwdriver-rightclick",
-				"to Increase/Decrease tickrate",            
-                "Creative debug machine",
+        		"Screwdriver-rightclick/Shift-screwdriver-rightclick",
+        		"to Increase/Decrease tickrate",            
+        		"Creative debug machine",
                 EnumChatFormatting.RED + "THIS IS A DEBUG MACHINE, DO NOT USE WITHOUT A BACKUP!"});
     }
 
