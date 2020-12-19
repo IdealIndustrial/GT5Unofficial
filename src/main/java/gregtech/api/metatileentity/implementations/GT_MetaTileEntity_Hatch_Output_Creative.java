@@ -7,18 +7,19 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Utility;
-import static gregtech.api.util.GT_ModHandler.getWater;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import static gregtech.api.util.GT_ModHandler.getWater;
+
 public class GT_MetaTileEntity_Hatch_Output_Creative extends GT_MetaTileEntity_Hatch {
 
     public GT_MetaTileEntity_Hatch_Output_Creative(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 3, new String[]{
-        		"Creative Fluid Output for Multiblocks"});
+                "Creative Fluid Output for Multiblocks"});
     }
 
     public GT_MetaTileEntity_Hatch_Output_Creative(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
