@@ -27,17 +27,17 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
         }
         setCreativeTab(GregTech_API.TAB_GREGTECH);
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Plascrete Window"); // for Cleanroom
-        ItemList.Block_Plascrete_Window.set(new ItemStack(this.setHardness(40.0f).setResistance(100.0f), 1, 2));
+        ItemList.Block_Plascrete_Window.set(new ItemStack(this.setHardness(40.0f).setResistance(100.0f), 1, 0));
     }
 
     public String getHarvestTool(int aMeta) {
         if (aMeta == 0) return "wrench";
-        return "wrench";
+        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + aMeta);
     }
 
     public int getHarvestLevel(int aMeta) {
         if (aMeta == 0) return 2;
-        return 2;
+        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + aMeta);
     }
 
     public IIcon getIcon(int aSide, int aMeta) {
@@ -45,7 +45,7 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
             case 0:
                 return Textures.BlockIcons.BLOCK_PLASCRETE_WINDOW.getIcon();
         }
-        return Textures.BlockIcons.BLOCK_PLASCRETE_WINDOW.getIcon(); // as default
+        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + aMeta);
     }
 
     public float getBlockHardness(World aWorld, int aX, int aY, int aZ) {
@@ -53,18 +53,15 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
         if (tMeta == 0) {
             return 40.0F;
         }
-        return Blocks.iron_block.getBlockHardness(aWorld, aX, aY, aZ);
+        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + tMeta);
     }
 
     public float getExplosionResistance(Entity par1Entity, World world, int x, int y, int z, double explosionX, double explosionY, double explosionZ) {
-        if (world == null) {
-            return 0.0F;
-        }
         int tMeta = world.getBlockMetadata(x, y, z);
         if (tMeta == 0) {
             return 100.0F;
         }
-        return super.getExplosionResistance(par1Entity, world, x, y, z, explosionX, explosionY, explosionZ);
+        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + tMeta);
     }
 
     @Override
