@@ -89,7 +89,7 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
         double tOut = getOutputRate()*(mEfficiency/10000) + waterToOutput;
         int rOut = (int)tOut;
         waterToOutput = tOut - rOut;
-        addOutput(GT_ModHandler.getWater(rOut));
+        addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
         return true;
     }
 
