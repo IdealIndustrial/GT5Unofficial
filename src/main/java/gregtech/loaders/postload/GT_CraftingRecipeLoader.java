@@ -791,5 +791,6 @@ public class GT_CraftingRecipeLoader implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Casing_Filter_ULV.get(1L), bits, new Object[]{"RFR","FPF","RFR", 'R', OrePrefixes.ring.get(Materials.Tin), 'F', ItemList.PrimitiveFluidFilterItem.get(1L), 'P', OrePrefixes.pipeMedium.get(Materials.Wood)});
         GT_ModHandler.addCraftingRecipe(ItemList.Tool_DataReader_MV.get(1L), bits, new Object[]{"PBP","CSC","PWP", 'P', OrePrefixes.plate.get(Materials.Aluminium), 'W', OrePrefixes.cableGt01.get(Materials.Copper), 'B', ItemList.Battery_RE_MV_Lithium,	'S', ItemList.Cover_Screen, 'C', OrePrefixes.circuit.get(Materials.Good)});
         GT_ModHandler.addCraftingRecipe(ItemList.Tool_DataReader_EV.get(1L), bits, new Object[]{"PBP","CSC","PWP", 'P', OrePrefixes.plate.get(Materials.Titanium), 'W', OrePrefixes.cableGt01.get(Materials.Aluminium), 'B', ItemList.IC2_LapotronCrystal,	'S', ItemList.Cover_Screen, 'C', OrePrefixes.circuit.get(Materials.Data)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Tool_DataReader_EV.get(1L), bits, new Object[]{"PBP","CSC","PWP", 'P', OrePrefixes.plate.get(Materials.Titanium), 'W', OrePrefixes.cableGt01.get(Materials.Aluminium), 'B', ItemList.IC2_LapotronCrystal.getWithDamage(1,GT_Values.W),	'S', ItemList.Cover_Screen, 'C', OrePrefixes.circuit.get(Materials.Data)});
     }
 }

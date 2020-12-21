@@ -77,7 +77,7 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
 
         ItemList.Tool_DataReader_EV.set(addItem(tLastID = 19, "Advanced Data Reader", "Now you'll know what data sticks contain"));
         addItemBehavior(32000+tLastID, new Behaviour_DataReader(4));
-        setElectricStats(32000+tLastID, 400000, GT_Values.V[4], 4, -3, false);
+        setElectricStats(32000+tLastID, 10000000, GT_Values.V[4], 4, -3, false);
 
         ItemList.Tool_CD.set(addItem(tLastID = 20, "Compact Disc", "Used for reading prospector info (single use)"));
         addItemBehavior(32000+tLastID, new Behaviour_CD());
