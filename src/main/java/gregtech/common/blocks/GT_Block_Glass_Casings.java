@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 
 public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
 
+    private static final int maxAllowedMeta = 0; // set here max meta that may by used for this class
 
     public GT_Block_Glass_Casings(String aName) {
         super(GT_Item_Glass_Casings.class, aName, GT_Material_Casings.INSTANCE);
@@ -32,12 +33,14 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
 
     public String getHarvestTool(int aMeta) {
         if (aMeta == 0) return "wrench";
-        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + aMeta);
+        assert aMeta >= 0 && aMeta <= maxAllowedMeta : "GT_Block_Glass_Casings - Invalid Metadata: " + aMeta;
+        return "wrench";
     }
 
     public int getHarvestLevel(int aMeta) {
         if (aMeta == 0) return 2;
-        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + aMeta);
+        assert aMeta >= 0 && aMeta <= maxAllowedMeta : "GT_Block_Glass_Casings - Invalid Metadata: " + aMeta;
+        return 2;
     }
 
     public IIcon getIcon(int aSide, int aMeta) {
@@ -45,7 +48,8 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
             case 0:
                 return Textures.BlockIcons.BLOCK_PLASCRETE_WINDOW.getIcon();
         }
-        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + aMeta);
+        assert aMeta >= 0 && aMeta <= maxAllowedMeta : "GT_Block_Glass_Casings - Invalid Metadata: " + aMeta;
+        return Textures.BlockIcons.BLOCK_PLASCRETE_WINDOW.getIcon();
     }
 
     public float getBlockHardness(World aWorld, int aX, int aY, int aZ) {
@@ -53,7 +57,8 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
         if (tMeta == 0) {
             return 40.0F;
         }
-        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + tMeta);
+        assert tMeta >= 0 && tMeta <= maxAllowedMeta : "GT_Block_Glass_Casings - Invalid Metadata: " + tMeta;
+        return 1.0F;
     }
 
     public float getExplosionResistance(Entity par1Entity, World world, int x, int y, int z, double explosionX, double explosionY, double explosionZ) {
@@ -61,7 +66,8 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
         if (tMeta == 0) {
             return 100.0F;
         }
-        throw new IllegalStateException("GT_Block_Glass_Casings - Invalid Metadata: " + tMeta);
+        assert tMeta >=0 && tMeta <= maxAllowedMeta : "GT_Block_Glass_Casings - Invalid Metadata: " + tMeta;
+        return super.getExplosionResistance(par1Entity, world, x, y, z, explosionX, explosionY, explosionZ);
     }
 
     @Override
@@ -83,12 +89,8 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess aWorld, int aX, int aY, int aZ, int aSide)
     {
-        if(aWorld == null) return false;
-        else {
-            Block block = aWorld.getBlock(aX, aY, aZ);
-            if (block.isBlockSolid(aWorld, aX, aY, aZ, aSide)) return false;
-        }
-        return true;
+        Block block = aWorld.getBlock(aX, aY, aZ);
+        return !block.isBlockSolid(aWorld, aX, aY, aZ, aSide);
     }
 
 }

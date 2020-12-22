@@ -337,8 +337,8 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.BlackSteel, 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Plastic, 1L), Materials.Concrete.getMolten(144L), ItemList.Block_Plascrete.get(1L, new Object[0]), 200, 48);
         GT_Values.RA.addChemicalBathRecipe(GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.TungstenSteel, 1L), Materials.Concrete.getMolten(144L), ItemList.Block_TungstenSteelReinforced.get(1L, new Object[0]), GT_Values.NI, GT_Values.NI, null, 200, 4);
 
-        GT_ModHandler.addCraftingRecipe(ItemList.Block_Plascrete_Window.get(4L, new Object[0]), new Object[]{"BPB","PGP","BPB",'B',ItemList.Block_Plascrete.get(1L, new Object[0]),'P', GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Glass, 1L),'G',GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Glue, 1L)});
-        GT_Values.RA.addAssemblerRecipe(ItemList.Block_Plascrete.get(1L, new Object[0]), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Glass, 1L), Materials.Glue.getFluid(100L), ItemList.Block_Plascrete_Window.get(1L, new Object[0]), 600, 4);
+        GT_ModHandler.addCraftingRecipe(ItemList.Block_Plascrete_Window.get(4L), new Object[]{"BPB","PGP","BPB",'B',ItemList.Block_Plascrete.get(1L),'P', GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Glass, 1L),'G',GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Glue, 1L)});
+        GT_Values.RA.addAssemblerRecipe(ItemList.Block_Plascrete.get(1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Glass, 1L), Materials.Glue.getFluid(100L), ItemList.Block_Plascrete_Window.get(1L), 600, 4);
 
         for (int j = 0; j < Dyes.dyeRed.getSizeOfFluidList(); j++) {
             GT_Values.RA.addChemicalBathRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt01, Materials.RedAlloy, 1L), Dyes.dyeRed.getFluidDye(j, 72L), GT_ModHandler.getModItem("BuildCraft|Transport", "pipeWire", 4L, 0), GT_Values.NI, GT_Values.NI, null, 32, 16);
