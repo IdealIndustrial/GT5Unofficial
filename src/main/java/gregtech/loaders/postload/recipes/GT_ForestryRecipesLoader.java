@@ -1,6 +1,5 @@
 package gregtech.loaders.postload.recipes;
 
-import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.util.GT_OreDictUnificator;

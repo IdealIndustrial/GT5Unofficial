@@ -4,6 +4,7 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GT_OreDictUnificator;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,7 @@ public class GT_RailcraftRecipesLoader implements Runnable {
 	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 0));
 	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 1));
 	GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 2));
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Emitter_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.RedAlloy, 4L),ItemList.Circuit_Board_Coated.get(1L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L, new Object[0])},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 0), 120, 5);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Emitter_LV.get(1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.RedAlloy, 4L),ItemList.Circuit_Board_Coated.get(1L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L, new Object[0])},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 0), 120, 5);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Sensor_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Gold, 4L),ItemList.Circuit_Board_Coated.get(1L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L, new Object[0])},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 1), 120, 5);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Sensor_LV.get(1L),GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Electrum, 4L),ItemList.Circuit_Board_Coated.get(1L), ItemList.Circuit_Integrated.getWithDamage(0L, 3L, new Object[0])},Materials.SolderingAlloy.getMolten(144L), GT_ModHandler.getModItem("Railcraft", "part.circuit", 1L, 2), 120, 5);
 
