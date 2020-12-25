@@ -2,13 +2,11 @@ package gregtech.api.util;
 
 import cofh.api.transport.IItemDuct;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.damagesources.GT_DamageSources;
 import gregtech.api.enchants.Enchantment_Radioactivity;
-import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.ItemList;
-import gregtech.api.enums.SubTag;
-import gregtech.api.enums.Textures;
+import gregtech.api.enums.*;
 import gregtech.api.events.BlockScanningEvent;
 import gregtech.api.interfaces.IDebugableBlock;
 import gregtech.api.interfaces.IProjectileItem;
@@ -16,6 +14,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.*;
 import gregtech.api.items.GT_EnergyArmor_Item;
 import gregtech.api.items.GT_Generic_Item;
+import gregtech.api.items.GT_MetaGenerated_Item;
+import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
 import gregtech.api.net.GT_Packet_Sound;
 import gregtech.api.objects.GT_ItemStack;
@@ -73,6 +73,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import com.mojang.authlib.GameProfile;
 
@@ -1834,6 +1835,80 @@ public class GT_Utility {
     public static <T> void addAllToAll( Collection<T> toAdd, Collection<? extends Collection<T>> addTo) {
        addTo.forEach(collection -> collection.addAll(toAdd));
     }
+
+    public static String recipeToString(GT_Recipe aRecipe) {
+        StringBuilder out = new StringBuilder();
+        Function<ItemStack, String> tStackLocalizer = is ->
+                is.getDisplayName().startsWith("gt.metaitem") ?
+                    is.getItemDamage() > 32000 ?
+                        GT_LanguageManager.getTranslation(is.getDisplayName()) :
+                    Materials.getLocalizedNameForItem(GT_LanguageManager.getTranslation(is.getDisplayName()), is.getItemDamage()%1000) :
+                is.getDisplayName().startsWith("gt.") ?
+                    GT_LanguageManager.getTranslation(is.getDisplayName()) :
+                    is.getDisplayName();
+        Function<ItemStack, String> tItemStackMapper = is -> tStackLocalizer.apply(is) + "<" + Item.getIdFromItem(is.getItem()) + ":" + Items.feather.getDamage(is) + ">" + "x" + is.stackSize;
+        String inputs = arrayToString(aRecipe.mInputs, tItemStackMapper);
+        String outputs = arrayToString(aRecipe.mOutputs, tItemStackMapper);
+
+        out.append("inputs:\n").append(inputs).append("\n");
+        out.append("outputs:\n").append(outputs).append("\n");
+
+        Function<FluidStack, String> tFluidStackMapper = fs -> fs.getFluid().getName() + "<" + fs.getFluid().getID() + ">" + "x" + fs.amount;
+        String fluidInputs = arrayToString(aRecipe.mFluidInputs, tFluidStackMapper);
+        String fluidOutputs = arrayToString(aRecipe.mFluidOutputs, tFluidStackMapper);
+
+        out.append("fluidInputs:\n").append(fluidInputs).append("\n");
+        out.append("fluidOutputs:\n").append(fluidOutputs).append("\n");
+
+        Function<Field, String> fieldMapper = field -> {
+            try {
+                return field.getName() + " : " + field.get(aRecipe);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                return "parse exception";
+            }
+        };
+
+        gtRecipeFieldList.stream().map(fieldMapper).forEach(str -> out.append(str).append("\n"));
+        out.append("mChances:").append(Arrays.toString(aRecipe.mChances)).append("\n");
+        return out.toString();
+    }
+
+    private static List<Field> gtRecipeFieldList = getAll(GT_Recipe.class, "mEUt", "mDuration", "mHidden", "mEnabled", "mSpecialValue");
+
+    public static <T> String arrayToString(T[] array, Function<? super T, ? extends String> mapper) {
+        if (array == null)
+            array = (T[]) new Object[0];
+        return Arrays.toString(Arrays.stream(array).filter(Objects::nonNull).map(mapper).toArray());
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static List<Field> getAll(Class cl, String... names) {
+        List<Field> out = new ArrayList<>(names.length);
+        for (String name : names) {
+            try {
+                out.add(cl.getDeclaredField(name));
+            } catch (NoSuchFieldException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return out;
+    }
+
+
+    public static String findFirstInStackTrace(List<String> classNames) {
+        StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+        for (StackTraceElement stackTraceElement : trace) {
+            if (classNames.stream().anyMatch(stackTraceElement.getClassName()::equals)) {
+                return stackTraceElement.getClassName() + "." + stackTraceElement.getMethodName() + "[" + stackTraceElement.getLineNumber() + "]";
+            }
+        }
+        return "unknown";
+    }
+
+
+
+
 
     public static class ItemNBT {
         public static void setNBT(ItemStack aStack, NBTTagCompound aNBT) {
