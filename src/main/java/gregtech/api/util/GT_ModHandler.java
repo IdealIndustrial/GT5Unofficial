@@ -69,7 +69,12 @@ public class GT_ModHandler {
     public static Collection<String> sNativeRecipeClasses = new HashSet<String>(), sSpecialRecipeClasses = new HashSet<String>();
     public static GT_HashSet<GT_ItemStack> sNonReplaceableItems = new GT_HashSet<GT_ItemStack>();
     public static Object sBoxableWrapper = GT_Utility.callConstructor("gregtechmod.api.util.GT_IBoxableWrapper", 0, null, false);
-    public static List<String> sRecipeLoadersNames = Stream.of(GT_CraftingRecipeLoader.class, GT_MachineRecipeLoader.class, GT_ForestryRecipesLoader.class, GT_RailcraftRecipesLoader.class, GT_Loader_MetaTileEntities.class).map(Class::getName).collect(Collectors.toList());
+
+    public static List<String> sRecipeLoadersNames = Stream.of(GT_MetaGenerated_Item_01.class, GT_MetaGenerated_Item_02.class, 
+    GT_MetaGenerated_Item_03.class, GT_MetaGenerated_Tool_01.class, GT_CraftingRecipeLoader.class, GT_MachineRecipeLoader.class, 
+    GT_ForestryRecipesLoader.class, GT_RailcraftRecipesLoader.class, 
+    GT_Loader_MetaTileEntities.class).map(Class::getName).collect(Collectors.toList());
+	
     private static Map<IRecipeInput, RecipeOutput> sExtractorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
     private static Map<IRecipeInput, RecipeOutput> sMaceratorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
     private static Map<IRecipeInput, RecipeOutput> sCompressorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
