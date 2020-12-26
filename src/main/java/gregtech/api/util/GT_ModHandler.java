@@ -17,11 +17,14 @@ import gregtech.loaders.postload.GT_CraftingRecipeLoader;
 import gregtech.loaders.postload.GT_MachineRecipeLoader;
 import gregtech.loaders.postload.recipes.GT_ForestryRecipesLoader;
 import gregtech.loaders.postload.recipes.GT_RailcraftRecipesLoader;
+import gregtech.loaders.postload.recipes.GT_IndustialCraftRecipesLoader;
+import gregtech.loaders.postload.recipes.GT_GraviSuiteRecipesLoader;
 import gregtech.loaders.preload.GT_Loader_MetaTileEntities;
 import gregtech.common.items.GT_MetaGenerated_Item_01;
 import gregtech.common.items.GT_MetaGenerated_Item_02;
 import gregtech.common.items.GT_MetaGenerated_Item_03;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.common.items.ItemComb;
 import gregtech.loaders.oreprocessing.*;
 import ic2.api.item.IBoxable;
 import ic2.api.item.IC2Items;
@@ -77,7 +80,7 @@ public class GT_ModHandler {
 
     public static List<String> sRecipeLoadersNames = Stream.of(GT_MetaGenerated_Item_01.class, GT_MetaGenerated_Item_02.class, 
     GT_MetaGenerated_Item_03.class, GT_MetaGenerated_Tool_01.class, GT_CraftingRecipeLoader.class, GT_MachineRecipeLoader.class, 
-    GT_ForestryRecipesLoader.class, GT_RailcraftRecipesLoader.class, 
+    GT_ForestryRecipesLoader.class, GT_RailcraftRecipesLoader.class, GT_IndustialCraftRecipesLoader.class, GT_GraviSuiteRecipesLoader.class, 
     ProcessingAll.class, ProcessingArrows.class, ProcessingBeans.class, ProcessingBlock.class, ProcessingBolt.class,
     ProcessingCell.class, ProcessingCircuit.class, ProcessingCompressed.class, ProcessingCrafting.class,
     ProcessingCrate.class, ProcessingCrop.class, ProcessingCrushedOre.class, ProcessingCrystallized.class,
@@ -89,7 +92,7 @@ public class GT_ModHandler {
     ProcessingSand.class, ProcessingSaplings.class, ProcessingScrew.class, ProcessingShaping.class,
     ProcessingSlab.class, ProcessingStick.class, ProcessingStickLong.class, ProcessingStone.class,
     ProcessingStoneCobble.class, ProcessingStoneVarious.class, ProcessingToolHead.class, ProcessingToolOther.class,
-    ProcessingTransforming.class, ProcessingWax.class, ProcessingWire.class,							       
+    ProcessingTransforming.class, ProcessingWax.class, ProcessingWire.class, ItemComb.class,						       
     GT_Loader_MetaTileEntities.class).map(Class::getName).collect(Collectors.toList());
 	
     private static Map<IRecipeInput, RecipeOutput> sExtractorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
