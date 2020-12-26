@@ -25,6 +25,7 @@ import gregtech.common.items.GT_MetaGenerated_Item_02;
 import gregtech.common.items.GT_MetaGenerated_Item_03;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import gregtech.common.items.ItemComb;
+import gregtech.loaders.load.GT_ItemIterator;
 import gregtech.loaders.oreprocessing.*;
 import ic2.api.item.IBoxable;
 import ic2.api.item.IC2Items;
@@ -92,7 +93,7 @@ public class GT_ModHandler {
     ProcessingSand.class, ProcessingSaplings.class, ProcessingScrew.class, ProcessingShaping.class,
     ProcessingSlab.class, ProcessingStick.class, ProcessingStickLong.class, ProcessingStone.class,
     ProcessingStoneCobble.class, ProcessingStoneVarious.class, ProcessingToolHead.class, ProcessingToolOther.class,
-    ProcessingTransforming.class, ProcessingWax.class, ProcessingWire.class, ItemComb.class,						       
+    ProcessingTransforming.class, ProcessingWax.class, ProcessingWire.class, ItemComb.class, GT_ItemIterator.class,						       
     GT_Loader_MetaTileEntities.class).map(Class::getName).collect(Collectors.toList());
 	
     private static Map<IRecipeInput, RecipeOutput> sExtractorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
