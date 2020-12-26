@@ -93,7 +93,8 @@ public class GT_ModHandler {
     ProcessingSand.class, ProcessingSaplings.class, ProcessingScrew.class, ProcessingShaping.class,
     ProcessingSlab.class, ProcessingStick.class, ProcessingStickLong.class, ProcessingStone.class,
     ProcessingStoneCobble.class, ProcessingStoneVarious.class, ProcessingToolHead.class, ProcessingToolOther.class,
-    ProcessingTransforming.class, ProcessingWax.class, ProcessingWire.class, ItemComb.class, GT_ItemIterator.class,						       
+    ProcessingTransforming.class, ProcessingWax.class, ProcessingWire.class, ItemComb.class, 
+    GT_ItemIterator.class, GT_ModHandler.class, GT_Mod.class,
     GT_Loader_MetaTileEntities.class).map(Class::getName).collect(Collectors.toList());
 	
     private static Map<IRecipeInput, RecipeOutput> sExtractorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
