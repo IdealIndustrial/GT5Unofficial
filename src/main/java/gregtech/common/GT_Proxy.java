@@ -239,7 +239,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean enableFixQuestsCommand = true;
     public boolean allowDisableToolTips = false;
     public boolean debugRecipeConflicts = true;
-
+    public List<String> debugRecipeMapsFilter = Collections.emptyList();
     
     public GT_Proxy() {
         GameRegistry.registerFuelHandler(this);

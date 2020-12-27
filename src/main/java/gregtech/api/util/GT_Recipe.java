@@ -680,12 +680,26 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                 GT_Recipe tConflict = findRecipe(null, false, Long.MAX_VALUE, aRecipe.mFluidInputs, aRecipe.mInputs);
                 if (tConflict != null) {
                     if (GT_Mod.gregtechproxy.debugRecipeConflicts) {
-                        ItemStack tConflictStack = aRecipe.mOutputs == null || aRecipe.mOutputs.length == 0 ? null : aRecipe.mOutputs[0];
+                      /*  ItemStack tConflictStack = aRecipe.mOutputs == null || aRecipe.mOutputs.length == 0 ? null : aRecipe.mOutputs[0];
                         if (tConflictStack == null)
                             return null;
                         HashMap<GT_NEIItemStack,List<GT_Recipe>> tRecipesMap = GT_Mod.gregtechproxy.mConflictMaps.computeIfAbsent(this, recipe -> {HashMap<GT_NEIItemStack, List<GT_Recipe>>map = new HashMap<>(); GregTech_API.sItemStackMappings.add(map); return map;});
                         List<GT_Recipe> tRecipes = tRecipesMap.computeIfAbsent(new GT_NEIItemStack(tConflictStack), k -> new ArrayList<>());
-                        tRecipes.add(tConflict);
+                        tRecipes.add(tConflict);*/ // will fix this later
+                        if (GT_Mod.gregtechproxy.debugRecipeMapsFilter.stream().anyMatch(mUnlocalizedName::contains)) {
+                            GT_Log.recipe.println("Conflict in: " + mUnlocalizedName);
+
+                            GT_Log.recipe.println("Recipe: ");
+                            GT_Log.recipe.println(GT_Utility.recipeToString(aRecipe));
+                            GT_Log.recipe.println("conflicts with: ");
+                            GT_Log.recipe.println(GT_Utility.recipeToString(tConflict));
+                            GT_Log.recipe.println("at");
+                            GT_Log.recipe.println(GT_Utility.findFirstInStackTrace(GT_ModHandler.sRecipeLoadersNames));
+
+                            GT_Log.recipe.println();
+                            GT_Log.recipe.println();
+                            GT_Log.recipe.println();
+                        }
                     }
                     return null;
                 }

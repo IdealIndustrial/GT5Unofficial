@@ -13,6 +13,20 @@ import gregtech.api.interfaces.internal.IGT_CraftingRecipe;
 import gregtech.api.objects.GT_HashSet;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
+import gregtech.loaders.postload.GT_CraftingRecipeLoader;
+import gregtech.loaders.postload.GT_MachineRecipeLoader;
+import gregtech.loaders.postload.recipes.GT_ForestryRecipesLoader;
+import gregtech.loaders.postload.recipes.GT_RailcraftRecipesLoader;
+import gregtech.loaders.postload.recipes.GT_IndustialCraftRecipesLoader;
+import gregtech.loaders.postload.recipes.GT_GraviSuiteRecipesLoader;
+import gregtech.loaders.preload.GT_Loader_MetaTileEntities;
+import gregtech.common.items.GT_MetaGenerated_Item_01;
+import gregtech.common.items.GT_MetaGenerated_Item_02;
+import gregtech.common.items.GT_MetaGenerated_Item_03;
+import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.common.items.ItemComb;
+import gregtech.loaders.load.GT_ItemIterator;
+import gregtech.loaders.oreprocessing.*;
 import ic2.api.item.IBoxable;
 import ic2.api.item.IC2Items;
 import ic2.api.item.IElectricItem;
@@ -44,6 +58,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static gregtech.api.enums.GT_Values.*;
 
@@ -62,6 +78,25 @@ public class GT_ModHandler {
     public static Collection<String> sNativeRecipeClasses = new HashSet<String>(), sSpecialRecipeClasses = new HashSet<String>();
     public static GT_HashSet<GT_ItemStack> sNonReplaceableItems = new GT_HashSet<GT_ItemStack>();
     public static Object sBoxableWrapper = GT_Utility.callConstructor("gregtechmod.api.util.GT_IBoxableWrapper", 0, null, false);
+
+    public static List<String> sRecipeLoadersNames = Stream.of(GT_MetaGenerated_Item_01.class, GT_MetaGenerated_Item_02.class, 
+    GT_MetaGenerated_Item_03.class, GT_MetaGenerated_Tool_01.class, GT_CraftingRecipeLoader.class, GT_MachineRecipeLoader.class, 
+    GT_ForestryRecipesLoader.class, GT_RailcraftRecipesLoader.class, GT_IndustialCraftRecipesLoader.class, GT_GraviSuiteRecipesLoader.class, 
+    ProcessingAll.class, ProcessingArrows.class, ProcessingBeans.class, ProcessingBlock.class, ProcessingBolt.class,
+    ProcessingCell.class, ProcessingCircuit.class, ProcessingCompressed.class, ProcessingCrafting.class,
+    ProcessingCrate.class, ProcessingCrop.class, ProcessingCrushedOre.class, ProcessingCrystallized.class,
+    ProcessingDirty.class, ProcessingDust.class, ProcessingDye.class, ProcessingFineWire.class, ProcessingFoil.class,
+    ProcessingFood.class, ProcessingGear.class, ProcessingGem.class, ProcessingIngot.class, ProcessingItem.class,
+    ProcessingLens.class, ProcessingLog.class, ProcessingNugget.class, ProcessingOre.class, ProcessingOrePoor.class,
+    ProcessingOreSmelting.class, ProcessingPipe.class, ProcessingPlank.class, ProcessingPlate.class,
+    ProcessingPure.class, ProcessingRecycling.class, ProcessingRotor.class, ProcessingRound.class,
+    ProcessingSand.class, ProcessingSaplings.class, ProcessingScrew.class, ProcessingShaping.class,
+    ProcessingSlab.class, ProcessingStick.class, ProcessingStickLong.class, ProcessingStone.class,
+    ProcessingStoneCobble.class, ProcessingStoneVarious.class, ProcessingToolHead.class, ProcessingToolOther.class,
+    ProcessingTransforming.class, ProcessingWax.class, ProcessingWire.class, ItemComb.class, 
+    GT_ItemIterator.class, GT_ModHandler.class, GT_Mod.class,
+    GT_Loader_MetaTileEntities.class).map(Class::getName).collect(Collectors.toList());
+	
     private static Map<IRecipeInput, RecipeOutput> sExtractorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
     private static Map<IRecipeInput, RecipeOutput> sMaceratorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
     private static Map<IRecipeInput, RecipeOutput> sCompressorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();

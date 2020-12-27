@@ -184,6 +184,18 @@ public class GT_Mod implements IGT_Mod {
             }
         } catch (Throwable e) {
         }
+
+        GT_Log.mRecipeLog = new File(aEvent.getModConfigurationDirectory().getParentFile(), "logs/GTRecipes.log");
+        if (!GT_Log.mRecipeLog.exists()) {
+            try {
+                GT_Log.mRecipeLog.createNewFile();
+            } catch (Throwable e) {
+            }
+        }
+        try {
+            GT_Log.recipe = new PrintStream(GT_Log.mRecipeLog);
+        } catch (FileNotFoundException e) {
+        }
         gregtechproxy.onPreLoad();
         GT_Log.out.println("GT_Mod: Are you there Translocator? " + GregTech_API.mTranslocator);
         GT_Log.out.println("GT_Mod: Are you there TConstruct? " + GregTech_API.mTConstruct);
@@ -302,7 +314,8 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.disassemblerRecipeMapOn = tMainConfig.get("general","DisasssemblerRecipeMapEnabled", true).getBoolean(true);
         gregtechproxy.enableFixQuestsCommand = tMainConfig.get("general", "EnableUpdateQuestsCommand", false).getBoolean(false);
         gregtechproxy.allowDisableToolTips = tMainConfig.get("general", "AllowDisablingLargeTooltips", true).getBoolean(true);
-        gregtechproxy.debugRecipeConflicts = tMainConfig.get("general", "DebugRecipeConflicts", false).getBoolean(false);
+        gregtechproxy.debugRecipeConflicts = tMainConfig.get("general", "DebugRecipeConflicts", true).getBoolean(true);
+        gregtechproxy.debugRecipeMapsFilter = Arrays.asList(tMainConfig.get("general", "DebugRecipeMapsFilter", "|").getString().split("\\|"));
         gregtechproxy.mEasyEnderIOMaterialsRecipe = tMainConfig.get("general","EasyEnderIOMaterialsRecipe",false).getBoolean(false);
         GT_LanguageManager.i18nPlaceholder = tMainConfig.get("general", "UsePlaceholderForMaterialNamesInLangFile", true).getBoolean(true);
 
