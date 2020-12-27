@@ -124,9 +124,11 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
             int aConsume = mPipe.fill_default(ForgeDirection.DOWN, aLiquid, true);
             if(aConsume <= 0)
                 mFilledPipes++;
+            return true;
         }
         return super.addOutput(aLiquid);
     }
+
 
     public boolean constructStructure(byte aDir){
         IGregTechTileEntity tBase = getBaseMetaTileEntity();
@@ -158,7 +160,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
                 break;
             }
         }
-        if (tDir == -1 || tDir == mMainFacing)
+        if (tDir == -1 || tDir == mMainFacing || aBaseMetaTileEntity.getFrontFacing() == mMainFacing)
             return false;
 
         TileEntity aPipe = aBaseMetaTileEntity.getTileEntityAtSide((byte)1);
@@ -181,7 +183,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         mPipes.clear();
         TileEntity tile = aBaseMetaTileEntity.getTileEntityAtSide((byte)mMainFacing);
         GT_MetaPipeEntity_Fluid tPipe = null;
-        if(tile instanceof IGregTechTileEntity && ((IGregTechTileEntity)tile).getMetaTileEntity() instanceof GT_MetaPipeEntity_Fluid)
+        if(tile instanceof IGregTechTileEntity && ((IGregTechTileEntity)tile).getMetaTileEntity() instanceof GT_MetaPipeEntity_Fluid && ((GT_MetaPipeEntity_Fluid)(((IGregTechTileEntity) tile).getMetaTileEntity())).isConnectedAtSide(GT_Utility.getOppositeSide(mMainFacing)))
             tPipe = (GT_MetaPipeEntity_Fluid)((IGregTechTileEntity)tile).getMetaTileEntity();
         if(tPipe == null)
             return false;
@@ -333,6 +335,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
             if (aWrenchingSide > 1 && getBaseMetaTileEntity().isServerSide()) {
                 mMainFacing = aWrenchingSide;
                 getBaseMetaTileEntity().sendBlockEvent((byte)1, (byte)mMainFacing);
+                GregTech_API.causeMachineUpdate(getBaseMetaTileEntity().getWorld(), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord());
                 return true;
             }
         }

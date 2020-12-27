@@ -375,7 +375,8 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
         			GT_Utility.sendChatToPlayer(aPlayer, trans("215", "Disconnected"));
         		}
     		}
-    		return true;
+            GregTech_API.causeMachineUpdate(getBaseMetaTileEntity().getWorld(), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord());
+            return true;
     	}
         return false;
     }
