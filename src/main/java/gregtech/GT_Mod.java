@@ -316,6 +316,7 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.allowDisableToolTips = tMainConfig.get("general", "AllowDisablingLargeTooltips", true).getBoolean(true);
         gregtechproxy.debugRecipeConflicts = tMainConfig.get("general", "DebugRecipeConflicts", true).getBoolean(true);
         gregtechproxy.debugRecipeMapsFilter = Arrays.asList(tMainConfig.get("general", "DebugRecipeMapsFilter", "|").getString().split("\\|"));
+        gregtechproxy.fixAE2SpatialPilons = tMainConfig.get("general", "FixAE2Spatials", false).getBoolean(false);
         gregtechproxy.mEasyEnderIOMaterialsRecipe = tMainConfig.get("general","EasyEnderIOMaterialsRecipe",false).getBoolean(false);
         GT_LanguageManager.i18nPlaceholder = tMainConfig.get("general", "UsePlaceholderForMaterialNamesInLangFile", true).getBoolean(true);
 
