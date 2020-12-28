@@ -1,5 +1,6 @@
 package gregtech.common;
 
+import codechicken.nei.recipe.FurnaceRecipeHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.common.*;
@@ -672,6 +673,16 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                 uses.set(null, new HashMap<>());
                 recipe.set(null, new HashMap<>());
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignored) {
+
+            }
+
+            try {
+                Class cl = Class.forName("codechicken.nei.recipe.FuelRecipeHandler");
+                Field fuels = cl.getField("afuels");
+                ArrayList list = (ArrayList)fuels.get(null);
+                list = (ArrayList)list.stream().filter(Objects::nonNull).collect(Collectors.toList());
+                fuels.set(null, list);
+            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ignored) {
 
             }
 
