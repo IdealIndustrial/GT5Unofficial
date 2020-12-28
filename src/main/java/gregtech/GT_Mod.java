@@ -17,6 +17,7 @@ import gregtech.api.objects.XSTR;
 import gregtech.api.util.*;
 import gregtech.common.*;
 import gregtech.common.blocks.GT_Block_Ores_Abstract;
+import gregtech.common.config.GT_DebugConfig;
 import gregtech.common.entities.GT_Entity_Arrow;
 import gregtech.common.entities.GT_Entity_Arrow_Potion;
 import gregtech.common.items.armor.components.LoadArmorComponents;
@@ -114,6 +115,7 @@ public class GT_Mod implements IGT_Mod {
                 tRunnable.run();
             }
         } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
+        new GT_LoaderConfig(aEvent).run();
         File tFile = new File(new File(aEvent.getModConfigurationDirectory(), "GregTech"), "GregTech.cfg");
         Configuration tMainConfig = new Configuration(tFile);
         tMainConfig.load();
@@ -314,8 +316,6 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.disassemblerRecipeMapOn = tMainConfig.get("general","DisasssemblerRecipeMapEnabled", true).getBoolean(true);
         gregtechproxy.enableFixQuestsCommand = tMainConfig.get("general", "EnableUpdateQuestsCommand", false).getBoolean(false);
         gregtechproxy.allowDisableToolTips = tMainConfig.get("general", "AllowDisablingLargeTooltips", true).getBoolean(true);
-        gregtechproxy.debugRecipeConflicts = tMainConfig.get("general", "DebugRecipeConflicts", true).getBoolean(true);
-        gregtechproxy.debugRecipeMapsFilter = Arrays.asList(tMainConfig.get("general", "DebugRecipeMapsFilter", "|").getString().split("\\|"));
         gregtechproxy.mEasyEnderIOMaterialsRecipe = tMainConfig.get("general","EasyEnderIOMaterialsRecipe",false).getBoolean(false);
         GT_LanguageManager.i18nPlaceholder = tMainConfig.get("general", "UsePlaceholderForMaterialNamesInLangFile", true).getBoolean(true);
 
