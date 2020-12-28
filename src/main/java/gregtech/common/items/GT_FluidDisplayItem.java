@@ -2,6 +2,7 @@ package gregtech.common.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregtech.GT_Mod;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
 import gregtech.api.items.GT_Generic_Item;
@@ -18,6 +19,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class GT_FluidDisplayItem
         extends GT_Generic_Item {
@@ -49,6 +52,14 @@ public class GT_FluidDisplayItem
     }
 
     public IIcon getIconFromDamage(int aMeta) {
+        if (GT_Mod.gregtechproxy.betterFluidDisplay) {
+            return Stream.of(FluidRegistry.getFluid(aMeta), FluidRegistry.WATER)
+                    .filter(Objects::nonNull)
+                    .map(Fluid::getStillIcon)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElseThrow(IllegalStateException::new);
+        }
         Fluid tFluid = FluidRegistry.getFluid(aMeta);
         return tFluid == null ? FluidRegistry.WATER.getStillIcon() : tFluid.getStillIcon();
     }
