@@ -1,5 +1,6 @@
 package gregtech.common.render;
 
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.ItemList;
 import gregtech.common.items.GT_FluidDisplayItem;
@@ -13,7 +14,7 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 
-@SideOnly(cpw.mods.fml.relauncher.Side.CLIENT)
+@SideOnly(Side.CLIENT)
 public class GT_FluidDisplayStackRenderer implements IItemRenderer {
 
     public GT_FluidDisplayStackRenderer() {
