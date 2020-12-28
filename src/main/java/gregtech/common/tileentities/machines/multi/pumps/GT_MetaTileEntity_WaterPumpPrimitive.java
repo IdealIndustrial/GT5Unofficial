@@ -74,8 +74,7 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
     }
 
     public boolean checkRecipe(ItemStack aStack) {
-
-        if (!depleteInput(GT_ModHandler.getSteam(100)))
+        if (!depleteInput(GT_ModHandler.getSteam(40)))
             return false;
         this.mEfficiencyIncrease = 10000;
         this.mMaxProgresstime = 10;
