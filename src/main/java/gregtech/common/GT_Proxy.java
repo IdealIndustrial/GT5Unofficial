@@ -679,7 +679,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignored) {
 
             }
-//-Xincgc -Xmx8096M -Xms3024M -XX:+UnlockCommercialFeatures
+            
             try {
                 Class cl = Class.forName("codechicken.nei.recipe.FuelRecipeHandler");
                 Field fuels = cl.getField("afuels");
