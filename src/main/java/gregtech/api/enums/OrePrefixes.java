@@ -663,7 +663,7 @@ public enum OrePrefixes {
                         arrowGtWood.mDisabledItems.add(aMaterial);
                 }
                 //Plates
-                if (!enableUnusedPlates && ((aMaterial.mTypes & 0x40) == 0) && !(aMaterial == Materials.Blaze || aMaterial == Materials.Silicon || aMaterial == Materials.Zinc ||
+                if (!enableUnusedPlates && ((aMaterial.mTypes & 0x40) == 0) && !(aMaterial == Materials.Apatite || aMaterial == Materials.Blaze || aMaterial == Materials.Silicon || aMaterial == Materials.Zinc ||
                         aMaterial == Materials.Europium || aMaterial == Materials.Americium || aMaterial == Materials.RedAlloy || aMaterial == Materials.SolderingAlloy || aMaterial == Materials.BatteryAlloy ||
                         aMaterial == Materials.AnnealedCopper || aMaterial == Materials.Firestone || aMaterial == Materials.VanadiumGallium || aMaterial == Materials.YttriumBariumCuprate ||
                         aMaterial == Materials.NiobiumTitanium || aMaterial == Materials.CertusQuartz || aMaterial == Materials.NetherQuartz || aMaterial == Materials.Lazurite || aMaterial == Materials.Lapis ||
