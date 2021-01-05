@@ -190,7 +190,8 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
-        aNBT.setTag("fFluid", fluid.writeToNBT(new NBTTagCompound()));
+        if (fluid != null)
+            aNBT.setTag("fFluid", fluid.writeToNBT(new NBTTagCompound()));
         super.saveNBTData(aNBT);
     }
 
