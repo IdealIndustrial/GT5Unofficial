@@ -1,4 +1,4 @@
-package gregtech.common;
+package idealindustial.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;

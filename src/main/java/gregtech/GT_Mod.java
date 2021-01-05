@@ -35,6 +35,7 @@ import gregtech.loaders.preload.*;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeOutput;
 import idealindustial.II_Core;
+import idealindustial.commands.CommandFixQuests;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -104,7 +105,6 @@ public class GT_Mod implements IGT_Mod {
 
     @Mod.EventHandler
     public void onPreLoad(FMLPreInitializationEvent aEvent) {
-        II_Core.onPreLoad(aEvent);
         Locale.setDefault(Locale.ENGLISH);
         if (GregTech_API.sPreloadStarted) {
             return;
@@ -1077,8 +1077,6 @@ public class GT_Mod implements IGT_Mod {
                 GT_OreDictUnificator.setStack(tOutput);
             }
         }
-        if(gregtechproxy.enableFixQuestsCommand)
-            aEvent.registerServerCommand(new CommandFixQuests());
         GregTech_API.mServerStarted = true;
         GT_Log.out.println("GT_Mod: ServerStarting-Phase finished!");
         GT_Log.ore.println("GT_Mod: ServerStarting-Phase finished!");
