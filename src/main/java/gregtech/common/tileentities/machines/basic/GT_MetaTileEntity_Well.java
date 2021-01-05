@@ -26,7 +26,7 @@ import static gregtech.api.enums.GT_Values.NW;
 
 public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
 
-    private static ArrayList<Fluid> allowedFluids = new ArrayList<>();
+    private static final ArrayList<Fluid> allowedFluids = new ArrayList<>();
     private FluidStack fluid = null;
     private int mProgresstime = 0;
     private static double mEfficiency = 1f;
@@ -80,7 +80,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
                 if (fluid.amount >= 1000) {
                     aBaseMetaTileEntity.setActive(true);
                     fluid.amount = 1000;
-                    NW.sendPacketToAllPlayersInRange(getBaseMetaTileEntity().getWorld(), new GT_Packet_ExtendedBlockEvent(getBaseMetaTileEntity().getXCoord(), (short) getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord(), 129, fluid.getFluidID()), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
+                    NW.sendPacketToAllPlayersInRange(getBaseMetaTileEntity().getWorld(), new GT_Packet_ExtendedBlockEvent(getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord(), 129, fluid.getFluidID()), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
                 }
             }
         }
@@ -117,7 +117,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
             ar[0] = new GT_RenderedTexture(new GT_IconContainer(fluid.getFluid().getStillIcon(), null, null));
             return ar;
         }
-        return mTextures[aSide == 0 ? 7 : aSide == 1 ? aActive ? 4 : 5 : aSide > 1 && aSide < 6 ? 3 : 4][aColorIndex + 1];
+        return mTextures[aSide == 0 ? 7 : aSide == 1 ? 5 : aSide > 1 && aSide < 6 ? 3 : 4][aColorIndex + 1];
 
     }
 
@@ -180,7 +180,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
             aPlayer.setCurrentItemOrArmor(0, aStack);
             fluid = null;
             getBaseMetaTileEntity().setActive(false);
-            NW.sendPacketToAllPlayersInRange(getBaseMetaTileEntity().getWorld(), new GT_Packet_ExtendedBlockEvent(getBaseMetaTileEntity().getXCoord(), (short) getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord(), 130, 0), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
+            NW.sendPacketToAllPlayersInRange(getBaseMetaTileEntity().getWorld(), new GT_Packet_ExtendedBlockEvent(getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord(), 130, 0), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
 
             return true;
         }
