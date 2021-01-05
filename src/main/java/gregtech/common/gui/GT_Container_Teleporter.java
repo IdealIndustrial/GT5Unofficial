@@ -50,7 +50,7 @@ public class GT_Container_Teleporter
 
     @Override
     public ItemStack slotClick(int aSlotIndex, int aMouseclick, int aShifthold, EntityPlayer aPlayer) {
-        if (aSlotIndex < 0) {
+        if (aSlotIndex < 0 || aShifthold == 6) {
             return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
         }
         Slot tSlot = (Slot) this.inventorySlots.get(aSlotIndex);
@@ -121,9 +121,8 @@ public class GT_Container_Teleporter
         this.mTargetD = ((GT_MetaTileEntity_Teleporter) this.mTileEntity.getMetaTileEntity()).mTargetD;
         this.mEgg = (((GT_MetaTileEntity_Teleporter) this.mTileEntity.getMetaTileEntity()).hasDimensionalTeleportCapability() ? 1 : 0);
 
-        Iterator var2 = this.crafters.iterator();
-        while (var2.hasNext()) {
-            ICrafting var1 = (ICrafting) var2.next();
+        for (Object crafter : this.crafters) {
+            ICrafting var1 = (ICrafting) crafter;
             var1.sendProgressBarUpdate(this, 100, this.mTargetX & 0xFFFF);
             var1.sendProgressBarUpdate(this, 101, this.mTargetX >>> 16);
             var1.sendProgressBarUpdate(this, 102, this.mTargetY & 0xFFFF);
