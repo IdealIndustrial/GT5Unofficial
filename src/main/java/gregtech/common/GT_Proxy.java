@@ -1,8 +1,5 @@
 package gregtech.common;
 
-import codechicken.nei.recipe.FurnaceRecipeHandler;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -30,6 +27,7 @@ import gregtech.api.objects.*;
 import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
 import gregtech.api.util.*;
 import gregtech.common.blocks.GT_Item_Machines;
+import gregtech.common.config.GT_DebugConfig;
 import gregtech.common.entities.GT_Entity_Arrow;
 import gregtech.common.gui.GT_ContainerVolumetricFlask;
 import gregtech.common.gui.GT_GUIContainerVolumetricFlask;
@@ -659,7 +657,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             GT_NEI_DefaultHandler.inputMaps = new HashMap<>();
             GT_NEI_DefaultHandler.outputMaps = new HashMap<>();
-            if (debugRecipeConflicts) {
+            if (GT_DebugConfig.recipeConflicts) {
                 mConflictMaps.forEach((map, recipes) -> {
                     HashMap<GT_NEIItemStack, List<GT_Recipe>> inMap = GT_NEI_DefaultHandler.inputMaps.computeIfAbsent(map, m-> new HashMap<>());
 
