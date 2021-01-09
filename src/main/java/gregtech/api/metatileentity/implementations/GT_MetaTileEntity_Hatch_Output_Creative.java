@@ -6,6 +6,7 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -80,12 +81,14 @@ public class GT_MetaTileEntity_Hatch_Output_Creative extends GT_MetaTileEntity_H
             if (tTileEntity != null) {
                 for (boolean temp = true; temp && mFluid != null; ) {
                     temp = false;
-                    FluidStack tDrained = aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), Math.max(1, mFluid.amount), false);
+                    FluidStack tDrained = aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), 1, false);
                     if (tDrained != null) {
+                        tDrained.amount = 100_000;
                         int tFilledAmount = tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), tDrained, false);
+                        tDrained.amount = tFilledAmount;
                         if (tFilledAmount > 0) {
                             temp = true;
-                            tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), aBaseMetaTileEntity.drain(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFrontFacing()), tFilledAmount, true), true);
+                            tTileEntity.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), tDrained, true);
                         }
                     }
                 }
@@ -161,11 +164,31 @@ public class GT_MetaTileEntity_Hatch_Output_Creative extends GT_MetaTileEntity_H
             if (doesEmptyContainers()) {
                 FluidStack tFluid = GT_Utility.getFluidForFilledItem(mInventory[getInputSlot()], true);
                 if (tFluid != null && isFluidInputAllowed(tFluid)) {
-                    tFluid.amount = 100000;
-                } else {
-                    tFluid = getWater(100000);
+                    if (getFillableStack() == null) {
+                        if (isFluidInputAllowed(tFluid) && tFluid.amount <= getCapacity()) {
+                            if (aBaseMetaTileEntity.addStackToSlot(getOutputSlot(), GT_Utility.getContainerItem(mInventory[getInputSlot()], true), 1)) {
+                                setFillableStack(tFluid.copy());
+                                this.onEmptyingContainerWhenEmpty();
+                                aBaseMetaTileEntity.decrStackSize(getInputSlot(), 1);
+                            }
+                        }
+                    } else {
+                        if (tFluid.isFluidEqual(getFillableStack())) {
+                            if (aBaseMetaTileEntity.addStackToSlot(getOutputSlot(), GT_Utility.getContainerItem(mInventory[getInputSlot()], true), 1)) {
+                                getFillableStack().amount += tFluid.amount;
+                                aBaseMetaTileEntity.decrStackSize(getInputSlot(), 1);
+                            }
+                        }
+                        else {
+                            tFluid.amount = 100_000;
+                            setFillableStack(tFluid);
+                        }
+
+                    }
                 }
-                setFillableStack(tFluid.copy());
+                else if (tFluid == null && mFluid == null) {
+                    mFluid = GT_ModHandler.getWater(100_000);
+                }
             }
 
             if (doesFillContainers()) {
@@ -177,6 +200,7 @@ public class GT_MetaTileEntity_Hatch_Output_Creative extends GT_MetaTileEntity_H
                     if (getDrainableStack().amount <= 0 && isFluidChangingAllowed()) setDrainableStack(null);
                 }
             }
-        }
+           mFluid.amount = 100_000;
+       }
     }
 }

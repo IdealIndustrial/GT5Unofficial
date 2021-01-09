@@ -3,6 +3,7 @@ package gregtech.api.util;
 import cofh.api.transport.IItemDuct;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
+import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.damagesources.GT_DamageSources;
 import gregtech.api.enchants.Enchantment_Radioactivity;
@@ -795,9 +796,20 @@ public class GT_Utility {
         } catch (Exception e) {
             System.err.println(e);
         }
-        ItemStack rStack = ItemList.Display_Fluid.getWithDamage(aUseStackSize ? aFluid.amount / 1000 : 1, tmp);
+        ItemStack rStack;
+        if (GT_Mod.gregtechproxy.betterFluidDisplay) {
+            rStack = ItemList.Display_Fluid.getWithDamage(1, tmp);
+        }
+        else {
+            rStack = ItemList.Display_Fluid.getWithDamage(aUseStackSize ? aFluid.amount / 1000 : 1, tmp);
+        }
         NBTTagCompound tNBT = new NBTTagCompound();
-        tNBT.setLong("mFluidDisplayAmount", aFluid.amount);
+        if (GT_Mod.gregtechproxy.betterFluidDisplay) {
+            tNBT.setLong("mFluidDisplayAmount", aUseStackSize ? aFluid.amount : 0);
+        }
+        else {
+            tNBT.setLong("mFluidDisplayAmount", aFluid.amount);
+        }
         tNBT.setLong("mFluidDisplayHeat", aFluid.getFluid().getTemperature(aFluid));
         tNBT.setBoolean("mFluidState", aFluid.getFluid().isGaseous(aFluid));
         rStack.setTagCompound(tNBT);

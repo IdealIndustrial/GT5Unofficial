@@ -2,17 +2,20 @@ package gregtech.common.tileentities.machines.multi.pumps;
 
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
+import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_RenderedTexture;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_WaterPumpBase{
-
+    public static int[] SPEED = new int[]{80, 80, 40, 20, 10, 5,5,2,2,2,2},
+            ENERGY = new int[]{8, 4, 16, 64, 256, 1024, 2048 ,32768,131072,524288};
     public int mTier;
 
     public GT_MetaTileEntity_WaterPumpElectric(int aID, String aName, String aNameRegional, int aTier) {
@@ -57,10 +60,16 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
     }
 
     public boolean checkRecipe(ItemStack aStack) {
-        mEUt = (int)-Math.pow(4,getTier());
+        mEUt = -ENERGY[getTier()];
         this.mEfficiencyIncrease = 10000;
         this.mMaxProgresstime = 10;
         return true;
+    }
+
+    @Override
+    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
+        String guiLocalName = trans("gt.blockmachines." + mName + ".guiname", (getTier() == 1 ? getLocalName() : ("Advanced Water Pump ") + (getTier() == 2 ? "" : getTier() == 3 ? "II" : getTier() == 4 ? "III" : "IV")));
+       return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, guiLocalName, "MultiblockDisplay.png");
     }
 
     @Override
@@ -105,7 +114,7 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
 
     @Override
     public double getOutputRate() {
-        return (12.5d*Math.pow(2,getTier()));
+        return 1000d/SPEED[getTier()];
     }
 
     @Override

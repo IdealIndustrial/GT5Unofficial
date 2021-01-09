@@ -36,6 +36,7 @@ import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
 import gregtech.common.items.behaviors.Behaviour_ProspectorsBook;
 import gregtech.nei.GT_NEI_DefaultHandler;
+import ic2.core.item.block.ItemDynamite;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -237,7 +238,11 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean disassemblerRecipeMapOn = false;
     public boolean enableFixQuestsCommand = true;
     public boolean allowDisableToolTips = false;
-
+    public boolean debugRecipeConflicts = true;
+    public boolean betterFluidDisplay = true;
+    public boolean fixAE2SpatialPilons = false;
+    public List<String> debugRecipeMapsFilter = Collections.emptyList();
+    
     public GT_Proxy() {
         GameRegistry.registerFuelHandler(this);
         MinecraftForge.EVENT_BUS.register(this);
@@ -276,6 +281,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public void onPreLoad() {
+
+
+
         GT_Log.out.println("GT_Mod: Preload-Phase started!");
         GT_Log.ore.println("GT_Mod: Preload-Phase started!");
 
@@ -667,6 +675,18 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                 uses.set(null, new HashMap<>());
                 recipe.set(null, new HashMap<>());
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignored) {
+
+            }
+            
+            try {
+                Class cl = Class.forName("codechicken.nei.recipe.FuelRecipeHandler");
+                Field fuels = cl.getField("afuels");
+                ArrayList list = (ArrayList)fuels.get(null);
+                if (list != null) {
+                    list = (ArrayList) list.stream().filter(Objects::nonNull).collect(Collectors.toList());
+                    fuels.set(null, list);
+                }
+            } catch (Exception ignored) {
 
             }
 
