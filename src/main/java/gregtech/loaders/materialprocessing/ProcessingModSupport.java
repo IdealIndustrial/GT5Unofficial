@@ -153,7 +153,7 @@ public class ProcessingModSupport implements gregtech.api.interfaces.IMaterialHa
         }
         if (!aEnableThermalFoundationMats) {
             Materials.Blizz.mHasParentMod = false;
-            Materials.Enderium.mHasParentMod = false;
+            //Materials.Enderium.mHasParentMod = false;
         }
         if (!aEnableRotaryCraftMats) {
             Materials.HSLA.mHasParentMod = false;
