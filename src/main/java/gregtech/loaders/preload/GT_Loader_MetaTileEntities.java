@@ -301,11 +301,11 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Output_UV.get(1L, new Object[0]), bitsd, new Object[]{"M", "G", 'M', ItemList.Hull_UV, 'G', Ic2Items.reinforcedGlass});
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Output_MAX.get(1L, new Object[0]), bitsd, new Object[]{"M", "G", 'M', ItemList.Hull_MAX, 'G', Ic2Items.reinforcedGlass});
 
-        ItemList.Quantum_Tank_LV.set(new GT_MetaTileEntity_QuantumTank(120, "quantum.tank.tier.01", "HV Quantum Tank", 1).getStackForm(1L));
-        ItemList.Quantum_Tank_MV.set(new GT_MetaTileEntity_QuantumTank(121, "quantum.tank.tier.02", "EV Quantum Tank", 2).getStackForm(1L));
-        ItemList.Quantum_Tank_HV.set(new GT_MetaTileEntity_QuantumTank(122, "quantum.tank.tier.03", "IV Quantum Tank", 3).getStackForm(1L));
-        ItemList.Quantum_Tank_EV.set(new GT_MetaTileEntity_QuantumTank(123, "quantum.tank.tier.04", "LuV Quantum Tank", 4).getStackForm(1L));
-        ItemList.Quantum_Tank_IV.set(new GT_MetaTileEntity_QuantumTank(124, "quantum.tank.tier.05", "ZPM Quantum Tank", 5).getStackForm(1L));
+        ItemList.Quantum_Tank_LV.set(new GT_MetaTileEntity_QuantumTank(120, "quantum.tank.tier.01", "Quantum Tank I", 1).getStackForm(1L));
+        ItemList.Quantum_Tank_MV.set(new GT_MetaTileEntity_QuantumTank(121, "quantum.tank.tier.02", "Quantum Tank II", 2).getStackForm(1L));
+        ItemList.Quantum_Tank_HV.set(new GT_MetaTileEntity_QuantumTank(122, "quantum.tank.tier.03", "Quantum Tank III", 3).getStackForm(1L));
+        ItemList.Quantum_Tank_EV.set(new GT_MetaTileEntity_QuantumTank(123, "quantum.tank.tier.04", "Quantum Tank IV", 4).getStackForm(1L));
+        ItemList.Quantum_Tank_IV.set(new GT_MetaTileEntity_QuantumTank(124, "quantum.tank.tier.05", "Quantum Tank V", 5).getStackForm(1L));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Quantum_Tank_LV.get(1L, new Object[0]), bitsd, new Object[]{"DGD", aTextPlateMotor, "DPD", 'M', ItemList.Hull_LV, 'G', ItemList.Field_Generator_LV, 'D', OrePrefixes.circuit.get(Materials.Advanced), 'P', OrePrefixes.plate.get(Materials.StainlessSteel)});
         GT_ModHandler.addCraftingRecipe(ItemList.Quantum_Tank_MV.get(1L, new Object[0]), bitsd, new Object[]{"DGD", aTextPlateMotor, "DPD", 'M', ItemList.Hull_MV, 'G', ItemList.Field_Generator_MV, 'D', OrePrefixes.circuit.get(Materials.Data), 'P', OrePrefixes.plate.get(Materials.Titanium)});
@@ -313,11 +313,11 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Quantum_Tank_EV.get(1L, new Object[0]), bitsd, new Object[]{"DGD", aTextPlateMotor, "DPD", 'M', ItemList.Hull_EV, 'G', ItemList.Field_Generator_EV, 'D', OrePrefixes.circuit.get(Materials.Master), 'P', OrePrefixes.plate.get(Materials.Europium)});
         GT_ModHandler.addCraftingRecipe(ItemList.Quantum_Tank_IV.get(1L, new Object[0]), bitsd, new Object[]{"DGD", aTextPlateMotor, "DPD", 'M', ItemList.Hull_IV, 'G', ItemList.Field_Generator_IV, 'D', OrePrefixes.circuit.get(Materials.Ultimate), 'P', OrePrefixes.plate.get(Materials.Americium)});
 
-        ItemList.Quantum_Chest_LV.set(new GT_MetaTileEntity_QuantumChest(125, "quantum.chest.tier.01", "HV Quantum Chest", 1).getStackForm(1L));
-        ItemList.Quantum_Chest_MV.set(new GT_MetaTileEntity_QuantumChest(126, "quantum.chest.tier.02", "EV Quantum Chest", 2).getStackForm(1L));
-        ItemList.Quantum_Chest_HV.set(new GT_MetaTileEntity_QuantumChest(127, "quantum.chest.tier.03", "IV Quantum Chest", 3).getStackForm(1L));
-        ItemList.Quantum_Chest_EV.set(new GT_MetaTileEntity_QuantumChest(128, "quantum.chest.tier.04", "LuV Quantum Chest", 4).getStackForm(1L));
-        ItemList.Quantum_Chest_IV.set(new GT_MetaTileEntity_QuantumChest(129, "quantum.chest.tier.05", "ZPM Quantum Chest", 5).getStackForm(1L));
+        ItemList.Quantum_Chest_LV.set(new GT_MetaTileEntity_QuantumChest(125, "quantum.chest.tier.01", "Quantum Chest I", 1).getStackForm(1L));
+        ItemList.Quantum_Chest_MV.set(new GT_MetaTileEntity_QuantumChest(126, "quantum.chest.tier.02", "Quantum Chest II", 2).getStackForm(1L));
+        ItemList.Quantum_Chest_HV.set(new GT_MetaTileEntity_QuantumChest(127, "quantum.chest.tier.03", "Quantum Chest III", 3).getStackForm(1L));
+        ItemList.Quantum_Chest_EV.set(new GT_MetaTileEntity_QuantumChest(128, "quantum.chest.tier.04", "Quantum Chest IV", 4).getStackForm(1L));
+        ItemList.Quantum_Chest_IV.set(new GT_MetaTileEntity_QuantumChest(129, "quantum.chest.tier.05", "Quantum Chest V", 5).getStackForm(1L));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Quantum_Chest_LV.get(1L, new Object[0]), bitsd, new Object[]{"DPD", aTextPlateMotor, "DGD", 'M', ItemList.Hull_LV, 'G', ItemList.Field_Generator_LV, 'D', OrePrefixes.circuit.get(Materials.Advanced), 'P', OrePrefixes.plate.get(Materials.StainlessSteel)});
         GT_ModHandler.addCraftingRecipe(ItemList.Quantum_Chest_MV.get(1L, new Object[0]), bitsd, new Object[]{"DPD", aTextPlateMotor, "DGD", 'M', ItemList.Hull_MV, 'G', ItemList.Field_Generator_MV, 'D', OrePrefixes.circuit.get(Materials.Data), 'P', OrePrefixes.plate.get(Materials.Titanium)});
