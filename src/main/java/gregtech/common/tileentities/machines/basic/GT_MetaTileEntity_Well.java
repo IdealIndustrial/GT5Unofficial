@@ -199,6 +199,7 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
         fluid = FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag("fFluid"));
+        getBaseMetaTileEntity().rebakeMap();
     }
 
 
