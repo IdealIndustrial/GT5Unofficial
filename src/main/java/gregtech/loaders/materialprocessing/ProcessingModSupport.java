@@ -30,7 +30,7 @@ public class ProcessingModSupport implements gregtech.api.interfaces.IMaterialHa
             Materials.Alunite.mHasParentMod = false;
             Materials.Asbestos.mHasParentMod = false;
             Materials.BasalticMineralSand.mHasParentMod = false;
-            Materials.Borax.mHasParentMod = false;
+            //Materials.Borax.mHasParentMod = false;
             Materials.CassiteriteSand.mHasParentMod = false;
             //Materials.Chromite.mHasParentMod = false;
             Materials.Chrysotile.mHasParentMod = false;
@@ -57,7 +57,7 @@ public class ProcessingModSupport implements gregtech.api.interfaces.IMaterialHa
             Materials.Gadolinium.mHasParentMod = false;
             Materials.Holmium.mHasParentMod = false;
             //Materials.Indium.mHasParentMod = false;
-            Materials.Lanthanum.mHasParentMod = false;
+            //Materials.Lanthanum.mHasParentMod = false;
             Materials.Praseodymium.mHasParentMod = false;
             Materials.Promethium.mHasParentMod = false;
             Materials.Rubidium.mHasParentMod = false;
@@ -141,9 +141,9 @@ public class ProcessingModSupport implements gregtech.api.interfaces.IMaterialHa
         }
         if (!aEnableTwilightMats) {
             Materials.FierySteel.mHasParentMod = false;
-            Materials.LiveRoot.mHasParentMod = false;
+            //Materials.LiveRoot.mHasParentMod = false;
             Materials.IronWood.mHasParentMod = false;
-            Materials.Steeleaf.mHasParentMod = false;
+            //Materials.Steeleaf.mHasParentMod = false;
             Materials.Knightmetal.mHasParentMod = false;
         }
         if (!aEnableGCMarsMats) {
