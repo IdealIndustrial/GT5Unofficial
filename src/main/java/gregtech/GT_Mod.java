@@ -316,7 +316,6 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.disassemblerRecipeMapOn = tMainConfig.get("general","DisasssemblerRecipeMapEnabled", true).getBoolean(true);
         gregtechproxy.enableFixQuestsCommand = tMainConfig.get("general", "EnableUpdateQuestsCommand", false).getBoolean(false);
         gregtechproxy.allowDisableToolTips = tMainConfig.get("general", "AllowDisablingLargeTooltips", true).getBoolean(true);
-        gregtechproxy.debugRecipeConflicts = tMainConfig.get("general", "DebugRecipeConflicts", true).getBoolean(true);
         gregtechproxy.debugRecipeMapsFilter = Arrays.asList(tMainConfig.get("general", "DebugRecipeMapsFilter", "|").getString().split("\\|"));
         gregtechproxy.fixAE2SpatialPilons = tMainConfig.get("general", "FixAE2Spatials", false).getBoolean(false);
         gregtechproxy.betterFluidDisplay = tMainConfig.get("general", "BetterFluidDisplay", true).getBoolean(true);

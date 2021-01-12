@@ -1,6 +1,6 @@
 package gregtech.common.config;
 
-import gregtech.HookContainer;
+import idealindustial.hooks.HookContainer;
 import gregtech.api.interfaces.internal.GT_Config;
 import gregtech.api.interfaces.internal.IGT_Config;
 import net.minecraftforge.common.config.Configuration;
@@ -32,7 +32,7 @@ public class GT_DebugConfig implements IGT_Config {
 
         for (String s : mapWrongMaterialIDs) {
             String[] kv = s.split("->");
-            HookContainer.subIDsMap.put(Integer.valueOf(kv[0]), Integer.valueOf(kv[1]));
+          //  HookContainer.subIDsMap.put(Integer.valueOf(kv[0]), Integer.valueOf(kv[1]));
         }
     }
 
