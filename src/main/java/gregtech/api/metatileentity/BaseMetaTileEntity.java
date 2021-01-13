@@ -889,7 +889,6 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     public void validate() {
         super.validate();
         mTickTimer = 0;
-        mShouldTick = true;
     }
 
     @Override
@@ -900,7 +899,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             if (!GT_Mod.gregtechproxy.fixAE2SpatialPilons)
                 mMetaTileEntity.setBaseMetaTileEntity(null);
         }
-        mShouldTick = false;
+
         super.invalidate();
     }
 

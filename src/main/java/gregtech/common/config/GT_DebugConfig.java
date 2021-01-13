@@ -1,6 +1,5 @@
 package gregtech.common.config;
 
-import idealindustial.hooks.HookContainer;
 import gregtech.api.interfaces.internal.GT_Config;
 import gregtech.api.interfaces.internal.IGT_Config;
 import net.minecraftforge.common.config.Configuration;
