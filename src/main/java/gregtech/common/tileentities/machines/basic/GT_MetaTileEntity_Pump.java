@@ -122,7 +122,8 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
         if(aBaseTileEntity.getAirOffset(aX,aY,aZ))
             return false;
         Block tBlock = aBaseTileEntity.getBlockOffset(aX,aY,aZ);
-        if(tBlock == Blocks.water){
+        int aMeta = aBaseTileEntity.getMetaIDOffset(aX, aY, aZ);
+        if(tBlock == Blocks.water && aMeta == 0){
             if(aBaseTileEntity.getWorld().setBlock(aBaseTileEntity.getXCoord()+aX,aBaseTileEntity.getYCoord()+aY,aBaseTileEntity.getZCoord()+aZ,Blocks.air,0,2)) {
                 if (mOutputFluid == null)
                     mOutputFluid = GT_ModHandler.getWater(1000L);
@@ -132,7 +133,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
             }
 
         }
-        else if(tBlock == Blocks.lava){
+        else if(tBlock == Blocks.lava && aMeta == 0){
             if(aBaseTileEntity.getWorld().setBlock(aBaseTileEntity.getXCoord()+aX,aBaseTileEntity.getYCoord()+aY,aBaseTileEntity.getZCoord()+aZ,Blocks.air,0,2)) {
                 if (mOutputFluid == null)
                     mOutputFluid = GT_ModHandler.getLava(1000L);
@@ -142,7 +143,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
             }
 
         }
-        else if(tBlock == Blocks.flowing_lava || tBlock == Blocks.flowing_water) {
+        else if(tBlock == Blocks.lava || tBlock == Blocks.water) {
             aBaseTileEntity.getWorld().setBlock(aBaseTileEntity.getXCoord() + aX, aBaseTileEntity.getYCoord() + aY, aBaseTileEntity.getZCoord() + aZ,Blocks.air,0,2);
             return true;
         }
