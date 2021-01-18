@@ -829,4 +829,9 @@ public abstract class MetaPipeEntity implements IMetaTileEntity, IConnectable {
     public boolean isWaterProofByDefault() {
         return false;
     }
+
+    @Override
+    public void sendClientData() {
+
+    }
 }

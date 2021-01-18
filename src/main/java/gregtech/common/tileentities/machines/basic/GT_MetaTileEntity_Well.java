@@ -132,6 +132,14 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
     }
 
     @Override
+    public void sendClientData() {
+        if (fluid == null)
+            NW.sendPacketToAllPlayersInRange(getBaseMetaTileEntity().getWorld(), new GT_Packet_ExtendedBlockEvent(getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord(), 130, 0), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
+        else
+            NW.sendPacketToAllPlayersInRange(getBaseMetaTileEntity().getWorld(), new GT_Packet_ExtendedBlockEvent(getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord(), 129, fluid.getFluidID()), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
+    }
+
+    @Override
     public ITexture[][][] getTextureSet(ITexture[] aTextures) {
         ITexture[][][] rTextures = new ITexture[14][17][];
         aTextures = Arrays.copyOf(aTextures, 14);
@@ -181,7 +189,6 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
             fluid = null;
             getBaseMetaTileEntity().setActive(false);
             NW.sendPacketToAllPlayersInRange(getBaseMetaTileEntity().getWorld(), new GT_Packet_ExtendedBlockEvent(getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord(), 130, 0), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord());
-
             return true;
         }
         GT_Utility.sendChatToPlayer(aPlayer, "Currently is ready");

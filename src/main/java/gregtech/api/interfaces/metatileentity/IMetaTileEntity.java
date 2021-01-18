@@ -410,4 +410,6 @@ public interface IMetaTileEntity extends ISidedInventory, IFluidTank, IFluidHand
     void receiveExtendedBlockEvent(int aID, int aValue);
 
     boolean isWaterProofByDefault();
+
+    void sendClientData();
 }
