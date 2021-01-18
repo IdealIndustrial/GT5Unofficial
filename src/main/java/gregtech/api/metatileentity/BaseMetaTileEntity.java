@@ -122,7 +122,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             aNBT.setBoolean("mActive", mActive);
             aNBT.setBoolean("mRedstone", mRedstone);
             aNBT.setBoolean("mWorks", !mWorks);
-            aNBT.setBoolean("mWaterProof", mWaterProof);
+            if (mWaterProof)
+                aNBT.setBoolean("mWaterProof", mWaterProof);
             aNBT.setBoolean("mInputDisabled", mInputDisabled);
             aNBT.setBoolean("mOutputDisabled", mOutputDisabled);
             aNBT.setTag("GT.CraftingComponents", mRecipeStuff);
