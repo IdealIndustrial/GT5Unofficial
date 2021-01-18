@@ -15,7 +15,7 @@ public class II_RemapGTMaterialsPatch {
 
     @Hook(injectOnExit = true, returnCondition = ReturnCondition.ALWAYS)
     public static ItemStack loadItemStackFromNBT(ItemStack defined, NBTTagCompound nbt, @Hook.ReturnValue ItemStack stack) {
-        if (GT_DebugConfig.enableMapWrongMaterials && stack != null && stack.getItem() instanceof GT_MetaGenerated_Item && subIDsMap.containsKey(stack.getItemDamage() % 1000)) {
+        if (stack != null && stack.getItem() instanceof GT_MetaGenerated_Item && subIDsMap.containsKey(stack.getItemDamage() % 1000)) {
             fixMeta(stack, nbt);
         }
         return stack;
@@ -32,7 +32,7 @@ public class II_RemapGTMaterialsPatch {
 
     @Hook(injectOnExit = true, returnCondition = ReturnCondition.ALWAYS)
     public static NBTTagCompound writeToNBT(ItemStack stack, NBTTagCompound p_77955_1_, @Hook.ReturnValue NBTTagCompound nbt) {
-        if (GT_DebugConfig.enableMapWrongMaterials && stack != null && stack.getItem() instanceof GT_MetaGenerated_Item && subIDsMap.containsKey(stack.getItemDamage() % 1000)) {
+        if (stack != null && stack.getItem() instanceof GT_MetaGenerated_Item && subIDsMap.containsKey(stack.getItemDamage() % 1000)) {
             fixMeta(stack, nbt);
         }
         return nbt;

@@ -2,6 +2,7 @@ package gregtech.common.config;
 
 import gregtech.api.interfaces.internal.GT_Config;
 import gregtech.api.interfaces.internal.IGT_Config;
+import idealindustrial.hooks.II_RemapGTMaterialsPatch;
 import net.minecraftforge.common.config.Configuration;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,15 +15,12 @@ public class GT_DebugConfig implements IGT_Config {
     @GT_Config(category = "recipes", configComment = "sets filters for GT_Recipes.log by class-recipeLoader name, all filters are applied with OR with String.contains(filter)")
     public static String[] recipeSourcesFilter = new String[]{"GT"};
 
-    @GT_Config(category = "extracells2", configComment = "probably fixes EC2 fluid interface filter mess up")
-    public static boolean fixEC2FluidInterfaces = false;
+
     @GT_Config(category = "extracells2", configComment = "enables fluid spam in GT ( adds 2000-3000 useless fluids), used for EC2 fluid interface testing")
     public static boolean addTrashFluids = false;
 
-    @GT_Config(category = "materials", configComment = "Enables meta generated items reMap feature")
-    public static boolean enableMapWrongMaterials = false;
     @GT_Config(category = "materials", configComment = "Remaps all meta generated gt items by materials (for eg. \"33->35\" maps all world cobalt items to copper ones)")
-    protected static String[] mapWrongMaterialIDs = new String[]{"33->35"};
+    protected static String[] mapWrongMaterialIDs = new String[]{"381->379", "379->380", "365->368", "380->381"};
 
 
     @Override
@@ -31,7 +29,7 @@ public class GT_DebugConfig implements IGT_Config {
 
         for (String s : mapWrongMaterialIDs) {
             String[] kv = s.split("->");
-          //  HookContainer.subIDsMap.put(Integer.valueOf(kv[0]), Integer.valueOf(kv[1]));
+            II_RemapGTMaterialsPatch.subIDsMap.put(Integer.valueOf(kv[0]), Integer.valueOf(kv[1]));
         }
     }
 

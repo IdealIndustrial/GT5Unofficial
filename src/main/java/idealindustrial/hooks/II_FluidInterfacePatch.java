@@ -11,8 +11,6 @@ public class II_FluidInterfacePatch {
 
     @Hook(injectOnExit = true, isMandatory = true)
     public static void readFromNBT(TileEntityFluidInterface face, NBTTagCompound tag) {
-        if (!GT_DebugConfig.fixEC2FluidInterfaces)
-            return;
         for (int i = 0; i < face.tanks.length; i++) {
             if (!tag.hasKey("notShittyFluidID" + i))
                 continue;
@@ -27,8 +25,6 @@ public class II_FluidInterfacePatch {
 
     @Hook(injectOnExit = true, isMandatory = true)
     public static void writeToNBTWithoutExport(TileEntityFluidInterface face, NBTTagCompound tag) {
-        if (!GT_DebugConfig.fixEC2FluidInterfaces)
-            return;
         for (int i = 0; i < face.tanks.length; i++) {
             int id = face.fluidFilter[i];
             Fluid fluid = FluidRegistry.getFluid(id);
