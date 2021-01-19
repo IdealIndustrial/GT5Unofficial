@@ -122,8 +122,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             aNBT.setBoolean("mActive", mActive);
             aNBT.setBoolean("mRedstone", mRedstone);
             aNBT.setBoolean("mWorks", !mWorks);
-            if (mWaterProof)
-                aNBT.setBoolean("mWaterProof", mWaterProof);
+            aNBT.setBoolean("mWaterProof", mWaterProof);
             aNBT.setBoolean("mInputDisabled", mInputDisabled);
             aNBT.setBoolean("mOutputDisabled", mOutputDisabled);
             aNBT.setTag("GT.CraftingComponents", mRecipeStuff);
@@ -1148,11 +1147,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         return mTextures[mActive?1:0][mColor];
     }
 
-    /*aNBT.setIntArray("mCoverData", mCoverData);
-            aNBT.setIntArray("mCoverSides", mCoverSides);
-            aNBT.setByte("mColor", mColor);*/
-
-    private static int[] EMPTY = new int[]{0,0,0,0,0,0};
+    private static final int[] EMPTY = new int[]{0,0,0,0,0,0};
 
     @Override
     public ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers) {
@@ -1402,7 +1397,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         if (mColor > 0) tNBT.setByte("mColor", mColor);
         if (mOtherUpgrades > 0) tNBT.setByte("mOtherUpgrades", mOtherUpgrades);
         if (mStrongRedstone > 0) tNBT.setByte("mStrongRedstone", mStrongRedstone);
-        tNBT.setBoolean("mWaterProof", mWaterProof);
+        if (mWaterProof) tNBT.setBoolean("mWaterProof", mWaterProof);
         for (byte i = 0; i < mCoverSides.length; i++) {
             if (mCoverSides[i] != 0) {
                 tNBT.setIntArray("mCoverData", mCoverData);
