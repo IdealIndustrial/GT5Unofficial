@@ -50,7 +50,7 @@ public class II_PatchConfig {
 
     static {
         Class<? extends HookLoader> cl = HookLoader.class;
-        Field[] ar = Stream.of("ec2Faces", "neiGui", "gtMats", "mineIcon", "ae2SpatialFix").map(s -> {
+        Field[] ar = Stream.of("ec2Faces", "neiGui", "gtMats", "mineIcon", "ae2SpatialFix", "opis").map(s -> {
             try {
                 return cl.getDeclaredField(s);
             } catch (NoSuchFieldException exception) {
@@ -60,15 +60,13 @@ public class II_PatchConfig {
         }).filter(Objects::nonNull).toArray(Field[]::new);
         configs = new FieldedConfig[]{
                 new FieldedConfig(ar[0], false, "\t#EC2 fluid face fix (fixes bug in fluid interfaces when all fluids swapped)"),
-                new FieldedConfig(ar[1], true, "\tAE2 GUI NEI fix ( fixes nei tabs overlap on AE2 and EC2 guis)"),
-                new FieldedConfig(ar[2], false, "\tGT Material ids remap feature (enables GT_Materials Remap)"),
-                new FieldedConfig(ar[3], true, "\tReplace minecraft window title and icon"),
-                new FieldedConfig(ar[4], false, "\tFix GT tiles in AE2 spatial pylons"),
-
+                new FieldedConfig(ar[1], true, "\t#AE2 GUI NEI fix ( fixes nei tabs overlap on AE2 and EC2 guis)"),
+                new FieldedConfig(ar[2], false, "\t#GT Material ids remap feature (enables GT_Materials Remap)"),
+                new FieldedConfig(ar[3], true, "\t#Replace minecraft window title and icon"),
+                new FieldedConfig(ar[4], false, "\t#Fix GT tiles in AE2 spatial pylons"),
+                new FieldedConfig(ar[5], false, "\t#Fix Opis GT Tile Names"),
         };
     }
-
-    public static boolean EC2FluidFaces, GT_MaterialsRemap, GT_TilesForAE2Spatials, AE2NEIGui;
 
     public static void load() {
         File minecraftDirectory = (File) FMLInjectionData.data()[6];

@@ -20,8 +20,9 @@ public class GT_DebugConfig implements IGT_Config {
     public static boolean addTrashFluids = false;
 
     @GT_Config(category = "materials", configComment = "Remaps all meta generated gt items by materials (for eg. \"33->35\" maps all world cobalt items to copper ones)")
-    protected static String[] mapWrongMaterialIDs = new String[]{"381->379", "379->380", "365->368", "380->381"};
-
+    protected static String[] mapWrongMaterialIDs = new String[]{"33->35"};
+    @GT_Config(category = "materials", configComment = "Enables gt remap materials IDs feature")
+    public static boolean mapIDsEnabled = false;
 
     @Override
     public void load(Configuration configuration) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {

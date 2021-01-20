@@ -3,12 +3,20 @@ package idealindustrial;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import idealindustrial.commands.CommandFixMaterials;
+import idealindustrial.commands.CommandFixQuests;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ReportedException;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
+
+import java.io.File;
+import java.io.IOException;
 
 @Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false, dependencies = "after:gregtech")
 public class II_Core {
@@ -58,5 +66,24 @@ public class II_Core {
             return false;
         }
         return true;
+    }
+
+    @Mod.EventHandler
+    public void onServerStarting(FMLServerStartingEvent aEvent) {
+        aEvent.registerServerCommand(new CommandFixQuests());
+        aEvent.registerServerCommand(new CommandFixMaterials());
+    }
+
+    @Mod.EventHandler
+    private void serverAboutToStart( final FMLServerAboutToStartEvent evt ) {
+        File iiSaveDir = new File(DimensionManager.getCurrentSaveRootDirectory(), "IIM");
+        if( !iiSaveDir.isDirectory() && !iiSaveDir.mkdir() ) {
+            throw new IllegalStateException("Cannot create IIM save folder");
+        }
+        try {
+            CommandFixMaterials.loadWorld(iiSaveDir);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }

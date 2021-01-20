@@ -53,33 +53,4 @@ public class II_AE2NeiPatch {
         return ret;
     }
 
-    @Hook(returnCondition = ReturnCondition.ALWAYS)
-    public static ArrayList<DataBlockTileEntityPerClass> getCumulativeTimingTileEntities(TileEntityManager ignored) { //shitty decompile but it works
-        HashBasedTable<Integer, Integer, DataBlockTileEntityPerClass> data = HashBasedTable.create();
-
-        CoordinatesBlock coord;
-        int id;
-        int meta;
-        Block block;
-        TileEntity tileEntity;
-        for (Iterator<CoordinatesBlock> iterator = ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.keySet().iterator(); iterator.hasNext(); data.get(id, meta).add(((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.get(coord).getGeometricMean())) {
-            coord = iterator.next();
-            World world = DimensionManager.getWorld(coord.dim);
-            id = Block.getIdFromBlock(block = world.getBlock(coord.x, coord.y, coord.z));
-            if (block instanceof GT_Block_Machines && (tileEntity = world.getTileEntity(coord.x, coord.y, coord.z)) instanceof IGregTechTileEntity) {
-                meta = ((IGregTechTileEntity) tileEntity).getMetaTileID();
-            } else {
-                meta = world.getBlockMetadata(coord.x, coord.y, coord.z);
-            }
-            if (!data.contains(id, meta)) {
-                data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
-            }
-        }
-
-        return new ArrayList(data.values());
-    }
-
-
-
-
 }
