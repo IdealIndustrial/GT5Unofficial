@@ -107,7 +107,7 @@ public class GT_Values {
     /**
      * Not really Constants, but they set using the Config and therefore should be constant (those are for the Debug Mode)
      */
-    public static boolean D1 = false, D2 = false;
+    public static boolean D1 = false, D2 = false, D3 = true; // d3 == debug recipes, disabled in common runtime
     /**
      * If you have to give something a World Parameter but there is no World... (Dummy World)
      */

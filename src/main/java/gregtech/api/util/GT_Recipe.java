@@ -883,6 +883,19 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                 }
             return aRecipe;
         }
+
+        /**
+         * removes all recipes from map, only for dev proposes
+         */
+
+        public void clear() {
+            if (!D3)
+                throw new IllegalStateException("Clearing maps is not allowed by config");
+            mRecipeList.clear();
+            mRecipeItemMap.clear();
+            mRecipeFluidMap.clear();
+            mRecipeFluidNameMap.clear();
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
