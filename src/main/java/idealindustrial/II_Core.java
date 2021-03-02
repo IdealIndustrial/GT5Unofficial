@@ -2,13 +2,13 @@ package idealindustrial;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import idealindustrial.commands.CommandFixMaterials;
 import idealindustrial.commands.CommandFixQuests;
+import idealindustrial.commands.DimTPCommand;
+import idealindustrial.commands.ReloadRecipesCommand;
+import idealindustrial.integration.ingameinfo.InGameInfoLoader;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ReportedException;
 import net.minecraftforge.common.DimensionManager;
@@ -20,6 +20,7 @@ import java.io.IOException;
 
 @Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false, dependencies = "after:gregtech")
 public class II_Core {
+    private static final String version = "1.17.1";
 
     public II_Core() {
         FMLCommonHandler.instance().bus().register(this);
@@ -33,6 +34,17 @@ public class II_Core {
             CrashReport tCrashReport = new CrashReport("Wrong enviroment detected, please install BQfix for thermos: https://github.com/IdealIndustrial/Ideal-Industrial-Quests", new RuntimeException("no fix for better questing is detected"));
             throw new ReportedException(tCrashReport);
         }
+
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+
+    }
+
+    @Mod.EventHandler
+    public void onPostInit(FMLPostInitializationEvent event) {
+        new InGameInfoLoader().load();
     }
 
     @SubscribeEvent
@@ -49,20 +61,17 @@ public class II_Core {
     private static boolean checkEnvironment() {
         try {
             Class.forName("thermos.Thermos");
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             return true;
         }
         try {
             Class.forName("betterquesting.core.BetterQuesting");
-        }
-        catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             return true;
         }
         try {
             Class.forName("a.b.c.gambiarra.Plugin");
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             return false;
         }
         return true;
@@ -71,13 +80,17 @@ public class II_Core {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent aEvent) {
         aEvent.registerServerCommand(new CommandFixQuests());
-        aEvent.registerServerCommand(new CommandFixMaterials());
+        aEvent.registerServerCommand(new DimTPCommand());
+        aEvent.registerServerCommand(new ReloadRecipesCommand());
+
+        //  aEvent.registerServerCommand(new CommandFixMaterials());
+
     }
 
     @Mod.EventHandler
-    private void serverAboutToStart( final FMLServerAboutToStartEvent evt ) {
+    private void serverAboutToStart(final FMLServerAboutToStartEvent evt) {
         File iiSaveDir = new File(DimensionManager.getCurrentSaveRootDirectory(), "IIM");
-        if( !iiSaveDir.isDirectory() && !iiSaveDir.mkdir() ) {
+        if (!iiSaveDir.isDirectory() && !iiSaveDir.mkdir()) {
             throw new IllegalStateException("Cannot create IIM save folder");
         }
         try {
@@ -85,5 +98,9 @@ public class II_Core {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    public static String getVersion() {
+        return version;
     }
 }

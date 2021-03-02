@@ -1,5 +1,6 @@
 package idealindustrial.commands;
 
+import gloomyfolken.hooklib.minecraft.HookLibPlugin;
 import gregtech.api.items.GT_MetaGenerated_Item;
 import idealindustrial.hooks.HookLoader;
 import net.minecraft.command.CommandBase;
@@ -58,7 +59,13 @@ public class CommandFixMaterials extends CommandBase {
 
         Method saveEverything;
         try {
-            saveEverything = MinecraftServer.class.getDeclaredMethod("saveAllWorlds", boolean.class);
+            if (HookLibPlugin.getObfuscated()) {
+                //noinspection JavaReflectionMemberAccess
+                saveEverything = MinecraftServer.class.getDeclaredMethod("func_71267_a", boolean.class);
+            }
+            else {
+                saveEverything = MinecraftServer.class.getDeclaredMethod("saveAllWorlds", boolean.class);
+            }
             saveEverything.setAccessible(true);
         } catch (NoSuchMethodException e) {
             ics.addChatMessage(new ChatComponentText("Something went wrong, may be you're using patched minecraft server"));
@@ -146,6 +153,7 @@ public class CommandFixMaterials extends CommandBase {
     private static void writeFile(File worldSettings, boolean wasExecutedAlready) throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(worldSettings));
         writer.println("materialsFixed="+wasExecutedAlready);
+        writer.println("IIM.ver=1.17.1");
         writer.flush();
         writer.close();
     }
