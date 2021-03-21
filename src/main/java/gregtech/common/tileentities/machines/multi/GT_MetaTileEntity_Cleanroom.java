@@ -254,13 +254,14 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
             float currentCleanTimeSec = (float)totalCleanTimeSec * (mEfficiency / 10000f);
             int problemsCount = getIdealStatus() - getRepairStatus();
             return new String[]{
-                    ColorFormat.SPECIAL.format(trans("217","Cleanroom")),
-                    trans("218", "Problems") + ": " + (problemsCount > 0 ? ColorFormat.BAD.format(problemsCount) : ColorFormat.GOOD.format(problemsCount)),
-                    trans("219", "Cleaning time") + ": " + ColorFormat.NEUTRAL.format(String.format("%.0f",currentCleanTimeSec) + " / " + totalCleanTimeSec),
-                    trans("220", "Energy consumption while cleaning") + ": " + ColorFormat.NEUTRAL.format(energyConsumptionMax),
-                    trans("221", "Energy consumption in idle") + ": " + ColorFormat.NEUTRAL.format(energyConsumptionMin),
-                    trans("222", "Max machine hulls allowed") + ": " + ColorFormat.NEUTRAL.format(mHullsAllowed),
-                    trans("223", "Efficiency") + ": " + (mEfficiency > 9999 ? ColorFormat.GOOD.format(mEfficiency / 100.0F) : ColorFormat.BETTER.format(mEfficiency / 100.0F)) + "%",                    
+                    "Cleaning time" + ": ",
+					ColorFormat.NEUTRAL.format(String.format("%.0f",currentCleanTimeSec) + " / " + totalCleanTimeSec)+ " S",					
+                    "Energy consumption while idle/cleaning" + ": ",
+					ColorFormat.NEUTRAL.format(energyConsumptionMin)+ " / " + ColorFormat.NEUTRAL.format(energyConsumptionMax) +" EU/t",
+                    ("Efficiency") + ": ",
+					(mEfficiency > 9999 ? ColorFormat.GOOD.format(mEfficiency / 100.0F) : ColorFormat.BETTER.format(mEfficiency / 100.0F)) + " %", 
+                    "Problems" + ": ",
+					(problemsCount > 0 ? ColorFormat.BAD.format(problemsCount) : ColorFormat.GOOD.format(problemsCount)),					
             };
         }
     }
