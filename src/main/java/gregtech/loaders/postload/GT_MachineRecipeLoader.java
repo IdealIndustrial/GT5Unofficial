@@ -2804,7 +2804,7 @@ if(Loader.isModLoaded("Railcraft")){
                 }, 600, 1920);
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_MAX.get(1), new ItemStack[]{
-                ItemList.Transformer_UHV_UV.get(1L),
+                ItemList.Transformer_MAX_UV.get(1L),
                 ItemList.Machine_DigitalTransformer_UV.get(2L),
                 ItemList.Cover_Screen.get(1L), 
                 ItemList.Circuit_Wetwaremainframe.get(4L)
