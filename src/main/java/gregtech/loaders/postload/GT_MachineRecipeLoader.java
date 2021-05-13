@@ -3089,7 +3089,8 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.Ethylene.getCells(6), 			Materials.HydrochloricAcid.getCells(2), Materials.Oxygen.getGas(1000), 				Materials.VinylChloride.getGas(6000), Materials.Empty.getCells(8), GT_Values.NI, 160, 30);
         GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.HydrochloricAcid.getCells(2), 	Materials.Oxygen.getCells(1), 			Materials.Ethylene.getGas(6000), 			Materials.VinylChloride.getGas(6000), Materials.Empty.getCells(3), GT_Values.NI, 160, 30);
         GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.Oxygen.getCells(1), 			Materials.Ethylene.getCells(6), 		Materials.HydrochloricAcid.getFluid(2000),  Materials.VinylChloride.getGas(6000), Materials.Empty.getCells(7), GT_Values.NI, 160, 30);
-
+	GT_Values.RA.addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(24)},new FluidStack[]{Materials.Ethylene.getGas(6000), Materials.Oxygen.getGas(1000), Materials.HydrochloricAcid.getFluid(2000)}, new FluidStack[]{Materials.VinylChloride.getGas(6000)}, null, 160, 30);	
+		
         GT_Values.RA.addUniversalDistillationRecipe(Materials.Acetone.getFluid(1000), new FluidStack[]{Materials.Ethenone.getGas(500), Materials.Methane.getGas(500)}, GT_Values.NI, 50, 640);
         GT_Values.RA.addFluidHeaterRecipe(GT_Utility.getIntegratedCircuit(1), Materials.Acetone.getFluid(1000), Materials.Ethenone.getGas(500), 160, 30);
         GT_Values.RA.addChemicalRecipe(                   Materials.AceticAcid.getCells(8),   GT_Utility.getIntegratedCircuit(1),  Materials.SulfuricAcid.getFluid(7000), Materials.DilutedSulfuricAcid.getFluid(10000), Materials.Ethenone.getCells(5), Materials.Empty.getCells(3), 160, 120);
