@@ -86,6 +86,8 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
     public void addAdditionalToolTips(List aList, ItemStack aStack, EntityPlayer aPlayer) {
         super.addAdditionalToolTips(aList, aStack, aPlayer);
         aList.add(GT_LanguageManager.addStringLocalization(new StringBuilder().append(getUnlocalizedName()).append(".configuration").toString(), "Configuration: ") + getConfigurationString(getDamage(aStack)));
+        aList.add(GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated1", "Rightclick to set number (+1)"));
+        aList.add(GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated2", "Rightclick + Shift to set number (-1)"));	    
     }
 
     public String getUnlocalizedName(ItemStack aStack) {
