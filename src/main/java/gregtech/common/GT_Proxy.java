@@ -241,6 +241,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean debugRecipeConflicts = true;
     public boolean betterFluidDisplay = true;
     public boolean fixAE2SpatialPilons = false;
+    public boolean mAllowLargeTurbinAutomation = false;
     public List<String> debugRecipeMapsFilter = Collections.emptyList();
     
     public GT_Proxy() {
