@@ -317,6 +317,7 @@ public class GT_Mod implements IGT_Mod {
         gregtechproxy.fixAE2SpatialPilons = tMainConfig.get("general", "FixAE2Spatials", false).getBoolean(false);
         gregtechproxy.betterFluidDisplay = tMainConfig.get("general", "BetterFluidDisplay", true).getBoolean(true);
         gregtechproxy.mEasyEnderIOMaterialsRecipe = tMainConfig.get("general","EasyEnderIOMaterialsRecipe",false).getBoolean(false);
+	gregtechproxy.mHardComponentsRecipe = tMainConfig.get("general","HardComponentsRecipes",false).getBoolean(false);
         GT_LanguageManager.i18nPlaceholder = tMainConfig.get("general", "UsePlaceholderForMaterialNamesInLangFile", true).getBoolean(true);
 
         Materials[] tDisableOres = new Materials[]{Materials.Chrome, Materials.Naquadria, Materials.Silicon, Materials.Cobalt, Materials.Cadmium, Materials.Indium, Materials.Tungsten,
