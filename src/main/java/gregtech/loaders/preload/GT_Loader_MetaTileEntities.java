@@ -122,7 +122,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_Coil_Kanthal.get(1L), bits, new Object[] {ItemList.Casing_Coil_Kanthal_Deprecated});
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Casing_Coil_Nichrome.get(1L), bits, new Object[] {ItemList.Casing_Coil_Nichrome_Deprecated});
 
-       	GT_ModHandler.addCraftingRecipe(ItemList.Casing_Firebricks.get(1L), bits, new Object[] {"BB", "BB", 'B', ItemList.Firebrick.get(2)});
+       	GT_ModHandler.addCraftingRecipe(ItemList.Casing_Firebricks.get(2L), bits, new Object[] {"BB", "BB", 'B', ItemList.Firebrick.get(1)});
 
         ItemList.Hull_Bronze.set(new GT_MetaTileEntity_BasicHull_Bronze(1, "hull.bronze", "Bronze Hull", 0, "For your first Steam Machines").getStackForm(1L));
         ItemList.Hull_Bronze_Bricks.set(new GT_MetaTileEntity_BasicHull_BronzeBricks(2, "hull.bronze_bricked", "Bricked Bronze Hull", 0, "For your first Steam Machines").getStackForm(1L));
