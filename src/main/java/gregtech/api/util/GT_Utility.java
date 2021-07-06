@@ -1918,9 +1918,13 @@ public class GT_Utility {
         return "unknown";
     }
 
-
-
-
+    public static void addItemToPlayerInventory(EntityPlayer aPlayer, ItemStack aStack) {
+        if (isStackInvalid(aStack)) return;
+        if (!aPlayer.inventory.addItemStackToInventory(aStack) && !aPlayer.worldObj.isRemote) {
+            EntityItem dropItem = aPlayer.entityDropItem(aStack, 0);
+            dropItem.delayBeforeCanPickup = 0;
+        }
+    }
 
     public static class ItemNBT {
         public static void setNBT(ItemStack aStack, NBTTagCompound aNBT) {
