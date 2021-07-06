@@ -112,6 +112,9 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
     }
 
     public static boolean useScrewdriver(EntityPlayer aPlayer) {
+        if (aPlayer.capabilities.isCreativeMode) {
+            return true;
+        }
         ItemStack[] mainInventory = aPlayer.inventory.mainInventory;
         for (int i = 0, mainInventoryLength = mainInventory.length; i < mainInventoryLength; i++) {
             ItemStack aStack = mainInventory[i];
