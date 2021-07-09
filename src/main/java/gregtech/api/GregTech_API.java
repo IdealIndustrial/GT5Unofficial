@@ -210,7 +210,7 @@ public class GregTech_API {
     /**
      * Getting assigned by the Config
      */
-    public static boolean sTimber = true, sDrinksAlwaysDrinkable = false, sMultiThreadedSounds = false,
+    public static boolean sTimber = true, sMultiThreadedSounds = false,
             sDoShowAllItemsInCreative = false, sColoredGUI = true, sConstantEnergy = true, sMachineExplosions = true,
             sMachineFlammable = true, sMachineNonWrenchExplosions = true, sMachineRainExplosions = true,
             sMachineThunderExplosions = true, sMachineFireExplosions = true, sMachineWireFire = true;
