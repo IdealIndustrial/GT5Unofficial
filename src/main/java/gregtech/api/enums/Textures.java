@@ -638,7 +638,17 @@ public class Textures {
                         new GT_RenderedTexture(OVERLAY_LOCKER_013),
                 },
                 CASING_BLOCKS = new ITexture[128],//original variable still limited to 128
-                MACHINE_CASINGS[] = new ITexture[10][17];
+                MACHINE_CASINGS[] = new ITexture[10][17],
+                WOODEN_CASINGS = new GT_RenderedTexture[]{
+                        new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/wooden_casing/BOTTOM")),
+                        new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/wooden_casing/TOP")),
+                        new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/wooden_casing/SIDE")),
+                        new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/wooden_casing/FRONT")),
+                        new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/wooden_casing/BOTTOM_ACTIVE")),
+                        new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/wooden_casing/TOP_ACTIVE")),
+                        new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/wooden_casing/SIDE_ACTIVE")),
+                        new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/wooden_casing/FRONT_ACTIVE"))
+                };
 
         public static ITexture[][] casingTexturePages = new ITexture[128][];//page holder so we don't make an short long array
 

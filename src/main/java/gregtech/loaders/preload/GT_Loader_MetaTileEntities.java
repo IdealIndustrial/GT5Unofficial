@@ -1738,6 +1738,8 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Automation_ItemDistributor_MAX.get(1L, new Object[0]), bitsd, new Object[]{"XCX", "VMV", " V ", 'M', ItemList.Hull_MAX, 'V', ItemList.Conveyor_Module_UV, 'C', OreDictNames.craftingChest, 'X', OrePrefixes.circuit.get(Materials.Good)});
 
         ItemList.Machine_Debug_LagCreator.set(new GT_MetaTileEntity_LagCreator(9330, "machine.debug.lagcreator", "Lag Creator", 1).getStackForm(1L));
+
+        ItemList.Machine_FermentingBarrel.set(new GT_MetaTileEntity_FermentingBarrel(9331).getStackForm(1L));
     }
 
     private static void makeWires(Materials aMaterial, int aStartID, long aLossInsulated, long aLoss, long aAmperage, long aVoltage, boolean aInsulatable, boolean aAutoInsulated) {

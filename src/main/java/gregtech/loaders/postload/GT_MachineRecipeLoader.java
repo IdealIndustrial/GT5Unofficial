@@ -10,6 +10,7 @@ import gregtech.api.objects.MaterialStack;
 import gregtech.api.util.*;
 import gregtech.common.GT_DummyWorld;
 import gregtech.common.items.GT_MetaGenerated_Item_03;
+import gregtech.loaders.postload.recipes.GT_JuicesRecipeLoader;
 import ic2.api.recipe.ILiquidHeatExchangerManager.HeatExchangeProperty;
 import ic2.api.recipe.Recipes;
 import ic2.core.Ic2Items;
@@ -1756,6 +1757,7 @@ if(Loader.isModLoaded("Railcraft")){
     }
 
 	private void run2() {
+        new GT_JuicesRecipeLoader().run(); //to stop spamming a single file. Too many trash
 	    for (OrePrefixes tPrefix : Arrays.asList(new OrePrefixes[]{OrePrefixes.dust, OrePrefixes.dustSmall, OrePrefixes.dustTiny})) {
             GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(tPrefix, Materials.EnderPearl, 1L), GT_OreDictUnificator.get(tPrefix, Materials.Blaze, 1L), GT_Values.NI, GT_Values.NI, GT_Values.NF, GT_Values.NF, GT_OreDictUnificator.getDust(Materials.EnderEye, 1L * tPrefix.mMaterialAmount), (int) (100L * tPrefix.mMaterialAmount / 3628800L), 8);
             GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(tPrefix, Materials.Gold, 1L), GT_OreDictUnificator.get(tPrefix, Materials.Silver, 1L), GT_Values.NI, GT_Values.NI, GT_Values.NF, GT_Values.NF, GT_OreDictUnificator.getDust(Materials.Electrum, 2L * tPrefix.mMaterialAmount), (int) (200L * tPrefix.mMaterialAmount / 3628800L), 8);

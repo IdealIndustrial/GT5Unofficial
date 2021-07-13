@@ -10,6 +10,7 @@ import gregtech.api.enchants.Enchantment_Radioactivity;
 import gregtech.api.enums.*;
 import gregtech.api.events.BlockScanningEvent;
 import gregtech.api.interfaces.IDebugableBlock;
+import gregtech.api.interfaces.IFoodStat;
 import gregtech.api.interfaces.IProjectileItem;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.*;
@@ -23,6 +24,7 @@ import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
 import gregtech.api.threads.GT_Runnable_Sound;
 import gregtech.common.GT_Proxy;
+import gregtech.common.items.GT_MetaGenerated_Item_02;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeInputItemStack;
 import ic2.api.recipe.RecipeInputOreDict;
@@ -38,6 +40,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -967,6 +970,20 @@ public class GT_Utility {
         GT_Log.out.println("GT_Mod: Added Book to Book List  -  Mapping: '" + aMapping + "'  -  Name: '" + aTitle + "'  -  Author: '" + aAuthor + "'");
         GregTech_API.sBookList.put(aMapping, rStack);
         return copy(rStack);
+    }
+
+    public static boolean isStackGlassBottle(ItemStack aStack) {
+        if (aStack == null) {
+            return false;
+        }
+        if (aStack.getItem() instanceof GT_MetaGenerated_Item_02) {
+            GT_MetaGenerated_Item_02 aItem = (GT_MetaGenerated_Item_02) aStack.getItem();
+            IFoodStat stat = aItem.getFoodStat(aStack);
+            if (stat != null && stat.getFoodAction(aItem, aStack) == EnumAction.drink) {
+                return true;
+            }
+        }
+        return ItemList.Bottle_Empty.isStackEqual(aStack) || aStack.getItem() == Items.potionitem;
     }
 
     public static boolean doSoundAtClient(String aSoundName, int aTimeUntilNextSound, float aSoundStrength) {
@@ -1918,10 +1935,17 @@ public class GT_Utility {
         return "unknown";
     }
 
+    public static void addToPlayerInventory(ItemStack aItem, EntityPlayer aPlayer) {
+        spawnAsEntity(aItem, aPlayer.worldObj, aPlayer.posX, aPlayer.posY, aPlayer.posZ);
+    }
 
-
-
-
+    public static void spawnAsEntity(ItemStack aStack, World aWorld, double aX, double aY, double aZ) {
+        EntityItem tEntity = new EntityItem(aWorld, aX, aY, aZ, aStack);
+        tEntity.motionX = 0;
+        tEntity.motionY = 0;
+        tEntity.motionZ = 0;
+        aWorld.spawnEntityInWorld(tEntity);
+    }
     public static class ItemNBT {
         public static void setNBT(ItemStack aStack, NBTTagCompound aNBT) {
             if (aNBT == null) {
