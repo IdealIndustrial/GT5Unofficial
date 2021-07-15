@@ -840,7 +840,7 @@ if(Loader.isModLoaded("Railcraft")){
         addPotionRecipes("speed", GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Sugar, 1L));
         addPotionRecipes("strength", GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Blaze, 1L));
 
-        GT_Values.RA.addFermentingRecipe(FluidRegistry.getFluidStack("milk", 50), FluidRegistry.getFluidStack("potion.mundane", 25), 1024, false);
+        GT_Values.RA.addFermentingRecipe(FluidRegistry.getFluidStack("milk", 50),                       FluidRegistry.getFluidStack("potion.mundane", 25),      240, false);
         GT_Values.RA.addFermentingRecipe(FluidRegistry.getFluidStack("potion.lemonjuice", 50),          FluidRegistry.getFluidStack("potion.limoncello", 25),   240, false);
         GT_Values.RA.addFermentingRecipe(FluidRegistry.getFluidStack("potion.applejuice", 50),          FluidRegistry.getFluidStack("potion.cider", 25),        240, false);
         GT_Values.RA.addFermentingRecipe(FluidRegistry.getFluidStack("potion.goldenapplejuice", 50),    FluidRegistry.getFluidStack("potion.goldencider", 25),  240, false);

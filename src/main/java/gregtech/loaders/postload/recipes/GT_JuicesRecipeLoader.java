@@ -10,6 +10,7 @@ public class GT_JuicesRecipeLoader implements Runnable{
     @Override
     public void run() {
         // Максимальная вместительность бочки 5000, выход должен быть кратен 250
+        RA.addFermentingBarrelRecipe(FluidRegistry.getFluidStack("milk", 50),                       FluidRegistry.getFluidStack("potion.mundane", 2500),        24000);
         RA.addFermentingBarrelRecipe(FluidRegistry.getFluidStack("potion.lemonjuice", 5000),        FluidRegistry.getFluidStack("potion.limoncello", 2500),     24000);
         RA.addFermentingBarrelRecipe(FluidRegistry.getFluidStack("potion.applejuice", 5000),        FluidRegistry.getFluidStack("potion.cider", 2500),          24000);
         RA.addFermentingBarrelRecipe(FluidRegistry.getFluidStack("potion.goldenapplejuice", 5000),  FluidRegistry.getFluidStack("potion.goldencider", 2500),    24000);
