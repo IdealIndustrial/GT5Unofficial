@@ -131,7 +131,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     @Override
     public ITexture[][][] getTextureSet(ITexture[] aTextures) {
         ITexture[][][] rTextures = new ITexture[14][17][];
-        aTextures = Arrays.copyOf(aTextures, 14);
+        aTextures = Arrays.copyOf(aTextures, 14); //wtf???
 
         for (int i = 0; i < aTextures.length; i++)
             if (aTextures[i] != null) for (byte c = -1; c < 16; c++) {

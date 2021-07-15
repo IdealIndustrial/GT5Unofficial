@@ -21,6 +21,7 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -68,7 +69,7 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
     public final IIcon[][] mIconList;
 
     public final ConcurrentHashMap<Short, IFoodStat> mFoodStats = new ConcurrentHashMap<Short, IFoodStat>();
-    public final ConcurrentHashMap<Short, Long[]> mElectricStats = new ConcurrentHashMap<Short, Long[]>();
+    public final ConcurrentHashMap<Short, Long[]> mElectricStats = new ConcurrentHashMap<Short, Long[]>();//wtf? why boxing ? array is already an object todo: replace with long[]
     public final ConcurrentHashMap<Short, Long[]> mFluidContainerStats = new ConcurrentHashMap<Short, Long[]>();
     public final ConcurrentHashMap<Short, Short> mBurnValues = new ConcurrentHashMap<Short, Short>();
 
@@ -357,5 +358,9 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
     @Override
     public boolean getIsRepairable(ItemStack aStack, ItemStack aMaterial) {
         return false;
+    }
+
+    public IFoodStat getFoodStat(ItemStack stack) {
+        return mFoodStats.get(((short) Items.feather.getDamage(stack)));
     }
 }
