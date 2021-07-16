@@ -1,5 +1,6 @@
 package gregtech.api.util;
 
+import cofh.api.energy.IEnergyContainerItem;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -12,6 +13,7 @@ import gregtech.api.interfaces.IItemContainer;
 import gregtech.api.interfaces.internal.IGT_CraftingRecipe;
 import gregtech.api.objects.GT_HashSet;
 import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.objects.GT_NEIItemStack;
 import gregtech.api.objects.ItemData;
 import gregtech.loaders.postload.GT_CraftingRecipeLoader;
 import gregtech.loaders.postload.GT_MachineRecipeLoader;
@@ -97,7 +99,7 @@ public class GT_ModHandler {
             GT_ItemIterator.class, GT_ModHandler.class, GT_Mod.class,
             GT_Loader_MetaTileEntities.class);
     public static List<String> sRecipeLoadersNames = sRecipeLoaderClasses.stream().map(Class::getName).collect(Collectors.toList());
-	
+
     private static Map<IRecipeInput, RecipeOutput> sExtractorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
     private static Map<IRecipeInput, RecipeOutput> sMaceratorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
     private static Map<IRecipeInput, RecipeOutput> sCompressorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
@@ -161,7 +163,9 @@ public class GT_ModHandler {
     public static List<Integer> sSingleNonBlockDamagableRecipeList_warntOutput = new ArrayList<Integer>(50);
     public static List<Integer> sVanillaRecipeList_warntOutput = new ArrayList<Integer>(50);
     public static final List<IRecipe> sSingleNonBlockDamagableRecipeList_verified = new ArrayList<IRecipe>(1000);
-    private static Cache<GT_ItemStack, ItemStack> sSmeltingRecipeCache = CacheBuilder.newBuilder().maximumSize(1000).build();	
+    public static Set<GT_NEIItemStack> sIgnoreLessTierList = new HashSet<>();
+    private static Cache<GT_ItemStack, ItemStack> sSmeltingRecipeCache = CacheBuilder.newBuilder().maximumSize(1000).build();
+
 
     static {
         sNativeRecipeClasses.add(ShapedRecipes.class.getName());
@@ -638,7 +642,7 @@ public class GT_ModHandler {
         }
         return true;
     }
-    
+
     public static boolean addImmersiveEngineeringRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, int aChance2, ItemStack aOutput3, int aChance3){
     	if(GregTech_API.mImmersiveEngineering && GT_Mod.gregtechproxy.mImmersiveEngineeringRecipes){
     		blusunrize.immersiveengineering.common.IERecipes.addCrusherRecipe(aOutput1, aInput, 6000, aOutput2, 0.15f);
@@ -1708,13 +1712,24 @@ public class GT_ModHandler {
         try {
             if (isElectricItem(aStack)) {
                 int tTier = ((ic2.api.item.IElectricItem) aStack.getItem()).getTier(aStack);
-                if (tTier < 0 || tTier == aTier || aTier == Integer.MAX_VALUE) {
+                if (tTier < 0 || tTier == aTier || aTier == Integer.MAX_VALUE || aTier <= tTier && sIgnoreLessTierList.contains(new GT_NEIItemStack(aStack))) {
                     if (!aIgnoreLimit && tTier >= 0)
                         aCharge = (int) Math.min(aCharge, V[Math.max(0, Math.min(V.length - 1, tTier))]);
                     if (aCharge > 0) {
                         int rCharge = (int) Math.max(0.0, ic2.api.item.ElectricItem.manager.charge(aStack, aCharge, tTier, true, aSimulate));
                         return rCharge + (rCharge * 4 > aTier ? aTier : 0);
                     }
+                }
+            }
+            if (aStack.getItem() instanceof IEnergyContainerItem) {
+                aCharge = (int) Math.min(aCharge, V[Math.max(0, Math.min(V.length - 1, aTier))]);
+                IEnergyContainerItem chargable = (IEnergyContainerItem)aStack.getItem();
+                int max = chargable.getMaxEnergyStored(aStack);
+                int cur = chargable.getEnergyStored(aStack) ;
+                int canUse = Math.min(aCharge, max - cur) * GregTech_API.mEUtoRF / 100;
+                if (cur < max) {
+                    chargable.receiveEnergy(aStack, canUse, false);
+                    return canUse / GregTech_API.mEUtoRF * 100;
                 }
             }
         } catch (Throwable e) {/*Do nothing*/}
@@ -1733,7 +1748,7 @@ public class GT_ModHandler {
 //			if (isElectricItem(aStack) &&  (aIgnoreDischargability || ((ic2.api.item.IElectricItem)aStack.getItem()).canProvideEnergy(aStack))) {
             if (isElectricItem(aStack)) {
                 int tTier = ((ic2.api.item.IElectricItem) aStack.getItem()).getTier(aStack);
-                if (tTier < 0 || tTier == aTier || aTier == Integer.MAX_VALUE) {
+                if (tTier < 0 || tTier == aTier || aTier == Integer.MAX_VALUE  || aTier < tTier && sIgnoreLessTierList.contains(new GT_NEIItemStack(aStack))) {
                     if (!aIgnoreLimit && tTier >= 0)
                         aCharge = (int) Math.min(aCharge, V[Math.max(0, Math.min(V.length - 1, tTier))]);
                     if (aCharge > 0) {
@@ -1878,16 +1893,20 @@ public class GT_ModHandler {
      */
     public static boolean isElectricItem(ItemStack aStack) {
         try {
-            return aStack != null && aStack.getItem() instanceof ic2.api.item.IElectricItem && ((IElectricItem) aStack.getItem()).getTier(aStack) < Integer.MAX_VALUE;
+            return aStack != null && (aStack.getItem() instanceof ic2.api.item.IElectricItem && ((IElectricItem) aStack.getItem()).getTier(aStack) < Integer.MAX_VALUE || sIgnoreLessTierList.contains(new GT_ItemStack(aStack)));
         } catch (Throwable e) {/*Do nothing*/}
         return false;
     }
 
     public static boolean isElectricItem(ItemStack aStack, byte aTier) {
         try {
-            return aStack != null && aStack.getItem() instanceof ic2.api.item.IElectricItem && ((IElectricItem) aStack.getItem()).getTier(aStack) == aTier;
+            return aStack != null && (aStack.getItem() instanceof ic2.api.item.IElectricItem && ((IElectricItem) aStack.getItem()).getTier(aStack) == aTier || sIgnoreLessTierList.contains(new GT_NEIItemStack(aStack)));
         } catch (Throwable e) {/*Do nothing*/}
         return false;
+    }
+
+    public static boolean isCompatElectricItem(ItemStack aStack) {
+        return aStack != null && aStack.getItem() instanceof IEnergyContainerItem;
     }
 
     public static void registerBoxableItemToToolBox(ItemStack aStack) {

@@ -36,6 +36,9 @@ import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
 import gregtech.common.items.behaviors.Behaviour_ProspectorsBook;
 import gregtech.nei.GT_NEI_DefaultHandler;
+import ic2.api.item.IC2Items;
+import ic2.core.IC2;
+import ic2.core.Ic2Items;
 import ic2.core.item.block.ItemDynamite;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
@@ -503,6 +506,10 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
         RecipeSorter.register("gregtech:shaped", GT_Shaped_Recipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
         RecipeSorter.register("gregtech:shapeless", GT_Shapeless_Recipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+
+        GT_ModHandler.sIgnoreLessTierList.add(new GT_NEIItemStack(IC2Items.getItem("cropnalyzer")));
+        //EnderIO:itemMagnet
+        GT_ModHandler.sIgnoreLessTierList.add(new GT_NEIItemStack(GT_ModHandler.getModItem("EnderIO", "itemMagnet", 1)));
     }
 
     public void onLoad() {
