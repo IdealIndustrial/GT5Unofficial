@@ -454,11 +454,12 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         if (mWaterSurface < getSurfaceBlocksCount()) {
             mEfficiency *= ((float) mWaterSurface) / getSurfaceBlocksCount();
         }
+        super.mEfficiency = (int) mEfficiency;
     }
 
     @Override
     public String[] getInfoData() {
-        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (mEfficiency / 100.0F) + "%", "Intake efficiency: " + (int) (mEfficiencyRate * 100) + "." + (int) (mEfficiencyRate * 1000) % 100 + "%", "Water surface covered: " + (Math.min(getSurfaceBlocksCount(), mWaterSurface)) + "/" + getSurfaceBlocksCount() + " blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
+        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (int) (mEfficiency / 100.0F) + "." + (int) (mEfficiency) % 100 + "%", "Intake efficiency: " + (int) (mEfficiencyRate * 100) + "." + (int) (mEfficiencyRate * 1000) % 100 + "%", "Water surface covered: " + (Math.min(getSurfaceBlocksCount(), mWaterSurface)) + "/" + getSurfaceBlocksCount() + " blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
     }
 
     protected long getCoordID(int aX, int aZ) {
