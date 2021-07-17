@@ -448,17 +448,13 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                     return;
                                 }
 
-                                if (!mWaterProof && !getMetaTileEntity().isWaterProofByDefault() && (mTickTimer&1000) == 0 && getRandomNumber(1000) == 0) {
-                                    if ((mTickTimer&128) == 128 && Arrays.stream(new Block[]{
+                                if (!mWaterProof && !getMetaTileEntity().isWaterProofByDefault() && (mTickTimer&512) == 512 && getRandomNumber(10) == 0) {
+                                    if (Arrays.stream(new Block[]{
                                             worldObj.getBlock(xCoord + 1, yCoord, zCoord), worldObj.getBlock(xCoord - 1, yCoord, zCoord),
                                             worldObj.getBlock(xCoord, yCoord + 1, zCoord), 
                                             worldObj.getBlock(xCoord, yCoord, zCoord + 1), worldObj.getBlock(xCoord, yCoord, zCoord - 1)})
                                             .anyMatch( (Block b) -> b == Blocks.water || b == Blocks.flowing_water || b == Blocks.lava || b == Blocks.flowing_lava || b instanceof IFluidBlock)) {
-                                        if ((mTickTimer&8) == 8) {
-                                            doEnergyExplosion();
-                                        } else
-                                            setOnFire();
-
+                                        doEnergyExplosion();
                                     }
                                     if (worldObj.getPrecipitationHeight(xCoord, zCoord) - 2 < yCoord
                                             || worldObj.getPrecipitationHeight(xCoord, zCoord - 1) - 1 < yCoord
@@ -469,7 +465,9 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                             if (getRandomNumber(10) == 0) {
                                                 try{GT_Mod.instance.achievements.issueAchievement(this.getWorldObj().getPlayerEntityByName(mOwnerName), "badweather");}catch(Exception e){}
                                                 doEnergyExplosion();
-                                            } else setOnFire();
+                                            } else {
+                                                setOnFire();
+                                            }
                                         }
                                         if (!hasValidMetaTileEntity()) {
                                             mRunningThroughTick = false;

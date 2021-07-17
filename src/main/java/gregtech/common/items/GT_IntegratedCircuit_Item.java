@@ -7,25 +7,24 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.items.GT_Generic_Item;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_Log;
-import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_Utility;
-import gregtech.api.util.GT_Config;
+import gregtech.api.util.*;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import java.util.List;
+
 import static gregtech.api.enums.GT_Values.RES_PATH_ITEM;
 
 public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
     private final static String aTextEmptyRow = "   ";
-	protected IIcon[] mIconDamage = new IIcon[25];	
+    protected IIcon[] mIconDamage = new IIcon[25];
+
     public GT_IntegratedCircuit_Item() {
         super("integrated_circuit", "Programmed Circuit", "");
         setHasSubtypes(true);
@@ -87,7 +86,7 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
         super.addAdditionalToolTips(aList, aStack, aPlayer);
         aList.add(GT_LanguageManager.addStringLocalization(new StringBuilder().append(getUnlocalizedName()).append(".configuration").toString(), "Configuration: ") + getConfigurationString(getDamage(aStack)));
         aList.add(GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated1", "Rightclick to set number (+1)"));
-        aList.add(GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated2", "Rightclick + Shift to set number (-1)"));	    
+        aList.add(GT_LanguageManager.addStringLocalization("gt.behaviour.Integrated2", "Rightclick + Shift to set number (-1)"));
     }
 
     public String getUnlocalizedName(ItemStack aStack) {
@@ -96,26 +95,35 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack aStack, World aWorld, EntityPlayer aPlayer) {
-        if(aWorld.isRemote||!useScrewdriver(aPlayer))
-            return super.onItemRightClick(aStack,aWorld,aPlayer);
+        if (aWorld.isRemote || !useScrewdriver(aPlayer))
+            return super.onItemRightClick(aStack, aWorld, aPlayer);
         int tConfig = getDamage(aStack);
-        if(aPlayer.isSneaking())
+        if (aPlayer.isSneaking())
             tConfig--;
         else
             tConfig++;
-        if(tConfig<0)
+        if (tConfig < 0)
             tConfig += 24;
-        if(tConfig>24)
+        if (tConfig > 24)
             tConfig -= 24;
         aStack.setItemDamage(tConfig);
-        GT_Utility.sendChatToPlayer(aPlayer,"Integrated Circuit config is: "+tConfig);
+        GT_Utility.sendChatToPlayer(aPlayer, "Integrated Circuit config is: " + tConfig);
         return super.onItemRightClick(aStack, aWorld, aPlayer);
     }
 
-    public static boolean useScrewdriver(EntityPlayer aPlayer){
-        for(ItemStack aStack : aPlayer.inventory.mainInventory){
-            if (GT_Utility.isStackInList(aStack, GregTech_API.sScrewdriverList) && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer))
+    public static boolean useScrewdriver(EntityPlayer aPlayer) {
+        if (aPlayer.capabilities.isCreativeMode) {
+            return true;
+        }
+        ItemStack[] mainInventory = aPlayer.inventory.mainInventory;
+        for (int i = 0, mainInventoryLength = mainInventory.length; i < mainInventoryLength; i++) {
+            ItemStack aStack = mainInventory[i];
+            if (GT_Utility.isStackInList(aStack, GregTech_API.sScrewdriverList) && GT_ModHandler.damageOrDechargeItem(aStack, 1, 1000, aPlayer)) {
+                if (aStack.stackSize == 0) {
+                    mainInventory[i] = null;
+                }
                 return true;
+            }
         }
         return false;
     }
@@ -128,9 +136,9 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister aIconRegister) {
         super.registerIcons(aIconRegister);
-        for (int i=0; i < mIconDamage.length; i++) {
+        for (int i = 0; i < mIconDamage.length; i++) {
             mIconDamage[i] = aIconRegister.registerIcon(RES_PATH_ITEM + (GT_Config.troll ? "troll" : getUnlocalizedName() + "/" + i));
-        }		
+        }
         if (GregTech_API.sPostloadFinished) {
             GT_Log.out.println("GT_Mod: Starting Item Icon Load Phase");
             System.out.println("GT_Mod: Starting Item Icon Load Phase");
@@ -139,7 +147,9 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
                 for (Runnable tRunnable : GregTech_API.sGTItemIconload) {
                     tRunnable.run();
                 }
-            } catch (Throwable e) {e.printStackTrace(GT_Log.err);}
+            } catch (Throwable e) {
+                e.printStackTrace(GT_Log.err);
+            }
             GT_Log.out.println("GT_Mod: Finished Item Icon Load Phase");
             System.out.println("GT_Mod: Finished Item Icon Load Phase");
         }
@@ -148,6 +158,6 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
     @Override
     public IIcon getIconFromDamage(int damage) {
         byte circuitMode = ((byte) (damage & 0xFF)); // Mask out the MSB Comparison Mode Bits. See: getModeString
-        return mIconDamage[circuitMode < mIconDamage.length ? circuitMode : 0];		
-    }	
+        return mIconDamage[circuitMode < mIconDamage.length ? circuitMode : 0];
+    }
 }
