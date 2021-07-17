@@ -69,8 +69,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     private String mOwnerName = "";
     private NBTTagCompound mRecipeStuff = new NBTTagCompound();
     public boolean mWaterProof = false;
-    private boolean mShouldTick = false;
-    
+
     private static final Field ENTITY_ITEM_HEALTH_FIELD;
     static
     {
@@ -275,19 +274,10 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     @Override
     public void updateEntity() {
         super.updateEntity();
-
-        if (GT_Mod.gregtechproxy.fixAE2SpatialPilons) {
-            if (!mShouldTick) {
-                return;
-            }
+        if (!hasValidMetaTileEntity()) {
+            if (mMetaTileEntity == null) return;
+            mMetaTileEntity.setBaseMetaTileEntity(this);
         }
-        else {
-            if (!hasValidMetaTileEntity()) {
-                if (mMetaTileEntity == null) return;
-                mMetaTileEntity.setBaseMetaTileEntity(this);
-            }
-        }
-
 
         mRunningThroughTick = true;
         long tTime = System.currentTimeMillis();
