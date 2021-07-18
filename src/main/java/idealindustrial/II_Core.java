@@ -1,16 +1,31 @@
 package idealindustrial;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import idealindustrial.commands.CommandFixMaterials;
 import idealindustrial.commands.CommandFixQuests;
 import idealindustrial.commands.DimTPCommand;
 import idealindustrial.commands.ReloadRecipesCommand;
 import idealindustrial.integration.ingameinfo.InGameInfoLoader;
+import idealindustrial.itemgen.fluids.II_Fluids;
+import idealindustrial.itemgen.implementation.II_MetaGeneratedCellItem;
+import idealindustrial.itemgen.oredict.II_OreDict;
+import idealindustrial.loader.II_BlocksLoader;
+import idealindustrial.loader.II_ItemsLoader;
+import idealindustrial.itemgen.oredict.II_OredictHandler;
+import idealindustrial.loader.II_Render;
+import idealindustrial.teststuff.RenderTest;
+import idealindustrial.teststuff.TestBlock;
+import idealindustrial.teststuff.TestTile;
+import idealindustrial.util.lang.II_Lang;
+import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ReportedException;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
@@ -20,22 +35,27 @@ import java.io.IOException;
 
 @Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false, dependencies = "after:gregtech")
 public class II_Core {
+    public static final String MOD_ID = "iicore";
     private static final String version = "1.17.1";
+    II_Render renderLoader;
+    II_ItemsLoader itemsLoader;
+    II_BlocksLoader blocksLoader;
+    II_OredictHandler oredictLoader;
 
     public II_Core() {
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
-
-    }
-
-    @Mod.EventHandler
-    public void onPreLoad(FMLPreInitializationEvent aEvent) {
-        if (!checkEnvironment()) {
-            CrashReport tCrashReport = new CrashReport("Wrong enviroment detected, please install BQfix for thermos: https://github.com/IdealIndustrial/Ideal-Industrial-Quests", new RuntimeException("no fix for better questing is detected"));
-            throw new ReportedException(tCrashReport);
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            renderLoader = new II_Render();
         }
+        itemsLoader = new II_ItemsLoader();
+        blocksLoader = new II_BlocksLoader();
+        oredictLoader = new II_OredictHandler();
 
+        MinecraftForge.EVENT_BUS.register(oredictLoader);
     }
+
+
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
@@ -48,8 +68,42 @@ public class II_Core {
     }
 
     @SubscribeEvent
-    public void onLoad(WorldEvent.Load event) {
+    public void onWorldLoad(WorldEvent.Load event) {
         System.out.println("gg");
+    }
+
+    @Mod.EventHandler
+    public void onPreLoad(FMLPreInitializationEvent aEvent) {
+        if (!checkEnvironment()) {
+            CrashReport tCrashReport = new CrashReport("Wrong enviroment detected, please install BQfix for thermos: https://github.com/IdealIndustrial/Ideal-Industrial-Quests", new RuntimeException("no fix for better questing is detected"));
+            throw new ReportedException(tCrashReport);
+        }
+        itemsLoader.preLoad();
+        blocksLoader.preLoad();
+        II_Fluids.INSTANCE.init();
+        new II_MetaGeneratedCellItem();
+
+        new TestBlock();
+        GameRegistry.registerTileEntity(TestTile.class, "testTile");
+        ClientRegistry.bindTileEntitySpecialRenderer(TestTile.class, new RenderTest());
+    }
+
+    @Mod.EventHandler
+    public void onLoad(FMLInitializationEvent aEvent) {
+        if (renderLoader != null) {
+            renderLoader.load();
+        }
+        oredictLoader.fireRegisterEvent();
+    }
+
+
+    @Mod.EventHandler
+    public void onPostLoad(FMLPostInitializationEvent aEvent) {
+        II_Lang.dumpAll();
+        II_Lang.pushLocalToMinecraft();
+        oredictLoader.init();
+        II_OreDict.getInstance().printAll(System.out);
+        int a = 0;
     }
 
     @Mod.EventHandler

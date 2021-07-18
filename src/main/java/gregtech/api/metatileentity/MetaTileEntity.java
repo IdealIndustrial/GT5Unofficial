@@ -6,11 +6,15 @@ import gregtech.api.GregTech_API;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
+import gregtech.api.metatileentity.reimplement.metatile.II_MetaTile;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
+import idealindustrial.util.fluid.II_FluidHandler;
+import idealindustrial.util.inventory.II_BaseInventory;
+import idealindustrial.util.inventory.II_InternalInventory;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -46,7 +50,7 @@ import static gregtech.api.enums.GT_Values.V;
  * Call the Constructor like the following example inside the Load Phase, to register it.
  * "new GT_MetaTileEntity_E_Furnace(54, "GT_E_Furnace", "Automatic E-Furnace");"
  */
-public abstract class MetaTileEntity implements IMetaTileEntity {
+public abstract class MetaTileEntity implements IMetaTileEntity, II_MetaTile {
     /**
      * Only assigned for the MetaTileEntity in the List! Also only used to get the localized Name for the ItemStack and for getInvName.
      */
@@ -928,4 +932,46 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     public void sendClientData() {
 
     }
+
+    protected boolean hasInventory = false;
+    protected II_InternalInventory inInventory, outInventory, specialInventory;
+
+    @Override
+    public boolean hasInventory() {
+        return hasInventory;
+    }
+
+    @Override
+    public II_InternalInventory getInputsHandler() {
+        return inInventory;
+    }
+
+    @Override
+    public II_InternalInventory getOutputsHandler() {
+        return outInventory;
+    }
+
+    @Override
+    public II_BaseInventory getSpecialItemHandler() {
+        return specialInventory;
+    }
+
+    protected boolean hasTank;
+    protected II_FluidHandler inTank, outTank;
+
+    @Override
+    public boolean hasFluidTank() {
+        return hasTank;
+    }
+
+    @Override
+    public II_FluidHandler getInputTank() {
+        return inTank;
+    }
+
+    @Override
+    public II_FluidHandler getOutputTank() {
+        return outTank;
+    }
+
 }
