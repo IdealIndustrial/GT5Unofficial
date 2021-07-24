@@ -1413,11 +1413,11 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             if (!privateAccess() || aPlayer.getDisplayName().equalsIgnoreCase(getOwnerName())) {
                 ItemStack tCurrentItem = aPlayer.inventory.getCurrentItem();
                 if (tCurrentItem != null) {
-                    if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
-                        tCurrentItem.func_150996_a(Items.bucket);
-                        setColorization((byte) (getColorization() >= 16 ? -2 : -1));
-                        return true;
-                    }
+//                    if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
+//                        tCurrentItem.func_150996_a(Items.bucket);
+//                        setColorization((byte) (getColorization() >= 16 ? -2 : -1));
+//                        return true;
+//                    }
                     if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWrenchList)) {
                     	if(aPlayer.isSneaking() && mMetaTileEntity instanceof GT_MetaTileEntity_BasicMachine && ((GT_MetaTileEntity_BasicMachine)mMetaTileEntity).setMainFacing(GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ))){
                             GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 1000, aPlayer);

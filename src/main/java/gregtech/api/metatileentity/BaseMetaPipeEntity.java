@@ -835,11 +835,11 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
         if (isServerSide()) {
             ItemStack tCurrentItem = aPlayer.inventory.getCurrentItem();
             if (tCurrentItem != null) {
-                if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
-                    tCurrentItem.func_150996_a(Items.bucket);
-                    setColorization((byte) -1);
-                    return true;
-                }
+//                if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
+//                    tCurrentItem.func_150996_a(Items.bucket);
+//                    setColorization((byte) -1);
+//                    return true;
+//                }
                 byte tSide = GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ);
                 if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWrenchList)) {
                     if (mMetaTileEntity.onWrenchRightClick(aSide, tSide, aPlayer, aX, aY, aZ)) {
