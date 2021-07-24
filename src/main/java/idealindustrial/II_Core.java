@@ -21,9 +21,14 @@ import idealindustrial.loader.II_Render;
 import idealindustrial.teststuff.RenderTest;
 import idealindustrial.teststuff.TestBlock;
 import idealindustrial.teststuff.TestTile;
+import idealindustrial.tile.gui.II_GuiHandler;
+import idealindustrial.tools.II_ToolRegistry;
 import idealindustrial.util.lang.II_Lang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
@@ -36,7 +41,17 @@ import java.io.IOException;
 @Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false, dependencies = "after:gregtech")
 public class II_Core {
     public static final String MOD_ID = "iicore";
+    @Mod.Instance(MOD_ID)
+    public static II_Core INSTANCE;
+    public static final CreativeTabs II_MAIN_TAB = new CreativeTabs("II Core") {
+        @Override
+        public Item getTabIconItem() {
+            return Items.apple;
+        }
+    };
+
     private static final String version = "1.17.1";
+
     II_Render renderLoader;
     II_ItemsLoader itemsLoader;
     II_BlocksLoader blocksLoader;
@@ -53,6 +68,7 @@ public class II_Core {
         oredictLoader = new II_OredictHandler();
 
         MinecraftForge.EVENT_BUS.register(oredictLoader);
+        //INSTANCE = this;
     }
 
 
@@ -86,6 +102,7 @@ public class II_Core {
         new TestBlock();
         GameRegistry.registerTileEntity(TestTile.class, "testTile");
         ClientRegistry.bindTileEntitySpecialRenderer(TestTile.class, new RenderTest());
+        II_GuiHandler.init();
     }
 
     @Mod.EventHandler
@@ -99,16 +116,19 @@ public class II_Core {
 
     @Mod.EventHandler
     public void onPostLoad(FMLPostInitializationEvent aEvent) {
+        try {
+            II_ToolRegistry.initTools();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
         II_Lang.dumpAll();
         II_Lang.pushLocalToMinecraft();
         oredictLoader.init();
         II_OreDict.getInstance().printAll(System.out);
-        int a = 0;
     }
 
     @Mod.EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
-        System.out.println("gg");
 
     }
 

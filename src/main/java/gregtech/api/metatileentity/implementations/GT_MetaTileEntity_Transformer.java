@@ -145,7 +145,7 @@ public class GT_MetaTileEntity_Transformer extends GT_MetaTileEntity_TieredMachi
         if (aBaseMetaTileEntity.isServerSide()) {
             aBaseMetaTileEntity.setActive(aBaseMetaTileEntity.isAllowedToWork());
             for (byte i = 0; i < 6 && aBaseMetaTileEntity.getStoredEU() < aBaseMetaTileEntity.getEUCapacity(); i++)
-                if (aBaseMetaTileEntity.inputEnergyFrom(i)) {
+                if (aBaseMetaTileEntity.inputsEnergyFrom(i)) {
                     TileEntity tTileEntity = aBaseMetaTileEntity.getTileEntityAtSide(i);
                     if (tTileEntity instanceof IReactorChamber) {
                         tTileEntity = (TileEntity) ((IReactorChamber) tTileEntity).getReactor();

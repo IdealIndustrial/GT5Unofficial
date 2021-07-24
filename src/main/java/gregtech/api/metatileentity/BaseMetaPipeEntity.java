@@ -645,12 +645,12 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     @Override
-    public boolean inputEnergyFrom(byte aSide) {
+    public boolean inputsEnergyFrom(byte aSide) {
         return false;
     }
 
     @Override
-    public boolean inputEnergyFrom(byte aSide, boolean waitForActive) {
+    public boolean inputsEnergyFrom(byte aSide, boolean waitForActive) {
         return false;
     }
 

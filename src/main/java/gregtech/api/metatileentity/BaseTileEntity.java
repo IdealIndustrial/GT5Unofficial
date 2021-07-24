@@ -1,5 +1,6 @@
 package gregtech.api.metatileentity;
 
+import com.google.common.io.ByteArrayDataInput;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
 import gregtech.api.net.GT_Packet_Block_Event;
@@ -105,7 +106,7 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
     }
 
     @Override
-    public final boolean openGUI(EntityPlayer aPlayer, int aID) {
+    public boolean openGUI(EntityPlayer aPlayer, int aID) {
         if (aPlayer == null) return false;
         aPlayer.openGui(GT, aID, worldObj, xCoord, yCoord, zCoord);
         return true;
@@ -463,5 +464,9 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
     
     public String trans(String aKey, String aEnglish){
     	return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_"+aKey, aEnglish, false);
+    }
+
+    public void receiveStream(ByteArrayDataInput stream) {
+
     }
 }

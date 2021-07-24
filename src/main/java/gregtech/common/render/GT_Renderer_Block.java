@@ -12,6 +12,10 @@ import gregtech.api.interfaces.tileentity.ITexturedTileEntity;
 import gregtech.common.blocks.GT_Block_Machines;
 import gregtech.common.blocks.GT_Block_Ores_Abstract;
 import gregtech.common.blocks.GT_TileEntity_Ores;
+import idealindustrial.II_Values;
+import idealindustrial.tile.II_Item_Machines;
+import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.meta.II_MetaTile;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -32,6 +36,14 @@ public class GT_Renderer_Block
     }
 
     public static void renderNormalInventoryMetaTileEntity(ItemStack is, Block aBlock, int aMeta, RenderBlocks aRenderer, boolean aInWorld) {
+        if (is.getItem() instanceof II_Item_Machines) {
+            II_MetaTile tile = II_Values.metaTiles[aMeta];
+            II_BaseTile base = tile == null ? null : tile.getBase();
+            if (base == null) {
+                return;
+            }
+            renderInventory(aBlock, aRenderer, base.getTextures(is, (byte)4, true, false, !aInWorld));
+        }
         if ((aMeta <= 0) || (aMeta >= GregTech_API.METATILEENTITIES.length)) {
             return;
         }
@@ -81,39 +93,43 @@ public class GT_Renderer_Block
             Tessellator.instance.draw();
         } else {
             ITexture[][] textures = tMetaTileEntity.getBaseMetaTileEntity().getTextures(is, (byte) 4, true, false,  !aInWorld);
-            Tessellator.instance.startDrawingQuads();
-            Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
-            renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[0], true);
-            Tessellator.instance.draw();
-
-            Tessellator.instance.startDrawingQuads();
-            Tessellator.instance.setNormal(0.0F, 1.0F, 0.0F);
-            renderPositiveYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[1], true);
-            Tessellator.instance.draw();
-
-            Tessellator.instance.startDrawingQuads();
-            Tessellator.instance.setNormal(0.0F, 0.0F, -1.0F);
-            renderNegativeZFacing(null, aRenderer, aBlock, 0, 0, 0, textures[2], true);
-            Tessellator.instance.draw();
-
-            Tessellator.instance.startDrawingQuads();
-            Tessellator.instance.setNormal(0.0F, 0.0F, 1.0F);
-            renderPositiveZFacing(null, aRenderer, aBlock, 0, 0, 0, textures[3], true);
-            Tessellator.instance.draw();
-
-            Tessellator.instance.startDrawingQuads();
-            Tessellator.instance.setNormal(-1.0F, 0.0F, 0.0F);
-            renderNegativeXFacing(null, aRenderer, aBlock, 0, 0, 0, textures[4], true);
-            Tessellator.instance.draw();
-
-            Tessellator.instance.startDrawingQuads();
-            Tessellator.instance.setNormal(1.0F, 0.0F, 0.0F);
-            renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, textures[5], true);
-            Tessellator.instance.draw();
+            renderInventory(aBlock, aRenderer, textures);
         }
         aBlock.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         aRenderer.setRenderBoundsFromBlock(aBlock);
        // GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+    }
+
+    private static void renderInventory(Block aBlock, RenderBlocks aRenderer, ITexture[][] textures) {
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
+        renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[0], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(0.0F, 1.0F, 0.0F);
+        renderPositiveYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[1], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(0.0F, 0.0F, -1.0F);
+        renderNegativeZFacing(null, aRenderer, aBlock, 0, 0, 0, textures[2], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(0.0F, 0.0F, 1.0F);
+        renderPositiveZFacing(null, aRenderer, aBlock, 0, 0, 0, textures[3], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(-1.0F, 0.0F, 0.0F);
+        renderNegativeXFacing(null, aRenderer, aBlock, 0, 0, 0, textures[4], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(1.0F, 0.0F, 0.0F);
+        renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, textures[5], true);
+        Tessellator.instance.draw();
     }
 
     public static boolean renderStandardBlock(IBlockAccess aWorld, int aX, int aY, int aZ, Block aBlock, RenderBlocks aRenderer) {

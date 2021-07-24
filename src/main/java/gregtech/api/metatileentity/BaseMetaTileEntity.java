@@ -606,6 +606,9 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             if (tTime > 0 && tTime > GregTech_API.MILLISECOND_THRESHOLD_UNTIL_LAG_WARNING && mTickTimer > 1000 && getMetaTileEntity().doTickProfilingMessageDuringThisTick() && mLagWarningCount++ < 10)
                 System.out.println("WARNING: Possible Lag Source at [" + xCoord + ", " + yCoord + ", " + zCoord + "] in Dimension " + worldObj.provider.dimensionId + " with " + tTime + "ms caused by an instance of " + getMetaTileEntity().getClass());
         }
+        if(mInventoryChanged) {
+            System.out.println("Change");
+        }
 
         mWorkUpdate = mInventoryChanged = mRunningThroughTick = false;
     }
@@ -845,7 +848,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
 
     @Override
     public ItemStack getStackInSlot(int aIndex) {
-        if (canAccessData()) return mMetaTileEntity.getStackInSlot(aIndex);
+        if (canAccessData())
+            return mMetaTileEntity.getStackInSlot(aIndex) == null ? null : mMetaTileEntity.getStackInSlot(aIndex).copy();
         return null;
     }
 
@@ -1017,12 +1021,12 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     @Override
-    public boolean inputEnergyFrom(byte aSide) {
-        return inputEnergyFrom(aSide, true);
+    public boolean inputsEnergyFrom(byte aSide) {
+        return inputsEnergyFrom(aSide, true);
     }
 
     @Override
-    public boolean inputEnergyFrom(byte aSide, boolean waitForActive) {
+    public boolean inputsEnergyFrom(byte aSide, boolean waitForActive) {
         if (aSide == 6) return true;
         if (isServerSide() && waitForActive) return ((aSide >= 0 && aSide < 6) && mActiveEUInputs[aSide]) && !mReleaseEnergy;
         return isEnergyInputSide(aSide);
@@ -1877,7 +1881,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
 
     @Override
     public long injectEnergyUnits(byte aSide, long aVoltage, long aAmperage) {
-        if (!canAccessData() || !mMetaTileEntity.isElectric() || !inputEnergyFrom(aSide) || aAmperage <= 0 || aVoltage <= 0 || getStoredEU() >= getEUCapacity() || mMetaTileEntity.maxAmperesIn() <= mAcceptedAmperes)
+        if (!canAccessData() || !mMetaTileEntity.isElectric() || !inputsEnergyFrom(aSide) || aAmperage <= 0 || aVoltage <= 0 || getStoredEU() >= getEUCapacity() || mMetaTileEntity.maxAmperesIn() <= mAcceptedAmperes)
             return 0;
         if (aVoltage > getInputVoltage()) {
             doExplosion(aVoltage);
@@ -2028,7 +2032,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     public boolean acceptsEnergyFrom(TileEntity aEmitter, ForgeDirection aDirection) {
-        return inputEnergyFrom((byte) aDirection.ordinal());
+        return inputsEnergyFrom((byte) aDirection.ordinal());
     }
 
     public boolean emitsEnergyTo(TileEntity aReceiver, ForgeDirection aDirection) {
@@ -2100,7 +2104,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     public boolean acceptsEnergyFrom(TileEntity aReceiver, Direction aDirection) {
-        return inputEnergyFrom((byte) aDirection.toSideValue());
+        return inputsEnergyFrom((byte) aDirection.toSideValue());
     }
 
     public boolean emitsEnergyTo(TileEntity aReceiver, Direction aDirection) {

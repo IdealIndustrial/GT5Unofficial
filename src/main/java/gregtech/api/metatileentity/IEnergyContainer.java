@@ -1,4 +1,4 @@
-package gregtech.api.metatileentity.reimplement.basetile;
+package gregtech.api.metatileentity;
 
 import gregtech.api.interfaces.tileentity.IEnergyConnected;
 import idealindustrial.util.energy.EUConsumer;

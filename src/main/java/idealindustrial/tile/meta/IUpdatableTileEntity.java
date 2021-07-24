@@ -1,4 +1,4 @@
-package gregtech.api.metatileentity.reimplement.basetile;
+package idealindustrial.tile.meta;
 
 public interface IUpdatableTileEntity {
 

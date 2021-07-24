@@ -3,6 +3,7 @@ package idealindustrial.util.inventory;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -139,7 +140,7 @@ public class II_ArrayRecipedInventory implements II_RecipedInventory {
 
     @Override
     public void set(int i, ItemStack stack) {
-        contents[i] = new II_ItemStack(stack);
+        contents[i] = stack == null ? null : new II_ItemStack(stack);
     }
 
     @Override
@@ -147,6 +148,9 @@ public class II_ArrayRecipedInventory implements II_RecipedInventory {
         ItemStack stack = contents[i].toMCStack();
         contents[i].amount -= amount;
         stack.stackSize = amount;
+        if (contents[i].amount == 0) {
+            contents[i] = null;
+        }
         return stack;
     }
 
@@ -158,5 +162,32 @@ public class II_ArrayRecipedInventory implements II_RecipedInventory {
     @Override
     public boolean allowInput(int i, ItemStack stack) {
         return true;
+    }
+
+    @Override
+    public void nbtSave(NBTTagCompound tag, String prefix) {//todo replace with tag list
+        NBTTagCompound inventoryTag = new NBTTagCompound();
+        for (int i = 0; i < size(); i++) {
+            if (contents[i] == null) {
+                continue;
+            }
+            inventoryTag.setTag("" + i, contents[i].writeToNBT(new NBTTagCompound()));
+        }
+        tag.setTag(prefix + "Inv", inventoryTag);
+    }
+
+    @Override
+    public void nbtLoad(NBTTagCompound tag, String prefix) {
+        NBTTagCompound inventoryTag = tag.getCompoundTag(prefix + "Inv");
+        if (inventoryTag == null) {
+            return;
+        }
+        for (int i = 0; i < size(); i++) {
+            NBTTagCompound itemTag = inventoryTag.getCompoundTag(""+i);
+            if (itemTag == null) {
+                continue;
+            }
+            contents[i] = II_ItemStack.loadFromNBT(itemTag);
+        }
     }
 }

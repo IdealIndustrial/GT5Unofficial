@@ -1,8 +1,13 @@
 package idealindustrial.util.item;
 
 
+import appeng.util.item.AESharedNBT;
+import appeng.util.item.II_Hackery;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * class for all itemStack work in GT, has fast hashCode and equals for NBT
@@ -16,10 +21,16 @@ public class II_ItemStack {
     public II_ItemStack(ItemStack is) {
         assert is != null && is.getItem() != null;
         this.def = new ItemDef(is.getItem());
+        this.def.setDamageValue(Items.feather.getDamage(is));
+        if (is.getTagCompound() != null) {
+            this.def.setTagCompound(II_Hackery.getNBTHackery(is.getTagCompound(), is));
+        }
+        this.amount = is.stackSize;
     }
 
     public II_ItemStack(Item item, int damage, int amount) {
         this.def = new ItemDef(item);
+        assert def.getItem() != null;
         def.setDamageValue(damage);
         this.amount = amount;
     }
@@ -32,6 +43,7 @@ public class II_ItemStack {
         this.def =  stack.def;
         this.amount = stack.amount;
         this.cachedStack = stack.cachedStack;
+        this.cachedMCStack = stack.cachedMCStack;
     }
 
     @Override
@@ -77,8 +89,24 @@ public class II_ItemStack {
     }
 
     public ItemStack toMCStack() {
+        if (def == null) {
+            System.out.println("bug, II_ItemStack with no item");
+            return null;
+        }
         ItemStack stack =  new ItemStack(def.getItem(), amount, def.getDamageValue());
-        stack.setTagCompound(def.getTagCompound().getNBTTagCompoundCopy());
+        if (def.getTagCompound() != null) {
+            stack.setTagCompound(def.getTagCompound().getNBTTagCompoundCopy());
+        }
+        cachedMCStack = stack;
         return stack;
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
+        return toMCStack().writeToNBT(tagCompound);//todo: implement better
+    }
+
+    public static II_ItemStack loadFromNBT(NBTTagCompound tagCompound) {
+        ItemStack is = ItemStack.loadItemStackFromNBT(tagCompound);
+        return is == null ? null : new II_ItemStack(is);
     }
 }

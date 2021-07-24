@@ -4,6 +4,7 @@ import com.sun.istack.internal.NotNull;
 import idealindustrial.util.item.II_HashedStack;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_LinkedStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,4 +79,13 @@ public class II_MultipartInternalInventory implements II_InternalInventory {
         };
     }
 
+    @Override
+    public void nbtSave(NBTTagCompound tag, String prefix) {
+
+    }
+
+    @Override
+    public void nbtLoad(NBTTagCompound tag, String prefix) {
+
+    }
 }
