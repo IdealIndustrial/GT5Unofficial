@@ -106,7 +106,6 @@ public class GT_Container_DataReader extends Container {
             NBTTagCompound nbt = mTool.getTagCompound();
             if (nbt == null)
                 nbt = new NBTTagCompound();
-            nbt.setBoolean("notify", true);
             mTool.setTagCompound(nbt);
             saveToNBT(mTool);
             return s;
