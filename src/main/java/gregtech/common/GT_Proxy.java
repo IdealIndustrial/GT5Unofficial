@@ -243,6 +243,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean fixAE2SpatialPilons = false;
     public boolean mHardComponentsRecipe = false;
     public List<String> debugRecipeMapsFilter = Collections.emptyList();
+    public static final int GUI_ID_COVER_SIDE_BASE = 10; // Takes GUI ID 10 - 15
     
     public GT_Proxy() {
         GameRegistry.registerFuelHandler(this);
@@ -1448,6 +1449,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                return null;
+            }
             IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
             if (tMetaTileEntity != null) {
                 return tMetaTileEntity.getServerGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
@@ -1515,9 +1519,20 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
-            IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
+            IGregTechTileEntity tile = (IGregTechTileEntity) tTileEntity;
+
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                byte side = (byte) (aID - GT_Proxy.GUI_ID_COVER_SIDE_BASE);
+                GT_CoverBehavior cover = tile.getCoverBehaviorAtSide(side);
+
+                if (cover.hasCoverGUI()) {
+                    return cover.getClientGUI(side, tile.getCoverIDAtSide(side), tile.getCoverDataAtSide(side), tile);
+                }
+                return null;
+            }
+            IMetaTileEntity tMetaTileEntity = tile.getMetaTileEntity();
             if (tMetaTileEntity != null) {
-                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
+                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, tile);
             }
         }
         return null;

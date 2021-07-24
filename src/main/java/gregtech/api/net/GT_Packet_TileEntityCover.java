@@ -53,7 +53,7 @@ public class GT_Packet_TileEntityCover extends GT_Packet {
 
     @Override
     public byte getPacketID() {
-        return 6;
+        return 8;
     }
 
     @Override
