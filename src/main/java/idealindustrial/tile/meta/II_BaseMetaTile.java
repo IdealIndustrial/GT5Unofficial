@@ -174,4 +174,9 @@ public abstract class II_BaseMetaTile implements II_MetaTile {
     public boolean onLeftClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
         return false;
     }
+
+    @Override
+    public boolean receiveClientEvent(int id, int value) {
+        return false;
+    }
 }

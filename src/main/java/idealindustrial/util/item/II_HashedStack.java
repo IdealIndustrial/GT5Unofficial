@@ -31,6 +31,13 @@ public class II_HashedStack {
         this(item, Item.getIdFromItem(item), damage);
     }
 
+    public II_HashedStack(int hash) {
+        damage =  (hash & 0xFFFF0000) >>> 16;
+        itemID = hash & 0x0000FFFF;
+        this.hash = hash;
+        item = Item.getItemById(itemID);
+    }
+
     /**
      * makes II_Stack equivalent of this
      *

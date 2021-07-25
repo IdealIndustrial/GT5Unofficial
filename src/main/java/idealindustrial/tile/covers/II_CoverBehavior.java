@@ -9,7 +9,7 @@ public interface II_CoverBehavior {
 
     long update(long var, int side, II_BaseTile tile);
 
-    int getTickRate();
+    long getTickRate();
 
     ITexture getTexture();
 

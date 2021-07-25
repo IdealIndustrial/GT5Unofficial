@@ -2,6 +2,8 @@ package idealindustrial.util.misc;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 public class II_StreamUtil {
 
@@ -18,5 +20,19 @@ public class II_StreamUtil {
             array[i] = stream.readInt();
         }
         return array;
+    }
+
+    public static void writeNBTLongArray(NBTTagCompound nbt, long[] ar, String name) {
+        for (int i = 0; i < ar.length; i++) {
+            nbt.setLong(name + i, ar[i]);
+        }
+    }
+
+    public static long[] readNBTLongArray(NBTTagCompound nbt, int length, String name) {
+        long[] ar = new long[length];
+        for (int i = 0; i < length; i++) {
+            ar[i] = nbt.getLong(name + i);
+        }
+        return ar;
     }
 }

@@ -9,12 +9,12 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.metatileentity.BaseTileEntity;
 import gregtech.api.net.GT_Packet_ByteStream;
 import gregtech.api.net.GT_Packet_ExtendedBlockEvent;
-import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.tile.covers.II_CoverBehavior;
+import idealindustrial.tile.covers.II_CoverRegistry;
 import idealindustrial.tile.meta.II_MetaTile;
 import idealindustrial.tools.II_ToolRegistry;
 import idealindustrial.util.energy.EUConsumer;
@@ -25,6 +25,7 @@ import idealindustrial.util.fluid.II_EmptyTank;
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.inventory.II_EmptyInventory;
 import idealindustrial.util.inventory.II_InternalInventory;
+import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -40,7 +41,6 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import static gregtech.api.enums.GT_Values.GT;
 import static idealindustrial.tile.base.II_BaseTileConstants.*;
 
 public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
@@ -57,7 +57,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     II_FluidHandler inTank, outTank;
     int color;
     II_EnergyHandler handler = new II_EmptyEnergyHandler();
-    //texture cache, active/side/textures
+    //texture cache, active/side/textureLayers
     ITexture[][][] textureCache = new ITexture[2][6][];
 
     boolean allowedToWork, active;
@@ -82,7 +82,8 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         outTank.nbtSave(tag, "out");
 
         handler.nbtLoad(tag, "eu");
-
+        tag.setIntArray("covers", coverIDs);
+        II_StreamUtil.writeNBTLongArray(tag, coverValues, "coverValues");
         tag.setInteger("mID", metaTileID);
     }
 
@@ -96,7 +97,13 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
         inTank.nbtLoad(tag, "in");
         outTank.nbtLoad(tag, "out");
-
+        coverIDs = tag.getIntArray("covers");
+        for (int i = 0; i < coverIDs.length; i++) {
+            if (coverIDs[i] != 0) {
+                covers[i] = II_CoverRegistry.behaviorFromID(coverIDs[i]);
+            }
+        }
+        coverValues = II_StreamUtil.readNBTLongArray(tag, 6, "coverValues");
         handler.nbtLoad(tag, "eu");
 
     }
@@ -568,7 +575,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         return false;
     }
 
-    public void sendPacket(int id, int value) {
+    public void sendEvent(int id, int value) {
         GT_Values.NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_ExtendedBlockEvent(xCoord, (short) yCoord, zCoord, id, value), xCoord, zCoord);
     }
 
@@ -579,10 +586,10 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
                 active = intToBool(value);
                 rebakeMap();
                 issueTextureUpdate();
-                break;
+                return true;
 
         }
-        return super.receiveClientEvent(id, value);
+        return metaTileEntity.receiveClientEvent(id, value);
     }
 
     public boolean isActive() {
@@ -593,7 +600,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         if (active != this.active) {
             this.active = active;
             if (isServerSide()) {
-                sendPacket(EVENT_ACTIVE, boolToInt(active));
+                sendEvent(EVENT_ACTIVE, boolToInt(active));
             }
         }
     }

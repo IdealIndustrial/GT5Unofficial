@@ -8,4 +8,6 @@ public interface ISyncedTileEntity {
     void writeTile(ByteArrayDataOutput stream);
 
     void readTile(ByteArrayDataInput stream);
+
+    boolean receiveClientEvent(int id, int value);
 }

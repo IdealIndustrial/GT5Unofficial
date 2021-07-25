@@ -22,10 +22,10 @@ public class II_TestMachine extends II_BaseMetaTile_Facing1 {
 
     public II_TestMachine(II_BaseTile baseTile) {
         super(baseTile, "test",
-                Stream.of(MACHINE_BRONZE_BOTTOM, MACHINE_BRONZE_TOP, MACHINE_BRONZE_SIDE, MACHINE_CASING_TURBINE,
+                Stream.of(MACHINE_BRONZE_BOTTOM, MACHINE_BRONZE_TOP, MACHINE_BRONZE_SIDE, TURBINE[4],
                         MACHINE_8V_BOTTOM, MACHINE_8V_TOP, MACHINE_8V_SIDE, MACHINE_CASING_TURBINE)
                         .map(GT_RenderedTexture::new).toArray(ITexture[]::new),
-                Stream.of(MACHINE_BRONZE_BOTTOM, MACHINE_BRONZE_TOP, MACHINE_BRONZE_SIDE, MACHINE_CASING_TURBINE,
+                Stream.of(MACHINE_BRONZE_BOTTOM, MACHINE_BRONZE_TOP, MACHINE_BRONZE_SIDE, TURBINE_ACTIVE[4],
                         MACHINE_8V_BOTTOM, MACHINE_8V_TOP, MACHINE_8V_SIDE, MACHINE_CASING_TURBINE)
                         .map(GT_RenderedTexture::new).toArray(ITexture[]::new)
                 );

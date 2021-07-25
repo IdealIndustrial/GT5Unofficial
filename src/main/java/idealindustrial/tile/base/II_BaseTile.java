@@ -29,4 +29,7 @@ public interface II_BaseTile extends IUpdatableTileEntity, IHasInventory, IFluid
     II_InternalInventory getIn();
     II_InternalInventory getOut();
     II_InternalInventory getSpecial();
+
+    void sendEvent(int id, int value);
+    void issueTextureUpdate();
 }
