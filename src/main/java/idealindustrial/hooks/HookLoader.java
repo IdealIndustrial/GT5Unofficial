@@ -30,6 +30,8 @@ public class HookLoader extends gloomyfolken.hooklib.minecraft.HookLoader {
             registerHookContainer("idealindustrial.hooks.II_OpisPatch");
         if (worldMultiThread)
             registerHookContainer("idealindustrial.hooks.II_WorldMultithreadingPatch");
+        if (true)
+            registerHookContainer("idealindustrial.hooks.II_NeiIdePatch");
 
     }
 }
