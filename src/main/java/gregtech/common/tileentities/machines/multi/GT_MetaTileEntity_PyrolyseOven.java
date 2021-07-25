@@ -18,13 +18,30 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import scala.actors.threadpool.Arrays;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlockBase {
 
 	private int coilMetaID;
 	private static final int CASING_INDEX = 128 + 64;
+	private CasingType casingType = CasingType.UNDEFINED;
+
+	private enum CasingType {
+	    OLD(GregTech_API.sBlockCasings1), NEW(GregTech_API.sBlockCasings6), UNDEFINED(null);
+
+	    private final Block block;
+
+        CasingType(Block block) {
+            this.block = block;
+        }
+
+        public boolean check(Block block) {
+	        return block == this.block;
+        }
+    }
 	
     public GT_MetaTileEntity_PyrolyseOven(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -107,6 +124,7 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
 
     @Override
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
+	    casingType = CasingType.UNDEFINED;
         int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX * 2;
         int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ * 2;
         replaceDeprecatedCoils(aBaseMetaTileEntity);
@@ -164,7 +182,21 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
     }
 
     private boolean wrongCasing(Block aBlock, int aMeta) {
-        return (aBlock != GregTech_API.sBlockCasings1 || aMeta != 0) && (aBlock != GregTech_API.sBlockCasings6 || aMeta != 0);
+	    if (aMeta != 0) {
+	        return true;
+        }
+	    if (casingType == CasingType.UNDEFINED) {
+	        if (CasingType.OLD.check(aBlock)) {
+	            casingType = CasingType.OLD;
+	            return false;
+            }
+            if (CasingType.NEW.check(aBlock)) {
+                casingType = CasingType.NEW;
+                return false;
+            }
+            return true;
+        }
+	    return !casingType.check(aBlock);
     }
 
     @Override
