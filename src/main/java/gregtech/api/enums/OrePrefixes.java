@@ -1028,6 +1028,9 @@ public enum OrePrefixes {
                         return "Ground " + "%material";
                 }
                 break;
+            case "YttriumBariumCuprate":
+                if (name().startsWith("dust"))
+                    return mLocalizedMaterialPre + "Yttrium Barium Copper" + mLocalizedMaterialPost;
         }
         if (ProcessingModSupport.aEnableThaumcraftMats) {
             switch (aMaterial.mName) {

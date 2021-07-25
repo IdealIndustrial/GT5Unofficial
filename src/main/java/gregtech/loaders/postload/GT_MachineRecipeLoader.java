@@ -2852,6 +2852,10 @@ if(Loader.isModLoaded("Railcraft")){
                 ItemList.Machine_DigitalTransformer_UV.get(2L),
                 ItemList.Cover_Screen.get(1L)}, OrePrefixes.circuit.get(Materials.Infinite), 4, GT_Values.NF, ItemList.Machine_DigitalTransformer_MAX.get(1L), 50, 1920);
         GT_Values.RA.addReplicatorRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.NetherStar, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.NetherStar, 1),  true, 13824000, 32, 10000, 6912000, 32);
+
+        GT_Values.RA.addBlastRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.YttriumBariumCuprate, 1), null, Materials.Oxygen.getGas(7000L), null, GT_OreDictUnificator.get(OrePrefixes.ingotHot, Materials.YttriumBariumCuprate, 1), null, 225*20, 120, Materials.YttriumBariumCuprate.mBlastFurnaceTemp);
+        GT_Values.RA.addBlastRecipe(GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.YttriumBariumCuprate, 4), null, Materials.Oxygen.getGas(7000L), null, GT_OreDictUnificator.get(OrePrefixes.ingotHot, Materials.YttriumBariumCuprate, 1), null, 225*20, 120, Materials.YttriumBariumCuprate.mBlastFurnaceTemp);
+        GT_Values.RA.addBlastRecipe(GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.YttriumBariumCuprate, 9), null, Materials.Oxygen.getGas(7000L), null, GT_OreDictUnificator.get(OrePrefixes.ingotHot, Materials.YttriumBariumCuprate, 1), null, 225*20, 120, Materials.YttriumBariumCuprate.mBlastFurnaceTemp);
     }
 
 	private void addChemicalRecipesSimple(){
