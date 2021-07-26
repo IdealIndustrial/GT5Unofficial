@@ -1984,7 +1984,9 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnderEye, 1), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.TungstenSteel, 4), GT_OreDictUnificator.get(OrePrefixes.stick, Materials.Osmium, 1), ItemList.Circuit_Crystalprocessor.get(1L), GT_Utility.getIntegratedCircuit(5)}, GT_Values.NF, ItemList.Sensor_IV.get(1L), 80, 480);
 	}
 
-        GT_Values.RA.addAssemblylineRecipe(ItemList.Electric_Motor_IV.get(1, new Object(){}),144000,new ItemStack[]{
+	GT_Values.RA.addAssemblerRecipe(new ItemStack[]{Materials.Steel.getPlates(4), Materials.Iron.getPlates(2),ItemList.Casing_BronzePlatedBricks.get(1L)}, GT_Values.NF, ItemList.Casing_Pyrolyse.get(1L), 200, 30);
+
+	GT_Values.RA.addAssemblylineRecipe(ItemList.Electric_Motor_IV.get(1, new Object(){}),144000,new ItemStack[]{
         		GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.NeodymiumMagnetic, 1L),
         		GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.HSSG, 2L),
         		GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.AnnealedCopper, 64L),
