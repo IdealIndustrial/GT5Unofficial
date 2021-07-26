@@ -1522,7 +1522,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
     }
     
     public static class GT_Recipe_Map_LargeChemicalReactor extends GT_Recipe_Map{
-    	private static int INPUT_COUNT = 2;
+    	private static int INPUT_COUNT = 3;
     	private static int OUTPUT_COUNT = 2;
     	private static int FLUID_INPUT_COUNT = 4;
     	private static int FLUID_OUTPUT_COUNT = 4;
