@@ -110,4 +110,9 @@ public class II_SingleFluidHandler implements II_FluidHandler {
             fluid = FluidStack.loadFluidStackFromNBT(fl);
         }
     }
+
+    @Override
+    public FluidStack[] getFluids() {
+        return new FluidStack[]{fluid};
+    }
 }

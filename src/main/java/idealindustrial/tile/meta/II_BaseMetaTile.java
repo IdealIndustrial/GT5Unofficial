@@ -8,7 +8,12 @@ import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.inventory.II_InternalInventory;
 import idealindustrial.util.misc.II_DirUtil;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * base class for cuboid machines, has IO for Items, Fluids and Energies(tbi)
@@ -104,7 +109,7 @@ public abstract class II_BaseMetaTile implements II_MetaTile {
     @Override
     public ITexture[] provideTexture(boolean active, int side) {
         int index = II_DirUtil.directionToSide(side) + (active ? 0 : 3);
-        return overlays[index] == null ? new ITexture[]{baseTextures[index]} : new ITexture[]{baseTextures[index], overlays[index]};
+        return Stream.of(baseTextures[index], overlays[index]).filter(Objects::nonNull).toArray(ITexture[]::new);
     }
 
     @Override
@@ -178,5 +183,10 @@ public abstract class II_BaseMetaTile implements II_MetaTile {
     @Override
     public boolean receiveClientEvent(int id, int value) {
         return false;
+    }
+
+    @Override
+    public IInventory getFluidIORepresentation() {
+        return null;
     }
 }

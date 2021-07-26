@@ -12,6 +12,7 @@ import idealindustrial.util.inventory.II_InternalInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 
 public interface II_MetaTile extends IUpdatableTileEntity, ISyncedTileEntity, IToolClickableTile {
 
@@ -37,5 +38,7 @@ public interface II_MetaTile extends IUpdatableTileEntity, ISyncedTileEntity, IT
     ITexture[] provideTexture(boolean active, int side);
     II_BaseTile getBase();
     II_MetaTile newMetaTile(II_BaseTile baseTile);
+
+    IInventory getFluidIORepresentation();
 
 }

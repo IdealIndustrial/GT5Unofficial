@@ -53,4 +53,9 @@ public class II_EmptyTank implements II_FluidHandler {
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
         return new FluidTankInfo[0];
     }
+
+    @Override
+    public FluidStack[] getFluids() {
+        return new FluidStack[0];
+    }
 }

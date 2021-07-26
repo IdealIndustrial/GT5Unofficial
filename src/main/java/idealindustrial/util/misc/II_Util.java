@@ -1,5 +1,7 @@
 package idealindustrial.util.misc;
 
+import org.omg.CORBA.Object;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -27,5 +29,10 @@ public class II_Util {
         for(int j = 0; j < i; j++) {
             map.put(keys[j], values[j]);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T[] nonNull(T[] ar) {
+        return ar == null ? (T[]) new Object[0] : ar;
     }
 }

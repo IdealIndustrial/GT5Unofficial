@@ -6,6 +6,7 @@ import idealindustrial.itemgen.material.Prefixes;
 import idealindustrial.itemgen.material.submaterial.BlockInfo;
 import idealindustrial.itemgen.material.submaterial.BlockType;
 import idealindustrial.reflection.events.II_EventListener;
+import idealindustrial.tile.II_Block_Machines;
 import idealindustrial.util.lang.II_Lang;
 import idealindustrial.util.lang.LocalizeEvent;
 import idealindustrial.util.lang.materials.EngLocalizer;
@@ -21,6 +22,7 @@ public class II_Blocks {
 
     public final II_MetaGeneratedBlock[][] materialBlocks = new II_MetaGeneratedBlock[BlockType.values().length][];
     public final List<II_MetaGeneratedBlock> metaGeneratedBlocks = new ArrayList<>();
+    public II_Block_Machines blockMachines;
 
     protected II_Blocks() {
         for (int i = 0; i < materialBlocks.length; i++) {
@@ -47,6 +49,8 @@ public class II_Blocks {
             }
             blocks[id].addBlock(id % 16, Prefixes.block, material);//todo think about other block prefixes
         }
+
+        blockMachines = new II_Block_Machines();
     }
 
     @LocalizeEvent

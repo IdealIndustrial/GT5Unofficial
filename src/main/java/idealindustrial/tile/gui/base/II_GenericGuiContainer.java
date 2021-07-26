@@ -2,10 +2,8 @@ package idealindustrial.tile.gui.base;
 
 import idealindustrial.tile.gui.base.component.II_Slot;
 import idealindustrial.tile.gui.base.component.II_Slots;
-import idealindustrial.util.misc.II_Paths;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 
 public class II_GenericGuiContainer extends GuiContainer {
@@ -39,7 +37,7 @@ public class II_GenericGuiContainer extends GuiContainer {
             II_Slot slot = (II_Slot) o;
             int id = slot.texture;
             int textureX = II_Slots.idToX(id), textureY = II_Slots.idToY(id);
-            drawTexturedModalRect(slot.xDisplayPosition, slot.yDisplayPosition, textureX, textureY,18, 18);
+            drawTexturedModalRect(slot.xDisplayPosition + x - 1, slot.yDisplayPosition + y - 1, textureX, textureY, 18, 18);
         }
 
     }

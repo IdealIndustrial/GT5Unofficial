@@ -9,6 +9,7 @@ public class II_TileUtil {
 
     public static void registerMetaTile(int id, II_MetaTile metaTile) {
         II_Values.metaTiles[id] = metaTile;
+        metaTile.getBase().setMetaTileID(id);
     }
 
     public static II_BaseTile makeBaseTile() {

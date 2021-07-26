@@ -15,6 +15,7 @@ import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.tile.covers.II_CoverBehavior;
 import idealindustrial.tile.covers.II_CoverRegistry;
+import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
 import idealindustrial.tile.meta.II_MetaTile;
 import idealindustrial.tools.II_ToolRegistry;
 import idealindustrial.util.energy.EUConsumer;
@@ -23,9 +24,12 @@ import idealindustrial.util.energy.II_EmptyEnergyHandler;
 import idealindustrial.util.energy.II_EnergyHandler;
 import idealindustrial.util.fluid.II_EmptyTank;
 import idealindustrial.util.fluid.II_FluidHandler;
+import idealindustrial.util.fluid.II_FluidInvReprImpl;
+import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
 import idealindustrial.util.inventory.II_EmptyInventory;
 import idealindustrial.util.inventory.II_InternalInventory;
 import idealindustrial.util.misc.II_StreamUtil;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -267,7 +271,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         if (alive()) {
             assert index >= 0 && index < inSize + outSize;
             if (index >= inSize) {
-                out.reduce(index - inSize, amount);
+                return out.reduce(index - inSize, amount);
             }
             return in.reduce(index, amount);
         }
@@ -486,7 +490,20 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
     @Override
     public ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers) {
-        return new ITexture[0][];//inventory
+        int oldFacing = 0;
+        if (metaTileEntity instanceof II_BaseMetaTile_Facing1Output) {//shitty but works for now
+            oldFacing = ((II_BaseMetaTile_Facing1Output) metaTileEntity).outputFacing;
+            ((II_BaseMetaTile_Facing1Output) metaTileEntity).outputFacing = aFacing;
+        }
+        ITexture[][] textures = new ITexture[6][];
+        for (int side = 0; side < 6; side++) {
+            textures[side] = provideTexture(aActive, side);
+        }
+
+        if (metaTileEntity instanceof II_BaseMetaTile_Facing1Output) {
+            ((II_BaseMetaTile_Facing1Output) metaTileEntity).outputFacing = oldFacing;
+        }
+        return textures;//inventory
     }
 
     @Override
@@ -507,6 +524,9 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         if (covers[side] != null) {
             return new ITexture[]{covers[side].getTexture()};
         }
+        if (metaTileEntity == null) {
+            return new ITexture[0];
+        }
         return metaTileEntity.provideTexture(active, side);
     }
 
@@ -515,6 +535,11 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         return metaTileID;
     }
 
+    @Override
+    public void setMetaTileID(int metaTileID) {
+        this.metaTileID = metaTileID;
+        setMetaTileEntity(II_Values.metaTiles[metaTileID]);
+    }
 
     @Override
     public ArrayList<ItemStack> getDrops() {
@@ -584,7 +609,6 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         switch (id) {
             case EVENT_ACTIVE:
                 active = intToBool(value);
-                rebakeMap();
                 issueTextureUpdate();
                 return true;
 
@@ -606,6 +630,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     public void issueTextureUpdate() {
+        rebakeMap();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
@@ -644,5 +669,25 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     @Override
     public II_InternalInventory getSpecial() {
         return metaTileEntity.getSpecialHandler();
+    }
+
+    @Override
+    public II_FluidInventoryRepresentation getFluidRepresentation() {
+        return new II_FluidInvReprImpl(II_Util.nonNull(inTank.getFluids()), II_Util.nonNull(outTank.getFluids()));
+    }
+
+    @Override
+    public boolean hasFluidTank() {
+        return hasTank;
+    }
+
+    @Override
+    public II_FluidHandler getInTank() {
+        return inTank;
+    }
+
+    @Override
+    public II_FluidHandler getOutTank() {
+        return outTank;
     }
 }

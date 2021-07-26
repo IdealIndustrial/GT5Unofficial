@@ -36,14 +36,6 @@ public class GT_Renderer_Block
     }
 
     public static void renderNormalInventoryMetaTileEntity(ItemStack is, Block aBlock, int aMeta, RenderBlocks aRenderer, boolean aInWorld) {
-        if (is.getItem() instanceof II_Item_Machines) {
-            II_MetaTile tile = II_Values.metaTiles[aMeta];
-            II_BaseTile base = tile == null ? null : tile.getBase();
-            if (base == null) {
-                return;
-            }
-            renderInventory(aBlock, aRenderer, base.getTextures(is, (byte)4, true, false, !aInWorld));
-        }
         if ((aMeta <= 0) || (aMeta >= GregTech_API.METATILEENTITIES.length)) {
             return;
         }
@@ -100,7 +92,7 @@ public class GT_Renderer_Block
        // GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
-    private static void renderInventory(Block aBlock, RenderBlocks aRenderer, ITexture[][] textures) {
+    public static void renderInventory(Block aBlock, RenderBlocks aRenderer, ITexture[][] textures) {
         Tessellator.instance.startDrawingQuads();
         Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
         renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[0], true);

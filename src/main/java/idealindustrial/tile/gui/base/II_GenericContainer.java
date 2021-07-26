@@ -1,17 +1,22 @@
 package idealindustrial.tile.gui.base;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import gregtech.api.gui.GT_Slot_Armor;
 import gregtech.api.gui.GT_Slot_Holo;
 import gregtech.api.gui.GT_Slot_Output;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
 import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.util.fluid.II_FluidHandler;
+import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
 import java.util.Iterator;
 
@@ -20,6 +25,7 @@ public class II_GenericContainer extends Container {
     public II_BaseTile tile;
     public EntityPlayer player;
     public final boolean bindInventory;
+    public II_FluidInventoryRepresentation representation;
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
@@ -28,6 +34,9 @@ public class II_GenericContainer extends Container {
 
     public II_GenericContainer(II_BaseTile tile, EntityPlayer player, boolean bindInventory) {
         this.tile = tile;
+        if (tile.hasFluidTank()) {
+            representation = tile.getFluidRepresentation();
+        }
         this.player = player;
         addSlots();
         this.bindInventory = bindInventory;
@@ -62,6 +71,9 @@ public class II_GenericContainer extends Container {
     @Override
     public ItemStack slotClick(int index, int mouse, int hotkeys, EntityPlayer player) {
         tile.markDirty();
+        if (index >= getFluidSlotStart() && index < getFluidSlotStart() + getFluidSlotCount()) {
+            return processFluids(index, mouse, hotkeys, player);
+        }
         try {
             if (hotkeys == 5) {
                 return super.slotClick(index, mouse, hotkeys, player);
@@ -73,6 +85,69 @@ public class II_GenericContainer extends Container {
         } catch (Throwable e) {
             e.printStackTrace(GT_Log.err);
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ItemStack processFluids(int index, int mouse, int hotkeys, EntityPlayer player) {
+        int internalIndex = index - getFluidSlotStart();
+        II_FluidHandler handler;
+        if (internalIndex < representation.getInSize()) {
+            handler = tile.getInTank();
+        }
+        else {
+            handler = tile.getOutTank();
+            internalIndex -= representation.getInSize();
+        }
+        return processFluidInventory(handler, index, internalIndex, mouse, hotkeys, player);
+    }
+
+    public ItemStack processFluidInventory(II_FluidHandler handler, int index, int internalIndex, int mouse, int hotkeys, EntityPlayer player) {
+        ItemStack held = player.inventory.getItemStack();
+        if (held == null || held.stackSize != 1 || mouse > 1 || FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            return null;
+        }
+        if (held.getItem() instanceof IFluidContainerItem) {
+            IFluidContainerItem item = (IFluidContainerItem) held.getItem();
+            FluidStack itemFluid = item.getFluid(held);
+            FluidStack tileFluid = handler.get(internalIndex);
+            if (mouse == 0) {//fill item
+                if (tileFluid == null) {
+                    return null;
+                }
+                int filled = item.fill(held, tileFluid, true);
+                if (filled > 0) {
+                    if ((tileFluid.amount -= filled) == 0) {
+                        tileFluid = null;
+                    }
+                    handler.set(internalIndex, tileFluid);
+                    return held;
+                }
+                return null;
+            }
+            else {//fill tile
+                if (itemFluid == null) {
+                    return null;
+                }
+                if (tileFluid == null) {
+                    FluidStack drained = item.drain(held,  handler.capacity(), true);
+                    handler.set(internalIndex, drained);
+                }
+                else if (tileFluid.getFluid() == itemFluid.getFluid()) {
+                    int space = Math.max(handler.capacity() - tileFluid.amount, 0);
+                    FluidStack drained = item.drain(held,  space, true);
+                    if (drained != null && drained.amount > 0) {
+                        tileFluid.amount += drained.amount;
+                        handler.set(internalIndex, tileFluid);
+                    }
+                }
+                else {
+                    return null;
+                }
+                player.inventory.setItemStack(held);
+                return held;
+            }
+
         }
         return null;
     }
@@ -467,20 +542,28 @@ public class II_GenericContainer extends Container {
         return var5;
     }
 
-    private int getShiftClickSlotCount() {
+    public int getShiftClickSlotCount() {
         return tile.getIn().size();
     }
 
-    private int getShiftClickStartIndex() {
+    public int getShiftClickStartIndex() {
         return 0;
     }
 
-    private int getAllSlotCount() {
+    public int getAllSlotCount() {
         return getSlotCount();
     }
 
-    private int getSlotCount() {
+    public int getSlotCount() {
         return tile.getIn().size() + tile.getOut().size() + tile.getSpecial().size();
+    }
+
+    public int getFluidSlotStart() {
+        return getAllSlotCount();
+    }
+
+    public int getFluidSlotCount() {
+        return representation == null ? 0 : representation.getSizeInventory();
     }
 
     @Override

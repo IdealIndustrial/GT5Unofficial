@@ -49,6 +49,7 @@ public class II_ToolRegistry {
     public static void initTools() throws NoSuchMethodException {
         Class<? extends IToolClickableTile> clazz = IToolClickableTile.class;
         registerTool(GregTech_API.sSoftHammerList, clazz.getDeclaredMethod("onSoftHammerClick", EntityPlayer.class, ItemStack.class, int.class), false, false);
+        registerTool(GregTech_API.sWrenchList, clazz.getDeclaredMethod("onWrenchClick", EntityPlayer.class, ItemStack.class, int.class, float.class, float.class, float.class), true, true);
     }
 }
 
