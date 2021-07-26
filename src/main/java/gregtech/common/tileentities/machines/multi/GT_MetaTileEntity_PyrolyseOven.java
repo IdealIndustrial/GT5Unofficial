@@ -47,7 +47,7 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                 "1x Maintenance Hatch (Any bottom layer casing)",
                 "1x Muffler Hatch (Centered 3x1x3 area in Top layer)",
                 "1x Energy Hatch (Any bottom layer casing)",
-                "Pyrolyze Casing for the rest (60 at least!)",
+                "Pyrolyse Casings for the rest (60 at least!)",
                 "Processing speed scales linearly with Coil tier:",
                 "CuNi: 50%, FeAlCr: 100%, Ni4Cr: 150%, Fe50CW: 200%, etc.",
                 "EU/t is not affected by Coil tier",
@@ -132,7 +132,7 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                             		return false;
                             	}
                             }
-                        } else if (h == 3) {// innen decke (Pyrolyze Casing + input + muffler)
+                        } else if (h == 3) {// innen decke (Pyrolyse Casings + input + muffler)
                             if ((!addInputToMachineList(tTileEntity, CASING_INDEX)) && (!addMufflerToMachineList(tTileEntity, CASING_INDEX))) {
                                 if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != CASING) {
                                     return false;
@@ -147,7 +147,7 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                             }
                         }
                     } else {// Aeusserer 5x5 ohne hoehe
-                        if (h == 0) {// aussen boden (controller, output, energy, maintainance, rest Pyrolyze Casing)
+                        if (h == 0) {// aussen boden (controller, output, energy, maintainance, rest Pyrolyse Casings)
                             if ((!addMaintenanceToMachineList(tTileEntity, CASING_INDEX)) && (!addOutputToMachineList(tTileEntity, CASING_INDEX)) && (!addEnergyInputToMachineList(tTileEntity, CASING_INDEX))) {
                                 if ((xDir + i != 0) || (zDir + j != 0)) {//no controller
                                     if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != CASING) {
@@ -158,7 +158,7 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                                     }
                                 }
                             }
-                        } else {// aussen ueber boden (Pyrolyze Casing)
+                        } else {// aussen ueber boden (Pyrolyse Casings)
                             if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != CASING) {
                                 return false;
                             }
