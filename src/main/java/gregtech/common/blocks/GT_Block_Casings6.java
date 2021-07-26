@@ -18,7 +18,7 @@ public class GT_Block_Casings6
         for (byte i = 0; i < 16; i = (byte) (i + 1)) {
             Textures.BlockIcons.casingTexturePages[1][i+64] = new GT_CopiedBlockTexture(this, 6, i);
         }
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Pyrolyze Casing"); // 176
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Pyrolyse Casing"); // 176
 
         ItemList.Casing_Pyrolyse.set(new ItemStack(this, 1, 0));
 
