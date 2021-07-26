@@ -8,6 +8,7 @@ import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.util.fluid.II_FluidHandler;
+import idealindustrial.util.fluid.II_FluidHelper;
 import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -107,19 +108,23 @@ public class II_GenericContainer extends Container {
         if (held == null || held.stackSize != 1 || mouse > 1 || FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             return null;
         }
-        if (held.getItem() instanceof IFluidContainerItem) {
-            IFluidContainerItem item = (IFluidContainerItem) held.getItem();
-            FluidStack itemFluid = item.getFluid(held);
+
+//        if (held.getItem() instanceof IFluidContainerItem) {
+//            IFluidContainerItem item = (IFluidContainerItem) held.getItem();
+        II_FluidHelper.II_FluidContainerItem item = II_FluidHelper.getContainerWrapper(held);
+            FluidStack itemFluid = item.getFluid();
             FluidStack tileFluid = handler.get(internalIndex);
             if (mouse == 0) {//fill item
                 if (tileFluid == null) {
                     return null;
                 }
-                int filled = item.fill(held, tileFluid, true);
+                int filled = item.fill(tileFluid, true);
                 if (filled > 0) {
                     if ((tileFluid.amount -= filled) == 0) {
                         tileFluid = null;
                     }
+                    held = item.getUpdated();
+                    player.inventory.setItemStack(held);
                     handler.set(internalIndex, tileFluid);
                     return held;
                 }
@@ -130,15 +135,21 @@ public class II_GenericContainer extends Container {
                     return null;
                 }
                 if (tileFluid == null) {
-                    FluidStack drained = item.drain(held,  handler.capacity(), true);
-                    handler.set(internalIndex, drained);
+                    FluidStack drained = item.drain(handler.capacity(), true);
+                    if (drained != null) {
+                        handler.set(internalIndex, drained);
+                        held = item.getUpdated();
+                        player.inventory.setItemStack(held);
+                    }
                 }
                 else if (tileFluid.getFluid() == itemFluid.getFluid()) {
                     int space = Math.max(handler.capacity() - tileFluid.amount, 0);
-                    FluidStack drained = item.drain(held,  space, true);
+                    FluidStack drained = item.drain(space, true);
                     if (drained != null && drained.amount > 0) {
                         tileFluid.amount += drained.amount;
                         handler.set(internalIndex, tileFluid);
+                        held = item.getUpdated();
+                        player.inventory.setItemStack(held);
                     }
                 }
                 else {
@@ -148,8 +159,8 @@ public class II_GenericContainer extends Container {
                 return held;
             }
 
-        }
-        return null;
+//        }
+//        return null;
     }
 
     public ItemStack slotClick1(int p_75144_1_, int p_75144_2_, int p_75144_3_, EntityPlayer p_75144_4_)

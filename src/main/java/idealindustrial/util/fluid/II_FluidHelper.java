@@ -14,7 +14,7 @@ public class II_FluidHelper {
      * if you call some method like fill or drain with modulation flag
      * you should replace your container itemStack with getUpdated()
      */
-    interface II_FluidContainerItem {
+    public interface II_FluidContainerItem {
         int fill(FluidStack source, boolean doFill);
         FluidStack drain(int maxDrain, boolean doDrain);
         ItemStack getUpdated();
@@ -43,7 +43,7 @@ public class II_FluidHelper {
             if (filled == null) {
                 return  0;
             }
-            FluidStack fluidStack =  GT_Utility.getFluidForFilledItem(stack, false);
+            FluidStack fluidStack =  GT_Utility.getFluidForFilledItem(filled, true);
             if (doFill && fluidStack != null) {
                 stack = filled;
             }
