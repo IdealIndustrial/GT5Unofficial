@@ -24,10 +24,10 @@ import java.util.ArrayList;
 public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlockBase {
 
 	private int coilMetaID;
-	public static GT_CopiedBlockTexture mTextureULV = new GT_CopiedBlockTexture(Block.getBlockFromItem(ItemList.Casing_ULV.get(1).getItem()), 6, 0,Dyes.MACHINE_METAL.mRGBa);
-	
-	//private final int CASING_INDEX = 22;
-	
+	Block CASING = GregTech_API.sBlockCasings6;
+	private final int CASING_INDEX = 192;
+	private final int CASING_META = 0;
+
     public GT_MetaTileEntity_PyrolyseOven(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
@@ -47,7 +47,7 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                 "1x Maintenance Hatch (Any bottom layer casing)",
                 "1x Muffler Hatch (Centered 3x1x3 area in Top layer)",
                 "1x Energy Hatch (Any bottom layer casing)",
-                "ULV Machine Casings for the rest (60 at least!)",
+                "Pyrolyze Casing for the rest (60 at least!)",
                 "Processing speed scales linearly with Coil tier:",
                 "CuNi: 50%, FeAlCr: 100%, Ni4Cr: 150%, Fe50CW: 200%, etc.",
                 "EU/t is not affected by Coil tier",
@@ -56,9 +56,9 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if (aSide == aFacing) {
-            return new ITexture[]{mTextureULV, new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_PYROLYSE_OVEN_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_PYROLYSE_OVEN)};
+            return new ITexture[]{Textures.BlockIcons.casingTexturePages[1][64], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_PYROLYSE_OVEN_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_PYROLYSE_OVEN)};
         }
-        return new ITexture[]{mTextureULV};
+        return new ITexture[]{Textures.BlockIcons.casingTexturePages[1][64]};
     }
 
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
@@ -132,12 +132,12 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                             		return false;
                             	}
                             }
-                        } else if (h == 3) {// innen decke (ulv casings + input + muffler)
-                            if ((!addInputToMachineList(tTileEntity, 22)) && (!addMufflerToMachineList(tTileEntity, 22))) {
-                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings1) {
+                        } else if (h == 3) {// innen decke (Pyrolyze Casing + input + muffler)
+                            if ((!addInputToMachineList(tTileEntity, CASING_INDEX)) && (!addMufflerToMachineList(tTileEntity, CASING_INDEX))) {
+                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != CASING) {
                                     return false;
                                 }
-                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 0) {
+                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != CASING_META) {
                                     return false;
                                 }
                             }
@@ -147,22 +147,22 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                             }
                         }
                     } else {// Aeusserer 5x5 ohne hoehe
-                        if (h == 0) {// aussen boden (controller, output, energy, maintainance, rest ulv casings)
-                            if ((!addMaintenanceToMachineList(tTileEntity, 22)) && (!addOutputToMachineList(tTileEntity, 22)) && (!addEnergyInputToMachineList(tTileEntity, 22))) {
+                        if (h == 0) {// aussen boden (controller, output, energy, maintainance, rest Pyrolyze Casing)
+                            if ((!addMaintenanceToMachineList(tTileEntity, CASING_INDEX)) && (!addOutputToMachineList(tTileEntity, CASING_INDEX)) && (!addEnergyInputToMachineList(tTileEntity, CASING_INDEX))) {
                                 if ((xDir + i != 0) || (zDir + j != 0)) {//no controller
-                                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings1) {
+                                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != CASING) {
                                         return false;
                                     }
-                                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 0) {
+                                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != CASING_META) {
                                         return false;
                                     }
                                 }
                             }
-                        } else {// aussen ueber boden (ulv casings)
-                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings1) {
+                        } else {// aussen ueber boden (Pyrolyze Casing)
+                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != CASING) {
                                 return false;
                             }
-                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 0) {
+                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != CASING_META) {
                                 return false;
                             }
                         }
