@@ -69,8 +69,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     private String mOwnerName = "";
     private NBTTagCompound mRecipeStuff = new NBTTagCompound();
     public boolean mWaterProof = false;
-    private boolean mShouldTick = false;
-    
+
     private static final Field ENTITY_ITEM_HEALTH_FIELD;
     static
     {
@@ -275,19 +274,10 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     @Override
     public void updateEntity() {
         super.updateEntity();
-
-        if (GT_Mod.gregtechproxy.fixAE2SpatialPilons) {
-            if (!mShouldTick) {
-                return;
-            }
+        if (!hasValidMetaTileEntity()) {
+            if (mMetaTileEntity == null) return;
+            mMetaTileEntity.setBaseMetaTileEntity(this);
         }
-        else {
-            if (!hasValidMetaTileEntity()) {
-                if (mMetaTileEntity == null) return;
-                mMetaTileEntity.setBaseMetaTileEntity(this);
-            }
-        }
-
 
         mRunningThroughTick = true;
         long tTime = System.currentTimeMillis();
@@ -895,8 +885,6 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         tileEntityInvalid = false;
         if (canAccessData()) {
             mMetaTileEntity.onRemoval();
-            if (!GT_Mod.gregtechproxy.fixAE2SpatialPilons)
-                mMetaTileEntity.setBaseMetaTileEntity(null);
         }
 
         super.invalidate();
@@ -1423,11 +1411,11 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             if (!privateAccess() || aPlayer.getDisplayName().equalsIgnoreCase(getOwnerName())) {
                 ItemStack tCurrentItem = aPlayer.inventory.getCurrentItem();
                 if (tCurrentItem != null) {
-                    if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
-                        tCurrentItem.func_150996_a(Items.bucket);
-                        setColorization((byte) (getColorization() >= 16 ? -2 : -1));
-                        return true;
-                    }
+//                    if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
+//                        tCurrentItem.func_150996_a(Items.bucket);
+//                        setColorization((byte) (getColorization() >= 16 ? -2 : -1));
+//                        return true;
+//                    }
                     if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWrenchList)) {
                     	if(aPlayer.isSneaking() && mMetaTileEntity instanceof GT_MetaTileEntity_BasicMachine && ((GT_MetaTileEntity_BasicMachine)mMetaTileEntity).setMainFacing(GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ))){
                             GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 1000, aPlayer);
