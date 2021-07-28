@@ -19,6 +19,7 @@ import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
+import ic2.api.item.IBoxable;
 import mods.railcraft.api.core.items.IToolCrowbar;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -59,7 +60,7 @@ import static gregtech.api.enums.GT_Values.MOD_ID_RC;
  * GT_MetaGenerated_Tool.sInstances.get("gt.metatool.01").getToolWithStats(GT_MetaGenerated_Tool_01.WRENCH, 1, Materials.Bismuth, Materials.Bismuth, null);
  */
 @Optional.InterfaceList(value = {@Optional.Interface(iface = "forestry.api.arboriculture.IToolGrafter", modid = MOD_ID_FR), @Optional.Interface(iface = "mods.railcraft.api.core.items.IToolCrowbar", modid = MOD_ID_RC), @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft"), @Optional.Interface(iface = "crazypants.enderio.api.tool.ITool", modid = "EnderIO")})
-public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements IDamagableItem, IToolGrafter, IToolCrowbar, IToolWrench, ITool {
+public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements IDamagableItem, IToolGrafter, IToolCrowbar, IToolWrench, ITool, IBoxable {
     /**
      * All instances of this Item Class are listed here.
      * This gets used to register the Renderer to all Items of this Type, if useStandardMetaItemRenderer() returns true.
@@ -72,6 +73,11 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
 
     public final ConcurrentHashMap<Short, IToolStats> mToolStats = new ConcurrentHashMap<Short, IToolStats>();
 
+    @Override
+    public boolean canBeStoredInToolbox(ItemStack itemstack) {
+        return true; //Разрешаем пихать инструменты в toolbox
+    }
+
     /**
      * Creates the Item using these Parameters.
      *
@@ -79,7 +85,7 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
      */
     public GT_MetaGenerated_Tool(String aUnlocalized) {
         super(aUnlocalized);
-        GT_ModHandler.registerBoxableItemToToolBox(this);
+        //GT_ModHandler.registerBoxableItemToToolBox(this); //Кажется это не работает
         setCreativeTab(GregTech_API.TAB_GREGTECH);
         setMaxStackSize(1);
         sInstances.put(getUnlocalizedName(), this);
