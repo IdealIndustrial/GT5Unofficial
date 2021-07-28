@@ -891,8 +891,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         tileEntityInvalid = false;
         if (canAccessData()) {
             mMetaTileEntity.onRemoval();
+            mMetaTileEntity.setBaseMetaTileEntity(null);
         }
-
         super.invalidate();
     }
 
