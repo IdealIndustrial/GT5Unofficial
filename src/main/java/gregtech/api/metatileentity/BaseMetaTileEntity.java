@@ -885,8 +885,6 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         tileEntityInvalid = false;
         if (canAccessData()) {
             mMetaTileEntity.onRemoval();
-            if (!GT_Mod.gregtechproxy.fixAE2SpatialPilons)
-                mMetaTileEntity.setBaseMetaTileEntity(null);
         }
 
         super.invalidate();
