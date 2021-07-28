@@ -72,6 +72,7 @@ public class II_Item_Machines
             II_BaseTileImpl tTileEntity = (II_BaseTileImpl) aWorld.getTileEntity(aX, aY, aZ);
             if (tTileEntity != null) {
                 tTileEntity.setInitialValuesAsNBT(tTileEntity.isServerSide() ? aStack.getTagCompound() : null, tDamage);
+                tTileEntity.onPlaced();
             }
         } else if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, tDamage, 3)) {
             return false;

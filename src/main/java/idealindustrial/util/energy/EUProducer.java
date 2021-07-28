@@ -9,4 +9,5 @@ public interface EUProducer {
     long availableAmperes();
 
     void consume(long amperes);
+
 }

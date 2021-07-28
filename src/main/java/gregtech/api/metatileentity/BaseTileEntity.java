@@ -416,7 +416,8 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
         isDead = false;
     }
 
-    public final void onAdjacentBlockChange(int aX, int aY, int aZ) {
+    //wtf? for what reason it was final...
+    public void onAdjacentBlockChange(int aX, int aY, int aZ) {
         clearNullMarkersFromTileEntityBuffer();
     }
 

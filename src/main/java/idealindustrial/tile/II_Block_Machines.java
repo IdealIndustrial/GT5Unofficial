@@ -335,14 +335,14 @@ public class II_Block_Machines
 //        if ((tTileEntity instanceof II_BaseTile)) {
 //            return ((II_BaseTile) tTileEntity).getLightOpacity();
 //        }
-        return aWorld.getBlockMetadata(aX, aY, aZ) == 0 ? 255 : 0;
+        return  0;
     }
 
     public int getLightValue(IBlockAccess aWorld, int aX, int aY, int aZ) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof BaseMetaTileEntity)) {
-            return ((BaseMetaTileEntity) tTileEntity).getLightValue();
-        }
+//        if ((tTileEntity instanceof BaseMetaTileEntity)) {
+//            return ((BaseMetaTileEntity) tTileEntity).getLightValue();
+//        }
         return 0;
     }
 

@@ -3,6 +3,7 @@ package idealindustrial.tile.meta;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
+import idealindustrial.render.II_CustomRenderer;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.tile.base.ISyncedTileEntity;
 import idealindustrial.tile.base.IToolClickableTile;
@@ -13,6 +14,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.nbt.NBTTagCompound;
 
 public interface II_MetaTile extends IUpdatableTileEntity, ISyncedTileEntity, IToolClickableTile {
 
@@ -40,5 +42,16 @@ public interface II_MetaTile extends IUpdatableTileEntity, ISyncedTileEntity, IT
     II_MetaTile newMetaTile(II_BaseTile baseTile);
 
     IInventory getFluidIORepresentation();
+
+    boolean hasRenderer();
+    II_CustomRenderer getRenderer();
+    boolean cacheCoverTexturesSeparately();
+
+    void onBlockChange();
+    void onPlaced();
+
+    NBTTagCompound saveToNBT(NBTTagCompound nbt);
+    void loadFromNBT(NBTTagCompound nbt);
+    NBTTagCompound saveNBTtoDrop(NBTTagCompound nbt);
 
 }

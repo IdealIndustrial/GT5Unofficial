@@ -21,8 +21,8 @@ import org.lwjgl.opengl.GL11;
 import static gregtech.common.render.GT_Renderer_Block.renderInventory;
 
 @SideOnly(cpw.mods.fml.relauncher.Side.CLIENT)
-public final class II_MachineRenderer implements IItemRenderer {
-    public II_MachineRenderer() {
+public final class II_MachineItemRenderer implements IItemRenderer {
+    public II_MachineItemRenderer() {
         MinecraftForgeClient.registerItemRenderer(II_Item_Machines.INSTANCE, this);
     }
 

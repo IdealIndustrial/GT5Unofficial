@@ -9,13 +9,14 @@ import net.minecraft.item.ItemStack;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static idealindustrial.tile.II_TileEvents.FACING_MAIN;
+
 /**
  * simple implementation of machine with one facing (wrench right click)
  * textures are 0 - down, 1 - up, 2 - side, 3 - outputFacing, 4 - mainFacing,  +5 for active.
  */
 public abstract class II_BaseMetaTile_Facing2Main extends II_BaseMetaTile_Facing1Output {
-    private static final int EVENT_FACING2 = 101;
-    public int mainFacing;
+     public int mainFacing;
 
     public II_BaseMetaTile_Facing2Main(II_BaseTile baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
         super(baseTile, name, baseTextures, overlays == null ? new ITexture[10] : overlays);
@@ -45,7 +46,7 @@ public abstract class II_BaseMetaTile_Facing2Main extends II_BaseMetaTile_Facing
         int sideTo = II_DirUtil.determineWrenchingSide(side, hitX, hitY, hitZ);
         if (isValidFacing(sideTo)) {
             mainFacing = sideTo;
-            baseTile.sendEvent(EVENT_FACING2, sideTo);
+            baseTile.sendEvent(FACING_MAIN, sideTo);
             return true;
         }
         return false;
@@ -53,7 +54,7 @@ public abstract class II_BaseMetaTile_Facing2Main extends II_BaseMetaTile_Facing
 
     @Override
     public boolean receiveClientEvent(int id, int value) {
-        if (id == EVENT_FACING2) {
+        if (id == FACING_MAIN) {
             mainFacing = value;
             baseTile.issueTextureUpdate();
             return true;

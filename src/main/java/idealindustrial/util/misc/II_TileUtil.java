@@ -4,6 +4,8 @@ import idealindustrial.II_Values;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tile.meta.II_MetaTile;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class II_TileUtil {
 
@@ -14,5 +16,13 @@ public class II_TileUtil {
 
     public static II_BaseTile makeBaseTile() {
         return new II_BaseTileImpl();
+    }
+
+    public static II_MetaTile getMetaTile(World world, int x, int y, int z) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof II_BaseTile) {
+            return ((II_BaseTile) tile).getMetaTile();
+        }
+        return null;
     }
 }

@@ -1,6 +1,6 @@
 package idealindustrial.loader;
 
-import idealindustrial.render.II_MachineRenderer;
+import idealindustrial.render.II_MachineItemRenderer;
 import idealindustrial.render.II_MetaGeneratedItem_Renderer;
 
 public class II_Render implements II_Loader {
@@ -12,6 +12,6 @@ public class II_Render implements II_Loader {
 
     public void load() {
         new II_MetaGeneratedItem_Renderer();
-        new II_MachineRenderer();
+        new II_MachineItemRenderer();
     }
 }

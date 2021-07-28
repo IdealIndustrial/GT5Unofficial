@@ -3,13 +3,17 @@ package idealindustrial.tile.meta;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
+import idealindustrial.render.II_CustomRenderer;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.inventory.II_InternalInventory;
 import idealindustrial.util.misc.II_DirUtil;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -33,6 +37,7 @@ public abstract class II_BaseMetaTile implements II_MetaTile {
     protected ITexture[] baseTextures, overlays;
 
     public II_BaseMetaTile(II_BaseTile baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
+        assert baseTextures != null && overlays != null;
         this.name = name;
         this.baseTile = baseTile;
         this.baseTextures = baseTextures;
@@ -188,5 +193,55 @@ public abstract class II_BaseMetaTile implements II_MetaTile {
     @Override
     public IInventory getFluidIORepresentation() {
         return null;
+    }
+
+    @Override
+    public boolean hasRenderer() {
+        return false;
+    }
+
+    @Override
+    public II_CustomRenderer getRenderer() {
+        return null;
+    }
+
+    @Override
+    public boolean cacheCoverTexturesSeparately() {
+        return false;
+    }
+
+    @Override
+    public GuiContainer getClientGUI(EntityPlayer player, int internalID) {
+        return null;
+    }
+
+    @Override
+    public Container getServerGUI(EntityPlayer player, int internalID) {
+        return null;
+    }
+
+    @Override
+    public void onBlockChange() {
+
+    }
+
+    @Override
+    public void onPlaced() {
+
+    }
+
+    @Override
+    public NBTTagCompound saveToNBT(NBTTagCompound nbt) {
+        return nbt;
+    }
+
+    @Override
+    public void loadFromNBT(NBTTagCompound nbt) {
+
+    }
+
+    @Override
+    public NBTTagCompound saveNBTtoDrop(NBTTagCompound nbt) {
+        return nbt;
     }
 }

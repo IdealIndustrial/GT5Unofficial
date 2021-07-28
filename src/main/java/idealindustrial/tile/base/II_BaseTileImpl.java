@@ -13,6 +13,8 @@ import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
+import idealindustrial.render.II_CustomRenderer;
+import idealindustrial.tile.II_TileEvents;
 import idealindustrial.tile.covers.II_CoverBehavior;
 import idealindustrial.tile.covers.II_CoverRegistry;
 import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
@@ -45,6 +47,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
+import static idealindustrial.tile.II_TileEvents.BASE_ACTIVE;
 import static idealindustrial.tile.base.II_BaseTileConstants.*;
 
 public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
@@ -61,8 +64,8 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     II_FluidHandler inTank, outTank;
     int color;
     II_EnergyHandler handler = new II_EmptyEnergyHandler();
-    //texture cache, active/side/textureLayers
-    ITexture[][][] textureCache = new ITexture[2][6][];
+    //texture cache, active + covers/side/textureLayers
+    ITexture[][][] textureCache = new ITexture[3][6][];
 
     boolean allowedToWork, active;
 
@@ -76,7 +79,15 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
+    public II_MetaTile getMetaTile() {
+        return metaTileEntity;
+    }
+
+    @Override
     public void writeToNBT(NBTTagCompound tag) {
+        if (metaTileEntity == null) {
+            worldObj.setBlock(xCoord, yCoord, zCoord, Blocks.air);
+        }
         super.writeToNBT(tag);
 
         in.nbtSave(tag, "in");
@@ -89,6 +100,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         tag.setIntArray("covers", coverIDs);
         II_StreamUtil.writeNBTLongArray(tag, coverValues, "coverValues");
         tag.setInteger("mID", metaTileID);
+        tag.setTag("meta", metaTileEntity.saveToNBT(new NBTTagCompound()));
     }
 
     @Override
@@ -109,6 +121,9 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         }
         coverValues = II_StreamUtil.readNBTLongArray(tag, 6, "coverValues");
         handler.nbtLoad(tag, "eu");
+
+        NBTTagCompound metaNBT = tag.getCompoundTag("meta");
+        metaTileEntity.loadFromNBT(metaNBT == null ? new NBTTagCompound() : metaNBT);
 
     }
 
@@ -423,11 +438,11 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
 
     protected boolean letsFluidIn(int side) {
-        return false;
+        return true;
     }
 
     protected boolean letsFluidOut(int side) {
-        return false;
+        return true;
     }
 
     @Override
@@ -497,7 +512,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         }
         ITexture[][] textures = new ITexture[6][];
         for (int side = 0; side < 6; side++) {
-            textures[side] = provideTexture(aActive, side);
+            textures[side] = provideTexture(aActive, side, true);
         }
 
         if (metaTileEntity instanceof II_BaseMetaTile_Facing1Output) {
@@ -507,27 +522,46 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
-    public ITexture[][] getTextures(boolean tCovered) {
-        return new ITexture[0][];//pipe entity. not used currently
+    public ITexture[][] getTextures(boolean covered) {
+        if (covered) {
+            return textureCache[2];
+        }
+        else {
+            return getTextures();
+        }
     }
 
     @Override
     public void rebakeMap() {
-        textureCache = new ITexture[2][6][];
-        for (int i = 0; i < 6; i++) {
-            textureCache[0][i] = provideTexture(false, i);
-            textureCache[1][i] = provideTexture(true, i);
+        if (metaTileEntity == null) {
+            return;
+        }
+        if (metaTileEntity.cacheCoverTexturesSeparately()) {
+            textureCache = new ITexture[3][6][];
+            for (int i = 0; i < 6; i++) {
+                textureCache[0][i] = provideTexture(false, i, true);
+                textureCache[1][i] = provideTexture(true, i, true);
+                textureCache[2][i] = new ITexture[]{coverAtSide(i)};
+            }
+        }
+        else {
+            textureCache = new ITexture[2][6][];
+            for (int i = 0; i < 6; i++) {
+                textureCache[0][i] = provideTexture(false, i, true);
+                textureCache[1][i] = provideTexture(true, i, true);
+            }
         }
     }
 
-    protected ITexture[] provideTexture(boolean active, int side) {
-        if (covers[side] != null) {
-            return new ITexture[]{covers[side].getTexture()};
-        }
-        if (metaTileEntity == null) {
-            return new ITexture[0];
+    protected ITexture[] provideTexture(boolean active, int side, boolean covered) {
+        if (covered && covers[side] != null) {
+            return new ITexture[]{coverAtSide(side)};
         }
         return metaTileEntity.provideTexture(active, side);
+    }
+
+    public ITexture coverAtSide(int side) {
+        return covers[side] != null ? covers[side].getTexture() : null;
     }
 
     @Override
@@ -585,11 +619,8 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         if(isServerSide() && II_ToolRegistry.applyTool(metaTileEntity, player, item, side, hitX, hitY, hitZ)) {
             return true;
         }
-        if (isServerSide() && !player.isSneaking()) {
+        if (isServerSide() && !player.isSneaking() && getServerGUI(player, 0) != null) {
             openGUI(player, 0);
-            return true;
-        }
-        else if (isClientSide()) {
             return true;
         }
         return false;
@@ -607,7 +638,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     @Override
     public boolean receiveClientEvent(int id, int value) {
         switch (id) {
-            case EVENT_ACTIVE:
+            case BASE_ACTIVE:
                 active = intToBool(value);
                 issueTextureUpdate();
                 return true;
@@ -689,5 +720,25 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     @Override
     public II_FluidHandler getOutTank() {
         return outTank;
+    }
+
+    @Override
+    public II_CustomRenderer getCustomRenderer() {
+        return metaTileEntity.hasRenderer() ? metaTileEntity.getRenderer() : null;
+    }
+
+    @Override
+    public void onAdjacentBlockChange(int aX, int aY, int aZ) {
+        super.onAdjacentBlockChange(aX, aY, aZ);
+        if (metaTileEntity != null) {
+            metaTileEntity.onBlockChange();
+        }
+    }
+
+    @Override
+    public void onPlaced() {
+        if (metaTileEntity != null) {
+            metaTileEntity.onPlaced();
+        }
     }
 }

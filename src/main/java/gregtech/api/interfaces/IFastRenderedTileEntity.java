@@ -1,5 +1,6 @@
 package gregtech.api.interfaces;
 
+import idealindustrial.render.II_CustomRenderer;
 import net.minecraft.item.ItemStack;
 
 public interface IFastRenderedTileEntity {
@@ -11,4 +12,8 @@ public interface IFastRenderedTileEntity {
     ITexture[][] getTextures(boolean tCovered);
 
     void rebakeMap();
+
+    default II_CustomRenderer getCustomRenderer() { //todo : remove default
+        return null;
+    }
 }

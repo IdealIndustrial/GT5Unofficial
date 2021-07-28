@@ -126,7 +126,11 @@ public class GT_Renderer_Block
 
     public static boolean renderStandardBlock(IBlockAccess aWorld, int aX, int aY, int aZ, Block aBlock, RenderBlocks aRenderer) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if(tTileEntity instanceof IFastRenderedTileEntity){
+        if (tTileEntity instanceof IFastRenderedTileEntity){
+            IFastRenderedTileEntity fastRenderedTileEntity = ((IFastRenderedTileEntity) tTileEntity);
+            if (fastRenderedTileEntity.getCustomRenderer() != null) {
+                return fastRenderedTileEntity.getCustomRenderer().renderWorldBlock(aWorld, fastRenderedTileEntity, aX, aY, aZ, aBlock, aRenderer);
+            }
             return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer, ((IFastRenderedTileEntity)tTileEntity).getTextures());
         }
         if ((tTileEntity instanceof ITexturedTileEntity)) {

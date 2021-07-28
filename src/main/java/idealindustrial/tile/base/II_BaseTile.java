@@ -3,6 +3,7 @@ package idealindustrial.tile.base;
 import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.tileentity.IHasInventory;
 import gregtech.api.metatileentity.IEnergyContainer;
+import idealindustrial.tile.meta.II_MetaTile;
 import idealindustrial.tile.meta.IUpdatableTileEntity;
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
@@ -40,4 +41,8 @@ public interface II_BaseTile extends IUpdatableTileEntity, IHasInventory, IFluid
     II_FluidHandler getInTank();
     II_FluidHandler getOutTank();
     II_FluidInventoryRepresentation getFluidRepresentation();
+
+    II_MetaTile getMetaTile();
+
+    void onPlaced();
 }
