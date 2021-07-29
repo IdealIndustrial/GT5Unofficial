@@ -19,6 +19,7 @@ import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import ic2.api.item.IBoxable;
 import mods.railcraft.api.core.items.IToolCrowbar;
 import net.minecraft.block.Block;
@@ -32,6 +33,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -73,9 +75,13 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
 
     public final ConcurrentHashMap<Short, IToolStats> mToolStats = new ConcurrentHashMap<Short, IToolStats>();
 
-    @Override
+    @Override //Разрешаем пихать инструменты в toolbox
     public boolean canBeStoredInToolbox(ItemStack itemstack) {
-        return true; //Разрешаем пихать инструменты в toolbox
+        int damage = Items.feather.getDamage(itemstack);
+        return damage != GT_MetaGenerated_Tool_01.TURBINE_SMALL &&
+                damage != GT_MetaGenerated_Tool_01.TURBINE &&
+                damage != GT_MetaGenerated_Tool_01.TURBINE_LARGE &&
+                damage != GT_MetaGenerated_Tool_01.TURBINE_HUGE;
     }
 
     /**
