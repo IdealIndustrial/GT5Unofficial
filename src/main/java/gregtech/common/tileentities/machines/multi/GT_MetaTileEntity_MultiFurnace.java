@@ -75,49 +75,42 @@ public class GT_MetaTileEntity_MultiFurnace
     public boolean checkRecipe(ItemStack aStack) {
         ArrayList<ItemStack> tInputList = getStoredInputs();
         if (!tInputList.isEmpty()) {
-            byte tTier = (byte) Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
+            int tTier = (byte) Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
 
-            int tMaxParrallel = 8 * this.mLevel;
-            int tCurrenParrallel = 0;
+            int tMaxParallel = 8 * this.mLevel;
+            int tCurrentParallel = 0;
             ItemStack tSmeltStack = tInputList.get(0);
-            ItemStack tOutputStack = GT_ModHandler.getSmeltingOutput(tSmeltStack,false,null);
-            if (tOutputStack == null)
-                    return false;
-            for (int i = 0;i<tInputList.size();i++)
-            {
-                ItemStack item = tInputList.get(i);
-                if (tSmeltStack.isItemEqual(item))
-                {
-                    if (item.stackSize<(tMaxParrallel-tCurrenParrallel))
-                    {
-                        tCurrenParrallel += item.stackSize;
+            ItemStack tOutputStack = GT_ModHandler.getSmeltingOutput(tSmeltStack, false, null);
+            if (tOutputStack == null) {
+                return false;
+            }
+            for (ItemStack item : tInputList) {
+                if (tSmeltStack.isItemEqual(item)) {
+                    if (item.stackSize < (tMaxParallel - tCurrentParallel)) {
+                        tCurrentParallel += item.stackSize;
                         item.stackSize = 0;
-                    }
-                    else
-                    {
-                        item.stackSize = (tCurrenParrallel + item.stackSize) - tMaxParrallel;
-                        tCurrenParrallel = tMaxParrallel;
+                    } else {
+                        item.stackSize = (tCurrentParallel + item.stackSize) - tMaxParallel;
+                        tCurrentParallel = tMaxParallel;
                         break;
                     }
                 }
             }
-            
-            tCurrenParrallel *= tOutputStack.stackSize;
-            this.mOutputItems = new ItemStack[(tCurrenParrallel/64)+1];
-            for (int i = 0; i<this.mOutputItems.length;i++)
-            {
+
+            tCurrentParallel *= tOutputStack.stackSize;
+            this.mOutputItems = new ItemStack[(tCurrentParallel / 64) + 1];
+            for (int i = 0; i < this.mOutputItems.length; i++) {
                 ItemStack tNewStack = tOutputStack.copy();
-                int size = tCurrenParrallel>64 ? 64 : tCurrenParrallel;
+                int size = Math.min(tCurrentParallel, 64);
                 tNewStack.stackSize = size;
-                tCurrenParrallel -= size;
+                tCurrentParallel -= size;
                 this.mOutputItems[i] = tNewStack;
             }
 
 
-            if (this.mOutputItems != null && this.mOutputItems.length > 0) {
+            if (this.mOutputItems.length > 0) {
                 this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
                 this.mEfficiencyIncrease = 10000;
-
                 this.mEUt = (-4 * (1 << tTier - 1) * (1 << tTier - 1) * this.mLevel / this.mCostDiscount);
                 this.mMaxProgresstime = Math.max(1, 512 / (1 << tTier - 1));
             }

@@ -472,6 +472,7 @@ public class GT_CraftingRecipeLoader implements Runnable {
 
 
         long bits = GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE;
+        long bitr = GT_ModHandler.RecipeBits.DISMANTLEABLE | GT_ModHandler.RecipeBits.BUFFERED | GT_ModHandler.RecipeBits.NOT_REMOVABLE;
         GT_ModHandler.addCraftingRecipe(ItemList.ModularBasicHelmet.getWildcard(1), bits, new Object[]{"AAA", "B B", 'A', new ItemStack(Items.leather, 1, 32767), 'B', OrePrefixes.ring.get(Materials.Iron)});
         GT_ModHandler.addCraftingRecipe(ItemList.ModularBasicChestplate.getWildcard(1), bits, new Object[]{"A A", "BAB", "AAA", 'A', new ItemStack(Items.leather, 1, 32767), 'B', OrePrefixes.ring.get(Materials.Iron)});
         GT_ModHandler.addCraftingRecipe(ItemList.ModularBasicLeggings.getWildcard(1), bits, new Object[]{"BAB", "A A", "A A", 'A', new ItemStack(Items.leather, 1, 32767), 'B', OrePrefixes.ring.get(Materials.Iron)});
@@ -493,7 +494,7 @@ public class GT_CraftingRecipeLoader implements Runnable {
 
         GT_ModHandler.addCraftingRecipe(ItemList.PrimitiveFluidFilterItem.get(1L), bits, new Object[]{"PSP","WOW","PSP", 'P', OrePrefixes.plate.get(Materials.Paper), 'S', new ItemStack(Items.string,1), 'W', new ItemStack(Blocks.wool, 1, GT_Values.W), 'O', OrePrefixes.pipeMedium.get(Materials.Wood) });
         GT_ModHandler.addCraftingRecipe(ItemList.Casing_Filter_ULV.get(1L), bits, new Object[]{"RFR","FPF","RFR", 'R', OrePrefixes.ring.get(Materials.Tin), 'F', ItemList.PrimitiveFluidFilterItem.get(1L), 'P', OrePrefixes.pipeMedium.get(Materials.Wood)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Tool_DataReader_MV.get(1L), bits, new Object[]{"PBP","CSC","PWP", 'P', OrePrefixes.plate.get(Materials.Aluminium), 'W', OrePrefixes.cableGt01.get(Materials.Copper), 'B', ItemList.Battery_RE_MV_Lithium,	'S', ItemList.Cover_Screen, 'C', OrePrefixes.circuit.get(Materials.Good)});
-        GT_ModHandler.addCraftingRecipe(ItemList.Tool_DataReader_EV.get(1L), bits, new Object[]{"PBP","CSC","PWP", 'P', OrePrefixes.plate.get(Materials.Titanium), 'W', OrePrefixes.cableGt01.get(Materials.Aluminium), 'B', OrePrefixes.battery.get(Materials.Master),	'S', ItemList.Cover_Screen, 'C', OrePrefixes.circuit.get(Materials.Data)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Tool_DataReader_MV.get(1L), bitr, new Object[]{"PBP","CSC","PWP", 'P', OrePrefixes.plate.get(Materials.Aluminium), 'W', OrePrefixes.cableGt01.get(Materials.Copper), 'B', ItemList.Battery_RE_MV_Lithium,	'S', ItemList.Cover_Screen, 'C', OrePrefixes.circuit.get(Materials.Good)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Tool_DataReader_EV.get(1L), bitr, new Object[]{"PBP","CSC","PWP", 'P', OrePrefixes.plate.get(Materials.Titanium), 'W', OrePrefixes.cableGt01.get(Materials.Aluminium), 'B', OrePrefixes.battery.get(Materials.Master),	'S', ItemList.Cover_Screen, 'C', OrePrefixes.circuit.get(Materials.Data)});
     }
 }

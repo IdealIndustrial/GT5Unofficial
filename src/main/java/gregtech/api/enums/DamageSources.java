@@ -46,7 +46,7 @@ public enum DamageSources {
 
     public static DamageSources determineSource(String tag) {
         DamageSources source = sources.get(tag);
-        if (source == null || source == DUMMY) {
+        if (source == null) {
             for (DamageSources s : DamageSources.values()) {
                 if (s.corresponds(tag)) {
                     sources.put(tag, s);

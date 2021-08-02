@@ -158,6 +158,8 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
             return GT_Recipe.GT_Recipe_Map.sAmplifiers;
         } else if (tmp.startsWith("circuitassembler")) {
             return GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes;
+        } else if (tmp.startsWith("filter")) {
+            return GT_Recipe.GT_Recipe_Map.sFilterRecipes;            
         }
         return null;
     }

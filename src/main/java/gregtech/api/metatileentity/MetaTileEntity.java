@@ -923,4 +923,9 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     public boolean isWaterProofByDefault() {
         return false;
     }
+
+    @Override
+    public void sendClientData() {
+
+    }
 }

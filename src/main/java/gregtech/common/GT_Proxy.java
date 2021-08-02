@@ -1,8 +1,5 @@
 package gregtech.common;
 
-import codechicken.nei.recipe.FurnaceRecipeHandler;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -30,6 +27,7 @@ import gregtech.api.objects.*;
 import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
 import gregtech.api.util.*;
 import gregtech.common.blocks.GT_Item_Machines;
+import gregtech.common.config.GT_DebugConfig;
 import gregtech.common.entities.GT_Entity_Arrow;
 import gregtech.common.gui.GT_ContainerVolumetricFlask;
 import gregtech.common.gui.GT_GUIContainerVolumetricFlask;
@@ -38,6 +36,9 @@ import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
 import gregtech.common.items.behaviors.Behaviour_ProspectorsBook;
 import gregtech.nei.GT_NEI_DefaultHandler;
+import ic2.api.item.IC2Items;
+import ic2.core.IC2;
+import ic2.core.Ic2Items;
 import ic2.core.item.block.ItemDynamite;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
@@ -243,7 +244,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean debugRecipeConflicts = true;
     public boolean betterFluidDisplay = true;
     public boolean fixAE2SpatialPilons = false;
+    public boolean mHardComponentsRecipe = false;
     public List<String> debugRecipeMapsFilter = Collections.emptyList();
+    public static final int GUI_ID_COVER_SIDE_BASE = 10; // Takes GUI ID 10 - 15
     
     public GT_Proxy() {
         GameRegistry.registerFuelHandler(this);
@@ -504,6 +507,10 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
         RecipeSorter.register("gregtech:shaped", GT_Shaped_Recipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
         RecipeSorter.register("gregtech:shapeless", GT_Shapeless_Recipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+
+        GT_ModHandler.sIgnoreLessTierList.add(new GT_NEIItemStack(IC2Items.getItem("cropnalyzer")));
+        //EnderIO:itemMagnet
+        GT_ModHandler.sIgnoreLessTierList.add(new GT_NEIItemStack(GT_ModHandler.getModItem("EnderIO", "itemMagnet", 1)));
     }
 
     public void onLoad() {
@@ -659,7 +666,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             GT_NEI_DefaultHandler.inputMaps = new HashMap<>();
             GT_NEI_DefaultHandler.outputMaps = new HashMap<>();
-            if (debugRecipeConflicts) {
+            if (GT_DebugConfig.recipeConflicts) {
                 mConflictMaps.forEach((map, recipes) -> {
                     HashMap<GT_NEIItemStack, List<GT_Recipe>> inMap = GT_NEI_DefaultHandler.inputMaps.computeIfAbsent(map, m-> new HashMap<>());
 
@@ -1449,6 +1456,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                return null;
+            }
             IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
             if (tMetaTileEntity != null) {
                 return tMetaTileEntity.getServerGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
@@ -1516,9 +1526,20 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
-            IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
+            IGregTechTileEntity tile = (IGregTechTileEntity) tTileEntity;
+
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                byte side = (byte) (aID - GT_Proxy.GUI_ID_COVER_SIDE_BASE);
+                GT_CoverBehavior cover = tile.getCoverBehaviorAtSide(side);
+
+                if (cover.hasCoverGUI()) {
+                    return cover.getClientGUI(side, tile.getCoverIDAtSide(side), tile.getCoverDataAtSide(side), tile);
+                }
+                return null;
+            }
+            IMetaTileEntity tMetaTileEntity = tile.getMetaTileEntity();
             if (tMetaTileEntity != null) {
-                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
+                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, tile);
             }
         }
         return null;
