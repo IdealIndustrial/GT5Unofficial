@@ -132,57 +132,90 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
         for (int i = 0; i < mInventory.length; i++)
             if (mInventory[i] != null && mInventory[i].stackSize <= 0) mInventory[i] = null;
     }
+	
+	private boolean areStacksSame(ItemStack a, ItemStack b) {
+		return (GT_Utility.areUnificationsEqual(a, b, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, a), b, true));
+	}
+	
+	private int countStack(ItemStack[] aList, ItemStack aStack) {
+		if (aStack == null) return 0;
+		
+		int count = 0;
+		
+		for (ItemStack tStack : aList) {
+			if (areStacksSame(tStack, aStack)) {
+				count += tStack.stackSize;
+			}
+		}
+		
+		return count;
+	}
+	
+	private ItemStack autoRepairKit = ItemList.AutoRepairKit.get(1);
+	
+	private ItemStack[] getRepairStack() {
+		return new ItemStack[]{
+			ItemList.Duct_Tape.get(4),
+			GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Lubricant, 2),
+			GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 4),
+			GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Advanced, 2)
+		};
+	}
+	
+	private void fullRepair() {
+		this.mCrowbar = true;
+		this.mHardHammer = true;
+		this.mScrewdriver = true;
+		this.mSoftHammer = true;
+		this.mSolderingTool = true;
+		this.mWrench = true;
+	}
+	
+	private void payCost (ItemStack[] repairCost) {
+		for (ItemStack row : repairCost) {
+			if (row == null) continue;
+			
+			int rowCost = row.stackSize;
+			
+			for (ItemStack aStack : mInventory) {
+				if (areStacksSame(aStack, row)) {
+					if (aStack.stackSize < rowCost) {
+						rowCost -= aStack.stackSize;
+						aStack.stackSize = 0;
+					} else {
+						aStack.stackSize -= rowCost;
+						rowCost = 0;
+						break;
+					}
+				}
+			}
+		}
+		updateSlots();
+	}
 
     public boolean autoMaintainance() {
-        boolean tSuccess = true;
-        ItemStack[] mInputs = new ItemStack[]{ItemList.Duct_Tape.get(4, new Object[]{}), GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Lubricant, 2), GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 4), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Advanced, 2)};
-        List<ItemStack> aInputs = Arrays.asList(mInventory);
-        if (mInputs.length > 0 && aInputs == null) tSuccess = false;
-        int amt = 0;
-        for (ItemStack tStack : mInputs) {
-            if (tStack != null) {
-                amt = tStack.stackSize;
-                boolean temp = true;
-                for (ItemStack aStack : aInputs) {
-                    if ((GT_Utility.areUnificationsEqual(aStack, tStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), tStack, true))) {
-                        amt -= aStack.stackSize;
-                        if (amt < 1) {
-                            temp = false;
-                            break;
-                        }
-                    }
-                }
-                if (temp) tSuccess = false;
-            }
-        }
-        if (tSuccess) {
-            for (ItemStack tStack : mInputs) {
-                if (tStack != null) {
-                    amt = tStack.stackSize;
-                    for (ItemStack aStack : aInputs) {
-                        if ((GT_Utility.areUnificationsEqual(aStack, tStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), tStack, true))) {
-                            if (aStack.stackSize < amt) {
-                                amt -= aStack.stackSize;
-                                aStack.stackSize = 0;
-                            } else {
-                                aStack.stackSize -= amt;
-                                amt = 0;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            this.mCrowbar = true;
-            this.mHardHammer = true;
-            this.mScrewdriver = true;
-            this.mSoftHammer = true;
-            this.mSolderingTool = true;
-            this.mWrench = true;
-            updateSlots();
-            return true;
-        }
-        return false;
+        ItemStack[] repairCost = getRepairStack();
+		
+        if (repairCost.length > 0 && mInventory == null) {
+			return false;
+		}
+		
+		int kitsCount = countStack(mInventory, autoRepairKit);
+		
+		if (kitsCount >= autoRepairKit.stackSize) {
+			payCost(new ItemStack[]{ autoRepairKit });
+		} else {
+			for (ItemStack row : repairCost) {
+				int inventoryCount = countStack(mInventory, row);
+				
+				if (row.stackSize > inventoryCount) return false;
+			}
+			payCost(repairCost);
+		}
+		
+		fullRepair();
+		
+		return true;
     }
 
     public void onToolClick(ItemStack aStack, EntityLivingBase aPlayer) {
@@ -216,51 +249,40 @@ public class GT_MetaTileEntity_Hatch_Maintenance extends GT_MetaTileEntity_Hatch
     public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
         if(!(mAuto && GT_Mod.gregtechproxy.mAMHInteraction))
             return false;
-        ItemStack[] mInputs = new ItemStack[]{ItemList.Duct_Tape.get(32, new Object[]{}), GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Lubricant, 32), GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 32), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Advanced, 32)};
-        ItemStack[] aInputs = mInventory;
-        for(ItemStack nStack :mInputs) {
-            if (GT_Utility.areUnificationsEqual(aStack, nStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), GT_OreDictUnificator.get(false, nStack), true)) {
-                for (byte i = 0;i<mInventory.length;i++) {
-                    ItemStack tStack =aInputs[i];
-                    if (GT_Utility.areUnificationsEqual(aStack, tStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), GT_OreDictUnificator.get(false, tStack), true)) {
-                        if ((tStack.stackSize < 64)){
-                            return true;
-                        }
-                        return false;
-                    }
-                    if(i == 3){
-                        return true;
-                    }
-
-                }
-            }
-        }
-        return false;
+		
+		if (!isRepairItem(aStack))
+			return false;
+			
+		return isItemNotFull(aStack);
     }
 
     @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
         if(!(mAuto && GT_Mod.gregtechproxy.mAMHInteraction))
             return false;
-        ItemStack[] mInputs = new ItemStack[]{ItemList.Duct_Tape.get(32, new Object[]{}), GT_OreDictUnificator.get(OrePrefixes.cell, Materials.Lubricant, 32), GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 32), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Advanced, 32)};
-        ItemStack[] aInputs = mInventory;
-        for(ItemStack nStack :mInputs) {
-            if (GT_Utility.areUnificationsEqual(aStack, nStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), GT_OreDictUnificator.get(false, nStack), true)) {
-                for (byte i = 0;i<mInventory.length;i++) {
-                    ItemStack tStack =aInputs[i];
-                    if (GT_Utility.areUnificationsEqual(aStack, tStack, true) || GT_Utility.areUnificationsEqual(GT_OreDictUnificator.get(false, aStack), GT_OreDictUnificator.get(false, tStack), true)) {
-                        if ((tStack.stackSize < 64)){
-                            return true;
-                        }
-                        return false;
-                    }
-                    if(i == 3){
-                        return true;
-                    }
-
-                }
+		
+		if (!isRepairItem(aStack))
+			return false;
+			
+		return isItemNotFull(aStack);
+    }
+	
+	private boolean isRepairItem(ItemStack aStack) {
+		if (areStacksSame(aStack, autoRepairKit)) {
+			return true;
+		}
+		
+        ItemStack[] mInputs = getRepairStack();
+		
+		for(ItemStack nStack :mInputs) {
+            if (areStacksSame(aStack, nStack)) {
+                return true;
             }
         }
         return false;
-    }
+	}
+	
+	private boolean isItemNotFull (ItemStack aStack) {
+		return countStack(mInventory, aStack) < 64;
+	}
 }
