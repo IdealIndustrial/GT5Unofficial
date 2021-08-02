@@ -100,9 +100,9 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                                 break;
                             }
                         }
-                        if (((aMaterial.mExtraData & 0x1) != 0)&&!aMaterial.mName.equals("SodiumHydroxide_GT5U"))
+                        if (((aMaterial.mExtraData & 0x1) != 0) && !aMaterial.mName.equals("SodiumHydroxide_GT5U"))
                             GT_Values.RA.addElectrolyzerRecipe(GT_Utility.copyAmount(tItemAmount, new Object[]{aStack}), tCapsuleCount > 0L ? ItemList.Cell_Empty.get(tCapsuleCount, new Object[0]) : null, null, tFluid, tList.size() < 1 ? null : (ItemStack) tList.get(0), tList.size() < 2 ? null : (ItemStack) tList.get(1), tList.size() < 3 ? null : (ItemStack) tList.get(2), tList.size() < 4 ? null : (ItemStack) tList.get(3), tList.size() < 5 ? null : (ItemStack) tList.get(4), tList.size() < 6 ? null : (ItemStack) tList.get(5), null, (int) Math.max(1L, Math.abs(aMaterial.getProtons() * 2L * tItemAmount)), Math.min(4, tList.size()) * 30);
-                        else if(((aMaterial.mExtraData & 0x1) != 0)&&aMaterial.mName.equals("SodiumHydroxide_GT5U"))
+                        else if (((aMaterial.mExtraData & 0x1) != 0) && aMaterial.mName.equals("SodiumHydroxide_GT5U"))
                             GT_Values.RA.addElectrolyzerRecipe(GT_Utility.copyAmount(tItemAmount, new Object[]{aStack}), tCapsuleCount > 0L ? ItemList.Cell_Empty.get(tCapsuleCount, new Object[0]) : null, null, tFluid, tList.size() < 1 ? null : (ItemStack) tList.get(0), tList.size() < 2 ? null : (ItemStack) tList.get(1), tList.size() < 3 ? null : (ItemStack) tList.get(2), tList.size() < 4 ? null : (ItemStack) tList.get(3), tList.size() < 5 ? null : (ItemStack) tList.get(4), tList.size() < 6 ? null : (ItemStack) tList.get(5), null, 186, 120);
                         if ((aMaterial.mExtraData & 0x2) != 0) {
                             GT_Values.RA.addCentrifugeRecipe(GT_Utility.copyAmount(tItemAmount, new Object[]{aStack}), tCapsuleCount > 0L ? ItemList.Cell_Empty.get(tCapsuleCount, new Object[0]) : null, null, tFluid, tList.size() < 1 ? null : (ItemStack) tList.get(0), tList.size() < 2 ? null : (ItemStack) tList.get(1), tList.size() < 3 ? null : (ItemStack) tList.get(2), tList.size() < 4 ? null : (ItemStack) tList.get(3), tList.size() < 5 ? null : (ItemStack) tList.get(4), tList.size() < 6 ? null : (ItemStack) tList.get(5), null, (int) Math.max(1L, Math.abs(aMaterial.getMass() * 4L * tItemAmount)), Math.min(4, tList.size()) * 5);
@@ -120,7 +120,9 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                     case "Glass":
                         GT_ModHandler.addSmeltingRecipe(GT_Utility.copyAmount(1L, new Object[]{aStack}), new ItemStack(net.minecraft.init.Blocks.glass));
                         break;
-                    case "NetherQuartz": case "Quartz": case "CertusQuartz":
+                    case "NetherQuartz":
+                    case "Quartz":
+                    case "CertusQuartz":
                         if (gregtech.api.GregTech_API.sRecipeFile.get(gregtech.api.enums.ConfigCategories.Recipes.disabledrecipes, "QuartzDustSmeltingIntoAESilicon", true))
                             GT_ModHandler.removeFurnaceSmelting(aStack);
                         break;
@@ -160,14 +162,32 @@ public class ProcessingDust implements gregtech.api.interfaces.IOreRecipeRegistr
                     case "Diamond":
                         GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, new Object[]{aStack}), 32, ItemList.IC2_Industrial_Diamond.get(3L, new Object[0]), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 16L));
                         break;
-                    case "Opal": case "Olivine": case "Emerald": case "Ruby": case "Sapphire": case "GreenSapphire": case "Topaz": case "BlueTopaz": case "Tanzanite":
+                    case "Opal":
+                    case "Olivine":
+                    case "Emerald":
+                    case "Ruby":
+                    case "Sapphire":
+                    case "GreenSapphire":
+                    case "Topaz":
+                    case "BlueTopaz":
+                    case "Tanzanite":
                         GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, new Object[]{aStack}), 24, GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 12L));
                         break;
-                    case "FoolsRuby": case "GarnetRed": case "GarnetYellow": case "Jasper": case "Amber": case "Monazite": case "Forcicium": case "Forcillium": case "Force":
+                    case "FoolsRuby":
+                    case "GarnetRed":
+                    case "GarnetYellow":
+                    case "Jasper":
+                    case "Amber":
+                    case "Monazite":
+                    case "Forcicium":
+                    case "Forcillium":
+                    case "Force":
                         GT_Values.RA.addImplosionRecipe(GT_Utility.copyAmount(4L, new Object[]{aStack}), 16, GT_OreDictUnificator.get(OrePrefixes.gem, aMaterial, 3L), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.DarkAsh, 8L));
                 }
                 break;
-            case dustPure: case dustImpure:case dustRefined:
+            case dustPure:
+            case dustImpure:
+            case dustRefined:
                 Materials tByProduct = (Materials) GT_Utility.selectItemInList(aPrefix == OrePrefixes.dustRefined ? 2 : aPrefix == OrePrefixes.dustPure ? 1 : 0, aMaterial, aMaterial.mOreByProducts);
 
                 if (aPrefix == OrePrefixes.dustPure) {
