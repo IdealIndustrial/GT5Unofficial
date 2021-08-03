@@ -17,7 +17,7 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
     public GT_Recipe_Map mRecipeMap = null;
 
     public GT_MetaTileEntity_Hatch_Input(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 3, new String[]{"Fluid Input for Multiblocks",  "Capacity: "+ 8000 * (aTier + 1) + "L"});
+        super(aID, aName, aNameRegional, aTier, 3, new String[]{"Fluid Input for Multiblocks",  "Capacity: "+ countCapacity(aTier) + "L"});
     }
 
     public GT_MetaTileEntity_Hatch_Input(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
@@ -117,9 +117,15 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
         return aSide == aBaseMetaTileEntity.getFrontFacing() && aIndex == 0 && (mRecipeMap == null || mRecipeMap.containsInput(aStack) || mRecipeMap.containsInput(GT_Utility.getFluidForFilledItem(aStack, true)));
     }
 
+    public static int countCapacity (int aTier) {
+        int x = aTier + 1;
+        if (x > 8) x = 8;
+        return 4000 * x * x;
+    }
+
     @Override
     public int getCapacity() {
-        return 8000 * (mTier + 1);
+        return countCapacity(mTier);
     }
 
     @Override
