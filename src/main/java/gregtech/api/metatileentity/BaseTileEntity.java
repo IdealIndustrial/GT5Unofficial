@@ -76,17 +76,17 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
     }
 
     @Override
-    public final int getOffsetX(byte aSide, int aMultiplier) {
+    public final int getOffsetX(int aSide, int aMultiplier) {
         return xCoord + ForgeDirection.getOrientation(aSide).offsetX * aMultiplier;
     }
 
     @Override
-    public final short getOffsetY(byte aSide, int aMultiplier) {
+    public final short getOffsetY(int aSide, int aMultiplier) {
         return (short) (yCoord + ForgeDirection.getOrientation(aSide).offsetY * aMultiplier);
     }
 
     @Override
-    public final int getOffsetZ(byte aSide, int aMultiplier) {
+    public final int getOffsetZ(int aSide, int aMultiplier) {
         return zCoord + ForgeDirection.getOrientation(aSide).offsetZ * aMultiplier;
     }
 
@@ -355,7 +355,7 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
     }
 
     @Override
-    public final TileEntity getTileEntityAtSide(byte aSide) {
+    public final TileEntity getTileEntityAtSide(int aSide) {
         if (aSide < 0 || aSide >= 6 || mBufferedTileEntities[aSide] == this) return null;
         int tX = getOffsetX(aSide, 1), tY = getOffsetY(aSide, 1), tZ = getOffsetZ(aSide, 1);
         if (crossedChunkBorder(tX, tZ)) {

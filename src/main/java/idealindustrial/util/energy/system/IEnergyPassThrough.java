@@ -7,6 +7,13 @@ public interface IEnergyPassThrough {
     long loss();
 
     void onPassing(long voltage, long amperage);
-    void check(long voltage, long amperage);
-    void update();
+
+    default void invalidate() {
+        //do nothing in general
+    }
+
+    default void update() {
+        //do nothing in general
+    }
+
 }

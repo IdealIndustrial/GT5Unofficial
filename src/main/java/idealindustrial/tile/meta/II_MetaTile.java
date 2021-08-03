@@ -16,7 +16,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 
-public interface II_MetaTile extends IUpdatableTileEntity, ISyncedTileEntity, IToolClickableTile {
+public interface II_MetaTile<B extends II_BaseTile> extends IUpdatableTileEntity, ISyncedTileEntity, IToolClickableTile {
 
 
     boolean hasInventory();
@@ -38,8 +38,8 @@ public interface II_MetaTile extends IUpdatableTileEntity, ISyncedTileEntity, IT
     Container getServerGUI(EntityPlayer player, int internalID);
 
     ITexture[] provideTexture(boolean active, int side);
-    II_BaseTile getBase();
-    II_MetaTile newMetaTile(II_BaseTile baseTile);
+    B getBase();
+    II_MetaTile<B> newMetaTile(B baseTile);
 
     IInventory getFluidIORepresentation();
 
@@ -49,6 +49,7 @@ public interface II_MetaTile extends IUpdatableTileEntity, ISyncedTileEntity, IT
 
     void onBlockChange();
     void onPlaced();
+    void onRemoval();
 
     NBTTagCompound saveToNBT(NBTTagCompound nbt);
     void loadFromNBT(NBTTagCompound nbt);

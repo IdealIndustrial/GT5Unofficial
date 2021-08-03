@@ -2,14 +2,13 @@ package idealindustrial.util.energy.system;
 
 import idealindustrial.tile.meta.connected.II_MetaConnected_Cable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EnergyConnection implements IEnergyPassThrough {
-    long maxAmperage, maxVoltage, loss;
-    long currentAmperage, currentVoltage;
-    List<II_MetaConnected_Cable> cables;
-    IEnergyNode node1, node2;
+    protected long maxAmperage, maxVoltage, loss;
+    protected long currentAmperage, currentVoltage;
+    protected List<II_MetaConnected_Cable> cables;
+    protected IEnergyNode node1, node2;
 
     public EnergyConnection(List<II_MetaConnected_Cable> cables, IEnergyNode node1, IEnergyNode node2) { //todo: think about lazy loss amperage and voltage
         this.cables = cables;
@@ -39,17 +38,23 @@ public class EnergyConnection implements IEnergyPassThrough {
     public void onPassing(long voltage, long amperage) {
         currentAmperage += amperage;
         currentVoltage += voltage;
-        check(currentVoltage, currentAmperage);
     }
 
     @Override
-    public void check(long voltage, long amperage) {
-
+    public void invalidate() {
+        cables.forEach(II_MetaConnected_Cable::onSystemInvalidate);
     }
 
     @Override
     public void update() {
+        if (currentVoltage > maxVoltage() || currentAmperage > maxAmperage()) {
+            cables.forEach(c -> c.checkEnergy(currentVoltage, currentAmperage));
+        }
+        currentVoltage = currentAmperage = 0;
+    }
 
+    public boolean isValid() {
+        return node1 != null && node2 != null;
     }
 
     protected IEnergyNode getOther(IEnergyNode node) {

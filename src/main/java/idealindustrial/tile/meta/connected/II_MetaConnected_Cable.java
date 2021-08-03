@@ -7,8 +7,13 @@ import gregtech.api.objects.GT_RenderedTexture;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tile.meta.II_MetaTile;
+import idealindustrial.util.energy.system.Cross;
 import idealindustrial.util.energy.system.II_CableSystem;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+
+import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class II_MetaConnected_Cable extends II_BaseMetaConnected {
     public II_CableSystem system;
@@ -46,14 +51,7 @@ public class II_MetaConnected_Cable extends II_BaseMetaConnected {
 
     @Override
     public void onPostTick(long timer, boolean serverSide) {
-        if (system == null) {
-            initDataSystem();
-        }
-    }
 
-    public void initDataSystem() {
-        system = new II_CableSystem();
-        system.init(this);
     }
 
     public long getLoss() {
@@ -66,5 +64,37 @@ public class II_MetaConnected_Cable extends II_BaseMetaConnected {
 
     public long getAmperage() {
         return amperage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return baseTile.equals(((II_MetaConnected_Cable) o).baseTile);
+    }
+
+    @Override
+    public int hashCode() {
+        return baseTile.hashCode();
+    }
+
+    //checks V and A and burns cable if necessary
+    public void checkEnergy(long voltage, long amperage) {
+        if (voltage > this.voltage || amperage > this.amperage) {
+            burnCable();
+        }
+    }
+
+    protected void burnCable() {
+        baseTile.getWorld().setBlock(getBase().getXCoord(), getBase().getYCoord(), getBase().getZCoord(), Blocks.fire);
+    }
+
+    public void onSystemInvalidate() {
+        system = null;
+    }
+
+    @Override
+    public void onRemoval() {
+        super.onRemoval();
     }
 }

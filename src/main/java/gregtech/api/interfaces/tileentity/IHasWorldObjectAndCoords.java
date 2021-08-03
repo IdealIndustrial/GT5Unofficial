@@ -35,7 +35,7 @@ public interface IHasWorldObjectAndCoords {
 
     public TileEntity getTileEntityOffset(int aX, int aY, int aZ);
 
-    public TileEntity getTileEntityAtSide(byte aSide);
+    public TileEntity getTileEntityAtSide(int aSide);
 
     public TileEntity getTileEntityAtSideAndDistance(byte aSide, int aDistance);
 
@@ -115,11 +115,11 @@ public interface IHasWorldObjectAndCoords {
 
     public BiomeGenBase getBiome(int aX, int aZ);
 
-    public int getOffsetX(byte aSide, int aMultiplier);
+    public int getOffsetX(int aSide, int aMultiplier);
 
-    public short getOffsetY(byte aSide, int aMultiplier);
+    public short getOffsetY(int aSide, int aMultiplier);
 
-    public int getOffsetZ(byte aSide, int aMultiplier);
+    public int getOffsetZ(int aSide, int aMultiplier);
 
     /**
      * Checks if the TileEntity is Invalid or Unloaded. Stupid Minecraft cannot do that btw.
@@ -166,4 +166,6 @@ public interface IHasWorldObjectAndCoords {
      * Opens the GUI with the ID = 0 of this TileEntity
      */
     public boolean openGUI(EntityPlayer aPlayer);
+
+    public void markDirty();
 }

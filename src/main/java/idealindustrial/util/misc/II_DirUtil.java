@@ -63,7 +63,7 @@ public class II_DirUtil {
     }
 
     private static final int[] opposites = new int[]{1, 0, 3,2, 5, 4};
-    private static int getOppositeSide(int side) {
+    public static int getOppositeSide(int side) {
         return opposites[side];
     }
 }

@@ -1,0 +1,55 @@
+package idealindustrial.util.energy.system;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class EnergyPathCache {
+
+    protected final II_CableSystem system;
+    protected Map<Pair<NodeProducer, NodeConsumer>, EnergyPath> cache = new HashMap<>();
+
+
+    public EnergyPathCache(II_CableSystem system) {
+        this.system = system;
+    }
+
+    public EnergyPath get(NodeProducer producer, NodeConsumer consumer) {
+        Pair<NodeProducer, NodeConsumer> pair = new ImmutablePair<>(producer, consumer);
+        EnergyPath path = cache.get(pair);
+        if (path != null) {
+            return path;
+        }
+        cacheWays(producer);
+        assert cache.containsKey(pair);
+        return cache.get(pair);
+    }
+
+    protected void cacheWays(NodeProducer producer) {
+        EnergyPath path = new EnergyPath(new ArrayList<>());
+        path.from = producer;
+        path.append(producer.connection);
+        nextStep(producer.connection.getOther(producer), path);
+
+    }
+
+    protected void nextStep(IEnergyNode node, EnergyPath path) {
+        switch (node.type()) {
+            case CROSS:
+                path.append(node);
+                for (EnergyConnection connection : node.connections()) {
+                    EnergyPath copy = path.copy();
+                    copy.append(connection);
+                    nextStep(connection.getOther(node), copy);
+                }
+            case PRODUCER:
+                return;
+            case CONSUMER:
+                path.to = (NodeConsumer) node;
+                cache.put(new ImmutablePair<>(path.from, path.to), path);
+        }
+    }
+}

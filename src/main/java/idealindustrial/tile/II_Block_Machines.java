@@ -18,6 +18,7 @@ import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.itemgen.blocks.base.II_Base_Block;
 import idealindustrial.tile.base.IClickableTileEntity;
+import idealindustrial.tile.base.II_BaseMachineTile;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tools.II_ToolRegistry;
@@ -219,12 +220,12 @@ public class II_Block_Machines
     public void breakBlock(World aWorld, int aX, int aY, int aZ, Block par5, int par6) {
         GregTech_API.causeMachineUpdate(aWorld, aX, aY, aZ);
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof II_BaseTile)) {
-            II_BaseTile tGregTechTileEntity = (II_BaseTile) tTileEntity;
+        if ((tTileEntity instanceof II_BaseMachineTile)) {
+            II_BaseMachineTile tGregTechTileEntity = (II_BaseMachineTile) tTileEntity;
             Random tRandom = new XSTR();
             for (int i = 0; i < tGregTechTileEntity.getSizeInventory(); i++) {
                 ItemStack tItem = tGregTechTileEntity.getStackInSlot(i);
-                if ((tItem != null) && (tItem.stackSize > 0) && (tGregTechTileEntity.isValidSlot(i))) {
+                if ((tItem != null) && (tItem.stackSize > 0)) {
                     EntityItem tItemEntity = new EntityItem(aWorld, aX + tRandom.nextFloat() * 0.8F + 0.1F, aY + tRandom.nextFloat() * 0.8F + 0.1F, aZ + tRandom.nextFloat() * 0.8F + 0.1F, new ItemStack(tItem.getItem(), tItem.stackSize, tItem.getItemDamage()));
                     if (tItem.hasTagCompound()) {
                         tItemEntity.getEntityItem().setTagCompound((NBTTagCompound) tItem.getTagCompound().copy());
@@ -415,11 +416,11 @@ public class II_Block_Machines
 
     public boolean recolourBlock(World aWorld, int aX, int aY, int aZ, ForgeDirection aSide, int aColor) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof II_BaseTile)) {
-            if (((II_BaseTile) tTileEntity).getColorization() == (byte) ((aColor ^ 0xFFFFFFFF) & 0xF)) {
+        if ((tTileEntity instanceof II_BaseMachineTile)) {
+            if (((II_BaseMachineTile) tTileEntity).getColorization() == (byte) ((~aColor) & 0xF)) {
                 return false;
             }
-            ((II_BaseTile) tTileEntity).setColorization((byte) ((aColor ^ 0xFFFFFFFF) & 0xF));
+            ((II_BaseMachineTile) tTileEntity).setColorization((byte) ((~aColor) & 0xF));
             return true;
         }
         return false;

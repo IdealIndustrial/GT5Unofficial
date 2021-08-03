@@ -6,6 +6,7 @@ import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tile.meta.II_MetaTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class II_TileUtil {
 
@@ -24,5 +25,10 @@ public class II_TileUtil {
             return ((II_BaseTile) tile).getMetaTile();
         }
         return null;
+    }
+
+    public static II_MetaTile getMetaTileAtSide(II_BaseTile tile, int side) {
+        ForgeDirection dir = ForgeDirection.getOrientation(side);
+        return getMetaTile(tile.getWorld(), tile.getXCoord() + dir.offsetX, tile.getYCoord() + dir.offsetY, tile.getZCoord() + dir.offsetZ);
     }
 }

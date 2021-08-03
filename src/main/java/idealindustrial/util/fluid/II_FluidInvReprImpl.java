@@ -6,17 +6,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+//just hackery class to sync fluid display inventory with client
 public class II_FluidInvReprImpl implements II_FluidInventoryRepresentation {
 
     int size;
     FluidStack[] in, out;
     ItemStack[] stacks;
+    boolean isClient;
 
     public II_FluidInvReprImpl(FluidStack[] in, FluidStack[] out) {
         this.size = in.length + out.length;
         this.in = in;
         this.out = out;
         this.stacks = new ItemStack[size];
+        this.isClient = FMLCommonHandler.instance().getEffectiveSide().isClient();
     }
 
     @Override
@@ -26,7 +29,7 @@ public class II_FluidInvReprImpl implements II_FluidInventoryRepresentation {
 
     @Override
     public ItemStack getStackInSlot(int i) {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {//no fluids on client so fluids are converted to items and sent to client
+        if (isClient) {//no fluids on client so fluids are converted to items and sent to client
             return stacks[i];
         }
         if (i < getInSize()) {
@@ -51,7 +54,7 @@ public class II_FluidInvReprImpl implements II_FluidInventoryRepresentation {
 
     @Override
     public void setInventorySlotContents(int i, ItemStack stack) {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {//set for client when processing item packet
+        if (isClient) {//set for client when processing item packet
             stacks[i] = stack;
         }
     }

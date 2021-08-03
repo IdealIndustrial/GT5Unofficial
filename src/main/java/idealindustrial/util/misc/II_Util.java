@@ -2,6 +2,7 @@ package idealindustrial.util.misc;
 
 import org.omg.CORBA.Object;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -34,5 +35,11 @@ public class II_Util {
     @SuppressWarnings("unchecked")
     public static <T> T[] nonNull(T[] ar) {
         return ar == null ? (T[]) new Object[0] : ar;
+    }
+
+    public static boolean[] trueAr(int size) {
+        boolean[] ar = new boolean[size];
+        Arrays.fill(ar, true);
+        return ar;
     }
 }

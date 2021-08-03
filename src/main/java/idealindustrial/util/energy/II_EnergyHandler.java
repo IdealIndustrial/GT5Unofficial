@@ -1,5 +1,6 @@
 package idealindustrial.util.energy;
 
+import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.util.misc.II_NBTSerializable;
 
 public abstract class II_EnergyHandler implements II_NBTSerializable {

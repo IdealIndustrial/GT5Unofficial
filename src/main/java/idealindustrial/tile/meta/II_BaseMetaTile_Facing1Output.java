@@ -1,6 +1,7 @@
 package idealindustrial.tile.meta;
 
 import gregtech.api.interfaces.ITexture;
+import idealindustrial.tile.base.II_BaseMachineTile;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.util.misc.II_DirUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,14 +13,14 @@ import static idealindustrial.tile.II_TileEvents.FACING_OUTPUT;
  * simple implementation of machine with one facing (wrench right click)
  * textures are 0 - down, 1 - up, 2 - side, 3 - outputFacing, +4 for active.
  */
-public abstract class II_BaseMetaTile_Facing1Output extends II_BaseMetaTile {
+public abstract class II_BaseMetaTile_Facing1Output<B extends II_BaseMachineTile> extends II_BaseMetaTile<B> {
     public int outputFacing;
 
-    public II_BaseMetaTile_Facing1Output(II_BaseTile baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
+    public II_BaseMetaTile_Facing1Output(B baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
         super(baseTile, name, baseTextures, overlays);
     }
 
-    public II_BaseMetaTile_Facing1Output(II_BaseTile baseTile) {
+    public II_BaseMetaTile_Facing1Output(II_BaseMachineTile baseTile) {
         super(baseTile);
     }
 
@@ -59,4 +60,5 @@ public abstract class II_BaseMetaTile_Facing1Output extends II_BaseMetaTile {
     protected boolean isValidFacing(int side) {
         return true;
     }
+
 }

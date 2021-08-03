@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Objects;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static idealindustrial.tile.II_TileEvents.CONNECTIONS;
@@ -158,5 +159,10 @@ public abstract class II_BaseMetaConnected extends II_BaseMetaTile {
 
     public void onConnectionUpdate() {
 
+    }
+
+    //definitely not fast, replace
+    public int connectionCount() {
+        return IntStream.iterate(0, i -> i + 1).limit(6).map(i -> isConnected(i) ? 1 : 0).sum();
     }
 }

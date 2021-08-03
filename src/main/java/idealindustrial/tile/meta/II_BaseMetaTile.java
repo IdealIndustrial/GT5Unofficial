@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.render.II_CustomRenderer;
+import idealindustrial.tile.base.II_BaseMachineTile;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.inventory.II_InternalInventory;
@@ -24,19 +25,19 @@ import java.util.stream.Stream;
  * also has very simple textures
  * you should init IO handlers
  */
-public abstract class II_BaseMetaTile implements II_MetaTile {
+public abstract class II_BaseMetaTile<B extends II_BaseMachineTile> implements II_MetaTile<B> {
 
     protected boolean hasInventory, hasTank;
     protected II_InternalInventory inventoryIn, inventoryOut, inventorySpecial;
     protected II_FluidHandler tankIn, tankOut;
     protected String name;
-    protected II_BaseTile baseTile;
+    protected B baseTile;
     /**
      * texture arrays, 0 - down, 1 - top, 2 - side, 3 - down active, 5 - top active...
      */
     protected ITexture[] baseTextures, overlays;
 
-    public II_BaseMetaTile(II_BaseTile baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
+    public II_BaseMetaTile(B baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
         assert baseTextures != null && overlays != null;
         this.name = name;
         this.baseTile = baseTile;
@@ -118,7 +119,7 @@ public abstract class II_BaseMetaTile implements II_MetaTile {
     }
 
     @Override
-    public II_BaseTile getBase() {
+    public B getBase() {
         return baseTile;
     }
 
@@ -227,6 +228,11 @@ public abstract class II_BaseMetaTile implements II_MetaTile {
 
     @Override
     public void onPlaced() {
+
+    }
+
+    @Override
+    public void onRemoval() {
 
     }
 

@@ -2,6 +2,7 @@ package idealindustrial.teststuff.testTile;
 
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
+import idealindustrial.tile.base.II_BaseMachineTile;
 import idealindustrial.tile.base.II_BaseTile;
 import idealindustrial.tile.gui.base.II_GenericGuiContainer;
 import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
@@ -17,9 +18,9 @@ import java.util.stream.Stream;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
-public class II_TestMachine extends II_BaseMetaTile_Facing1Output {
+public class II_TestMachine extends II_BaseMetaTile_Facing1Output<II_BaseMachineTile> {
 
-    public II_TestMachine(II_BaseTile baseTile) {
+    public II_TestMachine(II_BaseMachineTile baseTile) {
         super(baseTile, "test",
                 Stream.of(MACHINE_BRONZE_BOTTOM, MACHINE_BRONZE_TOP, MACHINE_BRONZE_SIDE, TURBINE[4],
                         MACHINE_8V_BOTTOM, MACHINE_8V_TOP, MACHINE_8V_SIDE, TURBINE_ACTIVE[4])
@@ -45,7 +46,7 @@ public class II_TestMachine extends II_BaseMetaTile_Facing1Output {
     }
 
     @Override
-    public II_MetaTile newMetaTile(II_BaseTile baseTile) {
+    public II_MetaTile<II_BaseMachineTile> newMetaTile(II_BaseMachineTile baseTile) {
         II_TestMachine testMachine = new II_TestMachine(baseTile);
         testMachine.name = name;
         testMachine.baseTextures = baseTextures;

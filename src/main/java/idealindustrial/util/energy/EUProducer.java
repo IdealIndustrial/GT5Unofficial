@@ -10,4 +10,6 @@ public interface EUProducer {
 
     void consume(long amperes);
 
+    void setHasSystem(boolean hasSystem);
+
 }
