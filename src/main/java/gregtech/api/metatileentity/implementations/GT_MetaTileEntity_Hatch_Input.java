@@ -118,9 +118,14 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
     }
 
     public static int countCapacity (int aTier) {
-        int x = aTier + 1;
-        if (x > 8) x = 8;
-        return 4000 * x * x;
+        int x;
+    
+        if (aTier > 3) {
+            x = (aTier - 3) * 8;
+        } else {
+            x =  aTier + 1;
+        }    
+        return 8000 * x;
     }
 
     @Override
