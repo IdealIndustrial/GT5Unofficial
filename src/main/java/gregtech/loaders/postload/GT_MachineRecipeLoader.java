@@ -1986,6 +1986,18 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{Materials.WroughtIron.getPlates(6), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.WroughtIron, 1)}, GT_Values.NF, ItemList.Casing_Pyrolyse.get(2L), 50, 16);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Duct_Tape.get(4), GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 4)}, OrePrefixes.circuit.get(Materials.Advanced), 2, Materials.Lubricant.getFluid(2000), ItemList.AutoRepairKit.get(1L), 80, 384);
 
+        GT_Values.RA.addAssemblylineRecipe(ItemList.Hatch_AutoMaintenance.get(1),288000,new Object[]{
+        		ItemList.Hull_ZPM.get(1),
+        		ItemList.Robot_Arm_ZPM.get(1),
+        		ItemList.Robot_Arm_ZPM.get(1),				
+        		new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1},
+        		new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1},
+        		new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1},
+        		new Object[]{OrePrefixes.circuit.get(Materials.Superconductor), 1},
+        		ItemList.AutoRepairKit.get(64)
+        		}, new FluidStack[]{
+        		Materials.Lubricant.getFluid(500)}, ItemList.Hatch_FullAutoMaintenance.get(1), 600, 30000);
+
         GT_Values.RA.addAssemblylineRecipe(ItemList.Electric_Motor_IV.get(1, new Object(){}),144000,new ItemStack[]{
         		GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.NeodymiumMagnetic, 1L),
         		GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.HSSG, 2L),
