@@ -223,7 +223,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                     for (GT_MetaTileEntity_Hatch_Maintenance tHatch : mMaintenanceHatches) {
                         if (isValidMetaTileEntity(tHatch)) {
                             if (!GT_MetaTileEntity_MultiBlockBase.disableMaintenance) {
-                                if (tHatch.mAuto && (!mWrench || !mScrewdriver || !mSoftHammer || !mHardHammer || !mSolderingTool || !mCrowbar))
+                                if (!mWrench || !mScrewdriver || !mSoftHammer || !mHardHammer || !mSolderingTool || !mCrowbar)
                                     tHatch.autoMaintainance();
                                 if (tHatch.mWrench) mWrench = true;
                                 if (tHatch.mScrewdriver) mScrewdriver = true;
