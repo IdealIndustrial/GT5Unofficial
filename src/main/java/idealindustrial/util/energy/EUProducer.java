@@ -1,5 +1,7 @@
 package idealindustrial.util.energy;
 
+import idealindustrial.util.energy.system.II_CableSystem;
+
 public interface EUProducer {
 
     boolean hasEnergy();
@@ -9,7 +11,8 @@ public interface EUProducer {
     long availableAmperes();
 
     void consume(long amperes);
+    void reset();
 
-    void setHasSystem(boolean hasSystem);
+    void setSystem(II_CableSystem system);
 
 }

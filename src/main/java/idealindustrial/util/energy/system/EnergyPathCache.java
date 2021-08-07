@@ -3,9 +3,7 @@ package idealindustrial.util.energy.system;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class EnergyPathCache {
 
@@ -32,18 +30,21 @@ public class EnergyPathCache {
         EnergyPath path = new EnergyPath(new ArrayList<>());
         path.from = producer;
         path.append(producer.connection);
-        nextStep(producer.connection.getOther(producer), path);
+        nextStep(producer.connection.getOther(producer), path, new HashSet<>());
 
     }
 
-    protected void nextStep(IEnergyNode node, EnergyPath path) {
+    protected void nextStep(IEnergyNode node, EnergyPath path, Set<IEnergyNode> passedCrossSet) {
         switch (node.type()) {
             case CROSS:
+                if (!passedCrossSet.add(node)) {
+                    return;
+                }
                 path.append(node);
                 for (EnergyConnection connection : node.connections()) {
                     EnergyPath copy = path.copy();
                     copy.append(connection);
-                    nextStep(connection.getOther(node), copy);
+                    nextStep(connection.getOther(node), copy, passedCrossSet);
                 }
             case PRODUCER:
                 return;

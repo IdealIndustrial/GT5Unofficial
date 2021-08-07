@@ -3,8 +3,7 @@ package gregtech.api.net;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import gregtech.api.metatileentity.BaseTileEntity;
-import idealindustrial.tile.base.ISyncedTileEntity;
+import idealindustrial.tile.interfaces.ISyncedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 

@@ -1,7 +1,6 @@
 package idealindustrial;
 
-import idealindustrial.itemgen.material.II_Materials;
-import idealindustrial.tile.meta.II_MetaTile;
+import idealindustrial.tile.interfaces.meta.II_MetaTile;
 import idealindustrial.tile.meta.II_MetaTileFactory;
 
 public class II_Values {

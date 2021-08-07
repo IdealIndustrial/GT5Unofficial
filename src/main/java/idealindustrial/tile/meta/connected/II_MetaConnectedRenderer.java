@@ -3,7 +3,7 @@ package idealindustrial.tile.meta.connected;
 import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.render.II_CustomRenderer;
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;

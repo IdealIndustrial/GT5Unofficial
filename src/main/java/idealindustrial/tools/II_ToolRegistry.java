@@ -3,8 +3,7 @@ package idealindustrial.tools;
 import gregtech.api.GregTech_API;
 import gregtech.api.objects.GT_HashSet;
 import gregtech.api.objects.GT_ItemStack;
-import idealindustrial.reflection.II_ReflectionHelper;
-import idealindustrial.tile.base.IToolClickableTile;
+import idealindustrial.tile.interfaces.IToolClickableTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

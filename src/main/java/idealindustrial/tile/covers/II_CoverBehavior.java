@@ -1,7 +1,7 @@
 package idealindustrial.tile.covers;
 
 import gregtech.api.interfaces.ITexture;
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

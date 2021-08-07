@@ -1,7 +1,6 @@
 package idealindustrial.teststuff.testTile;
 
-import idealindustrial.tile.base.II_BaseMachineTile;
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.gui.base.II_GenericContainer;
 import idealindustrial.tile.gui.base.component.II_Slot;
 import idealindustrial.tile.gui.base.component.II_SlotOutput;

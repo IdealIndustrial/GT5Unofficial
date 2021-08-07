@@ -1,4 +1,4 @@
-package idealindustrial.tile.base;
+package idealindustrial.tile.interfaces;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;

@@ -1,6 +1,7 @@
-package idealindustrial.tile.base;
+package idealindustrial.tile.interfaces.base;
 
 import gregtech.api.metatileentity.IEnergyContainer;
+import idealindustrial.tile.IOType;
 import idealindustrial.util.energy.II_EnergyHandler;
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
@@ -33,4 +34,15 @@ public interface II_BaseMachineTile extends II_BaseTile, IFluidHandler, ISidedIn
     II_FluidInventoryRepresentation getFluidRepresentation();
 
     II_EnergyHandler getEnergyHandler();
+
+    void overVoltage();
+
+    boolean[] getIO(IOType type);
+
+    boolean getIOatSide(int side, IOType type, boolean input);
+
+    void onIOConfigurationChanged();
+
+    void notifyOnIOConfigChange(IOType type);
+
 }

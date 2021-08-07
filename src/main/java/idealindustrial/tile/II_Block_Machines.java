@@ -6,22 +6,21 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IDebugableBlock;
 import gregtech.api.interfaces.tileentity.ICoverable;
-import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.metatileentity.BaseTileEntity;
 import gregtech.api.objects.XSTR;
-import gregtech.api.util.GT_Utility;
 import gregtech.common.blocks.GT_Material_Machines;
 import gregtech.common.render.GT_Renderer_Block;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.itemgen.blocks.base.II_Base_Block;
-import idealindustrial.tile.base.IClickableTileEntity;
-import idealindustrial.tile.base.II_BaseMachineTile;
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.interfaces.IClickableTileEntity;
+import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tools.II_ToolRegistry;
+import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.creativetab.CreativeTabs;
@@ -265,6 +264,8 @@ public class II_Block_Machines
         super.harvestBlock(aWorld, aPlayer, aX, aY, aZ, aMeta);
         aWorld.setBlockToAir(aX, aY, aZ);
     }
+
+
 //
 //    public int getComparatorInputOverride(World aWorld, int aX, int aY, int aZ, int aSide) {
 //        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
@@ -348,7 +349,7 @@ public class II_Block_Machines
     }
 
     public TileEntity createTileEntity(World aWorld, int aMeta) {
-        return new II_BaseTileImpl();
+        return II_TileUtil.provideTile(aMeta);
     }
 
     public float getExplosionResistance(Entity par1Entity, World aWorld, int aX, int aY, int aZ, double explosionX, double explosionY, double explosionZ) {

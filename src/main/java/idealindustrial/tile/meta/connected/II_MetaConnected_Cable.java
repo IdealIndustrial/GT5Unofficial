@@ -4,47 +4,66 @@ import gregtech.api.enums.Materials;
 import gregtech.api.enums.TextureSet;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
-import idealindustrial.tile.base.II_BaseTile;
-import idealindustrial.tile.base.II_BaseTileImpl;
-import idealindustrial.tile.meta.II_MetaTile;
-import idealindustrial.util.energy.system.Cross;
+import gregtech.api.util.GT_Utility;
+import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
+import idealindustrial.tile.interfaces.meta.II_MetaTile;
+import idealindustrial.util.energy.II_EnergyHandler;
 import idealindustrial.util.energy.system.II_CableSystem;
+import idealindustrial.util.energy.system.IInfoEnergyPassThrough;
+import idealindustrial.util.misc.II_DirUtil;
+import idealindustrial.util.misc.II_TileUtil;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.item.ItemStack;
 
-import java.util.Objects;
-import java.util.stream.IntStream;
-
-public class II_MetaConnected_Cable extends II_BaseMetaConnected {
+public class II_MetaConnected_Cable extends II_BaseMetaConnected<II_BaseTile> {
     public II_CableSystem system;
-    protected long loss, voltage, amperage;
+    protected long voltage, amperage, loss;
 
-    public II_MetaConnected_Cable(II_BaseTile baseTile) {
-        super(baseTile, "baseCable",
-                new ITexture[]{new GT_RenderedTexture(Materials.Copper.mIconSet.mTextures[TextureSet.INDEX_wire], Materials.Copper.mRGBa),
-                        new GT_RenderedTexture(Materials.Copper.mIconSet.mTextures[TextureSet.INDEX_wire], Materials.Copper.mRGBa)},
-                new ITexture[]{null, null}
-        );
+    public II_MetaConnected_Cable(II_BaseTile baseTile, Materials material, long voltage, long amperage, long loss) {
+        super(baseTile, new GT_RenderedTexture(material.mIconSet.mTextures[TextureSet.INDEX_wire], material.mRGBa),
+                new GT_RenderedTexture(material.mIconSet.mTextures[TextureSet.INDEX_wire]));
+        this.voltage = voltage;
+        this.amperage = amperage;
+        this.loss = loss;
+    }
+
+
+    private II_MetaConnected_Cable(II_BaseTile baseTile, ITexture textureInactive, ITexture textureActive, long voltage, long amperage, long loss) {
+        super(baseTile, textureInactive, textureActive);
+        this.voltage = voltage;
+        this.amperage = amperage;
+        this.loss = loss;
     }
 
     @Override
     public boolean canConnect(int side) {
-        TileEntity tile = baseTile.getTileEntityAtSide((byte) side);
-        return tile instanceof II_BaseTile && ((II_BaseTile) tile).getMetaTile() instanceof II_MetaConnected_Cable;
+        II_MetaTile<?> metaTile = II_TileUtil.getMetaTileAtSide(baseTile, side);
+        if (metaTile == null) {
+            return false;
+        }
+        if (metaTile instanceof II_MetaConnected_Cable) {
+            return true;
+        }
+        II_BaseTile baseTile = metaTile.getBase();
+        if (baseTile instanceof II_BaseMachineTile && metaTile.hasEnergy()) {
+            int opSide = II_DirUtil.getOppositeSide(side);
+            II_EnergyHandler handler = ((II_BaseMachineTile) baseTile).getEnergyHandler();
+            return handler.getConsumer(opSide) != null || handler.getProducer(opSide) != null;
+        }
+        return false;
     }
 
-    private II_MetaConnected_Cable(II_BaseTile baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
-        super(baseTile, name, baseTextures, overlays);
-    }
 
     @Override
-    public II_MetaTile newMetaTile(II_BaseTile baseTile) {
-        return new II_MetaConnected_Cable(baseTile, name, baseTextures, overlays);
+    public II_MetaConnected_Cable newMetaTile(II_BaseTile baseTile) {
+        return new II_MetaConnected_Cable(baseTile, textureInactive, textureActive, voltage, amperage, loss);
     }
 
     @Override
     public void onConnectionUpdate() {
-        if (system != null) {
+        if (baseTile.isServerSide() && system != null) {
             system.invalidate();
         }
     }
@@ -97,4 +116,29 @@ public class II_MetaConnected_Cable extends II_BaseMetaConnected {
     public void onRemoval() {
         super.onRemoval();
     }
+
+    @Override
+    public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
+        if (baseTile.isClientSide()) {
+            return true;
+        }
+        GT_Utility.sendChatToPlayer(player, "system: " + system);
+        if (system != null) {
+            IInfoEnergyPassThrough info = system.getInfo(this);
+            if (info != null) {//debug check, should always be true
+                GT_Utility.sendChatToPlayer(player, "Calculating Voltage and Amperage");
+                system.submitTask(20, player, info);
+            }
+        }
+        return super.onRightClick(player, item, side, hitX, hitY, hitZ);
+    }
+
+    public IInfoEnergyPassThrough getInfo() {
+        if (system == null) {
+            return null;
+        }
+        return system.getInfo(this);
+    }
+
+
 }

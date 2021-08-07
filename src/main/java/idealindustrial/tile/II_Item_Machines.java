@@ -5,6 +5,7 @@ import gregtech.api.util.GT_Utility;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.tile.base.II_BaseTileImpl;
+import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -53,13 +54,14 @@ public class II_Item_Machines
         }
     }
 
+    @SuppressWarnings("unchecked")
     public boolean placeBlockAt(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int side, float hitX, float hitY, float hitZ, int aMeta) {
         short tDamage = (short) getDamage(aStack);
         if (tDamage > 0) {
             if (II_Values.metaTiles[tDamage] == null) {
                 return false;
             }
-            int tMetaData = 0;
+            int tMetaData = II_TileUtil.classToMeta(II_Values.metaTiles[tDamage].getBaseTileClass());
             if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, tMetaData, 3)) {
                 return false;
             }

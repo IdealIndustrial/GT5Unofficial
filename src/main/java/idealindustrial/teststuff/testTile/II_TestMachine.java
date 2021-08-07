@@ -2,11 +2,13 @@ package idealindustrial.teststuff.testTile;
 
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
-import idealindustrial.tile.base.II_BaseMachineTile;
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.IOType;
+import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.gui.base.II_GenericGuiContainer;
 import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
-import idealindustrial.tile.meta.II_MetaTile;
+import idealindustrial.tile.interfaces.meta.II_MetaTile;
+import idealindustrial.util.energy.II_OutputEnergyHandler;
+import idealindustrial.util.energy.II_OutputFacingEnergyHandler;
 import idealindustrial.util.inventory.II_ArrayRecipedInventory;
 import idealindustrial.util.inventory.II_EmptyInventory;
 import idealindustrial.util.misc.II_Paths;
@@ -33,6 +35,9 @@ public class II_TestMachine extends II_BaseMetaTile_Facing1Output<II_BaseMachine
         inventoryOut = new II_ArrayRecipedInventory(1, 64);
         inventorySpecial = II_EmptyInventory.INSTANCE;
         hasInventory = true;
+
+        hasEnergy = true;
+        energyHandler = new II_OutputFacingEnergyHandler(this, 0, 10_000L, 32, 1, outputFacing);
     }
 
     @Override
@@ -46,7 +51,36 @@ public class II_TestMachine extends II_BaseMetaTile_Facing1Output<II_BaseMachine
     }
 
     @Override
-    public II_MetaTile<II_BaseMachineTile> newMetaTile(II_BaseMachineTile baseTile) {
+    protected void onOutputFacingChanged() {
+        if (energyHandler != null) {
+            energyHandler.onConfigurationChanged();
+            baseTile.notifyOnIOConfigChange(IOType.ENERGY);
+        }
+    }
+
+    @Override
+    public void onRemoval() {
+        if (energyHandler != null) {
+            energyHandler.onRemoval();
+        }
+    }
+
+    @Override
+    public void onPostTick(long timer, boolean serverSide) {
+        super.onPostTick(timer, serverSide);
+        if (serverSide && baseTile.isActive()) {
+            energyHandler.stored += 32;
+        }
+    }
+
+    @Override
+    public void onBlockChange() {
+        super.onBlockChange();
+        energyHandler.onConfigurationChanged();
+    }
+
+    @Override
+    public II_TestMachine newMetaTile(II_BaseMachineTile baseTile) {
         II_TestMachine testMachine = new II_TestMachine(baseTile);
         testMachine.name = name;
         testMachine.baseTextures = baseTextures;

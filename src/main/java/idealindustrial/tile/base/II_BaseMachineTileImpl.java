@@ -1,6 +1,8 @@
 package idealindustrial.tile.base;
 
-import idealindustrial.tile.meta.II_MetaTile;
+import idealindustrial.tile.IOType;
+import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
+import idealindustrial.tile.interfaces.meta.II_MetaTile;
 import idealindustrial.util.energy.EUConsumer;
 import idealindustrial.util.energy.EUProducer;
 import idealindustrial.util.energy.II_EmptyEnergyHandler;
@@ -11,6 +13,8 @@ import idealindustrial.util.fluid.II_FluidInvReprImpl;
 import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
 import idealindustrial.util.inventory.II_EmptyInventory;
 import idealindustrial.util.inventory.II_InternalInventory;
+import idealindustrial.util.misc.II_DirUtil;
+import idealindustrial.util.misc.II_TileUtil;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,9 +35,17 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
     protected int inSize, outSize;
     protected boolean hasTank = false;
     protected II_FluidHandler inTank, outTank;
-    protected boolean[] itemIO = II_Util.trueAr(6), fluidIO = II_Util.trueAr(6), energyIO = II_Util.trueAr(6);
+    protected boolean[] itemIO = II_Util.trueAr(12), fluidIO = II_Util.trueAr(12), energyIO = II_Util.trueAr(12);
 
     protected II_EnergyHandler handler = new II_EmptyEnergyHandler();
+
+    @Override
+    public void onPreTick(long timer, boolean serverSide) {
+        super.onPreTick(timer, serverSide);
+        if (serverSide && (timer + 1) % 4 == 0) {
+            handler.onUpdate();
+        }
+    }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
@@ -62,7 +74,7 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
     }
 
     @Override
-    protected void setMetaTileEntity(II_MetaTile metaTileEntity) {
+    protected void setMetaTileEntity(II_MetaTile<?> metaTileEntity) {
         super.setMetaTileEntity(metaTileEntity);
         if (metaTileEntity.hasInventory()) {
             in = metaTileEntity.getInputsHandler();
@@ -82,7 +94,12 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
         } else {
             inTank = outTank = II_EmptyTank.INSTANCE;
         }
-        handler = new II_EmptyEnergyHandler();//todo this
+
+        if (metaTileEntity.hasEnergy()) {
+            handler = metaTileEntity.getEnergyHandler();
+        } else {
+            handler = new II_EmptyEnergyHandler();//todo this
+        }
     }
 
     @Override
@@ -100,8 +117,7 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
             if (index >= inSize) {
                 return out.get(index - inSize);
             }
-            ItemStack is = in.get(index);
-            return is;
+            return in.get(index);
         }
         return null;
     }
@@ -364,6 +380,58 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
     public II_EnergyHandler getEnergyHandler() {
         return handler;
     }
+
+    @Override
+    public void overVoltage() {
+
+    }
+
+
+    @Override
+    public boolean[] getIO(IOType type) {
+        switch (type) {
+            case ITEM:
+                return itemIO;
+            case FLUID:
+                return fluidIO;
+            case ENERGY:
+                return energyIO;
+        }
+        return new boolean[12];
+    }
+
+    @Override
+    public boolean getIOatSide(int side, IOType type, boolean input) {
+        return true; //todo implement cover IO changes
+    }
+
+    @Override
+    public void onIOConfigurationChanged() {
+        updateIOArray(itemIO, IOType.ITEM);
+        updateIOArray(fluidIO, IOType.FLUID);
+        updateIOArray(energyIO, IOType.ENERGY);
+    }
+
+    protected void updateIOArray(boolean[] array, IOType type) {
+        for (int i = 0; i < 6; i++) {
+            array[i] = getIOatSide(i, type, false);
+        }
+        for (int i = 0; i < 6; i++) {
+            array[i + 6] = getIOatSide(i, type, true);
+        }
+    }
+
+    @Override
+    public void notifyOnIOConfigChange(IOType type) {
+        for (int i = 0; i < 6; i++) {
+            II_MetaTile<?> machineTile = II_TileUtil.getMetaTileAtSide(this, i);
+            if (machineTile != null) {
+                machineTile.receiveNeighbourIOConfigChange(type);
+            }
+        }
+    }
+
+
 
     @Override
     public boolean hasFluidTank() {

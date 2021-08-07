@@ -6,6 +6,11 @@ import cpw.mods.fml.relauncher.Side;
 
 public class II_WorldTickHandler {
 
+    public static II_WorldTickHandler INSTANCE = new II_WorldTickHandler();
+
+    private II_WorldTickHandler() {
+
+    }
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {

@@ -1,6 +1,7 @@
 package idealindustrial.tile.meta;
 
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
+import idealindustrial.tile.interfaces.meta.II_MetaTile;
 
 public interface II_MetaTileFactory {
 

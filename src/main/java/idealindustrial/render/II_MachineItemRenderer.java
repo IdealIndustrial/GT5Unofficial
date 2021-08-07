@@ -1,15 +1,11 @@
 package idealindustrial.render;
 
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.GregTech_API;
-import gregtech.common.blocks.GT_Item_Machines;
-import gregtech.common.render.GT_Renderer_Block;
-import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.itemgen.blocks.II_Blocks;
 import idealindustrial.tile.II_Item_Machines;
-import idealindustrial.tile.base.II_BaseTile;
-import idealindustrial.tile.meta.II_MetaTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
+import idealindustrial.tile.interfaces.meta.II_MetaTile;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Items;

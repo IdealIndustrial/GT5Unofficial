@@ -9,50 +9,33 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.metatileentity.BaseTileEntity;
 import gregtech.api.net.GT_Packet_ByteStream;
 import gregtech.api.net.GT_Packet_ExtendedBlockEvent;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Utility;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.render.II_CustomRenderer;
-import idealindustrial.tile.II_TileEvents;
+import idealindustrial.tile.IOType;
 import idealindustrial.tile.covers.II_CoverBehavior;
 import idealindustrial.tile.covers.II_CoverRegistry;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
-import idealindustrial.tile.meta.II_MetaTile;
+import idealindustrial.tile.interfaces.meta.II_MetaTile;
 import idealindustrial.tools.II_ToolRegistry;
-import idealindustrial.util.energy.EUConsumer;
-import idealindustrial.util.energy.EUProducer;
-import idealindustrial.util.energy.II_EmptyEnergyHandler;
-import idealindustrial.util.energy.II_EnergyHandler;
-import idealindustrial.util.fluid.II_EmptyTank;
-import idealindustrial.util.fluid.II_FluidHandler;
-import idealindustrial.util.fluid.II_FluidInvReprImpl;
-import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
-import idealindustrial.util.inventory.II_EmptyInventory;
-import idealindustrial.util.inventory.II_InternalInventory;
 import idealindustrial.util.misc.II_StreamUtil;
-import idealindustrial.util.misc.II_Util;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 
 import java.util.ArrayList;
-import java.util.stream.IntStream;
+import java.util.Arrays;
+import java.util.Objects;
 
 import static idealindustrial.tile.II_TileEvents.BASE_ACTIVE;
 import static idealindustrial.tile.base.II_BaseTileConstants.*;
 
 public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
-    protected II_MetaTile metaTileEntity;
+    protected II_MetaTile<?> metaTileEntity;
     protected int metaTileID;
     protected long timer = 0;
 
@@ -113,6 +96,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         setInitialValuesAsNBT(null, metaTileID);
     }
 
+    @SuppressWarnings("unchecked")
     public void setInitialValuesAsNBT(NBTTagCompound nbt, int metaTileID) {
         this.metaTileID = metaTileID;
         setMetaTileEntity(II_Values.metaTiles[metaTileID].newMetaTile(this));
@@ -122,7 +106,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         return !isDead;
     }
 
-    protected void setMetaTileEntity(II_MetaTile metaTileEntity) {
+    protected void setMetaTileEntity(II_MetaTile<?> metaTileEntity) {
         this.metaTileEntity = metaTileEntity;
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             rebakeMap();
@@ -193,6 +177,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")//shitty, extremely shitty
     public ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers) {
         int oldFacing = 0;
         if (metaTileEntity instanceof II_BaseMetaTile_Facing1Output) {//shitty but works for now
@@ -259,9 +244,10 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void setMetaTileID(int metaTileID) {
         this.metaTileID = metaTileID;
-        setMetaTileEntity(II_Values.metaTiles[metaTileID]);
+        setMetaTileEntity((II_MetaTile<?>) II_Values.metaTiles[metaTileID]);
     }
 
     @Override
@@ -305,7 +291,10 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         if (covers[side] != null && covers[side].onRightClick(coverValues[side], side, this, player, item, hitX, hitY, hitZ)) {
             return true;
         }
-        return isServerSide() && II_ToolRegistry.applyTool(metaTileEntity, player, item, side, hitX, hitY, hitZ);
+        if (isServerSide() && II_ToolRegistry.applyTool(metaTileEntity, player, item, side, hitX, hitY, hitZ) ) {
+            return true;
+        }
+        return metaTileEntity.onRightClick(player, item, side, hitX, hitY, hitZ);
     }
 
     @Override
@@ -357,6 +346,9 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
     @Override
     public II_CustomRenderer getCustomRenderer() {
+        if (metaTileEntity == null) {//all client side startup things should always check mte for null
+            return null;//cause minecraft sometimes does not send any description packets to client in time
+        }
         return metaTileEntity.hasRenderer() ? metaTileEntity.getRenderer() : null;
     }
 
@@ -381,5 +373,23 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
             metaTileEntity.onRemoval();
         }
         super.invalidate();
+    }
+
+    @Override
+    public void receiveNeighbourIOConfigChange(IOType type) {
+        metaTileEntity.receiveNeighbourIOConfigChange(type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        II_BaseTileImpl that = (II_BaseTileImpl) o;
+        return xCoord == that.xCoord && yCoord == that.yCoord && zCoord == that.zCoord;
+    }
+
+    @Override
+    public int hashCode() {
+        return xCoord  * 31 * 31 + yCoord * 31 + zCoord;
     }
 }

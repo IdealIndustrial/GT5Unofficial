@@ -48,6 +48,13 @@ public class EnergyPath implements IEnergyPassThrough {
         }
     }
 
+    public void fullSimulate(long voltage, long amperage) {
+        for (IEnergyPassThrough passThrough : passThroughList) {
+            passThrough.onPassing(voltage, amperage);
+            voltage -= passThrough.loss();
+        }
+    }
+
     public EnergyPath copy() {
         return new EnergyPath(this);
     }

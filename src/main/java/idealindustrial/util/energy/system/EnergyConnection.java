@@ -4,7 +4,7 @@ import idealindustrial.tile.meta.connected.II_MetaConnected_Cable;
 
 import java.util.List;
 
-public class EnergyConnection implements IEnergyPassThrough {
+public class EnergyConnection implements IInfoEnergyPassThrough {
     protected long maxAmperage, maxVoltage, loss;
     protected long currentAmperage, currentVoltage;
     protected List<II_MetaConnected_Cable> cables;
@@ -35,9 +35,14 @@ public class EnergyConnection implements IEnergyPassThrough {
     }
 
     @Override
+    public void setSystem(II_CableSystem system) {
+        cables.forEach(c -> c.system = system);
+    }
+
+    @Override
     public void onPassing(long voltage, long amperage) {
         currentAmperage += amperage;
-        currentVoltage += voltage;
+        currentVoltage = Math.max(voltage, currentVoltage);//todo:same for cross
     }
 
     @Override
@@ -59,9 +64,19 @@ public class EnergyConnection implements IEnergyPassThrough {
 
     protected IEnergyNode getOther(IEnergyNode node) {
         if (node == node1) {
-            return node1;
+            return node2;
         }
         assert node == node2;
-        return node2;
+        return node1;
+    }
+
+    @Override
+    public long voltageLastTick() {
+        return currentVoltage;
+    }
+
+    @Override
+    public long amperageLastTick() {
+        return currentAmperage;
     }
 }

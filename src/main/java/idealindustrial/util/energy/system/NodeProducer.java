@@ -4,7 +4,6 @@ import idealindustrial.util.energy.EUProducer;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 //wrapper class,,, may be remove ?
 public class NodeProducer implements IEnergyNode, EUProducer {
@@ -42,8 +41,13 @@ public class NodeProducer implements IEnergyNode, EUProducer {
     }
 
     @Override
-    public void setHasSystem(boolean hasSystem) {
-        producer.setHasSystem(hasSystem);
+    public void reset() {
+        producer.reset();
+    }
+
+    @Override
+    public void setSystem(II_CableSystem system) {
+        producer.setSystem(system);
     }
 
     @Override

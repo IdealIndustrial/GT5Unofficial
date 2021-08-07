@@ -1,4 +1,4 @@
-package idealindustrial.tile.base;
+package idealindustrial.tile.interfaces;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

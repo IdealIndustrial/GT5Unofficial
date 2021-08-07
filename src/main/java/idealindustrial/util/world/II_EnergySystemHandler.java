@@ -1,6 +1,7 @@
 package idealindustrial.util.world;
 
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.util.energy.system.II_CableSystem;
 
 import java.util.ArrayList;
@@ -17,7 +18,12 @@ public class II_EnergySystemHandler {
             if (!cableSystem.isValid()) {
                 iterator.remove();
             }
-            cableSystem.update();
+            try {
+                cableSystem.update();
+            }
+            catch (Throwable e) {
+                e.printStackTrace();//shitty, but only for debug
+            }
         }
     }
 
@@ -26,7 +32,12 @@ public class II_EnergySystemHandler {
      * @param tile - producer tile
      * @param side - side of tile with producer
      */
-    public static void initSystem(II_BaseTile tile, int side) {
-        systems.add(new II_CableSystem(tile, side));
+    public static void initSystem(II_BaseMachineTile tile, int side) {
+        try {
+            systems.add(new II_CableSystem(tile, side));
+        }
+        catch (Throwable e) {
+            e.printStackTrace();//same as top one
+        }
     }
 }

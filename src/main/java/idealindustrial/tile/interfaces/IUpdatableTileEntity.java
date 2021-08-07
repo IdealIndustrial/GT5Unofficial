@@ -1,4 +1,4 @@
-package idealindustrial.tile.meta;
+package idealindustrial.tile.interfaces;
 
 public interface IUpdatableTileEntity {
 

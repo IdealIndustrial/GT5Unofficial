@@ -24,6 +24,7 @@ import idealindustrial.teststuff.TestTile;
 import idealindustrial.tile.gui.II_GuiHandler;
 import idealindustrial.tools.II_ToolRegistry;
 import idealindustrial.util.lang.II_Lang;
+import idealindustrial.util.world.II_WorldTickHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
@@ -60,6 +61,8 @@ public class II_Core {
     public II_Core() {
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(II_WorldTickHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(II_WorldTickHandler.INSTANCE);
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             renderLoader = new II_Render();
         }

@@ -4,8 +4,11 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.render.II_CustomRenderer;
-import idealindustrial.tile.base.II_BaseMachineTile;
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.base.II_BaseMachineTileImpl;
+import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
+import idealindustrial.tile.interfaces.meta.II_MetaTile;
+import idealindustrial.util.energy.II_EnergyHandler;
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.inventory.II_InternalInventory;
 import idealindustrial.util.misc.II_DirUtil;
@@ -16,7 +19,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -25,32 +27,26 @@ import java.util.stream.Stream;
  * also has very simple textures
  * you should init IO handlers
  */
-public abstract class II_BaseMetaTile<B extends II_BaseMachineTile> implements II_MetaTile<B> {
+public abstract class II_BaseMetaTileMachine<BaseTileType extends II_BaseMachineTile> implements II_MetaTile<BaseTileType> {
 
-    protected boolean hasInventory, hasTank;
+    protected boolean hasInventory, hasTank, hasEnergy;
     protected II_InternalInventory inventoryIn, inventoryOut, inventorySpecial;
     protected II_FluidHandler tankIn, tankOut;
+    protected II_EnergyHandler energyHandler;
     protected String name;
-    protected B baseTile;
+    protected BaseTileType baseTile;
     /**
      * texture arrays, 0 - down, 1 - top, 2 - side, 3 - down active, 5 - top active...
      */
     protected ITexture[] baseTextures, overlays;
 
-    public II_BaseMetaTile(B baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
+    public II_BaseMetaTileMachine(BaseTileType baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
         assert baseTextures != null && overlays != null;
         this.name = name;
         this.baseTile = baseTile;
         this.baseTextures = baseTextures;
         this.overlays = overlays;
     }
-
-    //just simplest constructor, a bit unsafe
-    public II_BaseMetaTile(II_BaseTile baseTile) {
-
-    }
-
-
 
     @Override
     public boolean hasInventory() {
@@ -119,7 +115,7 @@ public abstract class II_BaseMetaTile<B extends II_BaseMachineTile> implements I
     }
 
     @Override
-    public B getBase() {
+    public BaseTileType getBase() {
         return baseTile;
     }
 
@@ -249,5 +245,20 @@ public abstract class II_BaseMetaTile<B extends II_BaseMachineTile> implements I
     @Override
     public NBTTagCompound saveNBTtoDrop(NBTTagCompound nbt) {
         return nbt;
+    }
+
+    @Override
+    public Class<? extends II_BaseTile> getBaseTileClass() {
+        return II_BaseMachineTileImpl.class;
+    }
+
+    @Override
+    public boolean hasEnergy() {
+        return hasEnergy;
+    }
+
+    @Override
+    public II_EnergyHandler getEnergyHandler() {
+        return energyHandler;
     }
 }

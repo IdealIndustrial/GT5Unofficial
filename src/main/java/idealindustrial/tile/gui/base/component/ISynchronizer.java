@@ -1,6 +1,6 @@
 package idealindustrial.tile.gui.base.component;
 
-import idealindustrial.tile.base.II_BaseTile;
+import idealindustrial.tile.interfaces.base.II_BaseTile;
 
 public interface ISynchronizer<T> {
 
