@@ -1160,8 +1160,8 @@ public class GT_RecipeAdder
     }
 
     @Override
-    public boolean addFilterRecipe(FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt){
-	    GT_Recipe.GT_Recipe_Map.sFilterRecipes.addRecipe(true, null, aOutputs, null, new FluidStack[]{aInput}, new FluidStack[]{aOutput},aDuration,aEUt,0);
+    public boolean addFilterRecipe(int aCircuit, FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt){
+	    GT_Recipe.GT_Recipe_Map.sFilterRecipes.addRecipe(true, new ItemStack[]{GT_Utility.getIntegratedCircuit(aCircuit)}, aOutputs, null, new FluidStack[]{aInput}, new FluidStack[]{aOutput},aDuration,aEUt,0);
         return true;
 	}
 
