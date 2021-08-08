@@ -61,19 +61,29 @@ public class II_Core {
     private static boolean checkEnvironment() {
         try {
             Class.forName("thermos.Thermos");
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             return true;
         }
         try {
             Class.forName("betterquesting.core.BetterQuesting");
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e){
             return true;
         }
+    
         try {
             Class.forName("a.b.c.gambiarra.Plugin");
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+		}
+		catch (ClassNotFoundException e) {
+        
+			try {
+				Class.forName("com.juanmuscaria.playercontainerfix.FMLCoreMod");
+			}
+			catch (ClassNotFoundException f) {
+				return false; 
+			}		
+		}
         return true;
     }
 
