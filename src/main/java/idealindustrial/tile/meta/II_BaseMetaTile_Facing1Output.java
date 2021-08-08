@@ -1,5 +1,7 @@
 package idealindustrial.tile.meta;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.util.GT_Utility;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
@@ -7,6 +9,7 @@ import idealindustrial.util.energy.II_OutputFacingEnergyHandler;
 import idealindustrial.util.misc.II_DirUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import static idealindustrial.tile.II_TileEvents.FACING_OUTPUT;
 
@@ -20,6 +23,7 @@ public abstract class II_BaseMetaTile_Facing1Output<B extends II_BaseMachineTile
     public II_BaseMetaTile_Facing1Output(B baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
         super(baseTile, name, baseTextures, overlays);
     }
+
 
     @Override
     public ITexture[] provideTexture(boolean active, int side) {
@@ -75,4 +79,27 @@ public abstract class II_BaseMetaTile_Facing1Output<B extends II_BaseMachineTile
 
     }
 
+    @Override
+    public void writeTile(ByteArrayDataOutput stream) {
+        super.writeTile(stream);
+        stream.writeByte(outputFacing);
+    }
+
+    @Override
+    public void readTile(ByteArrayDataInput stream) {
+        super.readTile(stream);
+        outputFacing = stream.readByte();
+    }
+
+    @Override
+    public void loadFromNBT(NBTTagCompound nbt) {
+        super.loadFromNBT(nbt);
+        outputFacing =  nbt.getInteger("outF");
+    }
+
+    @Override
+    public NBTTagCompound saveToNBT(NBTTagCompound nbt) {
+        nbt.setInteger("outF", outputFacing);
+        return super.saveToNBT(nbt);
+    }
 }

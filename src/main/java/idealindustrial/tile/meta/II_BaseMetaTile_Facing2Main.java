@@ -1,11 +1,14 @@
 package idealindustrial.tile.meta;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.util.misc.II_DirUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -61,5 +64,29 @@ public abstract class II_BaseMetaTile_Facing2Main<BaseTileType extends II_BaseMa
 
     protected boolean isValidFacing(int side) {
         return true;
+    }
+
+    @Override
+    public void writeTile(ByteArrayDataOutput stream) {
+        super.writeTile(stream);
+        stream.writeByte(mainFacing);
+    }
+
+    @Override
+    public void readTile(ByteArrayDataInput stream) {
+        super.readTile(stream);
+        mainFacing = stream.readByte();
+    }
+
+    @Override
+    public void loadFromNBT(NBTTagCompound nbt) {
+        super.loadFromNBT(nbt);
+        mainFacing =  nbt.getInteger("mainF");
+    }
+
+    @Override
+    public NBTTagCompound saveToNBT(NBTTagCompound nbt) {
+        nbt.setInteger("mainF", mainFacing);
+        return super.saveToNBT(nbt);
     }
 }
