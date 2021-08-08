@@ -2840,27 +2840,32 @@ if(Loader.isModLoaded("Railcraft")){
                 ItemList.Transformer_HV_MV.get(2L),
                 ItemList.Transformer_EV_HV.get(1L),
                 ItemList.Cover_Screen.get(1L)}, OrePrefixes.circuit.get(Materials.Data), 4, GT_Values.NF, ItemList.Machine_DigitalTransformer_EV.get(1L), 50, 1920);
+				
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
                 ItemList.Transformer_IV_EV.get(1L),
-                ItemList.Machine_DigitalTransformer_EV.get(2L),
-                ItemList.Cover_Screen.get(1L)}, OrePrefixes.circuit.get(Materials.Elite), 4, GT_Values.NF, ItemList.Machine_DigitalTransformer_IV.get(1L), 50, 1920);
+                ItemList.Machine_DigitalTransformer_EV.get(1L)
+                }, OrePrefixes.circuit.get(Materials.Elite), 2, GT_Values.NF, ItemList.Machine_DigitalTransformer_IV.get(1L), 50, 1920);
+				
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
                 ItemList.Transformer_LuV_IV.get(1L),
-                ItemList.Machine_DigitalTransformer_IV.get(2L),
-                ItemList.Cover_Screen.get(1L)}, OrePrefixes.circuit.get(Materials.Master), 4, GT_Values.NF, ItemList.Machine_DigitalTransformer_LuV.get(1L), 50, 1920);
+                ItemList.Machine_DigitalTransformer_IV.get(1L)
+                }, OrePrefixes.circuit.get(Materials.Master), 2, GT_Values.NF, ItemList.Machine_DigitalTransformer_LuV.get(1L), 50, 1920);
+				
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
                 ItemList.Transformer_ZPM_LuV.get(1L),
-                ItemList.Machine_DigitalTransformer_LuV.get(2L),
-                ItemList.Cover_Screen.get(1L)}, OrePrefixes.circuit.get(Materials.Ultimate), 4, GT_Values.NF, ItemList.Machine_DigitalTransformer_ZPM.get(1L), 50, 1920);
+                ItemList.Machine_DigitalTransformer_LuV.get(1L)
+                }, OrePrefixes.circuit.get(Materials.Ultimate), 2, GT_Values.NF, ItemList.Machine_DigitalTransformer_ZPM.get(1L), 50, 1920);
+				
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
                 ItemList.Transformer_UV_ZPM.get(1L),
-                ItemList.Machine_DigitalTransformer_ZPM.get(2L),
-                ItemList.Cover_Screen.get(1L)}, OrePrefixes.circuit.get(Materials.Superconductor), 4, GT_Values.NF, ItemList.Machine_DigitalTransformer_UV.get(1L), 50, 1920);
+                ItemList.Machine_DigitalTransformer_ZPM.get(1L)
+                }, OrePrefixes.circuit.get(Materials.Superconductor), 2, GT_Values.NF, ItemList.Machine_DigitalTransformer_UV.get(1L), 50, 1920);
+				
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
                 ItemList.Transformer_MAX_UV.get(1L),
-                ItemList.Machine_DigitalTransformer_UV.get(2L),
-                ItemList.Cover_Screen.get(1L)}, OrePrefixes.circuit.get(Materials.Infinite), 4, GT_Values.NF, ItemList.Machine_DigitalTransformer_MAX.get(1L), 50, 1920);
-
+                ItemList.Machine_DigitalTransformer_UV.get(1L)
+                }, OrePrefixes.circuit.get(Materials.Infinite), 2, GT_Values.NF, ItemList.Machine_DigitalTransformer_MAX.get(1L), 50, 1920);
+				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_EV.get(1), new ItemStack[]{
                 ItemList.Transformer_LV_ULV.get(8L),
@@ -2870,40 +2875,40 @@ if(Loader.isModLoaded("Railcraft")){
                 ItemList.Cover_Screen.get(1L), 
                 ItemList.Circuit_Nanocomputer.get(4L)
                 }, 2400, 16);
+				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_IV.get(1), new ItemStack[]{
                 ItemList.Transformer_IV_EV.get(1L),
-                ItemList.Machine_DigitalTransformer_EV.get(2L),
-                ItemList.Cover_Screen.get(1L), 
-                ItemList.Circuit_Quantumcomputer.get(4L)
-                }, 2400, 16);                
+                ItemList.Machine_DigitalTransformer_EV.get(1L),
+                ItemList.Circuit_Quantumcomputer.get(2L)
+                }, 2400, 16); 
+				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_LuV.get(1), new ItemStack[]{
                 ItemList.Transformer_LuV_IV.get(1L),
-                ItemList.Machine_DigitalTransformer_IV.get(2L),
-                ItemList.Cover_Screen.get(1L), 
-                ItemList.Circuit_Crystalcomputer.get(4L)
+                ItemList.Machine_DigitalTransformer_IV.get(1L),
+                ItemList.Circuit_Crystalcomputer.get(2L)
                 }, 2400, 16);
+				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_ZPM.get(1), new ItemStack[]{
                 ItemList.Transformer_ZPM_LuV.get(1L),
-                ItemList.Machine_DigitalTransformer_LuV.get(2L),
-                ItemList.Cover_Screen.get(1L), 
-                ItemList.Circuit_Wetwarecomputer.get(4L)
-                }, 2400, 16);                
+                ItemList.Machine_DigitalTransformer_LuV.get(1L),
+                ItemList.Circuit_Wetwarecomputer.get(2L)
+                }, 2400, 16);   
+				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_UV.get(1), new ItemStack[]{
                 ItemList.Transformer_UV_ZPM.get(1L),
-                ItemList.Machine_DigitalTransformer_ZPM.get(2L),
-                ItemList.Cover_Screen.get(1L), 
-                ItemList.Circuit_Wetwaresupercomputer.get(4L)
+                ItemList.Machine_DigitalTransformer_ZPM.get(1L),
+                ItemList.Circuit_Wetwaresupercomputer.get(2L)
                 }, 2400, 16);
+				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_MAX.get(1), new ItemStack[]{
                 ItemList.Transformer_MAX_UV.get(1L),
-                ItemList.Machine_DigitalTransformer_UV.get(2L),
-                ItemList.Cover_Screen.get(1L), 
-                ItemList.Circuit_Wetwaremainframe.get(4L)
+                ItemList.Machine_DigitalTransformer_UV.get(1L),
+                ItemList.Circuit_Wetwaremainframe.get(2L)
                 }, 2400, 16);
 
         GT_Values.RA.addReplicatorRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.NetherStar, 1), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.NetherStar, 1),  true, 13824000, 32, 10000, 6912000, 32);
