@@ -373,10 +373,10 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Hatch_Maintenance.set(GT_MetaTileEntity_Hatch_Maintenance.Manual(90, "hatch.maintenance", "Maintenance Hatch", 1).getStackForm(1L));
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Maintenance.get(1L), bitsd, new Object[]{"dwx", "hMc", "fsr", 'M', ItemList.Hull_LV});
 
-        ItemList.Hatch_AutoMaintenance.set(GT_MetaTileEntity_Hatch_Maintenance.AutoKit(111, "hatch.maintenance.auto", "Auto Maintenance Hatch", 5).getStackForm(1L));
+        ItemList.Hatch_AutoMaintenance.set(GT_MetaTileEntity_Hatch_Maintenance.AutoKit(111, "hatch.maintenance.semiauto", "Semi-Auto Maintenance Hatch", 5).getStackForm(1L));
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_AutoMaintenance.get(1L), bitsd, new Object[]{"CHC", "AMA", "CHC", 'M', ItemList.Hull_IV,'H',ItemList.Hatch_Maintenance,'A',ItemList.Robot_Arm_IV,'C',OrePrefixes.circuit.get(Materials.Elite)});
 
-        ItemList.Hatch_FullAutoMaintenance.set(GT_MetaTileEntity_Hatch_Maintenance.FullAuto(114, "hatch.maintenance.fullauto", "Full Auto Maintenance Hatch", 9).getStackForm(1L));
+        ItemList.Hatch_FullAutoMaintenance.set(GT_MetaTileEntity_Hatch_Maintenance.FullAuto(114, "hatch.maintenance.auto", "Auto Maintenance Hatch", 9).getStackForm(1L));
 
         ItemList.Hatch_DataAccess_EV.set(new GT_MetaTileEntity_Hatch_DataAccess(131, "hatch.dataaccess", "Data Access Hatch", 4).getStackForm(1L));
         ItemList.Hatch_DataAccess_LuV.set(new GT_MetaTileEntity_Hatch_DataAccess(132, "hatch.dataaccess.adv", "Advanced Data Access Hatch", 6).getStackForm(1L));
