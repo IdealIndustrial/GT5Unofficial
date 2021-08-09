@@ -548,6 +548,8 @@ achievement.ic2.itemArmorQuantumBoots.desc=Pickup this item to see the recipe in
 achievement.item.graviChestPlate=Gravi Chestplate
 achievement.item.graviChestPlate.desc=Pickup this item to see the recipe in NEI
 
+achievement.gt.blockmachines.hatch.maintenance.auto=True maintenance!
+
 for.bees.species.clay=Clay
 for.bees.species.slimeball=Slimeball
 for.bees.species.peat=Peat
