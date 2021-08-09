@@ -661,8 +661,20 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
             return addRecipe(new GT_Recipe(false, null, null, null, aOutputChances, aFluidInputs, aFluidOutputs, aDuration, aEUt, aSpecialValue), false, false, false);
         }
 
+        public GT_Recipe addRecipe(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs, Object aSpecial, FluidStack[] aFluidInputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt, int aSpecialValue, boolean waterUnify) {
+            GT_Recipe recipe = addRecipe(new GT_Recipe(aOptimize, aInputs, aOutputs, aSpecial, null, aFluidInputs, aFluidOutputs, aDuration, aEUt, aSpecialValue));
+            if (waterUnify && recipe != null) {
+                FluidStack fluidStack = GT_ModHandler.getDistilledWater(1);
+                recipe.mDistWaterUnificate = true;
+                mRecipeFluidNameMap.add(fluidStack.getFluid().getName());
+                Collection<GT_Recipe> collection = mRecipeFluidMap.computeIfAbsent(fluidStack.getFluid(), f -> new HashSet<>());
+                collection.add(recipe);
+            }
+            return recipe;
+        }
+
         public GT_Recipe addRecipe(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs, Object aSpecial, FluidStack[] aFluidInputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt, int aSpecialValue) {
-            return addRecipe(new GT_Recipe(aOptimize, aInputs, aOutputs, aSpecial, null, aFluidInputs, aFluidOutputs, aDuration, aEUt, aSpecialValue));
+            return addRecipe(aOptimize, aInputs, aOutputs, aSpecial, aFluidInputs, aFluidOutputs, aDuration, aEUt, aSpecialValue, false);
         }
 
         public GT_Recipe addRecipe(GT_Recipe aRecipe) {

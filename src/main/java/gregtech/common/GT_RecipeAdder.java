@@ -428,7 +428,7 @@ public class GT_RecipeAdder
         if ((aDuration = GregTech_API.sRecipeFile.get("orewasher", aInput, aDuration)) <= 0) {
             return false;
         }
-        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput1, aOutput2, aOutput3}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput1, aOutput2, aOutput3}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0, true);
         return true;
     }
 
@@ -439,7 +439,7 @@ public class GT_RecipeAdder
         if ((aDuration = GregTech_API.sRecipeFile.get("orewasher", aInput, aDuration)) <= 0) {
             return false;
         }
-        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput1, aOutput2, aOutput3}, null, new FluidStack[]{aFluidInput},  new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput1, aOutput2, aOutput3}, null, new FluidStack[]{aFluidInput},  new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0, true);
         return true;
     }
 
@@ -450,9 +450,7 @@ public class GT_RecipeAdder
         if ((aDuration = GregTech_API.sRecipeFile.get("orewasher", aInput1, aDuration)) <= 0) {
             return false;
         }
-        GT_Recipe r = GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput1, aInput2}, new ItemStack[]{aOutput1,aOutput2,aOutput3}, null, new FluidStack[]{aFluidInput},  new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
-        if(r!=null)
-            r.mDistWaterUnificate = true;
+        GT_Recipe r = GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput1, aInput2}, new ItemStack[]{aOutput1,aOutput2,aOutput3}, null, new FluidStack[]{aFluidInput},  new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0, true);
         return true;
     }	
 	
