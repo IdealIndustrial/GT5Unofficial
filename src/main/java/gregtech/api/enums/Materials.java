@@ -70,12 +70,13 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
 	GarnetSand,QuartzSand,Bastnasite,Pentlandite,Spodumene,Pollucite,Tantalite,Lepidolite,Glauconite,GlauconiteSand,Vermiculite,Bentonite,FullersEarth,Pitchblende,Monazite,Malachite,Mirabilite,Mica,Trona,Barite,Gypsum,Alunite,Dolomite,
 	Wollastonite,Zeolite,Kyanite,Kaolinite,Talc,Soapstone,Concrete,IronMagnetic,SteelMagnetic,NeodymiumMagnetic,TungstenCarbide,VanadiumSteel,HSSG,HSSE,HSSS,DilutedSulfuricAcid,EpoxidFiberReinforced,NitrousOxide,AntiKnock,GasolineRegular,
 	GasolinePremium,RedstoneAlloy,Soularium,ConductiveIron,ElectricalSteel,EnergeticAlloy,VibrantAlloy,PulsatingIron,Enderium,DarkSteel,EndSteel,DirtyWater,DirtyWater2,
+    CalciumChloride, LithiumChloride, TungstigAcid, TungstenTrioxide,
 
 	//Deprecated
 	IridiumAndSodiumOxide,Palygorskite,Adamantine,Ashes,DarkAshes,Abyssal,Adamant,AluminumBrass,Aluminum,NaturalAluminum,NaturalAluminium,Americum,Beryl,BlackGranite,CalciumCarbonate,
 	CrackedLightFuel,CrackedHeavyFuel,CreosoteOil,Chromium,Diesel,Enderpearl,Endereye,EyeOfEnder,Eyeofender,Flour,Meat,Garnet,Granite,Goethite,Kalium,Lapislazuli,LapisLazuli,
 	Monazit,Natrium,Mythril,NitroDiesel,Naquadriah,Obby,Peridot,Phosphorite,Quarried,Quicksilver,QuickSilver,RedRock,RefinedIron,RedGranite,Sheldonite,Soulsand,Titan,Uran,
-	Wolframite,Wolframium,Wolfram,Phosphor,	
+	Wolframite,Wolframium,Wolfram,Phosphor,
     EndStatic;
     /**
      * This is the Default Material returned in case no Material has been found or a NullPointer has been inserted at a location where it shouldn't happen.
@@ -684,9 +685,14 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     YellowLimonite = new Materials(931, TextureSet.SET_METALLIC,1.0F, 0, 2, 1 |8 , 200, 200, 0, 0, "YellowLimonite", "Yellow Limonite", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeYellow, 2, Arrays.asList(new MaterialStack(Iron, 1), new MaterialStack(Hydrogen, 1), new MaterialStack(Oxygen, 2))); // FeO(OH) + a bit Ni and Co
     YttriumBariumCuprate  = new Materials(358, TextureSet.SET_METALLIC, 1.0F, 0, 2, 1|2, 80, 64, 70, 0, "YttriumBariumCuprate", "Yttrium Barium Cuprate", 0, 0, 4500, 4500, true, false, 1, 1, 1, Dyes.dyeGray, 0, Arrays.asList(new MaterialStack(Yttrium, 1), new MaterialStack(Barium, 2), new MaterialStack(Copper, 3), new MaterialStack(Oxygen, 7)));
 
-    /**
-     * Second Degree Compounds
-     */
+    CalciumChloride = new Materials(743, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 250, 230, 245, 0, "CalciumChloride", "Calcium Chloride", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeWhite, 1, Arrays.asList(new MaterialStack(Calcium, 1), new MaterialStack(Chlorine, 2)));
+    LithiumChloride = new Materials(744, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 230, 250, 255, 0, "LithiumChloride", "Lithium Chloride", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeWhite, 1, Arrays.asList(new MaterialStack(Lithium, 1), new MaterialStack(Chlorine, 1)));
+    TungstigAcid = new Materials(745, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 255, 232, 38, 0, "TungstigAcid", "Tungstic Acid", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeYellow, 0, Arrays.asList(new MaterialStack(Hydrogen, 2), new MaterialStack(Tungstate, 1), new MaterialStack(Oxygen, 4)));
+    TungstenTrioxide = new Materials(746, TextureSet.SET_DULL, 		1.0F, 0, 1, 1, 255, 255, 17, 0, "TungstenTrioxide", "Tungsten Trioxide", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeYellow, 0, Arrays.asList(new MaterialStack(Tungsten, 1), new MaterialStack(Oxygen, 3)));
+
+        /**
+         * Second Degree Compounds
+         */
     WoodSealed = new Materials( 889, TextureSet.SET_WOOD, 		3.0F, 24, 0, 1|2|64|128, 80, 40, 0, 0, "WoodSealed", "Sealed Wood", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeBrown, 0, Arrays.asList(new MaterialStack(Wood, 1)), Arrays.asList(new TC_AspectStack(TC_Aspects.ARBOR, 2), new TC_AspectStack(TC_Aspects.FABRICO, 1)));
     LiveRoot = new Materials(832, TextureSet.SET_WOOD, 			1.0F, 0, 1, 1, 220, 200, 0, 0, "LiveRoot", "Liveroot", 5, 16, -1, 0, false, false, 2, 4, 3, Dyes.dyeBrown, 2, Arrays.asList(new MaterialStack(Wood, 3), new MaterialStack(Magic, 1)), Arrays.asList(new TC_AspectStack(TC_Aspects.ARBOR, 2), new TC_AspectStack(TC_Aspects.VICTUS, 2), new TC_AspectStack(TC_Aspects.PRAECANTATIO, 1)));
     IronWood = new Materials(338, TextureSet.SET_WOOD, 			6.0F, 384, 2, 1|2|64|128, 150, 140, 110, 0, "IronWood", "Ironwood", 5, 8, -1, 0, false, false, 2, 19, 18, Dyes.dyeBrown, 2, Arrays.asList(new MaterialStack(Iron, 9), new MaterialStack(LiveRoot, 9), new MaterialStack(Gold, 1)));
