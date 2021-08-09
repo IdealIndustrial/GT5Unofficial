@@ -60,6 +60,7 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
     }
 
     public boolean checkRecipe(ItemStack aStack) {
+        super.checkRecipe(aStack);
         mEUt = -ENERGY[getTier()];
         this.mEfficiencyIncrease = 10000;
         this.mMaxProgresstime = 10;
