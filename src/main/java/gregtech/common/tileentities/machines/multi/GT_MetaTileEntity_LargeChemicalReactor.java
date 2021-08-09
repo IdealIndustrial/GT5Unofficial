@@ -1,6 +1,7 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
@@ -50,7 +51,8 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 				"1x Input Bus/Hatch (Any inert casing)",
 				"1x Output Bus/Hatch (Any inert casing)",
 				"1x Maintenance Hatch (Any inert casing)",
-				"1x Energy Hatch (Any inert casing)" };
+				"1x Energy Hatch (Any inert casing)",
+				"Right click with wire cutter to toggle recipe conflicts resolving" };
 	}
 
 	@Override
@@ -117,8 +119,7 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 		if (inputs.length > 0 || fluids.length > 0) {
 			long voltage = getMaxInputVoltage();
 			byte tier = (byte) Math.max(1, GT_Utility.getTier(voltage));
-			GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sMultiblockChemicalRecipes.findRecipe(getBaseMetaTileEntity(), false,
-					false, gregtech.api.enums.GT_Values.V[tier], fluids, inputs);
+			GT_Recipe recipe = findRecipe(GT_Recipe.GT_Recipe_Map.sMultiblockChemicalRecipes, null, inputs, fluids, GT_Values.V[tier]);
 			if (recipe != null && recipe.isRecipeInputEqual(true, fluids, inputs)) {
 				this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
 				this.mEfficiencyIncrease = 10000;
@@ -219,4 +220,8 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 		return false;
 	}
 
+	@Override
+	protected boolean canHaveRecipeConflicts() {
+		return true;
+	}
 }
