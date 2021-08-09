@@ -2539,7 +2539,7 @@ if(Loader.isModLoaded("Railcraft")){
             		Materials.SolderingAlloy.getMolten(2880),
             }, ItemList.FusionComputer_UV.get(1,o), 1000, 90000);
 
-            GT_Values.RA.addFilterRecipe(1, Materials.DirtyWater.getFluid(1000L), Materials.Water.getFluid(900L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.SiliconDioxide,5),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Phosphate,3),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Calcite,2)},50,12);
+            GT_Values.RA.addFilterRecipe(1, Materials.DirtyWater.getFluid(1000L), Materials.Water.getFluid(900L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.SiliconDioxide,5),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Phosphate,3), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Biotite, 3), GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Calcite,2)},50,12);
             GT_Values.RA.addFilterRecipe(1, Materials.DirtyWater2.getFluid(1000L), Materials.Water.getFluid(900L), new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.Saltpeter,4),GT_OreDictUnificator.get(OrePrefixes.dustTiny, Materials.PotassiumFeldspar,1)},50,12);
             GT_Values.RA.addFilterRecipe(2, Materials.DirtyWater.getFluid(1000L), Materials.Water.getFluid(900L), new ItemStack[0],50,12);
             GT_Values.RA.addFilterRecipe(2, Materials.DirtyWater2.getFluid(1000L), Materials.Water.getFluid(900L), new ItemStack[0],50,12);
