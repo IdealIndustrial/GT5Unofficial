@@ -40,7 +40,7 @@ public class GT_MachineRecipeLoader2 implements Runnable{
                 600*20, 120, 3000);
         RA.addBlastRecipe(get(OrePrefixes.dust, Materials.TungstenTrioxide, 2), get(OrePrefixes.dust, Materials.Carbon, 3), null,
                 Materials.CarbonDioxide.getGas(3000), get(OrePrefixes.ingotHot, Materials.Tungsten, 2),null,
-                600*20, 120, 3000);
+                1200*20, 120, 3000);
 
     }
 }
