@@ -687,7 +687,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
 
     CalciumChloride = new Materials(743, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 250, 230, 245, 0, "CalciumChloride", "Calcium Chloride", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeWhite, 1, Arrays.asList(new MaterialStack(Calcium, 1), new MaterialStack(Chlorine, 2)));
     LithiumChloride = new Materials(744, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 230, 250, 255, 0, "LithiumChloride", "Lithium Chloride", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeWhite, 1, Arrays.asList(new MaterialStack(Lithium, 1), new MaterialStack(Chlorine, 1)));
-    TungstigAcid = new Materials(745, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 255, 232, 38, 0, "TungstigAcid", "Tungstic Acid", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeYellow, 0, Arrays.asList(new MaterialStack(Hydrogen, 2), new MaterialStack(Tungstate, 1), new MaterialStack(Oxygen, 4)));
+    TungstigAcid = new Materials(745, TextureSet.SET_DULL, 			1.0F, 0, 1, 1, 255, 232, 38, 0, "TungstigAcid", "Tungstic Acid", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeYellow, 0, Arrays.asList(new MaterialStack(Hydrogen, 2), new MaterialStack(Tungsten, 1), new MaterialStack(Oxygen, 4)));
     TungstenTrioxide = new Materials(746, TextureSet.SET_DULL, 		1.0F, 0, 1, 1, 255, 255, 17, 0, "TungstenTrioxide", "Tungsten Trioxide", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyeYellow, 0, Arrays.asList(new MaterialStack(Tungsten, 1), new MaterialStack(Oxygen, 3)));
     AluminiumSulfite = new Materials(747, TextureSet.SET_DULL, 		1.0F, 0, 1, 1, 203, 15, 255, 0, "AluminiumSulfite", "Aluminium Sulfite", 0, 0, -1, 0, false, false, 0, 1, 1, Dyes.dyePurple, 0, Arrays.asList(new MaterialStack(Aluminium, 2), new MaterialStack(SulfurTrioxide, 3)));
 
