@@ -61,5 +61,8 @@ public class EnergyPath implements IEnergyPassThrough {
 
     public void append(IEnergyPassThrough energyPassThrough) {
         passThroughList.add(energyPassThrough);
+        loss += energyPassThrough.loss();
+        amperage = Math.min(amperage, energyPassThrough.maxAmperage());
+        voltage = Math.min(voltage, energyPassThrough.maxVoltage());
     }
 }

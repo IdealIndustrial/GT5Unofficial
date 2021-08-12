@@ -55,6 +55,9 @@ public class II_CableSystem {
                 else {
                     path.fullSimulate(voltage, transfer); //if we are checking voltage and amperage we should simulate better
                 }
+                if (voltage <= 0) {
+                    continue;
+                }
                 consumer.acceptEnergy(voltage, transfer);
                 need -= transfer;
                 if (need <= 0) {
