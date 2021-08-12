@@ -13,7 +13,7 @@ import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.render.II_CustomRenderer;
 import idealindustrial.tile.IOType;
-import idealindustrial.tile.covers.II_CoverBehavior;
+import idealindustrial.tile.covers.II_BaseCoverBehavior;
 import idealindustrial.tile.covers.II_CoverRegistry;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
@@ -27,8 +27,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
 
 import static idealindustrial.tile.II_TileEvents.BASE_ACTIVE;
 import static idealindustrial.tile.base.II_BaseTileConstants.*;
@@ -47,7 +45,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
     protected int[] coverIDs = new int[6];
     protected long[] coverValues = new long[6];
-    protected II_CoverBehavior[] covers = new II_CoverBehavior[6];
+    protected II_BaseCoverBehavior[] covers = new II_BaseCoverBehavior[6];
 
 
     @Override

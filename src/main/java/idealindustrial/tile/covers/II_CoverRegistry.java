@@ -14,19 +14,19 @@ import java.util.Map;
  */
 public class II_CoverRegistry {
 
-    static Map<II_HashedStack, II_CoverBehavior> behaviorMap = II_ItemHelper.queryMap(new HashMap<>());
+    static Map<II_HashedStack, II_BaseCoverBehavior<?>> behaviorMap = II_ItemHelper.queryMap(new HashMap<>());
 
-    public static void registerCover(ItemStack stack, II_CoverBehavior behavior) {
+    public static void registerCover(ItemStack stack, II_BaseCoverBehavior<?> behavior) {
         II_HashedStack hashedStack = new II_HashedStack(stack);
         assert !behaviorMap.containsKey(hashedStack);
         behaviorMap.put(hashedStack, behavior);
     }
 
-    public static II_CoverBehavior behaviorFromStack(II_HashedStack stack) {
+    public static II_BaseCoverBehavior<?> behaviorFromStack(II_HashedStack stack) {
         return behaviorMap.get(stack);
     }
 
-    public static II_CoverBehavior behaviorFromID(int id) {
+    public static II_BaseCoverBehavior<?> behaviorFromID(int id) {
         return behaviorFromStack(new II_HashedStack(id));
     }
 
