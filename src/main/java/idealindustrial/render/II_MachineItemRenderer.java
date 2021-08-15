@@ -1,6 +1,7 @@
 package idealindustrial.render;
 
 import cpw.mods.fml.relauncher.SideOnly;
+import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.itemgen.blocks.II_Blocks;
 import idealindustrial.tile.II_Item_Machines;
@@ -33,13 +34,12 @@ public final class II_MachineItemRenderer implements IItemRenderer {
 
     public void renderItem(ItemRenderType type, ItemStack is, Object... data) {
 
-        if(type == ItemRenderType.INVENTORY){
+        if (type == ItemRenderType.INVENTORY) {
             GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-        }
-        else if(type == ItemRenderType.ENTITY) {
-            GL11.glTranslatef(-.5f,-.5f,-.5f);
-          //  GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+        } else if (type == ItemRenderType.ENTITY) {
+            GL11.glTranslatef(-.5f, -.5f, -.5f);
+            //  GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
         }
         GL11.glEnable(GL11.GL_ALPHA_TEST);
 
@@ -54,7 +54,11 @@ public final class II_MachineItemRenderer implements IItemRenderer {
             block.setBlockBoundsForItemRender();
             RenderBlocks renderer = RenderBlocks.getInstance();
             renderer.setRenderBoundsFromBlock(block);
-            renderInventory(block, renderer, base.getTextures(is, (byte)4, true, false, true));
+            if (base.getCustomRenderer() != null) {
+                base.getCustomRenderer().renderItem(type, is, II_Blocks.INSTANCE.blockMachines, RenderBlocks.getInstance(), meta);
+            } else {
+                renderInventory(block, renderer, base.getTextures(is, (byte) 4, true, false, true));
+            }
         }
 
     }

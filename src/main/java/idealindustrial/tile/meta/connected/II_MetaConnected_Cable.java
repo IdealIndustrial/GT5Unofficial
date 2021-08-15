@@ -1,10 +1,12 @@
 package idealindustrial.tile.meta.connected;
 
+import gregtech.GT_Mod;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.TextureSet;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.GT_Client;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;
@@ -13,32 +15,43 @@ import idealindustrial.util.energy.system.II_CableSystem;
 import idealindustrial.util.energy.system.IInfoEnergyPassThrough;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 public class II_MetaConnected_Cable extends II_BaseMetaConnected<II_BaseTile> {
     public II_CableSystem system;
     protected long voltage, amperage, loss;
 
-    public II_MetaConnected_Cable(II_BaseTile baseTile, Materials material, long voltage, long amperage, long loss) {
+    public II_MetaConnected_Cable(II_BaseTile baseTile, Materials material, long voltage, long amperage, long loss, float thickness) {
         super(baseTile, new GT_RenderedTexture(material.mIconSet.mTextures[TextureSet.INDEX_wire], material.mRGBa),
                 new GT_RenderedTexture(material.mIconSet.mTextures[TextureSet.INDEX_wire]));
         this.voltage = voltage;
         this.amperage = amperage;
         this.loss = loss;
+        this.thickness = thickness;
     }
 
 
-    private II_MetaConnected_Cable(II_BaseTile baseTile, ITexture textureInactive, ITexture textureActive, long voltage, long amperage, long loss) {
+    private II_MetaConnected_Cable(II_BaseTile baseTile, ITexture textureInactive, ITexture textureActive, long voltage, long amperage, long loss, float thickness) {
         super(baseTile, textureInactive, textureActive);
         this.voltage = voltage;
         this.amperage = amperage;
         this.loss = loss;
+        this.thickness = thickness;
     }
 
     @Override
     public boolean canConnect(int side) {
+        if (baseTile.isClientSide()) {
+            return false;
+        }
         II_MetaTile<?> metaTile = II_TileUtil.getMetaTileAtSide(baseTile, side);
         if (metaTile == null) {
             return false;
@@ -58,7 +71,7 @@ public class II_MetaConnected_Cable extends II_BaseMetaConnected<II_BaseTile> {
 
     @Override
     public II_MetaConnected_Cable newMetaTile(II_BaseTile baseTile) {
-        return new II_MetaConnected_Cable(baseTile, textureInactive, textureActive, voltage, amperage, loss);
+        return new II_MetaConnected_Cable(baseTile, textureInactive, textureActive, voltage, amperage, loss, thickness);
     }
 
     @Override
@@ -139,6 +152,5 @@ public class II_MetaConnected_Cable extends II_BaseMetaConnected<II_BaseTile> {
         }
         return system.getInfo(this);
     }
-
 
 }

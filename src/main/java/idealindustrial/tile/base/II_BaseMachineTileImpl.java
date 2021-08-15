@@ -1,6 +1,7 @@
 package idealindustrial.tile.base;
 
 import idealindustrial.tile.IOType;
+import idealindustrial.tile.covers.II_BaseCoverBehavior;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;
 import idealindustrial.util.energy.EUConsumer;
@@ -13,7 +14,6 @@ import idealindustrial.util.fluid.II_FluidInvReprImpl;
 import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
 import idealindustrial.util.inventory.II_EmptyInventory;
 import idealindustrial.util.inventory.II_InternalInventory;
-import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -71,6 +71,9 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
         outTank.nbtLoad(tag, "out");
 
         handler.nbtLoad(tag, "eu");
+        if (metaTileEntity != null) {
+            onIOConfigurationChanged();
+        }
     }
 
     @Override
@@ -104,34 +107,25 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
 
     @Override
     public int getSizeInventory() {
-        if (alive()) {
-            return inSize + outSize;
-        }
-        return 0;
+        return inSize + outSize;
     }
 
     @Override
     public ItemStack getStackInSlot(int index) {
-        if (alive()) {
-            assert index >= 0 && index < inSize + outSize;
-            if (index >= inSize) {
-                return out.get(index - inSize);
-            }
-            return in.get(index);
+        assert index >= 0 && index < inSize + outSize;
+        if (index >= inSize) {
+            return out.get(index - inSize);
         }
-        return null;
+        return in.get(index);
     }
 
     @Override
     public ItemStack decrStackSize(int index, int amount) {
-        if (alive()) {
-            assert index >= 0 && index < inSize + outSize;
-            if (index >= inSize) {
-                return out.reduce(index - inSize, amount);
-            }
-            return in.reduce(index, amount);
+        assert index >= 0 && index < inSize + outSize;
+        if (index >= inSize) {
+            return out.reduce(index - inSize, amount);
         }
-        return null;
+        return in.reduce(index, amount);
     }
 
     @Override
@@ -142,14 +136,12 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         inventoryModified = true;
-        if (alive()) {
-            assert index >= 0 && index < inSize + outSize;
-            if (index >= inSize) {
-                out.set(index - inSize, stack);
-                return;
-            }
-            in.set(index, stack);
+        assert index >= 0 && index < inSize + outSize;
+        if (index >= inSize) {
+            out.set(index - inSize, stack);
+            return;
         }
+        in.set(index, stack);
     }
 
     @Override
@@ -167,7 +159,7 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer aPlayer) {
-        return alive() && timer > 5 && getTileEntityOffset(0, 0, 0) == this && aPlayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
+        return getTileEntityOffset(0, 0, 0) == this && aPlayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
     }
 
 
@@ -197,7 +189,7 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
 
     @Override
     public int[] getAccessibleSlotsFromSide(int aSide) {
-        if (alive() && letsItemsOut(aSide) && letsItemsOut(aSide))
+        if (itemIO[aSide] || itemIO[aSide + 6])
             return slots;
         return new int[0];
     }
@@ -207,7 +199,7 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
      */
     @Override
     public boolean canInsertItem(int aIndex, ItemStack aStack, int aSide) {
-        return alive() && letsItemsIn(aSide) && aIndex < in.size() && in.allowInput(aIndex, aStack);
+        return itemIO[aSide] && aIndex < in.size() && in.allowInput(aIndex, aStack);
     }
 
     /**
@@ -215,27 +207,19 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
      */
     @Override
     public boolean canExtractItem(int aIndex, ItemStack aStack, int aSide) {
-        return alive() && letsItemsOut(aSide) && aIndex >= inSize && aIndex < inSize + outSize;
-    }
-
-    protected boolean letsItemsIn(int side) {
-        return true;
-    }
-
-    protected boolean letsItemsOut(int side) {
-        return true;
+        return itemIO[aSide + 6] && aIndex >= inSize && aIndex < inSize + outSize;
     }
 
     @Override
     public int fill(ForgeDirection aSide, FluidStack aFluid, boolean doFill) {
-        if (allowIn(aSide))
+        if (aSide != ForgeDirection.UNKNOWN && fluidIO[aSide.ordinal()])
             return inTank.fill(aSide, aFluid, doFill);
         return 0;
     }
 
     @Override
     public FluidStack drain(ForgeDirection aSide, FluidStack aFluid, boolean doDrain) {
-        if (allowOut(aSide))
+        if (aSide != ForgeDirection.UNKNOWN && fluidIO[aSide.ordinal() + 6])
             return outTank.drain(aSide, aFluid, doDrain);
         return null;
     }
@@ -243,82 +227,31 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
 
     @Override
     public FluidStack drain(ForgeDirection aSide, int maxDrain, boolean doDrain) {
-        if (allowOut(aSide))
+        if (aSide != ForgeDirection.UNKNOWN && fluidIO[aSide.ordinal() + 6])
             return outTank.drain(aSide, maxDrain, doDrain);
         return null;
     }
 
     @Override
     public boolean canFill(ForgeDirection aSide, Fluid fluid) {
-        if (allowIn(aSide))
+        if (aSide != ForgeDirection.UNKNOWN && fluidIO[aSide.ordinal()])
             return inTank.canFill(aSide, fluid);
         return false;
     }
 
     @Override
     public boolean canDrain(ForgeDirection aSide, Fluid aFluid) {
-        if (allowOut(aSide))
+        if (aSide != ForgeDirection.UNKNOWN && fluidIO[aSide.ordinal() + 6])
             return outTank.canDrain(aSide, aFluid);
         return false;
     }
 
     @Override
-    public FluidTankInfo[] getTankInfo(ForgeDirection aSide) {
-        if (hasTank && alive() && (aSide == ForgeDirection.UNKNOWN || (letsFluidIn(aSide.ordinal()) && letsFluidOut(aSide.ordinal()))))
-            return outTank.getTankInfo(aSide);
+    public FluidTankInfo[] getTankInfo(ForgeDirection side) {
+        int sideI = side.ordinal();
+        if (hasTank && alive() && (side == ForgeDirection.UNKNOWN || (fluidIO[sideI] && fluidIO[sideI + 6])))
+            return outTank.getTankInfo(side);
         return new FluidTankInfo[]{};
-    }
-
-    private boolean allowIn(ForgeDirection aSide) {
-        return hasTank && timer > 5 && alive() && (aSide == ForgeDirection.UNKNOWN || letsFluidIn(aSide.ordinal()));
-    }
-
-    private boolean allowOut(ForgeDirection aSide) {
-        return hasTank && timer > 5 && alive() && (aSide == ForgeDirection.UNKNOWN || (letsFluidOut(aSide.ordinal())));
-    }
-
-
-    protected boolean letsFluidIn(int side) {
-        return true;
-    }
-
-    protected boolean letsFluidOut(int side) {
-        return true;
-    }
-
-    @Override
-    public long injectEnergyUnits(byte aSide, long aVoltage, long aAmperage) {
-        return 0;
-    }
-
-    @Override
-    public boolean inputsEnergyFrom(byte aSide) {
-        return alive() && lestEnergyIn(aSide) && getConsumer(aSide) != null;
-    }
-
-    @Override
-    public boolean inputsEnergyFrom(byte aSide, boolean waitForActive) {
-        return inputsEnergyFrom(aSide);
-    }
-
-    @Override
-    public boolean outputsEnergyTo(byte aSide) {
-        return alive() && lestEnergyOut(aSide) && getProducer(aSide) != null;
-    }
-
-    @Override
-    public boolean outputsEnergyTo(byte aSide, boolean waitForActive) {
-        return outputsEnergyTo(aSide);
-    }
-
-    @Override
-    public byte getColorization() {
-        return (byte) color;
-    }
-
-    @Override
-    public byte setColorization(byte aColor) {
-        return (byte) (color = aColor);
     }
 
     @Override
@@ -330,15 +263,6 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
     public EUConsumer getConsumer(int side) {
         return handler.getConsumer(side);
     }
-
-    protected boolean lestEnergyIn(int side) {
-        return false;
-    }
-
-    protected boolean lestEnergyOut(int side) {
-        return false;
-    }
-
 
     @Override
     public Container getServerGUI(EntityPlayer player, int internalID) {
@@ -401,8 +325,8 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
     }
 
     @Override
-    public boolean getIOatSide(int side, IOType type, boolean input) {
-        return true; //todo implement cover IO changes
+    public boolean calculateIOatSide(int side, IOType type, boolean input) {
+        return (covers[side] == null || covers[side].getIO(type, input)) && metaTileEntity.getIOatSide(side, type, input);
     }
 
     @Override
@@ -414,10 +338,10 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
 
     protected void updateIOArray(boolean[] array, IOType type) {
         for (int i = 0; i < 6; i++) {
-            array[i] = getIOatSide(i, type, false);
+            array[i] = calculateIOatSide(i, type, false);
         }
         for (int i = 0; i < 6; i++) {
-            array[i + 6] = getIOatSide(i, type, true);
+            array[i + 6] = calculateIOatSide(i, type, true);
         }
     }
 
@@ -431,7 +355,12 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
         }
     }
 
-
+    @Override
+    protected void setCoverAtSide(int side, int id, II_BaseCoverBehavior<?> cover) {
+        super.setCoverAtSide(side, id, cover);
+        onIOConfigurationChanged();
+        notifyOnIOConfigChange(IOType.ALL);
+    }
 
     @Override
     public boolean hasFluidTank() {
@@ -457,6 +386,7 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
             openGUI(player, 0);
             return true;
         }
-        return false;
+        return true;
     }
+
 }

@@ -115,7 +115,7 @@ public abstract class II_BaseMetaTile<BaseTileType extends II_BaseTile> implemen
 
     @Override
     public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
-        return false;
+        return baseTile.isClientSide();
     }
 
     @Override

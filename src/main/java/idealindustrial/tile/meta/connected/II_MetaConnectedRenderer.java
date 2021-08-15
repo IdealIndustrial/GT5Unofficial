@@ -2,11 +2,15 @@ package idealindustrial.tile.meta.connected;
 
 import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
+import idealindustrial.II_Values;
 import idealindustrial.render.II_CustomRenderer;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.IItemRenderer;
 
 import static gregtech.common.render.GT_Renderer_Block.*;
 
@@ -25,13 +29,13 @@ public class II_MetaConnectedRenderer implements II_CustomRenderer {
                     connected[i] = true;
                 }
             }
-           int newConnections = 0;
-           newConnections |= connected[4] ? 1 : 0;
-           newConnections |= connected[5] ? 2 : 0;
-           newConnections |= connected[0] ? 4 : 0;
-           newConnections |= connected[1] ? 8 : 0;
-           newConnections |= connected[2] ? 16 : 0;
-           newConnections |= connected[3] ? 32 : 0;
+            int newConnections = 0;
+            newConnections |= connected[4] ? 1 : 0;
+            newConnections |= connected[5] ? 2 : 0;
+            newConnections |= connected[0] ? 4 : 0;
+            newConnections |= connected[1] ? 8 : 0;
+            newConnections |= connected[2] ? 16 : 0;
+            newConnections |= connected[3] ? 32 : 0;
 //           connections = newConnections;
             connections = (connections | (connections << 6)) >> 4;
             connections &= 0x3F;
@@ -42,9 +46,9 @@ public class II_MetaConnectedRenderer implements II_CustomRenderer {
         }
         float sp = (1.0F - tThickness) / 2.0F;
         boolean[] tIsCovered = new boolean[6];
-//        for (byte i = 0; i < 6; i = (byte) (i + 1)) {
-//            tIsCovered[i] = (aTileEntity.getCoverIDAtSide(i) != 0);
-//        }
+        for (byte i = 0; i < 6; i = (byte) (i + 1)) {
+            tIsCovered[i] = (tileConnected.getBase().getCoverIDAtSide(i) != 0);
+        }
         if ((tIsCovered[0]) && (tIsCovered[1]) && (tIsCovered[2]) && (tIsCovered[3]) && (tIsCovered[4]) && (tIsCovered[5])) {
             return renderStandardBlock(world, x, y, z, block, renderBlocks);
         }
@@ -310,4 +314,52 @@ public class II_MetaConnectedRenderer implements II_CustomRenderer {
         renderBlocks.setRenderBoundsFromBlock(block);
         return true;
     }
+
+    @Override
+    public void renderItem(IItemRenderer.ItemRenderType type, ItemStack item, Block aBlock, RenderBlocks aRenderer, int aMeta) {
+        II_BaseMetaConnected<?> metaTile = (II_BaseMetaConnected<?>) II_Values.metaTiles[aMeta];
+        aBlock.setBlockBoundsForItemRender();
+        aRenderer.setRenderBoundsFromBlock(aBlock);
+
+        ITexture[][] textures = metaTile.getBase().getTextures();
+        float tThickness = metaTile.thickness;
+        float sp = (1.0F - tThickness) / 2.0F;
+
+        aBlock.setBlockBounds(0.0F, sp, sp, 1.0F, sp + tThickness, sp + tThickness);
+        aRenderer.setRenderBoundsFromBlock(aBlock);
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
+        renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[0], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(0.0F, 1.0F, 0.0F);
+        renderPositiveYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[1], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(0.0F, 0.0F, -1.0F);
+        renderNegativeZFacing(null, aRenderer, aBlock, 0, 0, 0, textures[2], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(0.0F, 0.0F, 1.0F);
+        renderPositiveZFacing(null, aRenderer, aBlock, 0, 0, 0, textures[3], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(-1.0F, 0.0F, 0.0F);
+        renderNegativeXFacing(null, aRenderer, aBlock, 0, 0, 0, textures[4], true);
+        Tessellator.instance.draw();
+
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(1.0F, 0.0F, 0.0F);
+        renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, textures[5], true);
+        Tessellator.instance.draw();
+        aBlock.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        aRenderer.setRenderBoundsFromBlock(aBlock);
+    }
+
+
 }

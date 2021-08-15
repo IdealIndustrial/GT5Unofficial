@@ -6,6 +6,7 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IDebugableBlock;
 import gregtech.api.interfaces.tileentity.ICoverable;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.metatileentity.BaseTileEntity;
@@ -17,6 +18,7 @@ import idealindustrial.II_Values;
 import idealindustrial.itemgen.blocks.base.II_Base_Block;
 import idealindustrial.tile.interfaces.IClickableTileEntity;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
+import idealindustrial.tile.interfaces.base.II_BasePipeTile;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tools.II_ToolRegistry;
@@ -33,6 +35,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.Explosion;
@@ -418,12 +421,72 @@ public class II_Block_Machines
     public boolean recolourBlock(World aWorld, int aX, int aY, int aZ, ForgeDirection aSide, int aColor) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof II_BaseMachineTile)) {
-            if (((II_BaseMachineTile) tTileEntity).getColorization() == (byte) ((~aColor) & 0xF)) {
-                return false;
-            }
-            ((II_BaseMachineTile) tTileEntity).setColorization((byte) ((~aColor) & 0xF));
-            return true;
+//            if (((II_BaseMachineTile) tTileEntity).getColorization() == (byte) ((~aColor) & 0xF)) {
+//                return false;
+//            }
+//            ((II_BaseMachineTile) tTileEntity).setColorization((byte) ((~aColor) & 0xF));
+//            return true;
         }
         return false;
+    }
+
+    public void addCollisionBoxesToList(World aWorld, int aX, int aY, int aZ, AxisAlignedBB inputAABB, List outputAABB, Entity collider) {
+        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
+        if (((tTileEntity instanceof II_BasePipeTile)) && (((II_BasePipeTile) tTileEntity).getMetaTile() != null)) {
+            ((II_BasePipeTile) tTileEntity).addCollisionBoxesToList(aWorld, aX, aY, aZ, inputAABB, outputAABB, collider);
+            return;
+        }
+        minX = minY = minZ = 0;
+        maxX = maxY = maxZ = 1;
+        super.addCollisionBoxesToList(aWorld, aX, aY, aZ, inputAABB, outputAABB, collider);
+    }
+
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ) {
+        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
+        if (((tTileEntity instanceof II_BasePipeTile)) && (((II_BasePipeTile) tTileEntity).getMetaTile() != null)) {
+            return ((II_BasePipeTile) tTileEntity).getCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
+        }
+        minX = minY = minZ = 0;
+        maxX = maxY = maxZ = 1;
+        return super.getCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ) {
+        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
+        if (((tTileEntity instanceof II_BasePipeTile)) && (((II_BasePipeTile) tTileEntity).getMetaTile() != null)) {
+            return ((II_BasePipeTile) tTileEntity).getCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
+        }
+        minX = minY = minZ = 0;
+        maxX = maxY = maxZ = 1;
+        return super.getSelectedBoundingBoxFromPool(aWorld, aX, aY, aZ);
+    }
+
+    @Override  //THIS
+    public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int aX, int aY, int aZ) {
+        TileEntity tTileEntity = blockAccess.getTileEntity(aX, aY, aZ);
+        if (((tTileEntity instanceof II_BasePipeTile)) && (((II_BasePipeTile) tTileEntity).getMetaTile() != null)) {
+            AxisAlignedBB bbb=((II_BasePipeTile)tTileEntity).getCollisionBoundingBoxFromPool(((II_BasePipeTile)tTileEntity).getWorld(), 0, 0, 0);
+            minX=bbb.minX;//This essentially sets block bounds
+            minY=bbb.minY;
+            minZ=bbb.minZ;
+            maxX=bbb.maxX;
+            maxY=bbb.maxY;
+            maxZ=bbb.maxZ;
+            return;
+        }
+        minX = minY = minZ = 0;
+        maxX = maxY = maxZ = 1;
+        super.setBlockBoundsBasedOnState(blockAccess,aX,aY,aZ);
+    }
+
+    public void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider) {
+        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
+        if (((tTileEntity instanceof II_BasePipeTile)) && (((II_BasePipeTile) tTileEntity).getMetaTile() != null)) {
+            ((II_BasePipeTile) tTileEntity).onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
+            return;
+        }
+        super.onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
     }
 }

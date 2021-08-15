@@ -12,7 +12,7 @@ public class II_Util {
         return new DefaultableImpl<>(defaultValue);
     }
 
-    public static <T>Supplier<T> singletonSupplier(T value) {
+    public static <T> Supplier<T> singletonSupplier(T value) {
         return () -> value;
     }
 
@@ -21,13 +21,13 @@ public class II_Util {
         K[] keys = (K[]) new Object[map.size()];
         V[] values = (V[]) new Object[map.size()];//not using entries to save some performance
         int i = 0;
-        for (Map.Entry<K,V> entry : map.entrySet()) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
             keys[i] = entry.getKey();
             values[i] = entry.getValue();
             ++i;
         }
         map.clear();
-        for(int j = 0; j < i; j++) {
+        for (int j = 0; j < i; j++) {
             map.put(keys[j], values[j]);
         }
     }
@@ -41,5 +41,17 @@ public class II_Util {
         boolean[] ar = new boolean[size];
         Arrays.fill(ar, true);
         return ar;
+    }
+
+    public static long intsToLong(int a, int b) {
+        return ((long) a) << 32 | ((long) b);
+    }
+
+    public static int intAFromLong(long l) {
+        return (int) (l >> 32);
+    }
+
+    public static int intBFromLong(long l)  {
+        return (int) l;
     }
 }

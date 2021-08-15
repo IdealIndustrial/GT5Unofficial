@@ -22,6 +22,21 @@ public class II_StreamUtil {
         return array;
     }
 
+    public static void writeLongArray(long[] array, ByteArrayDataOutput stream) {
+        stream.writeInt(array.length);
+        for (long i : array) {
+            stream.writeLong(i);
+        }
+    }
+
+    public static long[] readLongArray(ByteArrayDataInput stream) {
+        long[] array = new long[stream.readInt()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = stream.readLong();
+        }
+        return array;
+    }
+
     public static void writeNBTLongArray(NBTTagCompound nbt, long[] ar, String name) {
         for (int i = 0; i < ar.length; i++) {
             nbt.setLong(name + i, ar[i]);

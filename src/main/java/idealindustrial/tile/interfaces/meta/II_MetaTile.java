@@ -3,6 +3,7 @@ package idealindustrial.tile.interfaces.meta;
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.render.II_CustomRenderer;
 import idealindustrial.tile.IOType;
+import idealindustrial.tile.covers.II_BaseCoverBehavior;
 import idealindustrial.tile.interfaces.ISyncedTileEntity;
 import idealindustrial.tile.interfaces.IToolClickableTile;
 import idealindustrial.tile.interfaces.IUpdatableTileEntity;
@@ -11,10 +12,15 @@ import idealindustrial.util.energy.II_EnergyHandler;
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.inventory.II_InternalInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 public interface II_MetaTile<BaseTileType extends II_BaseTile> extends IUpdatableTileEntity, ISyncedTileEntity, IToolClickableTile {
 
@@ -120,5 +126,26 @@ public interface II_MetaTile<BaseTileType extends II_BaseTile> extends IUpdatabl
 
     }
 
+    default boolean allowCoverAtSide(II_BaseCoverBehavior<?> cover, int side) {
+        return true;
+    }
 
+    default boolean getIOatSide(int side, IOType type, boolean input) {
+        return true;
+    }
+
+
+    default void addCollisionBoxesToList(World aWorld, int aX, int aY, int aZ, AxisAlignedBB inputAABB, List<AxisAlignedBB> outputAABB, Entity collider) {
+        AxisAlignedBB axisalignedbb1 = getCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
+        if (axisalignedbb1 != null && inputAABB.intersectsWith(axisalignedbb1)) outputAABB.add(axisalignedbb1);
+    }
+
+    default AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ) {
+        return AxisAlignedBB.getBoundingBox(aX, aY, aZ, aX + 1, aY + 1, aZ + 1);
+    }
+
+
+    default void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider) {
+
+    }
 }

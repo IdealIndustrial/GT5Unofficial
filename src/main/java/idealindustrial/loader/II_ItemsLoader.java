@@ -7,6 +7,7 @@ import idealindustrial.teststuff.testTile.II_TestMachine;
 import idealindustrial.teststuff.testTile2.II_TestMachine2;
 import idealindustrial.tile.II_Block_Machines;
 import idealindustrial.tile.base.II_BaseMachineTileImpl;
+import idealindustrial.tile.base.II_BasePipeTileImpl;
 import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.meta.connected.II_MetaConnected_Cable;
@@ -19,10 +20,11 @@ public class II_ItemsLoader {
 
         II_TileUtil.registerMetaTile(1, new II_TestMachine(II_TileUtil.makeBaseMachineTile()));
         II_TileUtil.registerMetaTile(2, new II_TestMachine2(II_TileUtil.makeBaseMachineTile()));
-        II_TileUtil.registerMetaTile(3, new II_MetaConnected_Cable(II_TileUtil.makeBaseTile(), Materials.Tin, 32, 1, 1));
-        II_TileUtil.registerMetaTile(4, new II_MetaConnected_Cable(II_TileUtil.makeBaseTile(), Materials.Copper, 128, 1, 1));
-        II_TileUtil.registerMetaTile(5, new II_MetaConnected_Cable(II_TileUtil.makeBaseTile(), Materials.Silver, 512, 2, 1));
+        II_TileUtil.registerMetaTile(3, new II_MetaConnected_Cable(II_TileUtil.makeBaseTile(), Materials.Tin, 32, 1, 1, 0.5f));
+        II_TileUtil.registerMetaTile(4, new II_MetaConnected_Cable(II_TileUtil.makeBaseTile(), Materials.Copper, 128, 1, 1, 0.3f));
+        II_TileUtil.registerMetaTile(5, new II_MetaConnected_Cable(II_TileUtil.makeBaseTile(), Materials.Silver, 512, 2, 1, 0.8f));
         GameRegistry.registerTileEntity(II_BaseTileImpl.class, "ii.tile");
         GameRegistry.registerTileEntity(II_BaseMachineTileImpl.class, "ii.machine_tile");
+        GameRegistry.registerTileEntity(II_BasePipeTileImpl.class, "ii.pipe_tile");
     }
 }

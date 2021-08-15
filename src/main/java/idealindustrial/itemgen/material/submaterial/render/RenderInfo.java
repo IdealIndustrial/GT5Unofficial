@@ -21,6 +21,10 @@ public abstract class RenderInfo {
         return (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
     }
 
+    public short[] getColorAsArray() {
+        return new short[]{(short) color.getRed(), (short) color.getGreen(), (short) color.getBlue(), 0};
+    }
+
     //for solid
     public abstract TextureSet getTextureSet();
     //forFluidForms

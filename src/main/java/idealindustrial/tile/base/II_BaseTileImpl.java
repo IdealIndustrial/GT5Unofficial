@@ -16,9 +16,10 @@ import idealindustrial.tile.IOType;
 import idealindustrial.tile.covers.II_BaseCoverBehavior;
 import idealindustrial.tile.covers.II_CoverRegistry;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
-import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;
+import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
 import idealindustrial.tools.II_ToolRegistry;
+import idealindustrial.util.item.II_HashedStack;
 import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -38,13 +39,14 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     protected long timer = 0;
 
     protected int color;
-    //texture cache, active + covers/side/textureLayers
-    protected ITexture[][][] textureCache = new ITexture[3][6][];
+    //texture cache, active/side/textureLayers
+    protected ITexture[][][] textureCache = new ITexture[2][6][];
 
     protected boolean allowedToWork, active;
 
     protected int[] coverIDs = new int[6];
     protected long[] coverValues = new long[6];
+    @SuppressWarnings("rawtypes")
     protected II_BaseCoverBehavior[] covers = new II_BaseCoverBehavior[6];
 
 
@@ -54,7 +56,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
-    public II_MetaTile getMetaTile() {
+    public II_MetaTile<?> getMetaTile() {
         return metaTileEntity;
     }
 
@@ -87,6 +89,9 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
         NBTTagCompound metaNBT = tag.getCompoundTag("meta");
         metaTileEntity.loadFromNBT(metaNBT == null ? new NBTTagCompound() : metaNBT);
+        if (metaTileEntity != null) {
+            issueTextureUpdate();
+        }
 
     }
 
@@ -101,7 +106,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     public boolean alive() {
-        return !isDead;
+        return metaTileEntity != null;
     }
 
     protected void setMetaTileEntity(II_MetaTile<?> metaTileEntity) {
@@ -150,11 +155,12 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPreTick(long timer, boolean serverSide) {
         metaTileEntity.onPreTick(timer, serverSide);
         for (int i = 0; i < 6; i++) {
             if (covers[i] != null && covers[i].getTickRate() > 0 && timer % covers[i].getTickRate() == 0) {
-               coverValues[i] = covers[i].update(coverValues[i],  i, this);
+                coverValues[i] = covers[i].update(coverValues[i], i, this);
             }
         }
     }
@@ -184,7 +190,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         }
         ITexture[][] textures = new ITexture[6][];
         for (int side = 0; side < 6; side++) {
-            textures[side] = provideTexture(aActive, side, true);
+            textures[side] = provideTexture(aActive, side);
         }
 
         if (metaTileEntity instanceof II_BaseMetaTile_Facing1Output) {
@@ -195,12 +201,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
     @Override
     public ITexture[][] getTextures(boolean covered) {
-        if (covered) {
-            return textureCache[2];
-        }
-        else {
-            return getTextures();
-        }
+        return getTextures();
     }
 
     @Override
@@ -208,32 +209,22 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         if (metaTileEntity == null) {
             return;
         }
-        if (metaTileEntity.cacheCoverTexturesSeparately()) {
-            textureCache = new ITexture[3][6][];
-            for (int i = 0; i < 6; i++) {
-                textureCache[0][i] = provideTexture(false, i, true);
-                textureCache[1][i] = provideTexture(true, i, true);
-                textureCache[2][i] = new ITexture[]{coverAtSide(i)};
-            }
-        }
-        else {
-            textureCache = new ITexture[2][6][];
-            for (int i = 0; i < 6; i++) {
-                textureCache[0][i] = provideTexture(false, i, true);
-                textureCache[1][i] = provideTexture(true, i, true);
-            }
+        textureCache = new ITexture[2][6][];
+        for (int i = 0; i < 6; i++) {
+            textureCache[0][i] = provideTexture(false, i);
+            textureCache[1][i] = provideTexture(true, i);
         }
     }
 
-    protected ITexture[] provideTexture(boolean active, int side, boolean covered) {
-        if (covered && covers[side] != null) {
-            return new ITexture[]{coverAtSide(side)};
+    protected ITexture[] provideTexture(boolean active, int side) {
+        if (covers[side] != null) {
+            return new ITexture[]{getCoverTexture(side)};
         }
         return metaTileEntity.provideTexture(active, side);
     }
 
-    public ITexture coverAtSide(int side) {
-        return covers[side] != null ? covers[side].getTexture() : null;
+    public ITexture getCoverTexture(int side) {
+        return covers[side] != null ? covers[side].getTexture(coverValues[side], side, this) : null;
     }
 
     @Override
@@ -242,7 +233,6 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void setMetaTileID(int metaTileID) {
         this.metaTileID = metaTileID;
         setMetaTileEntity((II_MetaTile<?>) II_Values.metaTiles[metaTileID]);
@@ -263,6 +253,8 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     public void writeTile(ByteArrayDataOutput stream) {
         stream.writeInt(metaTileID);
         stream.writeBoolean(active);
+        II_StreamUtil.writeIntArray(coverIDs, stream);
+        II_StreamUtil.writeLongArray(coverValues, stream);
         metaTileEntity.writeTile(stream);
     }
 
@@ -270,7 +262,16 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     public void readTile(ByteArrayDataInput stream) {
         setInitialValuesAsNBT(stream.readInt());
         active = stream.readBoolean();
+        coverIDs = II_StreamUtil.readIntArray(stream);
+        coverValues = II_StreamUtil.readLongArray(stream);
+        for (int side = 0; side < 6; side++) {
+            if (coverIDs[side] == 0) {
+                continue;
+            }
+            covers[side] = II_CoverRegistry.behaviorFromID(coverIDs[side]);
+        }
         metaTileEntity.readTile(stream);
+        issueTextureUpdate();
     }
 
     @Override
@@ -282,6 +283,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
         if (metaTileEntity == null) {
             return false;
@@ -289,10 +291,41 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         if (covers[side] != null && covers[side].onRightClick(coverValues[side], side, this, player, item, hitX, hitY, hitZ)) {
             return true;
         }
-        if (isServerSide() && II_ToolRegistry.applyTool(metaTileEntity, player, item, side, hitX, hitY, hitZ) ) {
+        if (isServerSide() && II_ToolRegistry.applyTool(metaTileEntity, player, item, side, hitX, hitY, hitZ)) {
             return true;
         }
+        if (isServerSide() && covers[side] == null && player.getHeldItem() != null) {//todo ctrl alt m
+            II_HashedStack hashHand = new II_HashedStack(player.getHeldItem());
+            if (II_CoverRegistry.isCover(hashHand)) {
+                II_BaseCoverBehavior<?> coverBehavior = II_CoverRegistry.behaviorFromStack(hashHand);
+                if (metaTileEntity.allowCoverAtSide(coverBehavior, side)) {
+                    if (!player.capabilities.isCreativeMode) {
+                        player.getHeldItem().stackSize--;
+                    }
+                    if (player.getHeldItem().stackSize == 0) {
+                        player.inventory.setItemStack(null);
+                    }
+                    setCoverAtSide(side, hashHand.hashCode(), coverBehavior);
+                    return true;
+                }
+            }
+        }
         return metaTileEntity.onRightClick(player, item, side, hitX, hitY, hitZ);
+    }
+
+    protected void setCoverAtSide(int side, int id, II_BaseCoverBehavior<?> cover) {
+        coverValues[side] = 0;
+        coverIDs[side] = id;
+        covers[side] = cover;
+        syncTileEntity();
+    }
+
+    //clientside sync method
+    protected void setCoverAtSide(int side, int id, long coverValue) {
+        coverValues[side] = coverValue;
+        coverIDs[side] = id;
+        covers[side] = II_CoverRegistry.behaviorFromID(id);
+        issueTextureUpdate();
     }
 
     @Override
@@ -306,20 +339,21 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
     @Override
     public boolean receiveClientEvent(int id, int value) {
-        switch (id) {
-            case BASE_ACTIVE:
-                active = intToBool(value);
-                issueTextureUpdate();
-                return true;
-
+        if (id == BASE_ACTIVE) {
+            active = intToBool(value);
+            issueTextureUpdate();
+            return true;
         }
         return metaTileEntity.receiveClientEvent(id, value);
     }
 
+
+    @Override
     public boolean isActive() {
         return active;
     }
 
+    @Override
     public void setActive(boolean active) {
         if (active != this.active) {
             this.active = active;
@@ -327,6 +361,20 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
                 sendEvent(EVENT_ACTIVE, boolToInt(active));
             }
         }
+    }
+
+    @Override
+    public boolean allowedToWork() {
+        return allowedToWork;
+    }
+
+    @Override
+    public void allowWork(boolean allow) {
+        if (!allowedToWork && allow) {
+            allowedToWork = true;
+            onEnabled();
+        }
+        allowedToWork = allow;
     }
 
     public void issueTextureUpdate() {
@@ -378,6 +426,7 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         metaTileEntity.receiveNeighbourIOConfigChange(type);
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -388,6 +437,36 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
     @Override
     public int hashCode() {
-        return xCoord  * 31 * 31 + yCoord * 31 + zCoord;
+        return xCoord * 31 * 31 + yCoord * 31 + zCoord;
+    }
+
+
+    protected void onEnabled() {
+
+    }
+
+    @Override
+    public int getCoverIDAtSide(int side) {
+        return coverIDs[side];
+    }
+
+    @Override
+    public II_BaseCoverBehavior<?> getCoverAtSide(int side) {
+        return covers[side];
+    }
+
+    @Override
+    public long getCoverVarAtSide(int side) {
+        return coverValues[side];
+    }
+
+    @Override
+    public void dropCoverAtSide(int side) {
+        //todo impl
+    }
+
+    @Override
+    public void setCoverVarAtSide(int side, long value) {
+        coverValues[side] = value;
     }
 }

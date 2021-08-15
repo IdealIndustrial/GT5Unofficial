@@ -2,13 +2,14 @@ package idealindustrial.util.misc;
 
 import idealindustrial.II_Values;
 import idealindustrial.tile.base.II_BaseMachineTileImpl;
+import idealindustrial.tile.base.II_BasePipeTileImpl;
+import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
-import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -19,13 +20,15 @@ public class II_TileUtil {
 
 
     @SuppressWarnings("unchecked")
-    private static final Class<? extends TileEntity>[] tileClasses = new Class[]{II_BaseTileImpl.class, II_BaseMachineTileImpl.class};
+    private static final Class<? extends TileEntity>[] tileClasses = new Class[]{II_BaseTileImpl.class, II_BaseMachineTileImpl.class, II_BasePipeTileImpl.class};
     private static final Map<Class<? extends TileEntity>, Integer> classToMeta = new HashMap<>();
+
     static {
         for (int i = 0; i < tileClasses.length; i++) {
             classToMeta.put(tileClasses[i], i);
         }
     }
+
     public static Class<? extends TileEntity> metaToClass(int meta) {
         return tileClasses[meta];
     }
@@ -82,5 +85,23 @@ public class II_TileUtil {
             return ((II_BaseTile) tileEntity).getMetaTile();
         }
         return null;
+    }
+
+    public static <T extends II_BaseTile> T getBaseTileOfClass(World world, int x, int y, int z, Class<T> clazz) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        return checkTileForClass(tileEntity, clazz);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T checkTileForClass(TileEntity tileEntity, Class<T> clazz) {
+        if (tileEntity == null || !clazz.isAssignableFrom(tileEntity.getClass())) {
+            return null;
+        }
+        return (T) tileEntity;
+    }
+
+    public static II_BaseTile getBaseTile(IBlockAccess world, int x, int y, int z) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        return tileEntity instanceof II_BaseTile ? (II_BaseTile) tileEntity : null;
     }
 }

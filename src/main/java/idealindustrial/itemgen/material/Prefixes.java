@@ -6,7 +6,7 @@ package idealindustrial.itemgen.material;
  */
 public enum Prefixes {
     ingot( "", "Ingot", 1),
-    plate("", "Plate", 2),
+    plate("", "Plate", 17),
     dust("", "Dust",2),
     dustSmall("Small Pile of", "Dust",1),
     dustTiny("Tiny Pile of", "Dust",0),

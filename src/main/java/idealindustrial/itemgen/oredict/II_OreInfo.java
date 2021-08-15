@@ -55,7 +55,7 @@ public class II_OreInfo {
         assert !subItems.contains(hashedStack);
         subItems.add(hashedStack);
         if (prefix != null && prefix.isUnifiable()) {
-            II_OreDict.getInstance().addInfo(hashedStack, this);
+            II_OreDict.addInfo(hashedStack, this);
         }
     }
 

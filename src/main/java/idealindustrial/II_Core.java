@@ -13,6 +13,8 @@ import idealindustrial.commands.ReloadRecipesCommand;
 import idealindustrial.integration.ingameinfo.InGameInfoLoader;
 import idealindustrial.itemgen.fluids.II_Fluids;
 import idealindustrial.itemgen.implementation.II_MetaGeneratedCellItem;
+import idealindustrial.itemgen.material.II_Material;
+import idealindustrial.itemgen.material.II_Materials;
 import idealindustrial.itemgen.oredict.II_OreDict;
 import idealindustrial.loader.II_BlocksLoader;
 import idealindustrial.loader.II_ItemsLoader;
@@ -127,7 +129,8 @@ public class II_Core {
         II_Lang.dumpAll();
         II_Lang.pushLocalToMinecraft();
         oredictLoader.init();
-        II_OreDict.getInstance().printAll(System.out);
+        II_Materials.initMaterialLoops();
+        II_OreDict.printAll(System.out);
     }
 
     @Mod.EventHandler

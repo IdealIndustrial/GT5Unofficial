@@ -13,6 +13,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraftforge.fluids.IFluidHandler;
 
 public interface II_BaseMachineTile extends II_BaseTile, IFluidHandler, ISidedInventory, IEnergyContainer {
+
     Container getServerGUI(EntityPlayer player, int internalID);
 
     GuiContainer getClientGUI(EntityPlayer player, int internalID);
@@ -39,7 +40,7 @@ public interface II_BaseMachineTile extends II_BaseTile, IFluidHandler, ISidedIn
 
     boolean[] getIO(IOType type);
 
-    boolean getIOatSide(int side, IOType type, boolean input);
+    boolean calculateIOatSide(int side, IOType type, boolean input);
 
     void onIOConfigurationChanged();
 

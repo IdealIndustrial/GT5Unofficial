@@ -49,14 +49,14 @@ public class II_CableSystem {
                 assert path != null;
                 producer.consume(transfer);
                 long voltage = producer.voltage() - path.loss();
-                if (tasks.isEmpty()) {
-                    path.onPassing(voltage, transfer);
-                }
-                else {
-                    path.fullSimulate(voltage, transfer); //if we are checking voltage and amperage we should simulate better
-                }
                 if (voltage <= 0) {
                     continue;
+                }
+                if (tasks.isEmpty()) {
+                    path.onPassing(producer.voltage(), transfer);
+                }
+                else {
+                    path.fullSimulate(producer.voltage(), transfer); //if we are checking voltage and amperage we should simulate better
                 }
                 consumer.acceptEnergy(voltage, transfer);
                 need -= transfer;

@@ -109,21 +109,19 @@ public class II_MetaGeneratedItem_Renderer
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 
-        if (fluid != null){
-            renderBackSide(type, cellRenderInfo, cellIcon);
-            int tColor = fluid.getFluid().getColor(fluid);
-            GL11.glColor3f((tColor >> 16 & 0xFF) / 255.0F, (tColor >> 8 & 0xFF) / 255.0F, (tColor & 0xFF) / 255.0F);
+        renderBackSide(type, cellRenderInfo, cellIcon);
+        int tColor = fluid.getFluid().getColor(fluid);
+        GL11.glColor3f((tColor >> 16 & 0xFF) / 255.0F, (tColor >> 8 & 0xFF) / 255.0F, (tColor & 0xFF) / 255.0F);
 
-            Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glDepthFunc(GL11.GL_EQUAL);
-            if (type.equals(IItemRenderer.ItemRenderType.INVENTORY)) {
-                GT_RenderUtil.renderItemIcon(fluidIcon, 16.0D, 0.001D, 0.0F, 0.0F, -1.0F);
-            } else {
-                ItemRenderer.renderItemIn2D(Tessellator.instance, fluidIcon.getMaxU(), fluidIcon.getMinV(), fluidIcon.getMinU(), fluidIcon.getMaxV(), fluidIcon.getIconWidth(), fluidIcon.getIconHeight(), 0.0625F);
-            }
-            GL11.glDepthFunc(GL11.GL_LEQUAL);
+        Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDepthFunc(GL11.GL_EQUAL);
+        if (type.equals(ItemRenderType.INVENTORY)) {
+            GT_RenderUtil.renderItemIcon(fluidIcon, 16.0D, 0.001D, 0.0F, 0.0F, -1.0F);
+        } else {
+            ItemRenderer.renderItemIn2D(Tessellator.instance, fluidIcon.getMaxU(), fluidIcon.getMinV(), fluidIcon.getMinU(), fluidIcon.getMaxV(), fluidIcon.getIconWidth(), fluidIcon.getIconHeight(), 0.0625F);
         }
+        GL11.glDepthFunc(GL11.GL_LEQUAL);
         renderOverlay(type, cellIcon);
     }
 

@@ -11,13 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class II_OredictHandler {
-    II_OreDict oreDict = II_OreDict.getInstance();
     List<II_OreInfo> expectedOres = new ArrayList<>();
     List<OrePair> delayedOres = new ArrayList<>();
 
     public void init() {
         for (OrePair pair : delayedOres) {
-            oreDict.register(pair.name, pair.stack);
+            II_OreDict.register(pair.name, pair.stack);
         }
         checkExpected();
         delayedOres = null;
@@ -52,10 +51,10 @@ public class II_OredictHandler {
         isAddingOre = true;
         String oreName;
         if (prefix.isUnifiable()) {
-            oreName = oreDict.registerMain(prefix, material, stack);
+            oreName = II_OreDict.registerMain(prefix, material, stack);
         }
         else {
-            oreName = oreDict.register(prefix, material, stack);
+            oreName = II_OreDict.register(prefix, material, stack);
         }
         OreDictionary.registerOre(oreName, stack);
         isAddingOre = false;
@@ -64,7 +63,7 @@ public class II_OredictHandler {
     public void registerExpected(Prefixes prefix, II_Material material) {
         II_OreInfo info = new II_OreInfo(prefix, material);
         expectedOres.add(info);
-        oreDict.add(info);
+        II_OreDict.add(info);
     }
 
     private static class OrePair {

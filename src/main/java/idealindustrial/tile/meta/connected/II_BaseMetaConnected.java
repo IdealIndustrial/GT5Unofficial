@@ -2,16 +2,24 @@ package idealindustrial.tile.meta.connected;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+import gregtech.GT_Mod;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.GT_Client;
 import idealindustrial.render.II_CustomRenderer;
 import idealindustrial.tile.IOType;
+import idealindustrial.tile.base.II_BasePipeTileImpl;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.util.misc.II_DirUtil;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static idealindustrial.tile.II_TileEvents.CONNECTIONS;
@@ -130,7 +138,7 @@ public abstract class II_BaseMetaConnected<BaseTileType extends II_BaseTile> ext
 
     @Override
     public void receiveNeighbourIOConfigChange(IOType type) {
-        if (type == IOType.ENERGY) {
+        if (type.is(IOType.ENERGY)) {
             updateConnections();
         }
     }
@@ -162,5 +170,72 @@ public abstract class II_BaseMetaConnected<BaseTileType extends II_BaseTile> ext
     //definitely not fast, todo: replace
     public int connectionCount() {
         return IntStream.iterate(0, i -> i + 1).limit(6).map(i -> isConnected(i) ? 1 : 0).sum();
+    }
+
+    @Override
+    public Class<? extends II_BaseTile> getBaseTileClass() {
+        return II_BasePipeTileImpl.class;
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ) {
+        if (GT_Mod.instance.isClientSide() && (GT_Client.hideValue & 0x2) != 0)
+            return AxisAlignedBB.getBoundingBox(aX, aY, aZ, aX + 1, aY + 1, aZ + 1);
+        else
+            return getActualCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
+    }
+
+    private AxisAlignedBB getActualCollisionBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ) {
+        float tSpace = (1f - thickness) / 2;
+        float tSide0 = tSpace;
+        float tSide1 = 1f - tSpace;
+        float tSide2 = tSpace;
+        float tSide3 = 1f - tSpace;
+        float tSide4 = tSpace;
+        float tSide5 = 1f - tSpace;
+
+        if (baseTile.getCoverIDAtSide(0) != 0) {
+            tSide0 = tSide2 = tSide4 = 0;
+            tSide3 = tSide5 = 1;
+        }
+        if (baseTile.getCoverIDAtSide(1) != 0) {
+            tSide2 = tSide4 = 0;
+            tSide1 = tSide3 = tSide5 = 1;
+        }
+        if (baseTile.getCoverIDAtSide(2) != 0) {
+            tSide0 = tSide2 = tSide4 = 0;
+            tSide1 = tSide5 = 1;
+        }
+        if (baseTile.getCoverIDAtSide(3) != 0) {
+            tSide0 = tSide4 = 0;
+            tSide1 = tSide3 = tSide5 = 1;
+        }
+        if (baseTile.getCoverIDAtSide(4) != 0) {
+            tSide0 = tSide2 = tSide4 = 0;
+            tSide1 = tSide3 = 1;
+        }
+        if (baseTile.getCoverIDAtSide(5) != 0) {
+            tSide0 = tSide2 = 0;
+            tSide1 = tSide3 = tSide5 = 1;
+        }
+
+        int tConn = connections;
+        if ((tConn & (1 << ForgeDirection.DOWN.ordinal())) != 0) tSide0 = 0f;
+        if ((tConn & (1 << ForgeDirection.UP.ordinal())) != 0) tSide1 = 1f;
+        if ((tConn & (1 << ForgeDirection.NORTH.ordinal())) != 0) tSide2 = 0f;
+        if ((tConn & (1 << ForgeDirection.SOUTH.ordinal())) != 0) tSide3 = 1f;
+        if ((tConn & (1 << ForgeDirection.WEST.ordinal())) != 0) tSide4 = 0f;
+        if ((tConn & (1 << ForgeDirection.EAST.ordinal())) != 0) tSide5 = 1f;
+
+        return AxisAlignedBB.getBoundingBox(aX + tSide4, aY + tSide0, aZ + tSide2, aX + tSide5, aY + tSide1, aZ + tSide3);
+    }
+
+    @Override
+    public void addCollisionBoxesToList(World aWorld, int aX, int aY, int aZ, AxisAlignedBB inputAABB, List<AxisAlignedBB> outputAABB, Entity collider) {
+        super.addCollisionBoxesToList(aWorld, aX, aY, aZ, inputAABB, outputAABB, collider);
+        if (GT_Mod.instance.isClientSide() && (GT_Client.hideValue & 0x2) != 0) {
+            AxisAlignedBB aabb = getActualCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
+            if (inputAABB.intersectsWith(aabb)) outputAABB.add(aabb);
+        }
     }
 }

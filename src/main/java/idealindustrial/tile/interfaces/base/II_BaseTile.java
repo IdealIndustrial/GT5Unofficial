@@ -3,6 +3,7 @@ package idealindustrial.tile.interfaces.base;
 import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
 import idealindustrial.tile.IOType;
+import idealindustrial.tile.covers.II_BaseCoverBehavior;
 import idealindustrial.tile.interfaces.IClickableTileEntity;
 import idealindustrial.tile.interfaces.ISyncedTileEntity;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;
@@ -18,14 +19,22 @@ public interface II_BaseTile extends IUpdatableTileEntity, IHasWorldObjectAndCoo
 
     ArrayList<ItemStack> getDrops();
 
-    boolean isActive();//todo move up
-    void setActive(boolean active);
-
     void sendEvent(int id, int value);
     void issueTextureUpdate();
-
 
     void onPlaced();
 
     void receiveNeighbourIOConfigChange(IOType type);
+
+    boolean allowedToWork();
+    void allowWork(boolean allow);
+    boolean isActive();
+    void setActive(boolean active);
+
+    int getCoverIDAtSide(int side);
+    II_BaseCoverBehavior<?> getCoverAtSide(int side);
+    long getCoverVarAtSide(int side);
+
+    void dropCoverAtSide(int side);
+    void setCoverVarAtSide(int side, long value);
 }
