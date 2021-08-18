@@ -55,10 +55,10 @@ public class GT_ForestryRecipesLoader implements Runnable {
     }
 
     private void addSoilRecipes() {
-        GT_Values.RA.addMixerRecipe(ItemList.IC2_Fertilizer.get(1L, new Object[0]), new ItemStack(Blocks.dirt, 8, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 8L, 0), 64, 16);
-        GT_Values.RA.addMixerRecipe(ItemList.FR_Fertilizer.get(1L, new Object[0]), new ItemStack(Blocks.dirt, 8, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 8L, 0), 64, 16);
-        GT_Values.RA.addMixerRecipe(ItemList.FR_Compost.get(1L, new Object[0]), new ItemStack(Blocks.dirt, 8, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 8L, 0), 64, 16);
-        GT_Values.RA.addMixerRecipe(ItemList.FR_Mulch.get(1L, new Object[0]), new ItemStack(Blocks.dirt, 8, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 9L, 0), 64, 16);
+        GT_Values.RA.addMixerRecipe(ItemList.IC2_Fertilizer.get(1L), new ItemStack(Blocks.dirt, 8, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 8L, 0), 64, 16);
+        GT_Values.RA.addMixerRecipe(ItemList.FR_Fertilizer.get(1L), new ItemStack(Blocks.dirt, 8, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 8L, 0), 64, 16);
+        GT_Values.RA.addMixerRecipe(ItemList.FR_Compost.get(1L), new ItemStack(Blocks.dirt, 8, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 8L, 0), 64, 16);
+        GT_Values.RA.addMixerRecipe(ItemList.FR_Mulch.get(1L), new ItemStack(Blocks.dirt, 8, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1000L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 9L, 0), 64, 16);
         GT_Values.RA.addMixerRecipe(new ItemStack(Blocks.sand, 1, 32767), new ItemStack(Blocks.dirt, 1, 32767), GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(250L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "soil", 2L, 1), 16, 16);
     }
 
@@ -70,22 +70,15 @@ public class GT_ForestryRecipesLoader implements Runnable {
     }
 
     private void addFertilizerRecipes() {
-        GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Ash, 1L), new ItemStack(Blocks.sand, 2, 32767), ItemList.Circuit_Integrated.getWithDamage(0L, 2L, new Object[0]), GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.FR_Fertilizer.get(2L, new Object[0]), 64, 16);
-        GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.DarkAsh, 1L), new ItemStack(Blocks.sand, 2, 32767), ItemList.Circuit_Integrated.getWithDamage(0L, 2L, new Object[0]), GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.FR_Fertilizer.get(4L, new Object[0]), 64, 16);
-        GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Apatite, 1L), new ItemStack(Blocks.sand, 2, 32767), ItemList.Circuit_Integrated.getWithDamage(0L, 2L, new Object[0]), GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.FR_Fertilizer.get(8L, new Object[0]), 64, 16);
-        GT_Values.RA.addMixerRecipe(ItemList.FR_Compost.get(1L, new Object[0]), new ItemStack(Blocks.sand, 2, 32767), ItemList.Circuit_Integrated.getWithDamage(0L, 2L, new Object[0]), GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.FR_Fertilizer.get(4L, new Object[0]), 64, 16);
+        GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Ash, 1L), new ItemStack(Blocks.sand, 2, 32767), ItemList.Circuit_Integrated.getWithDamage(0L, 2L), GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.FR_Fertilizer.get(2L), 64, 16);
+        GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.DarkAsh, 1L), new ItemStack(Blocks.sand, 2, 32767), ItemList.Circuit_Integrated.getWithDamage(0L, 2L), GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.FR_Fertilizer.get(4L), 64, 16);
+        GT_Values.RA.addMixerRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Apatite, 1L), new ItemStack(Blocks.sand, 2, 32767), ItemList.Circuit_Integrated.getWithDamage(0L, 2L), GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.FR_Fertilizer.get(8L), 64, 16);
+        GT_Values.RA.addMixerRecipe(ItemList.FR_Compost.get(1L), new ItemStack(Blocks.sand, 2, 32767), ItemList.Circuit_Integrated.getWithDamage(0L, 2L), GT_Values.NI, GT_Values.NF, GT_Values.NF, ItemList.FR_Fertilizer.get(4L), 64, 16);
     }
 
     private void addOtherForestryRecipes() {
         GT_Values.RA.addLatheRecipe(GT_ModHandler.getModItem(aTextForestry, "slabs", 1L, GT_Values.W), new ItemStack(Items.bowl,1), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Wood, 1), 50, 8);
         GT_Values.RA.addFluidSmelterRecipe(GT_ModHandler.getModItem(aTextForestry, "Phosphorus", 1L), GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Phosphorus, 1L), Materials.Lava.getFluid(800L), 1000, 256, 128);
-        GT_Values.RA.addAssemblerRecipe(ItemList.FR_Wax.get(6L, new Object[0]), new ItemStack(Items.string, 1, 32767), Materials.Water.getFluid(600L), GT_ModHandler.getModItem(aTextForestry, "candle", 24L, 0), 64, 8);
-        GT_Values.RA.addAssemblerRecipe(ItemList.FR_Wax.get(2L, new Object[0]), ItemList.FR_Silk.get(1L, new Object[0]), Materials.Water.getFluid(200L), GT_ModHandler.getModItem(aTextForestry, "candle", 8L, 0), 16, 8);
-        GT_Values.RA.addAssemblerRecipe(ItemList.FR_Silk.get(9L, new Object[0]), ItemList.Circuit_Integrated.getWithDamage(0L, 9L, new Object[0]), Materials.Water.getFluid(500L), GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 1L, 3), 64, 8);
-        GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "propolis", 5L, 2), ItemList.Circuit_Integrated.getWithDamage(0L, 5L, new Object[0]), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 1L, 1), 16, 8);
-        GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "sturdyMachine", 1L, 0), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Diamond, 4L), Materials.Water.getFluid(5000L), ItemList.FR_Casing_Hardened.get(1L, new Object[0]), 64, 32);
-        GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 5L, 1), ItemList.Circuit_Integrated.getWithDamage(0L, 5L, new Object[0]), GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnderPearl, 1L), 64, 8);
-        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Bronze, 8L), ItemList.Circuit_Integrated.getWithDamage(0L, 8L, new Object[0]), GT_Values.NF, ItemList.FR_Casing_Sturdy.get(1L, new Object[0]), 32, 16);
     }
 
     private void addForestryFarmRecipes() {
