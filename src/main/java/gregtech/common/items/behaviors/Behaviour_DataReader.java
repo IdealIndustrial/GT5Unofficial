@@ -8,6 +8,7 @@ import gregtech.common.gui.GT_Container_DataReader;
 import gregtech.common.gui.GT_GUIContainer_DataReader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -59,6 +60,10 @@ public class Behaviour_DataReader
                         GT_Utility.ItemNBT.convertProspectionData(tStack);
                         nbt.removeTag("prog");
                         nbt.setTag("s0", tStack.writeToNBT(new NBTTagCompound()));
+                        Container container = ((EntityPlayer) aPlayer).openContainer;
+                        if (container instanceof GT_Container_DataReader) {//if gui is open we should replace stack with new stack or it will save old stack
+                            ((GT_Container_DataReader) container).mInventory.setInventorySlotContents(0, tStack);
+                        }
                     }
                 }
             }
@@ -74,7 +79,6 @@ public class Behaviour_DataReader
 
         }
         aStack.setTagCompound(nbt);
-
     }
 
     @Override

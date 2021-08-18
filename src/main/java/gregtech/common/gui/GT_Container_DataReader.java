@@ -19,7 +19,7 @@ public class GT_Container_DataReader extends Container {
     public static int DataStickID = 1;
 
     int mRestrictedSlot;
-    GT_ItemInventory mInventory;
+    public GT_ItemInventory mInventory;
     ItemStack mTool;
 
     public GT_Container_DataReader(InventoryPlayer aInventoryPlayer, ItemStack aTool) {
