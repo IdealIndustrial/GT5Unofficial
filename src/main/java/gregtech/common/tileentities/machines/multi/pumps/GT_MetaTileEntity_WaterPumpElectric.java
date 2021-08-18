@@ -71,6 +71,11 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
             return true;
         }
         return false;
+        super.checkRecipe(aStack);
+        mEUt = -ENERGY[getTier()];
+        this.mEfficiencyIncrease = 10000;
+        this.mMaxProgresstime = 10;
+        return true;
     }
 
     @Override

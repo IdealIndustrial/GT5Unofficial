@@ -1,6 +1,7 @@
 package idealindustrial;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -44,36 +45,47 @@ public class II_Core {
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
-        new InGameInfoLoader().load();
+        if (Loader.isModLoaded("InGameInfoXML")) {
+            new InGameInfoLoader().load();
+        }
     }
 
     @SubscribeEvent
     public void onLoad(WorldEvent.Load event) {
-        System.out.println("gg");
+
     }
 
     @Mod.EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
-        System.out.println("gg");
 
     }
 
     private static boolean checkEnvironment() {
         try {
             Class.forName("thermos.Thermos");
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             return true;
         }
         try {
             Class.forName("betterquesting.core.BetterQuesting");
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e){
             return true;
         }
+    
         try {
             Class.forName("a.b.c.gambiarra.Plugin");
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+		}
+		catch (ClassNotFoundException e) {
+        
+			try {
+				Class.forName("com.juanmuscaria.playercontainerfix.FMLCoreMod");
+			}
+			catch (ClassNotFoundException f) {
+				return false; 
+			}		
+		}
         return true;
     }
 

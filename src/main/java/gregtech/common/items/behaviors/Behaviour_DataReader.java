@@ -1,17 +1,11 @@
 package gregtech.common.items.behaviors;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.GT_Mod;
 import gregtech.api.enums.ItemList;
 import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_DataReader;
 import gregtech.common.gui.GT_GUIContainer_DataReader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,6 +18,7 @@ public class Behaviour_DataReader
         extends Behaviour_HasGui {
 
     int mTier;
+
     public Behaviour_DataReader(int aTier) {
         mTier = aTier;
     }
@@ -45,22 +40,9 @@ public class Behaviour_DataReader
         NBTTagCompound nbt = aStack == null ? null : aStack.getTagCompound();
         if (nbt == null)
             return;
-        if (nbt.getBoolean("notify")) {
-            ItemStack tStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("s0"));
-            if ((ItemList.Tool_DataStick.isStackEqual(tStack, false, true)|| ItemList.Tool_CD.isStackEqual(tStack, false, true))) {
-                if (GT_Utility.ItemNBT.getBookTitle(tStack).equals("Raw Prospection Data")) {
-                    nbt.setInteger("prog", 1);
-                                   }
-            }
-            else {
-                nbt.removeTag("prog");
-            }
-            nbt.setBoolean("notify", false);
-            aStack.setTagCompound(nbt);
-        }
-        else if (nbt.getInteger("prog") > 0) {
+        if (nbt.getInteger("prog") > 0) {
             int tCharge = nbt.getInteger("GT.ItemCharge");
-            tCharge -= 8 * (1<<(2*(mTier - 2)));
+            tCharge -= 8 * (1 << (2 * (mTier - 2)));
             if (tCharge < 0) {
                 nbt.removeTag("prog");
                 tCharge = 0;
@@ -68,8 +50,8 @@ public class Behaviour_DataReader
             nbt.setInteger("GT.ItemCharge", tCharge);
             //remove energy
             int tProgress = 0;
-            nbt.setInteger("prog",  tProgress = nbt.getInteger("prog") + 1);
-            if (tProgress >= 1000/ (1 << (mTier-2))) {
+            nbt.setInteger("prog", tProgress = nbt.getInteger("prog") + 1);
+            if (tProgress >= 1000 / (1 << (mTier - 2))) {
                 ItemStack tStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("s0"));
                 if (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, true)) {
                     if (GT_Utility.ItemNBT.getBookTitle(tStack).equals("Raw Prospection Data")) {
@@ -80,8 +62,18 @@ public class Behaviour_DataReader
                     }
                 }
             }
-            aStack.setTagCompound(nbt);
+        } else {
+            ItemStack tStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("s0"));
+            if ((ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, true))) {
+                if (GT_Utility.ItemNBT.getBookTitle(tStack).equals("Raw Prospection Data")) {
+                    nbt.setInteger("prog", 1);
+                }
+            } else {
+                nbt.removeTag("prog");
+            }
+
         }
+        aStack.setTagCompound(nbt);
 
     }
 
@@ -89,7 +81,7 @@ public class Behaviour_DataReader
     public List<String> getAdditionalToolTips(GT_MetaBase_Item aItem, List<String> aList, ItemStack aStack) {
         int tProgress = 0;
         if (aStack != null && aStack.getTagCompound() != null && (tProgress = aStack.getTagCompound().getInteger("prog")) > 0) {
-            aList.add("Analyzing data, progress: " + tProgress / 20 + "/" + 50/(1 << (mTier-2)));
+            aList.add("Analyzing data, progress: " + tProgress / 20 + "/" + 50 / (1 << (mTier - 2)));
             String s = aList.get(2);
             aList.set(2, aList.get(3));
             aList.set(3, s);

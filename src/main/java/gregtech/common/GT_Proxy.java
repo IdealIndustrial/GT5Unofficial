@@ -36,6 +36,9 @@ import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
 import gregtech.common.items.behaviors.Behaviour_ProspectorsBook;
 import gregtech.nei.GT_NEI_DefaultHandler;
+import ic2.api.item.IC2Items;
+import ic2.core.IC2;
+import ic2.core.Ic2Items;
 import ic2.core.item.block.ItemDynamite;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
@@ -241,7 +244,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean debugRecipeConflicts = true;
     public boolean betterFluidDisplay = true;
     public boolean fixAE2SpatialPilons = false;
+    public boolean mHardComponentsRecipe = false;
     public List<String> debugRecipeMapsFilter = Collections.emptyList();
+    public static final int GUI_ID_COVER_SIDE_BASE = 10; // Takes GUI ID 10 - 15
     
     public GT_Proxy() {
         GameRegistry.registerFuelHandler(this);
@@ -354,6 +359,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         ItemList.Cell_Universal_Fluid.set(GT_ModHandler.getIC2Item("FluidCell", 1L));
         ItemList.Cell_Empty.set(GT_ModHandler.getIC2Item("cell", 1L, GT_ModHandler.getIC2Item("cellEmpty", 1L, GT_ModHandler.getIC2Item("emptyCell", 1L))));
         ItemList.Cell_Water.set(GT_ModHandler.getIC2Item("waterCell", 1L, GT_ModHandler.getIC2Item("cellWater", 1L)));
+        ItemList.Cell_DistilledWater.set(GT_ModHandler.getIC2Item("distilledwaterCell", 1L, GT_ModHandler.getIC2Item("distilledwaterCell", 1L)));
         ItemList.Cell_Lava.set(GT_ModHandler.getIC2Item("lavaCell", 1L, GT_ModHandler.getIC2Item("cellLava", 1L)));
         ItemList.Cell_Air.set(GT_ModHandler.getIC2Item("airCell", 1L, GT_ModHandler.getIC2Item("cellAir", 1L, GT_ModHandler.getIC2Item("cellOxygen", 1L))));
 
@@ -428,18 +434,6 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         OrePrefixes.cellPlasma.mContainerItem = ItemList.Cell_Empty.get(1L, new Object[0]);
         OrePrefixes.cell.mContainerItem = ItemList.Cell_Empty.get(1L, new Object[0]);
 
-        List<GT_ItemStack> tQuantumList = Stream.of("quantumHelmet", "quantumLeggings","quantumBoots", "quantumBodyarmor").map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
-        tQuantumList.add(new GT_ItemStack(new ItemStack(GameRegistry.findItem("GraviSuite","graviChestPlate"), 1, 32767)));
-
-        List<GT_ItemStack> tHazmatList = Stream.of("hazmatHelmet", "hazmatChestplate", "hazmatLeggings", "hazmatBoots" ).map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
-        tHazmatList.addAll(tQuantumList);
-
-        List<GT_ItemStack> tChainList = Stream.of(new ItemStack(Items.chainmail_helmet, 1, 32767), new ItemStack(Items.chainmail_chestplate, 1, 32767), new ItemStack(Items.chainmail_leggings, 1, 32767), new ItemStack(Items.chainmail_boots, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
-
-        GT_Utility.addAllToAll(tHazmatList, Arrays.asList(GregTech_API.sFrostHazmatList, GregTech_API.sHeatHazmatList, GregTech_API.sBioHazmatList, GregTech_API.sElectroHazmatList, GregTech_API.sRadioHazmatList, GregTech_API.sGasHazmatList));
-        GregTech_API.sQuantumArmorList.addAll(tQuantumList);
-        GregTech_API.sElectroHazmatList.addAll(tChainList);
-
         GT_ModHandler.sNonReplaceableItems.add(new ItemStack(Items.bow, 1, 32767));
         GT_ModHandler.sNonReplaceableItems.add(new ItemStack(Items.fishing_rod, 1, 32767));
         GT_ModHandler.sNonReplaceableItems.add(ItemList.IC2_ForgeHammer.getWithDamage(1L, 32767L, new Object[0]));
@@ -502,6 +496,10 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
         RecipeSorter.register("gregtech:shaped", GT_Shaped_Recipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
         RecipeSorter.register("gregtech:shapeless", GT_Shapeless_Recipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+
+        GT_ModHandler.sIgnoreLessTierList.add(new GT_NEIItemStack(IC2Items.getItem("cropnalyzer")));
+        //EnderIO:itemMagnet
+        GT_ModHandler.sIgnoreLessTierList.add(new GT_NEIItemStack(GT_ModHandler.getModItem("EnderIO", "itemMagnet", 1)));
     }
 
     public void onLoad() {
@@ -526,6 +524,20 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public void onPostLoad() {
         GT_Log.out.println("GT_Mod: Beginning PostLoad-Phase.");
         GT_Log.ore.println("GT_Mod: Beginning PostLoad-Phase.");
+
+        //lest just init armor lists when all items are certainly registered
+        List<GT_ItemStack> tQuantumList = Stream.of("quantumHelmet", "quantumLeggings","quantumBoots", "quantumBodyarmor").map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+        tQuantumList.add(new GT_ItemStack(new ItemStack(GameRegistry.findItem("GraviSuite","graviChestPlate"), 1, 32767)));
+
+        List<GT_ItemStack> tHazmatList = Stream.of("hazmatHelmet", "hazmatChestplate", "hazmatLeggings", "hazmatBoots" ).map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+        tHazmatList.addAll(tQuantumList);
+
+        List<GT_ItemStack> tChainList = Stream.of(new ItemStack(Items.chainmail_helmet, 1, 32767), new ItemStack(Items.chainmail_chestplate, 1, 32767), new ItemStack(Items.chainmail_leggings, 1, 32767), new ItemStack(Items.chainmail_boots, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+
+        GT_Utility.addAllToAll(tHazmatList, Arrays.asList(GregTech_API.sFrostHazmatList, GregTech_API.sHeatHazmatList, GregTech_API.sBioHazmatList, GregTech_API.sElectroHazmatList, GregTech_API.sRadioHazmatList, GregTech_API.sGasHazmatList));
+        GregTech_API.sQuantumArmorList.addAll(tQuantumList);
+        GregTech_API.sElectroHazmatList.addAll(tChainList);
+
         if (GT_Log.pal != null) {
             new Thread(new GT_PlayerActivityLogger()).start();
         }
@@ -1447,6 +1459,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                return null;
+            }
             IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
             if (tMetaTileEntity != null) {
                 return tMetaTileEntity.getServerGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
@@ -1514,9 +1529,20 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
-            IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
+            IGregTechTileEntity tile = (IGregTechTileEntity) tTileEntity;
+
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                byte side = (byte) (aID - GT_Proxy.GUI_ID_COVER_SIDE_BASE);
+                GT_CoverBehavior cover = tile.getCoverBehaviorAtSide(side);
+
+                if (cover.hasCoverGUI()) {
+                    return cover.getClientGUI(side, tile.getCoverIDAtSide(side), tile.getCoverDataAtSide(side), tile);
+                }
+                return null;
+            }
+            IMetaTileEntity tMetaTileEntity = tile.getMetaTileEntity();
             if (tMetaTileEntity != null) {
-                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
+                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, tile);
             }
         }
         return null;
