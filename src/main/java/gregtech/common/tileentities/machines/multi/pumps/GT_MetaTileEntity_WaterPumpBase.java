@@ -25,6 +25,7 @@ import net.minecraft.world.biome.BiomeGenRiver;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import org.lwjgl.Sys;
 
 import java.util.*;
 
@@ -33,7 +34,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     public List<GT_MetaTileEntity_WaterPumpBase> mConnectedPumps = new ArrayList<>(2);
     protected List<GT_MetaPipeEntity_Fluid> mPipes = new ArrayList<>();
     protected GT_MetaPipeEntity_Fluid mPipe = null;
-    public double mEfficiency = 0, mEfficiencyRate = 1d;
+    public double mPumpingEfficiency = 0, mEfficiencyRate = 1d;
     protected int mWorkCycles = 0;
     public int mWaterSurface = 0;
     protected int mHeadX = 0, mHeadY = -1, mHeadZ = 0;
@@ -63,6 +64,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     @Override
     public boolean checkRecipe(ItemStack aStack) {
         mScrewdriver = mWrench = mCrowbar = mHardHammer = mSoftHammer = mSolderingTool = true;
+        mEfficiencyIncrease = 10000;
         return false;
     }
 
@@ -100,7 +102,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         if (!super.onRunningTick(aStack)) {
             return false;
         }
-        double tOut = getOutputRate() * (mEfficiency / 10000) + waterToOutput;
+        double tOut = getOutputRate() * (mPumpingEfficiency / 10000) + waterToOutput;
         tOut *= mEfficiencyRate;
         int rOut = (int) tOut;
         waterToOutput = tOut - rOut;
@@ -453,23 +455,38 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     }
 
     public void recalculateEfficiency() {
-        mEfficiency = 10000f;
+        mPumpingEfficiency = 10000d;
         if (mConnectedPumps.size() > 0) {
-            mEfficiency *= 1f / ((float) mConnectedPumps.size());
+            mPumpingEfficiency *= 1d / ((double) mConnectedPumps.size() + 1);
         }
         if (mWaterSurface < getSurfaceBlocksCount()) {
-            mEfficiency *= ((float) mWaterSurface) / getSurfaceBlocksCount();
+            mPumpingEfficiency *= ((double) mWaterSurface) / getSurfaceBlocksCount();
         }
-        super.mEfficiency = (int) mEfficiency;
     }
 
     @Override
     public String[] getInfoData() {
-        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (int) (mEfficiency / 100.0F) + "." + (int) (mEfficiency) % 100 + "%", "Intake efficiency: " + (int) (mEfficiencyRate * 100) + "." + (int) (mEfficiencyRate * 1000) % 100 + "%", "Water surface covered: " + (Math.min(getSurfaceBlocksCount(), mWaterSurface)) + "/" + getSurfaceBlocksCount() + " blocks", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
+        return new String[]{"Progress: " , (mProgresstime / 20) + " secs",
+                "Efficiency: " , (int) (mPumpingEfficiency / 100.0F) + "." + (int) (mPumpingEfficiency) % 100 + "%",
+                "Intake efficiency: ", (int) (mEfficiencyRate * 100) + "." + (int) (mEfficiencyRate * 1000) % 100 + "%",
+                "Water surface covered: " , (Math.min(getSurfaceBlocksCount(), mWaterSurface)) + "/" + getSurfaceBlocksCount() + " blocks",
+                "Pumps: ", (int)(getOutputRate() * (mPumpingEfficiency / 10000) + waterToOutput) + "L of Water",
+                "Uses: ", getConsumptionDescription()};
     }
+
+    protected abstract String getConsumptionDescription();
 
     protected long getCoordID(int aX, int aZ) {
         return ((long) aX << 32) | (((long) aZ) & 0xFFFFFFFFL);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        while (true) {
+
+
+        }
     }
 
 

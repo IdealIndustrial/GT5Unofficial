@@ -19,7 +19,6 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
     public static int[] SPEED = new int[]{80, 80, 40, 20, 10, 5, 5, 2, 2, 2, 2},
             ENERGY = new int[]{8, 4, 16, 64, 256, 1024, 2048, 32768, 131072, 524288};
     public int mTier;
-    public int recipeProgressTime = 10;
 
     public GT_MetaTileEntity_WaterPumpElectric(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional);
@@ -63,19 +62,15 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
     }
 
     public boolean checkRecipe(ItemStack aStack) {
+        super.checkRecipe(aStack);
         recalculateEfficiency();
-        long neededEnergy = (long) Math.ceil(((long) ENERGY[getTier()] * 10000 * recipeProgressTime) / Math.max(1000, mEfficiency));
+        long neededEnergy =  ENERGY[getTier()] * 10;
         if (mEnergyHatches.get(0).getEUVar() >= neededEnergy) {
             mEUt = -ENERGY[getTier()];
-            this.mMaxProgresstime = recipeProgressTime;
+            this.mMaxProgresstime = 10;
             return true;
         }
         return false;
-        super.checkRecipe(aStack);
-        mEUt = -ENERGY[getTier()];
-        this.mEfficiencyIncrease = 10000;
-        this.mMaxProgresstime = 10;
-        return true;
     }
 
     @Override
@@ -165,4 +160,8 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
         return mFaces;
     }
 
+    @Override
+    protected String getConsumptionDescription() {
+        return (getBaseMetaTileEntity().isActive() ? ENERGY[getTier()] : 0) + " EU/t";
+    }
 }

@@ -75,11 +75,9 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
 
     public boolean checkRecipe(ItemStack aStack) {
         super.checkRecipe(aStack);
-        if (!depleteInput(GT_ModHandler.getSteam(40)))
-
+        if (!depleteInput(GT_ModHandler.getSteam(40))) {
             return false;
         }
-        this.mEfficiencyIncrease = 10000;
         this.mMaxProgresstime = 10;
         this.mEUt = 0;
         return true;
@@ -88,7 +86,7 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
 
     @Override
     public boolean onRunningTick(ItemStack aStack) {
-        double tOut = getOutputRate() * (mEfficiency / 10000) + waterToOutput;
+        double tOut = getOutputRate() * (mPumpingEfficiency / 10000) + waterToOutput;
         int rOut = (int) tOut;
         waterToOutput = tOut - rOut;
         addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
@@ -134,6 +132,11 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         return super.getTexture(aBaseMetaTileEntity, aSide, aFacing, aColorIndex, aActive, aRedstone);
+    }
+
+    @Override
+    protected String getConsumptionDescription() {
+        return (getBaseMetaTileEntity().isActive() ? 40 : 0) + " L/t";
     }
 
 
