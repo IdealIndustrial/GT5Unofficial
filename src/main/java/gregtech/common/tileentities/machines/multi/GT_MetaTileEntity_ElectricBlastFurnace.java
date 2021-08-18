@@ -1,6 +1,7 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
@@ -56,7 +57,8 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                 "Each 900K over the min. Heat Capacity grants 5% speedup (multiplicatively)",
                 "Each 1800K over the min. Heat Capacity allows for one upgraded overclock",
                 "Upgraded overclocks reduce recipe time to 25% and increase EU/t to 400%",
-                "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"};
+                "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second",
+                "Right click with wire cutter to toggle recipe conflicts resolving"};
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
@@ -121,7 +123,7 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
         if (tInputList.size() > 0) {
             long tVoltage = getMaxInputVoltage();
             byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-            GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sBlastRecipes.findRecipe(getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+            GT_Recipe tRecipe = findRecipe(GT_Recipe.GT_Recipe_Map.sBlastRecipes, null, tInputs, tFluids, GT_Values.V[tTier]);
             if ((tRecipe != null) && (this.mHeatingCapacity >= tRecipe.mSpecialValue) && (tRecipe.isRecipeInputEqual(true, tFluids, tInputs))) {
                 this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
                 this.mEfficiencyIncrease = 10000;
@@ -317,4 +319,8 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
         return false;
     }
 
+    @Override
+    protected boolean canHaveRecipeConflicts() {
+        return true;
+    }
 }

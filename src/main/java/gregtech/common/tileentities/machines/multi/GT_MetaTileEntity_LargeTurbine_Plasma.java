@@ -38,11 +38,12 @@ public class GT_MetaTileEntity_LargeTurbine_Plasma extends GT_MetaTileEntity_Lar
                 "Controller Block for the Large Plasma Generator",
                 "Size(WxHxD): 3x3x4 (Hollow), Controller (Front centered)",
                 "1x Plasma Input Hatch (Side centered)",
+                "Optional Output Hatch for Gas/Molten Metals (Side centered)",
                 "1x Maintenance Hatch (Side centered)",
                 "1x Dynamo Hatch (Back centered)",
                 "Tungstensteel Turbine Casings for the rest (24 at least!)",
                 "Needs a Turbine Item (Inside controller GUI)",
-                "Output depending on Rotor: 6553-332595EU/t"};
+                "Energy Output depending on Rotor: 6553-332595EU/t"};
     }
 
     public int getFuelValue(FluidStack aLiquid) {

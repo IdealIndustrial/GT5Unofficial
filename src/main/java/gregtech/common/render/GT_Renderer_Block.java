@@ -3,6 +3,7 @@ package gregtech.common.render;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import gregtech.api.GregTech_API;
+import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -14,6 +15,7 @@ import gregtech.common.blocks.GT_TileEntity_Ores;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
@@ -29,7 +31,7 @@ public class GT_Renderer_Block
         RenderingRegistry.registerBlockHandler(this);
     }
 
-    private static void renderNormalInventoryMetaTileEntity(Block aBlock, int aMeta, RenderBlocks aRenderer) {
+    public static void renderNormalInventoryMetaTileEntity(ItemStack is, Block aBlock, int aMeta, RenderBlocks aRenderer, boolean aInWorld) {
         if ((aMeta <= 0) || (aMeta >= GregTech_API.METATILEENTITIES.length)) {
             return;
         }
@@ -40,8 +42,7 @@ public class GT_Renderer_Block
         aBlock.setBlockBoundsForItemRender();
         aRenderer.setRenderBoundsFromBlock(aBlock);
 
-        GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+
         if ((tMetaTileEntity.getBaseMetaTileEntity() instanceof IPipeRenderedTileEntity)) {
             float tThickness = ((IPipeRenderedTileEntity) tMetaTileEntity.getBaseMetaTileEntity()).getThickNess();
             float sp = (1.0F - tThickness) / 2.0F;
@@ -79,43 +80,47 @@ public class GT_Renderer_Block
             renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(tMetaTileEntity.getBaseMetaTileEntity(), (byte) 5, (byte) 9, (byte) -1, true, false), true);
             Tessellator.instance.draw();
         } else {
+            ITexture[][] textures = tMetaTileEntity.getBaseMetaTileEntity().getTextures(is, (byte) 4, true, false,  !aInWorld);
             Tessellator.instance.startDrawingQuads();
             Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
-            renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(tMetaTileEntity.getBaseMetaTileEntity(), (byte) 0, (byte) 4, (byte) -1, true, false), true);
+            renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[0], true);
             Tessellator.instance.draw();
 
             Tessellator.instance.startDrawingQuads();
             Tessellator.instance.setNormal(0.0F, 1.0F, 0.0F);
-            renderPositiveYFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(tMetaTileEntity.getBaseMetaTileEntity(), (byte) 1, (byte) 4, (byte) -1, true, false), true);
+            renderPositiveYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[1], true);
             Tessellator.instance.draw();
 
             Tessellator.instance.startDrawingQuads();
             Tessellator.instance.setNormal(0.0F, 0.0F, -1.0F);
-            renderNegativeZFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(tMetaTileEntity.getBaseMetaTileEntity(), (byte) 2, (byte) 4, (byte) -1, true, false), true);
+            renderNegativeZFacing(null, aRenderer, aBlock, 0, 0, 0, textures[2], true);
             Tessellator.instance.draw();
 
             Tessellator.instance.startDrawingQuads();
             Tessellator.instance.setNormal(0.0F, 0.0F, 1.0F);
-            renderPositiveZFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(tMetaTileEntity.getBaseMetaTileEntity(), (byte) 3, (byte) 4, (byte) -1, true, false), true);
+            renderPositiveZFacing(null, aRenderer, aBlock, 0, 0, 0, textures[3], true);
             Tessellator.instance.draw();
 
             Tessellator.instance.startDrawingQuads();
             Tessellator.instance.setNormal(-1.0F, 0.0F, 0.0F);
-            renderNegativeXFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(tMetaTileEntity.getBaseMetaTileEntity(), (byte) 4, (byte) 4, (byte) -1, true, false), true);
+            renderNegativeXFacing(null, aRenderer, aBlock, 0, 0, 0, textures[4], true);
             Tessellator.instance.draw();
 
             Tessellator.instance.startDrawingQuads();
             Tessellator.instance.setNormal(1.0F, 0.0F, 0.0F);
-            renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(tMetaTileEntity.getBaseMetaTileEntity(), (byte) 5, (byte) 4, (byte) -1, true, false), true);
+            renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, textures[5], true);
             Tessellator.instance.draw();
         }
         aBlock.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         aRenderer.setRenderBoundsFromBlock(aBlock);
-        GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+       // GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
     public static boolean renderStandardBlock(IBlockAccess aWorld, int aX, int aY, int aZ, Block aBlock, RenderBlocks aRenderer) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
+        if(tTileEntity instanceof IFastRenderedTileEntity){
+            return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer, ((IFastRenderedTileEntity)tTileEntity).getTextures());
+        }
         if ((tTileEntity instanceof ITexturedTileEntity)) {
             return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer, new ITexture[][]{((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 0), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 1), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 2), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 3), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 4), ((ITexturedTileEntity) tTileEntity).getTexture(aBlock, (byte) 5)});
         }
@@ -154,16 +159,24 @@ public class GT_Renderer_Block
         }
         boolean[] tIsCovered = new boolean[6];
         for (byte i = 0; i < 6; i = (byte) (i + 1)) {
-            tIsCovered[i] = (aTileEntity.getCoverIDAtSide(i) != 0 ? true : false);
+            tIsCovered[i] = (aTileEntity.getCoverIDAtSide(i) != 0);
         }
         if ((tIsCovered[0]) && (tIsCovered[1]) && (tIsCovered[2]) && (tIsCovered[3]) && (tIsCovered[4]) && (tIsCovered[5])) {
             return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer);
         }
-        ITexture[][] tIcons = new ITexture[6][];
-        ITexture[][] tCovers = new ITexture[6][];
-        for (byte i = 0; i < 6; i = (byte) (i + 1)) {
-            tCovers[i] = aTileEntity.getTexture(aBlock, i);
-            tIcons[i] = aTileEntity.getTextureUncovered(i);
+        ITexture[][] tIcons;
+        ITexture[][] tCovers;
+        if(aTileEntity instanceof IFastRenderedTileEntity){
+            tIcons = ((IFastRenderedTileEntity)aTileEntity).getTextures(false);
+            tCovers = ((IFastRenderedTileEntity)aTileEntity).getTextures(true);
+        }
+        else {
+            tIcons = new ITexture[6][];
+            tCovers = new ITexture[6][];
+            for (byte i = 0; i < 6; i = (byte) (i + 1)) {
+                tCovers[i] = aTileEntity.getTexture(aBlock, i);
+                tIcons[i] = aTileEntity.getTextureUncovered(i);
+            }
         }
         if (tConnections == 0) {
             aBlock.setBlockBounds(sp, sp, sp, sp + tThickness, sp + tThickness, sp + tThickness);
@@ -527,7 +540,7 @@ public class GT_Renderer_Block
         if ((aBlock instanceof GT_Block_Machines)) {
             if ((aMeta > 0) && (aMeta < GregTech_API.METATILEENTITIES.length) && (GregTech_API.METATILEENTITIES[aMeta] != null) &&
                     (!GregTech_API.METATILEENTITIES[aMeta].renderInInventory(aBlock, aMeta, aRenderer))) {
-                renderNormalInventoryMetaTileEntity(aBlock, aMeta, aRenderer);
+                //renderNormalInventoryMetaTileEntity(aBlock, aMeta, aRenderer);
             }
         } else if ((aBlock instanceof GT_Block_Ores_Abstract)) {
             GT_TileEntity_Ores tTileEntity = new GT_TileEntity_Ores();

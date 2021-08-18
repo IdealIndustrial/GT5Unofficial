@@ -1,26 +1,29 @@
 buildscript {
     repositories {
         mavenCentral()
-		maven {
-			name = "MavenRepo"
-			url = "https://repo.maven.apache.org/maven2"
-		}
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name = "gt"
+            url = "https://gregtech.overminddl1.com/"
         }
-       /* maven {
+        maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }*/
+        }
+        maven {
+            name = "jitpack.io"
+            url = "https://jitpack.io"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT'
     }
 }
 
 apply plugin: 'forge'
 apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'signing'
+apply plugin: 'java-library'
 
 file "build.properties" withReader {
     def prop = new Properties()
@@ -28,20 +31,21 @@ file "build.properties" withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
+
 version = "${config.gt.version}"
-group= "gregtech"
+group = "gregtech"
 archivesBaseName = "gregtech"
 
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    options.encoding = "UTF-8"
+}
 
 minecraft {
     version = "${config.minecraft.version}-${config.forge.version}"
     runDir = "eclipse"
 }
-
-idea { module { inheritOutputDirs = true } }
 
 configurations {
     provided
@@ -49,53 +53,43 @@ configurations {
     compile.extendsFrom provided, embedded
 }
 
+idea.module.inheritOutputDirs = true
+
 repositories {
     maven {
-        name 'Forge'
-        url 'http://files.minecraftforge.net/maven'
+        name = "gt"
+        url = "https://gregtech.overminddl1.com/"
     }
-    /*maven {
+    maven {
         name = "chickenbones"
         url = "http://chickenbones.net/maven/"
-    }*/
+    }
     maven {
         name = "ic2, forestry"
         url = "http://maven.ic2.player.to/"
     }
     maven { // EnderIO & EnderCore
-        name 'tterrag Repo'
-        url "http://maven.tterrag.com"
+        name = 'tterrag Repo'
+        url = "http://maven.tterrag.com"
+    }
+    maven { // TConstruct
+        name = 'DVS1 Maven FS'
+        url = 'http://dvs1.progwml6.com/files/maven'
     }
     maven { // AppleCore
-        url "http://www.ryanliptak.com/maven/"
+        url = "http://www.ryanliptak.com/maven/"
+    }
+    maven { // GalacticGreg, YAMCore,..
+        name = 'UsrvDE'
+        url = "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases/"
     }
     ivy {
-        name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+        name = 'gtnh_download_source_stupid_underscore_typo'
+        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]")
     }
     ivy {
-        name 'CoFHLib'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhlib.cf}/[module]-[revision].[ext]"
-    }
-    ivy {
-        name 'CoFHCore'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.cofhcore.cf}/[module]-[revision].[ext]"
-    }
-    ivy {
-        name 'Railcraft'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.railcraft.cf}/[module]_[revision].[ext]"
-    }
-	ivy {
-        name 'IC2NuclearControl'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.nc.cf}/[module]-[revision].[ext]"
-    }
-		ivy {
-        name 'ImmersiveEngineering'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.immeng.cf}/[module]-[revision].[ext]"
-    }
-		ivy {
-        name 'magneticraft'
-        artifactPattern "http://addons-origin.cursecdn.com/files/${config.magneticraft.cf}/[module]-[revision].[ext]"
+        name = 'gtnh_download_source'
+        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
     }
 }
 
@@ -114,14 +108,15 @@ dependencies {
  /*   provided ("com.enderio:EnderIO:${config.enderio.version}:dev") {
         transitive = false
     }*/
-    provided name: 'buildcraft', version: config.buildcraft.version, classifier: "dev", ext: 'jar'
+    // provided name: 'buildcraft', version: config.buildcraft.version, classifier: "dev", ext: 'jar'
     // provided name: 'CoFHLib', version: config.cofhlib.version, ext: 'jar'
     // provided name: 'CoFHCore', version: config.cofhcore.version, ext: 'jar'
     // provided name: 'Railcraft', version: config.railcraft.version, ext: 'jar'
     // provided name: 'IC2NuclearControl', version: config.nc.version, ext: 'jar'
     // provided name: 'ImmersiveEngineering', version: config.immeng.version, ext: 'jar'
-    // provided name: 'magneticraft', version: config.magneticraft.version, ext: 'jar'
+    // provided name: 'magneticraft', version: config.magneticraft.version, ext: 'jar'nonRuntimeLibs
     provided fileTree(dir: 'libs', include: '*.jar')
+    compileOnly fileTree(dir: 'nonRuntimeLibs', include: '*.jar')
 }
 
 processResources

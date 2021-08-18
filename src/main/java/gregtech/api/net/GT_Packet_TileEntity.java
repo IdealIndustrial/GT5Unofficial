@@ -12,13 +12,14 @@ public class GT_Packet_TileEntity extends GT_Packet {
     private int mX, mZ, mC0, mC1, mC2, mC3, mC4, mC5;
     private short mY, mID;
     private byte mTexture, mTexturePage, mUpdate, mRedstone, mColor;
+    private boolean mWaterProof;
 
     public GT_Packet_TileEntity() {
         super(true);
     }
 
     //For tiles
-    public GT_Packet_TileEntity(int aX, short aY, int aZ, short aID, int aC0, int aC1, int aC2, int aC3, int aC4, int aC5, byte aTexture, byte aTexturePage, byte aUpdate, byte aRedstone, byte aColor) {
+    public GT_Packet_TileEntity(int aX, short aY, int aZ, short aID, int aC0, int aC1, int aC2, int aC3, int aC4, int aC5, byte aTexture, byte aTexturePage, byte aUpdate, byte aRedstone, byte aColor, boolean aWaterProof) {
         super(false);
         mX = aX;
         mY = aY;
@@ -35,6 +36,7 @@ public class GT_Packet_TileEntity extends GT_Packet {
         mUpdate = aUpdate;
         mRedstone = aRedstone;
         mColor = aColor;
+        mWaterProof = aWaterProof;
     }
 
     //For pipes
@@ -55,11 +57,12 @@ public class GT_Packet_TileEntity extends GT_Packet {
         mUpdate = aUpdate;
         mRedstone = aRedstone;
         mColor = aColor;
+        mWaterProof = false;
     }
 
     @Override
     public byte[] encode() {
-        ByteArrayDataOutput tOut = ByteStreams.newDataOutput(41);
+        ByteArrayDataOutput tOut = ByteStreams.newDataOutput(42);
 
         tOut.writeInt(mX);
         tOut.writeShort(mY);
@@ -79,12 +82,14 @@ public class GT_Packet_TileEntity extends GT_Packet {
         tOut.writeByte(mRedstone);
         tOut.writeByte(mColor);
 
+        tOut.writeBoolean(mWaterProof);
+
         return tOut.toByteArray();
     }
 
     @Override
     public GT_Packet decode(ByteArrayDataInput aData) {
-        return new GT_Packet_TileEntity(aData.readInt(), aData.readShort(), aData.readInt(), aData.readShort(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readByte(), aData.readByte(), aData.readByte(), aData.readByte(), aData.readByte());
+        return new GT_Packet_TileEntity(aData.readInt(), aData.readShort(), aData.readInt(), aData.readShort(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readByte(), aData.readByte(), aData.readByte(), aData.readByte(), aData.readByte(), aData.readBoolean());
     }
 
     @Override
@@ -93,7 +98,7 @@ public class GT_Packet_TileEntity extends GT_Packet {
             TileEntity tTileEntity = aWorld.getTileEntity(mX, mY, mZ);
             if (tTileEntity != null) {
                 if (tTileEntity instanceof BaseMetaTileEntity)
-                    ((BaseMetaTileEntity) tTileEntity).receiveMetaTileEntityData(mID, mC0, mC1, mC2, mC3, mC4, mC5, mTexture, mTexturePage, mUpdate, mRedstone, mColor);
+                    ((BaseMetaTileEntity) tTileEntity).receiveMetaTileEntityData(mID, mC0, mC1, mC2, mC3, mC4, mC5, mTexture, mTexturePage, mUpdate, mRedstone, mColor, mWaterProof);
                 else if (tTileEntity instanceof BaseMetaPipeEntity)
                     ((BaseMetaPipeEntity) tTileEntity).receiveMetaTileEntityData(mID, mC0, mC1, mC2, mC3, mC4, mC5, mTexture, mUpdate, mRedstone, mColor);
             }

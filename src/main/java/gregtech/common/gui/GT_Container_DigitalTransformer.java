@@ -32,13 +32,13 @@ public class GT_Container_DigitalTransformer extends GT_ContainerMetaTile_Machin
 
     @Override
     public ItemStack slotClick(int aSlotIndex, int aMouseclick, int aShifthold, EntityPlayer aPlayer) {
-        if (aSlotIndex < 0) {
+        if (aSlotIndex < 0 || aShifthold == 6) {
             return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
         }
         Slot tSlot = (Slot) inventorySlots.get(aSlotIndex);
         if (tSlot != null && mTileEntity.getMetaTileEntity() != null) {
             GT_MetaTileEntity_Digital_Transformer dpg = (GT_MetaTileEntity_Digital_Transformer) mTileEntity.getMetaTileEntity();
-            if (aSlotIndex > 11) {
+            if (aSlotIndex > 5) {
                 return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
             }
             int mult = (aSlotIndex > 2 ? 1 : -1);

@@ -44,6 +44,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
     public final boolean mGasProof;
     public final FluidStack[] mFluids;
     public byte mLastReceivedFrom = 0, oLastReceivedFrom = 0;
+    public boolean mStructurePart = false;
     /**
      * Bitmask for whether disable fluid input form each side.
      */
@@ -92,20 +93,30 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
         return new GT_MetaPipeEntity_Fluid(mName, mThickNess, mMaterial, mCapacity, mHeatResistance, mGasProof, mPipeAmount);
     }
 
+    private static final byte[][] sRestrictionArray = new byte[][]  {
+            {2, 3, 5, 4},
+            {2, 3, 4, 5},
+            {1, 0, 4, 5},
+            {1, 0, 4, 5},
+            {1, 0, 2, 3},
+            {1, 0, 2, 3}
+    };
+
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aConnections, byte aColorIndex, boolean aConnected, boolean aRedstone) {
     	float tThickNess = getThickNess();
     	if (mDisableInput == 0) return new ITexture[]{aConnected ? getBaseTexture(tThickNess, mPipeAmount, mMaterial, aColorIndex) : new GT_RenderedTexture(mMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa))};
         byte tMask = 0;
-        byte[][] sRestrictionArray = new byte[][]{
-        	{2, 3, 5, 4},
-        	{2, 3, 4, 5},
-        	{1, 0, 4, 5},
-        	{1, 0, 4, 5},
-        	{1, 0, 2, 3},
-        	{1, 0, 2, 3}
-        };
-        if (aSide >= 0 && aSide < 6) for (byte i = 0; i < 4; i++) if (isInputDisabledAtSide(sRestrictionArray[aSide][i])) tMask |= 1 << i;
+
+        if (aSide >= 0 && aSide < 6) {
+            for (byte i = 0; i < 4; i++)
+                if (isInputDisabledAtSide(sRestrictionArray[aSide][i]))
+                    tMask |= 1 << i;
+            //Full block size renderer flips side 5 and 2  textures, flip restrictor textures to compensate
+            if (tThickNess >= 0.99F && (aSide == 5 || aSide == 2))
+                if (tMask > 3 && tMask < 12)
+                    tMask = (byte) (tMask ^ 12);
+        }
         return new ITexture[]{aConnected ? getBaseTexture(tThickNess, mPipeAmount, mMaterial, aColorIndex) : new GT_RenderedTexture(mMaterial.mIconSet.mTextures[OrePrefixes.pipe.mTextureIndex], Dyes.getModulation(aColorIndex, mMaterial.mRGBa)), getRestrictorTexture(tMask)};
     }
 
@@ -144,6 +155,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
     @Override
     public void onValueUpdate(byte aValue) {
     	mDisableInput = aValue;
+        getBaseMetaTileEntity().rebakeMap();
     }
 
     @Override
@@ -230,7 +242,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
 
             if (!GT_Mod.gregtechproxy.gt6Pipe || mCheckConnections) checkConnections();
 
-            boolean shouldDistribute = (oLastReceivedFrom == mLastReceivedFrom);
+            boolean shouldDistribute = (oLastReceivedFrom == mLastReceivedFrom) && !mStructurePart;
             for (int i = 0, j = aBaseMetaTileEntity.getRandomNumber(mPipeAmount); i < mPipeAmount; i++) {
                 int index = (i + j) % mPipeAmount;
                 if (mFluids[index] != null && mFluids[index].amount <= 0) mFluids[index] = null;
@@ -363,7 +375,8 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
         			GT_Utility.sendChatToPlayer(aPlayer, trans("215", "Disconnected"));
         		}
     		}
-    		return true;
+            GregTech_API.causeMachineUpdate(getBaseMetaTileEntity().getWorld(), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord());
+            return true;
     	}
         return false;
     }
@@ -380,6 +393,7 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
 
     @Override
     public boolean canConnect(byte aSide, TileEntity tTileEntity) {
+        if (mStructurePart && getBaseMetaTileEntity().getBlockAtSide(aSide) == GregTech_API.sBlockCasings8) return true;
         if (tTileEntity == null) return false;
 
         final byte tSide = (byte)ForgeDirection.getOrientation(aSide).getOpposite().ordinal();

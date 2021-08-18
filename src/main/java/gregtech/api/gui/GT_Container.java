@@ -479,6 +479,8 @@ public class GT_Container extends Container {
     public void onContainerClosed(EntityPlayer par1EntityPlayer) {
         try {
             super.onContainerClosed(par1EntityPlayer);
+            if (mTileEntity != null)
+                mTileEntity.closeInventory(); //now this hook works fine
         } catch (Throwable e) {
             e.printStackTrace(GT_Log.err);
         }

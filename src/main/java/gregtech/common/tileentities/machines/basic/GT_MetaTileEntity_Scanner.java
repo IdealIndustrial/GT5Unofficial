@@ -12,6 +12,7 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.items.GT_MetaGenerated_Item_X32;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.objects.GT_RenderedTexture;
@@ -28,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.fluids.FluidStack;
 
 public class GT_MetaTileEntity_Scanner
         extends GT_MetaTileEntity_BasicMachine {
@@ -118,6 +120,25 @@ public class GT_MetaTileEntity_Scanner
                     this.mEUt = (32 * (1 << this.mTier - 1) * (1 << this.mTier - 1));
                     return 2;
                 }
+                if ((mLastRecipe = GT_Recipe.GT_Recipe_Map.sScannerRecipes.findRecipe(getBaseMetaTileEntity(), false, GT_Values.V[9], new FluidStack[0], getAllInputs())) != null) {
+                    getSpecialSlot().stackSize -= 1;
+                    this.mOutputItems[0] = ItemList.Tool_DataOrb.get(1L, new Object[0]);
+                    Behaviour_DataOrb.setDataTitle(this.mOutputItems[0], "Substance-Scan");
+                    String s = aStack.getDisplayName();
+                    if (s.endsWith(".name")) {
+                        if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+                            s = GT_Assemblyline_Server.lServerNames.get(aStack.getDisplayName());
+                            if (s == null)
+                                s = aStack.getDisplayName();
+                        }
+                    }
+                    Behaviour_DataOrb.setDataName(this.mOutputItems[0], s);
+                    Behaviour_DataOrb.setDataID(this.mOutputItems[0], aStack.getUnlocalizedName());
+                    aStack.stackSize -= 1;
+                    this.mMaxProgresstime = ((mLastRecipe.mDuration / (1 << this.mTier - 1)));
+                    this.mEUt = (mLastRecipe.mEUt * (1 << this.mTier - 1) * (1 << this.mTier - 1));
+                    return 2;
+                }
             }
             if (ItemList.Tool_DataStick.isStackEqual(getSpecialSlot(), false, true)) {
                 if (ItemList.Tool_DataStick.isStackEqual(aStack, false, true)) {
@@ -149,7 +170,7 @@ public class GT_MetaTileEntity_Scanner
                 }
 
             }
-            if (getSpecialSlot() == null && ItemList.Tool_DataStick.isStackEqual(aStack, false, true)) {
+            if (getSpecialSlot() == null && (ItemList.Tool_DataStick.isStackEqual(aStack, false, true) || ItemList.Tool_CD.isStackEqual(aStack, false, true))) {
                 if (GT_Utility.ItemNBT.getBookTitle(aStack).equals("Raw Prospection Data")) {
                     GT_Utility.ItemNBT.setBookTitle(aStack, "Analyzed Prospection Data");
                     GT_Utility.ItemNBT.convertProspectionData(aStack);
@@ -208,7 +229,7 @@ public class GT_MetaTileEntity_Scanner
                         for(int i=0;i<tRecipe.mInputs.length;i++){
                             if (tRecipe.mOreDictAlt[i] != null) {
                                 int count = 0;
-                                StringBuilder tBuilder = new StringBuilder("Input Bus "+(i+1)+": ");
+                                StringBuilder tBuilder = new StringBuilder("Input Bus "+(i+1)+": \n");
                                 for (ItemStack tStack : tRecipe.mOreDictAlt[i]) {
                                     if (tStack != null) {
                                         s=tStack.getDisplayName();
@@ -231,7 +252,7 @@ public class GT_MetaTileEntity_Scanner
                                     if (s==null)
                                         s=tRecipe.mInputs[i].getDisplayName();
                                 }
-                                tNBTList.appendTag(new NBTTagString("Input Bus "+(i+1)+": "+tRecipe.mInputs[i].stackSize+" "+s));
+                                tNBTList.appendTag(new NBTTagString("Input Bus "+(i+1)+": \n"+tRecipe.mInputs[i].stackSize+" "+s));
                             }
                         }
                         for(int i=0;i<tRecipe.mFluidInputs.length;i++){
@@ -242,7 +263,7 @@ public class GT_MetaTileEntity_Scanner
                                     if (s==null)
                                         s=tRecipe.mFluidInputs[i].getLocalizedName();
                                 }
-                                tNBTList.appendTag(new NBTTagString("Input Hatch "+(i+1)+": "+tRecipe.mFluidInputs[i].amount+"L "+s));
+                                tNBTList.appendTag(new NBTTagString("Input Hatch "+(i+1)+": \n"+tRecipe.mFluidInputs[i].amount+"L "+s));
                             }
                         }
                         tNBT.setTag("pages", tNBTList);

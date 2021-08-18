@@ -75,19 +75,42 @@ public class GT_MetaTileEntity_MultiFurnace
     public boolean checkRecipe(ItemStack aStack) {
         ArrayList<ItemStack> tInputList = getStoredInputs();
         if (!tInputList.isEmpty()) {
-            byte tTier = (byte) Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
+            int tTier = (byte) Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
 
-            int j = 0;
-            this.mOutputItems = new ItemStack[8 * this.mLevel];
-            for (int i = 0; (i < 256) && (j < this.mOutputItems.length); i++) {
-                if (null != (this.mOutputItems[j] = GT_ModHandler.getSmeltingOutput((ItemStack) tInputList.get(i % tInputList.size()), true, null))) {
-                    j++;
+            int tMaxParallel = 8 * this.mLevel;
+            int tCurrentParallel = 0;
+            ItemStack tSmeltStack = tInputList.get(0);
+            ItemStack tOutputStack = GT_ModHandler.getSmeltingOutput(tSmeltStack, false, null);
+            if (tOutputStack == null) {
+                return false;
+            }
+            for (ItemStack item : tInputList) {
+                if (tSmeltStack.isItemEqual(item)) {
+                    if (item.stackSize < (tMaxParallel - tCurrentParallel)) {
+                        tCurrentParallel += item.stackSize;
+                        item.stackSize = 0;
+                    } else {
+                        item.stackSize = (tCurrentParallel + item.stackSize) - tMaxParallel;
+                        tCurrentParallel = tMaxParallel;
+                        break;
+                    }
                 }
             }
-            if (j > 0) {
+
+            tCurrentParallel *= tOutputStack.stackSize;
+            this.mOutputItems = new ItemStack[(tCurrentParallel / 64) + 1];
+            for (int i = 0; i < this.mOutputItems.length; i++) {
+                ItemStack tNewStack = tOutputStack.copy();
+                int size = Math.min(tCurrentParallel, 64);
+                tNewStack.stackSize = size;
+                tCurrentParallel -= size;
+                this.mOutputItems[i] = tNewStack;
+            }
+
+
+            if (this.mOutputItems.length > 0) {
                 this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
                 this.mEfficiencyIncrease = 10000;
-
                 this.mEUt = (-4 * (1 << tTier - 1) * (1 << tTier - 1) * this.mLevel / this.mCostDiscount);
                 this.mMaxProgresstime = Math.max(1, 512 / (1 << tTier - 1));
             }

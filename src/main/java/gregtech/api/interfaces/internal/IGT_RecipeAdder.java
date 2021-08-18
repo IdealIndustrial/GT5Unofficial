@@ -59,6 +59,7 @@ public interface IGT_RecipeAdder {
      * @return
      */
     public boolean addCompressorRecipe(ItemStack aInput1, ItemStack aOutput1, int aDuration, int aEUt);
+    public boolean addCompressorRecipe(ItemStack aCircuit, FluidStack aOutput, int aDuration, int aEUt);
 
     /**
      * Adds a Electrolyzer Recipe
@@ -388,6 +389,7 @@ public interface IGT_RecipeAdder {
      */
     public boolean addOreWasherRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, int aDuration, int aEUt);
     public boolean addOreWasherRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt);
+    public boolean addOreWasherRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt);
 
     /**
      * Adds an Implosion Compressor Recipe
@@ -671,7 +673,9 @@ public interface IGT_RecipeAdder {
 
     public boolean addDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutputs, int aDuration, int aEUt);
 
-    public boolean addFilterRecipe(FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt);
+    public boolean addFilterRecipe(int aCircuit, FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt);
+
+    public boolean addReplicatorRecipe(ItemStack aInput, ItemStack aOutput, boolean aMetaGeneratedItem, int aScanDuration, int aScanEUt, int aMatterAmount, int aReplicationDuration, int aReplicationEUt);
 
     /**
      * Adds a Sound to the Sonictron9001

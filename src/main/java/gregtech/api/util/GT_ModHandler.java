@@ -1,5 +1,8 @@
 package gregtech.api.util;
 
+import cofh.api.energy.IEnergyContainerItem;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.GT_Mod;
@@ -10,7 +13,22 @@ import gregtech.api.interfaces.IItemContainer;
 import gregtech.api.interfaces.internal.IGT_CraftingRecipe;
 import gregtech.api.objects.GT_HashSet;
 import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.objects.GT_NEIItemStack;
 import gregtech.api.objects.ItemData;
+import gregtech.loaders.postload.GT_CraftingRecipeLoader;
+import gregtech.loaders.postload.GT_MachineRecipeLoader;
+import gregtech.loaders.postload.recipes.GT_ForestryRecipesLoader;
+import gregtech.loaders.postload.recipes.GT_RailcraftRecipesLoader;
+import gregtech.loaders.postload.recipes.GT_IndustialCraftRecipesLoader;
+import gregtech.loaders.postload.recipes.GT_GraviSuiteRecipesLoader;
+import gregtech.loaders.preload.GT_Loader_MetaTileEntities;
+import gregtech.common.items.GT_MetaGenerated_Item_01;
+import gregtech.common.items.GT_MetaGenerated_Item_02;
+import gregtech.common.items.GT_MetaGenerated_Item_03;
+import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.common.items.ItemComb;
+import gregtech.loaders.load.GT_ItemIterator;
+import gregtech.loaders.oreprocessing.*;
 import ic2.api.item.IBoxable;
 import ic2.api.item.IC2Items;
 import ic2.api.item.IElectricItem;
@@ -42,6 +60,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static gregtech.api.enums.GT_Values.*;
 
@@ -60,6 +80,26 @@ public class GT_ModHandler {
     public static Collection<String> sNativeRecipeClasses = new HashSet<String>(), sSpecialRecipeClasses = new HashSet<String>();
     public static GT_HashSet<GT_ItemStack> sNonReplaceableItems = new GT_HashSet<GT_ItemStack>();
     public static Object sBoxableWrapper = GT_Utility.callConstructor("gregtechmod.api.util.GT_IBoxableWrapper", 0, null, false);
+
+    public static final List<Class> sRecipeLoaderClasses = Arrays.asList(GT_MetaGenerated_Item_01.class, GT_MetaGenerated_Item_02.class,
+            GT_MetaGenerated_Item_03.class, GT_MetaGenerated_Tool_01.class, GT_CraftingRecipeLoader.class, GT_MachineRecipeLoader.class,
+            GT_ForestryRecipesLoader.class, GT_RailcraftRecipesLoader.class, GT_IndustialCraftRecipesLoader.class, GT_GraviSuiteRecipesLoader.class,
+            ProcessingAll.class, ProcessingArrows.class, ProcessingBeans.class, ProcessingBlock.class, ProcessingBolt.class,
+            ProcessingCell.class, ProcessingCircuit.class, ProcessingCompressed.class, ProcessingCrafting.class,
+            ProcessingCrate.class, ProcessingCrop.class, ProcessingCrushedOre.class, ProcessingCrystallized.class,
+            ProcessingDirty.class, ProcessingDust.class, ProcessingDye.class, ProcessingFineWire.class, ProcessingFoil.class,
+            ProcessingFood.class, ProcessingGear.class, ProcessingGem.class, ProcessingIngot.class, ProcessingItem.class,
+            ProcessingLens.class, ProcessingLog.class, ProcessingNugget.class, ProcessingOre.class, ProcessingOrePoor.class,
+            ProcessingOreSmelting.class, ProcessingPipe.class, ProcessingPlank.class, ProcessingPlate.class,
+            ProcessingPure.class, ProcessingRecycling.class, ProcessingRotor.class, ProcessingRound.class,
+            ProcessingSand.class, ProcessingSaplings.class, ProcessingScrew.class, ProcessingShaping.class,
+            ProcessingSlab.class, ProcessingStick.class, ProcessingStickLong.class, ProcessingStone.class,
+            ProcessingStoneCobble.class, ProcessingStoneVarious.class, ProcessingToolHead.class, ProcessingToolOther.class,
+            ProcessingTransforming.class, ProcessingWax.class, ProcessingWire.class, ItemComb.class,
+            GT_ItemIterator.class, GT_ModHandler.class, GT_Mod.class,
+            GT_Loader_MetaTileEntities.class);
+    public static List<String> sRecipeLoadersNames = sRecipeLoaderClasses.stream().map(Class::getName).collect(Collectors.toList());
+
     private static Map<IRecipeInput, RecipeOutput> sExtractorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
     private static Map<IRecipeInput, RecipeOutput> sMaceratorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
     private static Map<IRecipeInput, RecipeOutput> sCompressorRecipes = new /*Concurrent*/HashMap<IRecipeInput, RecipeOutput>();
@@ -123,6 +163,9 @@ public class GT_ModHandler {
     public static List<Integer> sSingleNonBlockDamagableRecipeList_warntOutput = new ArrayList<Integer>(50);
     public static List<Integer> sVanillaRecipeList_warntOutput = new ArrayList<Integer>(50);
     public static final List<IRecipe> sSingleNonBlockDamagableRecipeList_verified = new ArrayList<IRecipe>(1000);
+    public static Set<GT_NEIItemStack> sIgnoreLessTierList = new HashSet<>();
+    private static Cache<GT_ItemStack, ItemStack> sSmeltingRecipeCache = CacheBuilder.newBuilder().maximumSize(1000).build();
+
 
     static {
         sNativeRecipeClasses.add(ShapedRecipes.class.getName());
@@ -599,7 +642,7 @@ public class GT_ModHandler {
         }
         return true;
     }
-    
+
     public static boolean addImmersiveEngineeringRecipe(ItemStack aInput, ItemStack aOutput1, ItemStack aOutput2, int aChance2, ItemStack aOutput3, int aChance3){
     	if(GregTech_API.mImmersiveEngineering && GT_Mod.gregtechproxy.mImmersiveEngineeringRecipes){
     		blusunrize.immersiveengineering.common.IERecipes.addCrusherRecipe(aOutput1, aInput, 6000, aOutput2, 0.15f);
@@ -836,7 +879,8 @@ public class GT_ModHandler {
         if (aInput == null || aOutput == null || aOutput.length <= 0 || aOutput[0] == null) return false;
         if (GT_Mod.gregtechproxy.mAddGTRecipesToIC2Machines) GT_Utility.removeSimpleIC2MachineRecipe(aInput, getOreWashingRecipeList(), null);
         if (!GregTech_API.sRecipeFile.get(ConfigCategories.Machines.orewashing, aInput, true)) return false;
-        RA.addOreWasherRecipe(aInput, (ItemStack)aOutput[0], (ItemStack)aOutput[1], (ItemStack)aOutput[2], GT_ModHandler.getWater(1000L), (FluidStack)aOutput[3], 500, 16);
+        RA.addOreWasherRecipe(aInput, GT_Utility.getIntegratedCircuit(4),(ItemStack)aOutput[0], (ItemStack)aOutput[1], (ItemStack)aOutput[2], GT_ModHandler.getWater(1000L), (FluidStack)aOutput[3], 500, 16);
+        RA.addOreWasherRecipe(aInput, GT_Utility.getIntegratedCircuit(3),(ItemStack)aOutput[0], (ItemStack)aOutput[1], (ItemStack)aOutput[2], GT_ModHandler.getWater(1000L), null, 500, 16);
         if (GT_Mod.gregtechproxy.mAddGTRecipesToIC2Machines) {
             NBTTagCompound tNBT = new NBTTagCompound();
             tNBT.setInteger("amount", aWaterAmount);
@@ -1578,8 +1622,14 @@ public class GT_ModHandler {
      * Used in my own Furnace.
      */
     public static ItemStack getSmeltingOutput(ItemStack aInput, boolean aRemoveInput, ItemStack aOutputSlot) {
-        if (aInput == null || aInput.stackSize < 1) return null;
-        ItemStack rStack = GT_OreDictUnificator.get(FurnaceRecipes.smelting().getSmeltingResult(aInput));
+        if (aInput == null || aInput.stackSize < 1)
+            return null;
+        ItemStack rStack = null;
+        try {
+            rStack = sSmeltingRecipeCache.get(new GT_ItemStack(aInput), () -> GT_OreDictUnificator.get(FurnaceRecipes.smelting().getSmeltingResult(aInput)));
+        } catch (Exception ignored){
+        }
+
         if (rStack != null && (aOutputSlot == null || (GT_Utility.areStacksEqual(rStack, aOutputSlot) && rStack.stackSize + aOutputSlot.stackSize <= aOutputSlot.getMaxStackSize()))) {
             if (aRemoveInput) aInput.stackSize--;
             return rStack;
@@ -1662,13 +1712,24 @@ public class GT_ModHandler {
         try {
             if (isElectricItem(aStack)) {
                 int tTier = ((ic2.api.item.IElectricItem) aStack.getItem()).getTier(aStack);
-                if (tTier < 0 || tTier == aTier || aTier == Integer.MAX_VALUE) {
+                if (tTier < 0 || tTier == aTier || aTier == Integer.MAX_VALUE || aTier <= tTier && sIgnoreLessTierList.contains(new GT_NEIItemStack(aStack))) {
                     if (!aIgnoreLimit && tTier >= 0)
                         aCharge = (int) Math.min(aCharge, V[Math.max(0, Math.min(V.length - 1, tTier))]);
                     if (aCharge > 0) {
                         int rCharge = (int) Math.max(0.0, ic2.api.item.ElectricItem.manager.charge(aStack, aCharge, tTier, true, aSimulate));
                         return rCharge + (rCharge * 4 > aTier ? aTier : 0);
                     }
+                }
+            }
+            if (aStack.getItem() instanceof IEnergyContainerItem) {
+                aCharge = (int) Math.min(aCharge, V[Math.max(0, Math.min(V.length - 1, aTier))]);
+                IEnergyContainerItem chargable = (IEnergyContainerItem)aStack.getItem();
+                int max = chargable.getMaxEnergyStored(aStack);
+                int cur = chargable.getEnergyStored(aStack) ;
+                int canUse = Math.min(aCharge, max - cur) * GregTech_API.mEUtoRF / 100;
+                if (cur < max) {
+                    chargable.receiveEnergy(aStack, canUse, false);
+                    return canUse / GregTech_API.mEUtoRF * 100;
                 }
             }
         } catch (Throwable e) {/*Do nothing*/}
@@ -1687,7 +1748,7 @@ public class GT_ModHandler {
 //			if (isElectricItem(aStack) &&  (aIgnoreDischargability || ((ic2.api.item.IElectricItem)aStack.getItem()).canProvideEnergy(aStack))) {
             if (isElectricItem(aStack)) {
                 int tTier = ((ic2.api.item.IElectricItem) aStack.getItem()).getTier(aStack);
-                if (tTier < 0 || tTier == aTier || aTier == Integer.MAX_VALUE) {
+                if (tTier < 0 || tTier == aTier || aTier == Integer.MAX_VALUE  || aTier < tTier && sIgnoreLessTierList.contains(new GT_NEIItemStack(aStack))) {
                     if (!aIgnoreLimit && tTier >= 0)
                         aCharge = (int) Math.min(aCharge, V[Math.max(0, Math.min(V.length - 1, tTier))]);
                     if (aCharge > 0) {
@@ -1832,16 +1893,20 @@ public class GT_ModHandler {
      */
     public static boolean isElectricItem(ItemStack aStack) {
         try {
-            return aStack != null && aStack.getItem() instanceof ic2.api.item.IElectricItem && ((IElectricItem) aStack.getItem()).getTier(aStack) < Integer.MAX_VALUE;
+            return aStack != null && (aStack.getItem() instanceof ic2.api.item.IElectricItem && ((IElectricItem) aStack.getItem()).getTier(aStack) < Integer.MAX_VALUE || sIgnoreLessTierList.contains(new GT_ItemStack(aStack)));
         } catch (Throwable e) {/*Do nothing*/}
         return false;
     }
 
     public static boolean isElectricItem(ItemStack aStack, byte aTier) {
         try {
-            return aStack != null && aStack.getItem() instanceof ic2.api.item.IElectricItem && ((IElectricItem) aStack.getItem()).getTier(aStack) == aTier;
+            return aStack != null && (aStack.getItem() instanceof ic2.api.item.IElectricItem && ((IElectricItem) aStack.getItem()).getTier(aStack) == aTier || sIgnoreLessTierList.contains(new GT_NEIItemStack(aStack)));
         } catch (Throwable e) {/*Do nothing*/}
         return false;
+    }
+
+    public static boolean isCompatElectricItem(ItemStack aStack) {
+        return aStack != null && aStack.getItem() instanceof IEnergyContainerItem;
     }
 
     public static void registerBoxableItemToToolBox(ItemStack aStack) {

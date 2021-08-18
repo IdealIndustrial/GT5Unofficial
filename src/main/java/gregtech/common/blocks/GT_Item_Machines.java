@@ -1,37 +1,57 @@
 package gregtech.common.blocks;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.interfaces.metatileentity.IConnectable;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Fluid;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Frame;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Item;
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.util.GT_ItsNotMyFaultException;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import org.lwjgl.input.Keyboard;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class GT_Item_Machines
         extends ItemBlock {
+    public static Item INSTANCE;
+    public static byte[] mShowStructure = null;
+    public static int mLastID = -1;
+    private static long mTimer = 0;
+    private static int mClick = 0;
     public GT_Item_Machines(Block par1) {
         super(par1);
         setMaxDamage(0);
         setHasSubtypes(true);
         setCreativeTab(GregTech_API.TAB_GREGTECH);
+        INSTANCE = this;
     }
 
+    public static void postInit() {
+        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            mShowStructure = new byte[Short.MAX_VALUE];
+            for (int i = 0;  i < GregTech_API.METATILEENTITIES.length; i++) {
+                if (GregTech_API.METATILEENTITIES[i] != null && GregTech_API.METATILEENTITIES[i].getDescription().length > 5) {
+                    mShowStructure[i] = 1;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     public void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean par4) {
         try {
             int tDamage = getDamage(aStack);
@@ -39,11 +59,51 @@ public class GT_Item_Machines
                 return;
             }
 
+            if (Arrays.stream(Thread.currentThread().getStackTrace()).noneMatch(el -> el.getClassName().equals("mcp.mobius.waila.overlay.DisplayUtil"))) {
+                if (GT_Mod.gregtechproxy.allowDisableToolTips && (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))) {
+                    if (mLastID != tDamage) {
+                        if (mLastID > 0) {
+                            if (mShowStructure[mLastID] > 0)
+                                mShowStructure[mLastID] = 1;
+                            else if (mShowStructure[mLastID] < 0)
+                                mShowStructure[mLastID] = -1;
+                        }
+                        mClick = 0;
+                        mLastID = tDamage;
+                    }
+
+                    if (System.currentTimeMillis() - mTimer > 500 && mClick == 0) {
+                        mClick++;
+                        mTimer = System.currentTimeMillis();
+                    } else if (mClick == 2) {
+                        if (System.currentTimeMillis() - mTimer < 500) {
+                            mTimer = System.currentTimeMillis();
+                            mClick = 0;
+                            mShowStructure[tDamage] *= -1;
+                        } else {
+                            mClick = 1;
+                            mTimer = System.currentTimeMillis();
+                        }
+                    }
+
+                } else {
+                    if (mClick == 1)
+                        mClick++;
+                }
+            }
+
             if (GregTech_API.METATILEENTITIES[tDamage] != null) {
                 IGregTechTileEntity tTileEntity = GregTech_API.METATILEENTITIES[tDamage].getBaseMetaTileEntity();
                 if (tTileEntity.getDescription() != null) {
                     int i = 0;
+                    int numSkip = 1;
+                    int n = 0;
                     for (String tDescription : tTileEntity.getDescription()) {
+                        if (mShowStructure[tDamage] == -1 && n >= numSkip) {
+                            aList.add(GT_LanguageManager.addStringLocalization("struct.tooltip", "===Shift double click to show description==="));
+                            break;
+                        }
+                        n++;
                         if (GT_Utility.isStringValid(tDescription)) {
                         	if(tDescription.contains("%%%")){
                         		String[] tString = tDescription.split("%%%");
@@ -60,6 +120,10 @@ public class GT_Item_Machines
                         }else i++;
                     }
                 }
+                if (tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_BasicMachine_GT_Recipe) {
+                    if (tTileEntity.getMetaTileEntity().getCapacity() > 0)
+                        aList.add(GT_LanguageManager.addStringLocalization("TileEntity_Fluid_CAPACITY", "Fluid Tank: ", !GregTech_API.sPostloadFinished) + tTileEntity.getMetaTileEntity().getCapacity() + "L");
+                }
                 if (tTileEntity.getEUCapacity() > 0L) {
                     if (tTileEntity.getInputVoltage() > 0L) {
                         aList.add(GT_LanguageManager.addStringLocalization("TileEntity_EUp_IN", "Voltage IN: ", !GregTech_API.sPostloadFinished ) + EnumChatFormatting.GREEN + tTileEntity.getInputVoltage() + " (" + GT_Values.VN[GT_Utility.getTier(tTileEntity.getInputVoltage())] + ")" + EnumChatFormatting.GRAY);
@@ -75,6 +139,9 @@ public class GT_Item_Machines
             }
             NBTTagCompound aNBT = aStack.getTagCompound();
             if (aNBT != null) {
+                if(aNBT.getBoolean("mWaterProof")){
+                    aList.add(GT_LanguageManager.addStringLocalization("GT_WATERPROOF","Is Water Proof", !GregTech_API.sPostloadFinished));
+                }
                 if (aNBT.getBoolean("mMuffler")) {
                     aList.add(GT_LanguageManager.addStringLocalization("GT_TileEntity_MUFFLER", "has Muffler Upgrade", !GregTech_API.sPostloadFinished ));
                 }

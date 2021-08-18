@@ -14,12 +14,9 @@ import gregtech.GT_Mod;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
-import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.objects.GT_NEIItemStack;
 import gregtech.api.objects.ItemData;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
+import gregtech.api.util.*;
 import gregtech.common.gui.GT_GUIContainer_FusionReactor;
 import gregtech.common.gui.GT_GUIContainer_PrimitiveBlastFurnace;
 import net.minecraft.client.Minecraft;
@@ -45,11 +42,11 @@ public class GT_NEI_DefaultHandler
         GuiContainerManager.addTooltipHandler(new GT_RectHandler());
     }
 
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<CachedDefaultRecipe>>> inputMaps = new HashMap<>();
-    public static final HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_ItemStack,List<CachedDefaultRecipe>>> outputMaps = new HashMap<>();
+    public static HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> inputMaps = new HashMap<>();
+    public static HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> outputMaps = new HashMap<>();
 
-    protected HashMap<GT_ItemStack,List<CachedDefaultRecipe>> inputRecipes;
-    protected HashMap<GT_ItemStack,List<CachedDefaultRecipe>> outputRecipes;
+    protected HashMap<GT_NEIItemStack,List<GT_Recipe>> inputRecipes;
+    protected HashMap<GT_NEIItemStack,List<GT_Recipe>> outputRecipes;
     protected boolean isFilled = false;
 
     protected final GT_Recipe.GT_Recipe_Map mRecipeMap;
@@ -99,15 +96,7 @@ public class GT_NEI_DefaultHandler
                     continue;
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (PositionedStack tStck : tNEIRecipe.mOutputs) {
-                    ArrayList<ItemStack> tResults = new ArrayList<>();
-                    tResults.addAll(Arrays.asList(tStck.items));
-                    for (ItemStack t : tResults) {
-                        List<CachedDefaultRecipe> r = inputRecipes.get(new GT_ItemStack(t));
-                        if (r == null)
-                            r = new ArrayList<>();
-                        r.add(tNEIRecipe);
-                        inputRecipes.put(new GT_ItemStack(t), r);
-                    }
+                    putInMap(tNEIRecipe, tStck, inputRecipes);
 
                 }
             }
@@ -126,15 +115,7 @@ public class GT_NEI_DefaultHandler
                     continue;
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (PositionedStack tStck : tNEIRecipe.mInputs) {
-                    ArrayList<ItemStack> tResults = new ArrayList<>();
-                    tResults.addAll(Arrays.asList(tStck.items));
-                    for (ItemStack t : tResults) {
-                        List<CachedDefaultRecipe> r = outputRecipes.get(new GT_ItemStack(t));
-                        if (r == null)
-                            r = new ArrayList<>();
-                        r.add(tNEIRecipe);
-                        outputRecipes.put(new GT_ItemStack(t), r);
-                    }
+                    putInMap(tNEIRecipe, tStck, outputRecipes);
 
                 }
             }
@@ -142,6 +123,17 @@ public class GT_NEI_DefaultHandler
 
         }
 
+    }
+
+    private void putInMap(CachedDefaultRecipe aNEIRecipe, PositionedStack tStck, HashMap<GT_NEIItemStack, List<GT_Recipe>> aOutputRecipes) {
+        for (ItemStack t : tStck.items) {
+            List<GT_Recipe> r = aOutputRecipes.get(new GT_NEIItemStack(t));
+            if (r == null)
+                r = new ArrayList<>();
+            if (!r.contains(aNEIRecipe.mRecipe))
+                r.add(aNEIRecipe.mRecipe);
+            aOutputRecipes.put(new GT_NEIItemStack(t), r);
+        }
     }
 
     public void loadCraftingRecipes(ItemStack aResult) {
@@ -166,15 +158,16 @@ public class GT_NEI_DefaultHandler
             }
         }
         for(ItemStack t : tResults){
-            List<CachedDefaultRecipe> r = inputRecipes.get(new GT_ItemStack(t));
-            if(r!=null)
-                for(CachedDefaultRecipe q : r){
+            List<GT_Recipe> res = inputRecipes.get(new GT_NEIItemStack(t));
+            if(res!=null)
+                for(GT_Recipe r : res){
+                    CachedDefaultRecipe q = new CachedDefaultRecipe(r);
                     if(!arecipes.contains(q))
-                    arecipes.addAll(r);
+                        arecipes.add(q);
                 }
 
         }
-        /*for (GT_Recipe tRecipe : getSortedRecipes()) {
+     /*  for (GT_Recipe tRecipe : getSortedRecipes()) {
             if (!tRecipe.mHidden) {
                 CachedDefaultRecipe tNEIRecipe = new CachedDefaultRecipe(tRecipe);
                 for (ItemStack tStack : tResults) {
@@ -210,11 +203,12 @@ public class GT_NEI_DefaultHandler
             }
         }
         for(ItemStack t : tInputs){
-            List<CachedDefaultRecipe> r = outputRecipes.get(new GT_ItemStack(t));
-            if(r!=null)
-                for(CachedDefaultRecipe q : r){
+            List<GT_Recipe> res = outputRecipes.get(new GT_NEIItemStack(t));
+            if(res!=null)
+                for(GT_Recipe r : res){
+                    CachedDefaultRecipe q = new CachedDefaultRecipe(r);
                     if(!arecipes.contains(q))
-                        arecipes.addAll(r);
+                        arecipes.add(q);
                 }
 
         }
@@ -288,10 +282,10 @@ public class GT_NEI_DefaultHandler
 		String[] recipeDesc = ((CachedDefaultRecipe) this.arecipes.get(aRecipeIndex)).mRecipe.getNeiDesc();
 		if (recipeDesc == null) {
 			if (tEUt != 0) {
-				drawText(10, 73, trans("152","Total: ") + NumberFormat.getNumberInstance().format((long)tDuration * tEUt) + " EU", -16777216);
-				drawText(10, 83, trans("153","Usage: ") + NumberFormat.getNumberInstance().format(tEUt) + " EU/t", -16777216);
+				drawText(10, 73, trans("152","Total: ") + GT_Utility.formatNumbers((long)tDuration * tEUt) + " EU", -16777216);
+				drawText(10, 83, trans("153","Usage: ") + GT_Utility.formatNumbers(tEUt) + " EU/t", -16777216);
 				if (this.mRecipeMap.mShowVoltageAmperageInNEI) {
-					drawText(10, 93, trans("154","Voltage: ") + NumberFormat.getNumberInstance().format(tEUt / this.mRecipeMap.mAmperage) + " EU ("+GT_Values.VN[GT_Utility.getTier(tEUt / this.mRecipeMap.mAmperage)]+")", -16777216);
+					drawText(10, 93, trans("154","Voltage: ") + GT_Utility.formatNumbers(tEUt / this.mRecipeMap.mAmperage) + " EU ("+GT_Values.VN[tEUt / this.mRecipeMap.mAmperage < 16 ? 1 : GT_Utility.getTier(tEUt / this.mRecipeMap.mAmperage)]+")", -16777216);
 					drawText(10, 103, trans("155","Amperage: ") + this.mRecipeMap.mAmperage, -16777216);
 				} else {
 					drawText(10, 93, trans("156","Voltage: unspecified"), -16777216);
@@ -300,7 +294,7 @@ public class GT_NEI_DefaultHandler
 			}
 			if (tDuration > 0) {
 //				drawText(10, 113, trans("158","Time: ") + (tDuration < 20 ? "< 1" : Integer.valueOf(tDuration / 20)) + trans("161"," secs"), -16777216);
-				drawText(10, 113, trans("158","Time: ")+String.format("%.2f " + trans("161"," secs"), 0.05F * tDuration), -16777216);
+				drawText(10, 113, trans("158","Time: ") + GT_Utility.formatNumbers(0.05F * tDuration) + trans("161"," secs"), -16777216);
 			}
 			int tSpecial = ((CachedDefaultRecipe) this.arecipes.get(aRecipeIndex)).mRecipe.mSpecialValue;
 			if (tSpecial == -100 && GT_Mod.gregtechproxy.mLowGravProcessing) {
@@ -310,7 +304,7 @@ public class GT_NEI_DefaultHandler
 			} else if (tSpecial == -300) {
 				drawText(10, 123, trans("216","Deprecated Recipe"), -16777216);
 			} else if ((GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePre)) || (GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePost))) {
-				drawText(10, 123, this.mRecipeMap.mNEISpecialValuePre + tSpecial * this.mRecipeMap.mNEISpecialValueMultiplier + this.mRecipeMap.mNEISpecialValuePost, -16777216);
+				drawText(10, 123, this.mRecipeMap.mNEISpecialValuePre + GT_Utility.formatNumbers(tSpecial * this.mRecipeMap.mNEISpecialValueMultiplier) + this.mRecipeMap.mNEISpecialValuePost, -16777216);
 			}
 		} else {
 			int i = 0;
@@ -875,7 +869,11 @@ public class GT_NEI_DefaultHandler
                     tStartIndex++;
             }
             if ((aRecipe.mFluidInputs.length > 0) && (aRecipe.mFluidInputs[0] != null) && (aRecipe.mFluidInputs[0].getFluid() != null)) {
-                this.mInputs.add(new FixedPositionedStack(GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[0], true), 48, 52));
+                ItemStack f = GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[0], true);
+                if(aRecipe.mDistWaterUnificate&&aRecipe.mFluidInputs[0].isFluidEqual(GT_ModHandler.getWater(1))){
+                    f.setStackDisplayName(GT_ModHandler.getWater(1).getLocalizedName()+"/"+GT_ModHandler.getDistilledWater(1).getLocalizedName());
+                }
+                this.mInputs.add(new FixedPositionedStack(f, 48, 52));
                 if ((aRecipe.mFluidInputs.length > 1) && (aRecipe.mFluidInputs[1] != null) && (aRecipe.mFluidInputs[1].getFluid() != null)) {
                     this.mInputs.add(new FixedPositionedStack(GT_Utility.getFluidDisplayStack(aRecipe.mFluidInputs[1], true), 30, 52));
                 }
@@ -912,7 +910,12 @@ public class GT_NEI_DefaultHandler
         public List<PositionedStack> getOtherStacks() {
             return this.mOutputs;
         }
-    } 
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof CachedDefaultRecipe && ((CachedDefaultRecipe)o).mRecipe.equals(mRecipe);
+        }
+    }
     
     public String trans(String aKey, String aEnglish){
     	return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_"+aKey, aEnglish, false);

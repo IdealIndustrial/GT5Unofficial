@@ -918,4 +918,14 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
 
     @Override
     public void receiveExtendedBlockEvent(int aID, int aValue) {  }
+
+    @Override
+    public boolean isWaterProofByDefault() {
+        return false;
+    }
+
+    @Override
+    public void sendClientData() {
+
+    }
 }

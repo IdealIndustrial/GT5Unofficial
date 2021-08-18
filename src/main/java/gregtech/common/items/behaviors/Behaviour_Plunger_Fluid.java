@@ -8,6 +8,7 @@ import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicTank;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.tileentities.machines.multi.pumps.GT_MetaTileEntity_WaterPumpBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -46,6 +47,11 @@ public class Behaviour_Plunger_Fluid
         if (aTileEntity instanceof IGregTechTileEntity) {
         IGregTechTileEntity tTileEntity = (IGregTechTileEntity) aTileEntity;
         IMetaTileEntity mTileEntity = tTileEntity.getMetaTileEntity();
+        if (aPlayer.isSneaking() && mTileEntity instanceof GT_MetaTileEntity_WaterPumpBase) {
+            ((GT_MetaTileEntity_WaterPumpBase) mTileEntity).mEfficiencyRate = 1d;
+            GT_Utility.sendChatToPlayer(aPlayer, GT_LanguageManager.addStringLocalization("gt.plunger.clearpump", "Cleared"));
+            return true;
+        }
         if (mTileEntity instanceof GT_MetaTileEntity_BasicTank) {
           	GT_MetaTileEntity_BasicTank machine = (GT_MetaTileEntity_BasicTank) mTileEntity;
            	if(machine.mFluid!=null&&machine.mFluid.amount>0)

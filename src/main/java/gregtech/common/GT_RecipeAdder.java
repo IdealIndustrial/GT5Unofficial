@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
@@ -14,15 +15,14 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.interfaces.internal.IGT_RecipeAdder;
 import gregtech.api.objects.GT_FluidStack;
 import gregtech.api.objects.ItemData;
-import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.*;
 import gregtech.api.util.GT_Recipe.GT_Recipe_AssemblyLine;
-import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_IntegratedCircuit_Item;
+import gregtech.common.items.behaviors.Behaviour_DataOrb;
 import mods.railcraft.common.blocks.aesthetics.cube.EnumCube;
 import mods.railcraft.common.items.RailcraftToolItems;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -64,6 +64,17 @@ public class GT_RecipeAdder
             return false;
         }
         GT_Recipe.GT_Recipe_Map.sCentrifugeRecipes.addRecipe(true, new ItemStack[]{aInput1, aInput2}, new ItemStack[]{aOutput1, aOutput2, aOutput3, aOutput4, aOutput5, aOutput6}, null, aChances, new FluidStack[]{aFluidInput}, new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
+        return true;
+    }
+
+    public boolean addCompressorRecipe(ItemStack aCircuit, FluidStack fOutput, int aDuration, int aEUt) {
+        if ((aCircuit == null) || (fOutput == null)) {
+            return false;
+        }
+        if ((aCircuit != null) && ((aDuration = GregTech_API.sRecipeFile.get("compressor", aCircuit, aDuration)) <= 0)) {
+            return false;
+        }
+        GT_Recipe.GT_Recipe_Map.sCompressorRecipes.addRecipe(true, new ItemStack[]{aCircuit}, null, null, null,  new FluidStack[]{fOutput}, aDuration, aEUt, 0);
         return true;
     }
 
@@ -417,7 +428,7 @@ public class GT_RecipeAdder
         if ((aDuration = GregTech_API.sRecipeFile.get("orewasher", aInput, aDuration)) <= 0) {
             return false;
         }
-        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput1, aOutput2, aOutput3}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput1, aOutput2, aOutput3}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0, true);
         return true;
     }
 
@@ -428,10 +439,21 @@ public class GT_RecipeAdder
         if ((aDuration = GregTech_API.sRecipeFile.get("orewasher", aInput, aDuration)) <= 0) {
             return false;
         }
-        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput1, aOutput2, aOutput3}, null, new FluidStack[]{aFluidInput},  new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput}, new ItemStack[]{aOutput1, aOutput2, aOutput3}, null, new FluidStack[]{aFluidInput},  new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0, true);
         return true;
     }
 
+    public boolean addOreWasherRecipe(ItemStack aInput1 ,ItemStack aInput2, ItemStack aOutput1, ItemStack aOutput2, ItemStack aOutput3, FluidStack aFluidInput, FluidStack aFluidOutput, int aDuration, int aEUt) {
+        if ((aInput1 == null) || (aFluidInput == null) || ((aOutput1 == null))) {
+            return false;
+        }
+        if ((aDuration = GregTech_API.sRecipeFile.get("orewasher", aInput1, aDuration)) <= 0) {
+            return false;
+        }
+        GT_Recipe r = GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.addRecipe(true, new ItemStack[]{aInput1, aInput2}, new ItemStack[]{aOutput1,aOutput2,aOutput3}, null, new FluidStack[]{aFluidInput},  new FluidStack[]{aFluidOutput}, aDuration, aEUt, 0, true);
+        return true;
+    }	
+	
     public boolean addImplosionRecipe(ItemStack aInput1, int aInput2, ItemStack aOutput1, ItemStack aOutput2) {
         if ((aInput1 == null) || (aOutput1 == null)) {
             return false;
@@ -1136,12 +1158,39 @@ public class GT_RecipeAdder
     }
 
     @Override
-    public boolean addFilterRecipe(FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt){
-	    GT_Recipe.GT_Recipe_Map.sFilterRecipes.addRecipe(true, null, aOutputs, null, new FluidStack[]{aInput}, new FluidStack[]{aOutput},aDuration,aEUt,0);
+    public boolean addFilterRecipe(int aCircuit, FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt){
+	    GT_Recipe.GT_Recipe_Map.sFilterRecipes.addRecipe(true, new ItemStack[]{GT_Utility.getIntegratedCircuit(aCircuit)}, aOutputs, null, new FluidStack[]{aInput}, new FluidStack[]{aOutput},aDuration,aEUt,0);
         return true;
 	}
 
-	private boolean areItemsAndFluidsBothNull(ItemStack[] items, FluidStack[] fluids){
+    @Override
+    public boolean addReplicatorRecipe(ItemStack aInput, ItemStack aOutput, boolean aMetaGeneratedItem, int aScanDuration, int aScanEUt, int aMatterAmount, int aReplicationDuration, int aReplicationEUt) {
+        if (aInput == null || aOutput == null)
+            return false;
+
+        ItemStack aOrb = ItemList.Tool_DataOrb.get(1);
+        Behaviour_DataOrb.setDataTitle(aOrb, "Substance-Scan");
+        String s = aOutput.getDisplayName();
+        if (aMetaGeneratedItem) {
+            if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+                s = GT_Assemblyline_Server.lServerNames.get(aOutput.getDisplayName());
+                if (s == null)
+                    s = aOutput.getDisplayName();
+            } else {
+                s = Materials.getLocalizedNameForItem(GT_LanguageManager.getTranslation(s), aOutput.getItemDamage() % 1000);
+            }
+        }
+        Behaviour_DataOrb.setDataName(aOrb, s);
+	    ItemStack[] aInputs = new ItemStack[]{aInput}, tOrb = new ItemStack[]{aOrb};
+
+        GT_Recipe.GT_Recipe_Map.sScannerFakeRecipes.addFakeRecipe(false, aInputs, tOrb, ItemList.Tool_DataOrb.get(1L, new Object[0]), null, null,  aScanDuration, aScanEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sScannerRecipes.addRecipe(true, aInputs, null, null, null, null,  aScanDuration, aScanEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sReplicatorFakeRecipes.addFakeRecipe(false, null, aInputs, tOrb, new FluidStack[]{Materials.UUMatter.getFluid(aMatterAmount)}, null, aReplicationDuration, aReplicationEUt, 0);
+        GT_Recipe.GT_Recipe_Map.sReplicatorRecipes.put(aOutput.getUnlocalizedName(), new GT_Recipe(true, null, new ItemStack[]{aOutput}, null, null, new FluidStack[]{Materials.UUMatter.getFluid(aMatterAmount)}, null, aReplicationDuration, aReplicationEUt, 0 ));
+        return true;
+    }
+
+    private boolean areItemsAndFluidsBothNull(ItemStack[] items, FluidStack[] fluids){
     	boolean itemsNull = true;
     	if (items != null) {
     		for (ItemStack itemStack : items) {

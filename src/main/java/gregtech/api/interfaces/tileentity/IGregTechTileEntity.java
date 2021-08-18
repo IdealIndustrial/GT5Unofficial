@@ -1,6 +1,7 @@
 package gregtech.api.interfaces.tileentity;
 
 import gregtech.api.interfaces.IDescribable;
+import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,7 @@ import java.util.List;
  * <p/>
  * It can cause Problems to include this Interface!
  */
-public interface IGregTechTileEntity extends ITexturedTileEntity, IGearEnergyTileEntity, ICoverable, IFluidHandler, ITurnable, IGregTechDeviceInformation, IUpgradableMachine, IDigitalChest, IDescribable, IMachineBlockUpdateable {
+public interface IGregTechTileEntity extends ITexturedTileEntity, IGearEnergyTileEntity, ICoverable, IFluidHandler, ITurnable, IGregTechDeviceInformation, IUpgradableMachine, IDigitalChest, IDescribable, IMachineBlockUpdateable, IFastRenderedTileEntity {
     /**
      * gets the Error displayed on the GUI
      */
@@ -124,4 +125,5 @@ public interface IGregTechTileEntity extends ITexturedTileEntity, IGearEnergyTil
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ);
 
     public void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider);
+
 }

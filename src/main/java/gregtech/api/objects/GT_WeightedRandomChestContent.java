@@ -27,7 +27,7 @@ public class GT_WeightedRandomChestContent extends WeightedRandomChestContent {
                     return new ItemStack[0];
             }
             TileEntity tileEntity = (TileEntity)newInventory;
-            return new ItemStack[]{Behaviour_ProspectorsBook.getBook(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.getWorldObj().getChunkHeightMapMinimum(tileEntity.xCoord,tileEntity.zCoord), tileEntity.zCoord, random)};
+            return new ItemStack[]{Behaviour_ProspectorsBook.getBook(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.getWorldObj().getChunkHeightMapMinimum(tileEntity.xCoord,tileEntity.zCoord), tileEntity.zCoord, random,false)};
         }
         return new ItemStack[0];
     }

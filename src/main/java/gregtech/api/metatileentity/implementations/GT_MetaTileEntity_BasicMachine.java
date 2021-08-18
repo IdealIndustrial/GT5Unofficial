@@ -6,6 +6,7 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_Container_BasicMachine;
 import gregtech.api.gui.GT_GUIContainer_BasicMachine;
+import gregtech.api.interfaces.IFastRenderedTileEntity;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.objects.GT_ItemStack;
@@ -51,11 +52,13 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     public FluidStack mOutputFluid;
     public String mGUIName = "", mNEIName = "";
     public GT_MetaTileEntity_MultiBlockBase mCleanroom;
+    public boolean fluidChange = false;
     /**
      * Contains the Recipe which has been previously used, or null if there was no previous Recipe, which could have been buffered
      */
     protected GT_Recipe mLastRecipe = null;
-    private FluidStack mFluidOut;
+    public FluidStack mFluidOut;
+    public FluidStack mFluid1, mFluid2;
 
     /**
      * @param aOverlays 0 = SideFacingActive
@@ -116,10 +119,10 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     
     public boolean setMainFacing(byte aSide){
     	if (!isValidMainFacing(aSide)) return false;
-    	mMainFacing = aSide;
-    	if(getBaseMetaTileEntity().getFrontFacing() == mMainFacing){
+    	if(getBaseMetaTileEntity().getFrontFacing() == aSide){
     		getBaseMetaTileEntity().setFrontFacing(GT_Utility.getOppositeSide(aSide));
     	}
+        mMainFacing = aSide;
         onFacingChange();
         onMachineBlockUpdate();
     	return true;
@@ -477,7 +480,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
             if (doesAutoOutputFluids() && getDrainableStack() != null && aBaseMetaTileEntity.getFrontFacing() != mMainFacing && (tSucceeded || aTick % 20 == 0)) {
                 IFluidHandler tTank = aBaseMetaTileEntity.getITankContainerAtSide(aBaseMetaTileEntity.getFrontFacing());
                 if (tTank != null) {
-                    FluidStack tDrained = drain(1000, false);
+                    FluidStack tDrained = drain((int) Math.pow(1.5, mTier), false);
                     if (tDrained != null) {
                         int tFilledAmount = tTank.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), tDrained, false);
                         if (tFilledAmount > 0)
@@ -534,10 +537,12 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     protected void doDisplayThings() {
         if (mMainFacing < 2 && getBaseMetaTileEntity().getFrontFacing() > 1) {
             mMainFacing = getBaseMetaTileEntity().getFrontFacing();
+           // ((IFastRenderedTileEntity)getBaseMetaTileEntity()).rebakeMap();
         }
         if (mMainFacing >= 2 && !mHasBeenUpdated) {
             mHasBeenUpdated = true;
             getBaseMetaTileEntity().setFrontFacing(getBaseMetaTileEntity().getBackFacing());
+         //   ((IFastRenderedTileEntity)getBaseMetaTileEntity()).rebakeMap();
         }
 
         if (displaysInputFluid()) {
@@ -636,6 +641,10 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
     @Override
     public void onValueUpdate(byte aValue) {
+        if(aValue!=mMainFacing) {
+            mMainFacing = aValue;
+            ((IFastRenderedTileEntity) getBaseMetaTileEntity()).rebakeMap();
+        }
         mMainFacing = aValue;
     }
 

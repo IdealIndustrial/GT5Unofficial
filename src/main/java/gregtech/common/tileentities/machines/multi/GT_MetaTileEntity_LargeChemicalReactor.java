@@ -218,5 +218,4 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 	public boolean explodesOnComponentBreak(ItemStack aStack) {
 		return false;
 	}
-
 }

@@ -7,6 +7,7 @@ import gregtech.api.util.GT_LanguageManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.Slot;
 
 import java.util.Iterator;
 
@@ -17,11 +18,14 @@ import java.util.Iterator;
  */
 public class GT_ContainerMetaTile_Machine extends GT_Container {
 
-    public int mActive = 0, mMaxProgressTime = 0, mProgressTime = 0, mEnergy = 0, mSteam = 0, mSteamStorage = 0, mStorage = 0, mOutput = 0, mInput = 0, mID = 0, mDisplayErrorCode = 0;
-    private int oActive = 0, oMaxProgressTime = 0, oProgressTime = 0, oEnergy = 0, oSteam = 0, oSteamStorage = 0, oStorage = 0, oOutput = 0, oInput = 0, oID = 0, oDisplayErrorCode = 0, mTimer = 0;
+    public int mActive = 0, mMaxProgressTime = 0, mProgressTime = 0, mEnergy = 0, mSteam = 0, mSteamStorage = 0, mStorage = 0, mOutput = 0, mInput = 0, mID = 0, mDisplayErrorCode = 0, mAllowedToWork = 0;
+    private int oActive = 0, oMaxProgressTime = 0, oProgressTime = 0, oEnergy = 0, oSteam = 0, oSteamStorage = 0, oStorage = 0, oOutput = 0, oInput = 0, oID = 0, oDisplayErrorCode = 0, oAllowedToWork = 0, mTimer = 0;
 
-    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
+    SlotSupplier<? extends Slot> mSupplier;
+
+    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, SlotSupplier<? extends Slot> aSupplier) {
         super(aInventoryPlayer, aTileEntity);
+        mSupplier = aSupplier;
 
         mTileEntity = aTileEntity;
 
@@ -34,9 +38,14 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
         }
     }
 
+    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
+        this(aInventoryPlayer, aTileEntity, Slot::new);
+    }
+
     public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, boolean doesBindInventory) {
         super(aInventoryPlayer, aTileEntity);
         mTileEntity = aTileEntity;
+        mSupplier = Slot::new;
 
         if (mTileEntity != null && mTileEntity.getMetaTileEntity() != null) {
             addSlots(aInventoryPlayer);
@@ -47,9 +56,12 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
         }
     }
 
-    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int aPlayerInventoryXOffset, int aPlayerInventoryYOffset, boolean initEvertyhing) {
+    public GT_ContainerMetaTile_Machine(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int aPlayerInventoryXOffset, int aPlayerInventoryYOffset, boolean initEvertyhing, SlotSupplier<? extends Slot> aSupplier) {
         super(aInventoryPlayer, aTileEntity, aPlayerInventoryXOffset, aPlayerInventoryYOffset);
 
+        mSupplier = aSupplier;
+        if (mSupplier == null)
+            mSupplier = Slot::new;
         mTileEntity = aTileEntity;
 
         if(initEvertyhing) {
@@ -77,11 +89,11 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
         mProgressTime = mTileEntity.getProgress();
         mMaxProgressTime = mTileEntity.getMaxProgress();
         mActive = mTileEntity.isActive() ? 1 : 0;
+        mAllowedToWork = mTileEntity.isAllowedToWork() ? 1 : 0;
         mTimer++;
 
-        Iterator var2 = this.crafters.iterator();
-        while (var2.hasNext()) {
-            ICrafting var1 = (ICrafting) var2.next();
+        for (Object crafter : this.crafters) {
+            ICrafting var1 = (ICrafting) crafter;
             if (mTimer % 500 == 10 || oEnergy != mEnergy) {
                 var1.sendProgressBarUpdate(this, 0, mEnergy & 65535);
                 var1.sendProgressBarUpdate(this, 1, mEnergy >>> 16);
@@ -121,6 +133,9 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
                 var1.sendProgressBarUpdate(this, 19, mSteamStorage & 65535);
                 var1.sendProgressBarUpdate(this, 20, mSteamStorage >>> 16);
             }
+            if (mTimer % 500 == 10 || oAllowedToWork != mAllowedToWork) {
+                var1.sendProgressBarUpdate(this, 21, mAllowedToWork);
+            }
         }
 
         oID = mID;
@@ -134,6 +149,7 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
         oProgressTime = mProgressTime;
         oMaxProgressTime = mMaxProgressTime;
         oDisplayErrorCode = mDisplayErrorCode;
+        oAllowedToWork = mAllowedToWork;
     }
 
     @SideOnly(Side.CLIENT)
@@ -192,6 +208,8 @@ public class GT_ContainerMetaTile_Machine extends GT_Container {
             case 20:
                 mSteamStorage = mSteamStorage & 65535 | par2 << 16;
                 break;
+            case 21:
+                mAllowedToWork = par2;
         }
     }
 
