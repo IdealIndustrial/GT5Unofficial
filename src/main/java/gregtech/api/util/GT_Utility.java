@@ -1818,8 +1818,9 @@ public class GT_Utility {
      */
     public static boolean consumeItems(EntityPlayer player, ItemStack stack, Item item, int count) {
         if (stack != null && stack.getItem() == item && stack.stackSize >= count) {
-            if ((!player.capabilities.isCreativeMode) && (stack.stackSize != 111))
+            if (player == null || ((!player.capabilities.isCreativeMode) && (stack.stackSize != 111))) {
                 stack.stackSize -= count;
+            }
             return true;
         }
         return false;
@@ -1833,8 +1834,9 @@ public class GT_Utility {
         if (stack != null
             && GT_OreDictUnificator.getItemData(stack).mMaterial.mMaterial == mat
             && stack.stackSize >= count) {
-            if ((!player.capabilities.isCreativeMode) && (stack.stackSize != 111))
+            if (player == null || ((!player.capabilities.isCreativeMode) && (stack.stackSize != 111))) {
                 stack.stackSize -= count;
+            }
             return true;
             }
         return false;

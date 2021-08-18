@@ -9,6 +9,7 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -179,7 +180,7 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
         }
 
         addSlotToContainer(new Slot(mTileEntity, 1, 80, 63));
-        addSlotToContainer(new Slot(mTileEntity, 3, 125, 63));
+        addSlotToContainer(provideSpecialSlot(mTileEntity, 3, 125, 63));
         addSlotToContainer(new GT_Slot_Render(mTileEntity, tStartIndex++, 53, 63));
     }
 
@@ -428,5 +429,9 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
     @Override
     public int getShiftClickSlotCount() {
         return ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mInputSlotCount;
+    }
+
+    public Slot provideSpecialSlot(IInventory iInventory, int id, int x, int y) {
+        return new Slot(iInventory, id, x, y);
     }
 }
