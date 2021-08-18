@@ -479,15 +479,5 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     protected long getCoordID(int aX, int aZ) {
         return ((long) aX << 32) | (((long) aZ) & 0xFFFFFFFFL);
     }
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        
-        while (true) {
-
-
-        }
-    }
-
-
+    
 }
