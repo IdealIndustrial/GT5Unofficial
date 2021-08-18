@@ -35,22 +35,22 @@ public class GT_Cover_LiquidMeter
                 }
             }
             if(tUsed==0L)//nothing
-                aTileEntity.setOutputRedstoneSignal(aSide, (byte)(aCoverVariable == 0 ? 15 : 0));
+                aTileEntity.setOutputRedstoneSignal(aSide, (byte)(aCoverVariable != 0 ? 15 : 0));
             else if(tUsed >= tMax)//full
-                aTileEntity.setOutputRedstoneSignal(aSide, (byte)(aCoverVariable == 0 ? 0 : 15));
+                aTileEntity.setOutputRedstoneSignal(aSide, (byte)(aCoverVariable != 0 ? 0 : 15));
             else//1-14 range
-                aTileEntity.setOutputRedstoneSignal(aSide, (byte)(aCoverVariable == 0 ? 14-((14*tUsed)/tMax) : 1+((14*tUsed)/tMax)) );
+                aTileEntity.setOutputRedstoneSignal(aSide, (byte)(aCoverVariable != 0 ? 14-((14*tUsed)/tMax) : 1+((14*tUsed)/tMax)) );
         } else {
-            aTileEntity.setOutputRedstoneSignal(aSide, (byte) 0);
+            aTileEntity.setOutputRedstoneSignal(aSide, (byte)0);
         }
         return aCoverVariable;
     }
 
     public int onCoverScrewdriverclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         if (aCoverVariable == 0) {
-            GT_Utility.sendChatToPlayer(aPlayer, trans("055", "Normal"));
-        } else {
             GT_Utility.sendChatToPlayer(aPlayer, trans("054", "Inverted"));
+        } else {
+            GT_Utility.sendChatToPlayer(aPlayer, trans("055", "Normal"));
         }
         return aCoverVariable == 0 ? 1 : 0;
     }
@@ -115,7 +115,7 @@ public class GT_Cover_LiquidMeter
             this.side = aSide;
             this.coverID = aCoverID;
             this.coverVariable = aCoverVariable;
-            new GT_GuiIconCheckButton(this, 0, startX + spaceX*0, startY+spaceY*0, GT_GuiIcon.REDSTONE_ON, GT_GuiIcon.REDSTONE_OFF);
+            new GT_GuiIconCheckButton(this, 0, startX + spaceX*0, startY+spaceY*0, GT_GuiIcon.REDSTONE_OFF, GT_GuiIcon.REDSTONE_ON);
         }
 
         @Override
@@ -123,9 +123,9 @@ public class GT_Cover_LiquidMeter
             super.drawExtras(mouseX, mouseY, parTicks);
             String s2;
             if (coverVariable == 0)
-                s2 = trans("INVERTED","Inverted");
-            else
                 s2 = trans("NORMAL","Normal");
+            else
+                s2 = trans("INVERTED","Inverted");
 
             this.fontRendererObj.drawString(s2,  startX + spaceX*1, 4+startY+spaceY*0, 0xFF555555);
         }

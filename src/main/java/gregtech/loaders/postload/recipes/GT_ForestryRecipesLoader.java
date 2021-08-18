@@ -24,8 +24,19 @@ public class GT_ForestryRecipesLoader implements Runnable {
         addFertilizerRecipes();
         addOtherForestryRecipes();
         addForestryFarmRecipes();
+        addOtherForestry2Recipes();	    
     }
 
+    private void addOtherForestry2Recipes() {
+        GT_Values.RA.addAssemblerRecipe(ItemList.FR_Wax.get(6L), new ItemStack(Items.string, 1, 32767), Materials.Water.getFluid(600L), GT_ModHandler.getModItem(aTextForestry, "candle", 24L, 0), 64, 8);
+        GT_Values.RA.addAssemblerRecipe(ItemList.FR_Wax.get(2L), ItemList.FR_Silk.get(1L), Materials.Water.getFluid(200L), GT_ModHandler.getModItem(aTextForestry, "candle", 8L, 0), 16, 8);
+        GT_Values.RA.addAssemblerRecipe(ItemList.FR_Silk.get(9L), ItemList.Circuit_Integrated.getWithDamage(0L, 9L), Materials.Water.getFluid(500L), GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 1L, 3), 64, 8);
+        GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "propolis", 5L, 2), ItemList.Circuit_Integrated.getWithDamage(0L, 5L), GT_Values.NF, GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 1L, 1), 16, 8);
+        GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "sturdyMachine", 1L, 0), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Diamond, 4L), Materials.Water.getFluid(5000L), ItemList.FR_Casing_Hardened.get(1L), 64, 32);
+        GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Bronze, 8L), ItemList.Circuit_Integrated.getWithDamage(0L, 8L), GT_Values.NF, ItemList.FR_Casing_Sturdy.get(1L), 32, 16);
+        GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 5L, 1), ItemList.Circuit_Integrated.getWithDamage(0L, 5L), GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnderPearl, 1L), 64, 8);
+    }	
+	
     private void addThermionicTubesRecipes() {
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.plate, Materials.RedstoneAlloy, 1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Copper, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Gold, 4L),GT_OreDictUnificator.get(OrePrefixes.bolt, Materials.Iron, 4L),ItemList.Circuit_Parts_Glass_Tube.get(1L)},Materials.Glass.getMolten(144L), GT_ModHandler.getModItem(aTextForestry, "thermionicTubes", 1L, 0), 64, 28);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.plate, Materials.RedstoneAlloy, 1L), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.AnnealedCopper, 1L), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.Gold, 4L),GT_OreDictUnificator.get(OrePrefixes.bolt, Materials.Iron, 4L),ItemList.Circuit_Parts_Glass_Tube.get(1L)},Materials.Glass.getMolten(144L), GT_ModHandler.getModItem(aTextForestry, "thermionicTubes", 1L, 0), 64, 28);
