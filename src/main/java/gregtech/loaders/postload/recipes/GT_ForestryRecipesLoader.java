@@ -1,5 +1,6 @@
 package gregtech.loaders.postload.recipes;
 
+import forestry.farming.render.EnumFarmBlockTexture;
 import gregtech.api.enums.*;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -7,6 +8,9 @@ import gregtech.api.util.GT_ModHandler;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.function.Function;
 
 public class GT_ForestryRecipesLoader implements Runnable {
 
@@ -19,7 +23,7 @@ public class GT_ForestryRecipesLoader implements Runnable {
         addChipsetsRecipes();
         addFertilizerRecipes();
         addOtherForestryRecipes();
-        //addForestryFarmRecipes(); // not working for now
+        addForestryFarmRecipes();
     }
 
     private void addThermionicTubesRecipes() {
@@ -80,51 +84,61 @@ public class GT_ForestryRecipesLoader implements Runnable {
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 4));
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 5));
 
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
-                        ItemList.IC2_Item_Casing_Copper.get(4L),
-                        GT_OreDictUnificator.get(OrePrefixes.screw,Materials.Steel, 4L),
-                        GT_ModHandler.getModItem(aTextForestry, "thermionicTubes", 1L, 1),
-                        GT_ModHandler.getModItem("minecraft", "stonebrick", 1L, 0),
-                        GT_Utility.getIntegratedCircuit(5)},
-                Materials.Redstone.getMolten(144),
-                GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 0), 600, 30);
+        for (EnumFarmBlockTexture farmBlock : EnumFarmBlockTexture.values()) {
+            ItemStack basicBlock = GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 0);
+            Function<ItemStack, ItemStack> tagFunction = st -> {
+                st = st.copy();
+                NBTTagCompound tag = new NBTTagCompound();
+                farmBlock.saveToCompound(tag);
+                st.setTagCompound(tag);
+                return st;
+            };
+            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
+                            ItemList.IC2_Item_Casing_Copper.get(4L),
+                            GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 4L),
+                            GT_ModHandler.getModItem(aTextForestry, "thermionicTubes", 1L, 1),
+                            farmBlock.getBase(),
+                            GT_Utility.getIntegratedCircuit(5)},
+                    Materials.Redstone.getMolten(144),
+                    tagFunction.apply(basicBlock), 600, 30);
 
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
-                        ItemList.Electric_Motor_LV.get(1L),
-                        GT_OreDictUnificator.get(OrePrefixes.gearGtSmall, Materials.Steel, 4),
-                        GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 0),
-                        GT_Utility.getIntegratedCircuit(5)},
-                Materials.Redstone.getMolten(144),
-                GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 2), 600, 30);
+            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
+                            ItemList.Electric_Motor_LV.get(1L),
+                            GT_OreDictUnificator.get(OrePrefixes.gearGtSmall, Materials.Steel, 4),
+                            farmBlock.getBase(),
+                            GT_Utility.getIntegratedCircuit(5)},
+                    Materials.Redstone.getMolten(144),
+                    tagFunction.apply(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 2)), 600, 30);
 
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
-                        ItemList.Conveyor_Module_LV.get(2L),
-                        ItemList.Electric_Motor_LV.get(1L),
-                        GT_OreDictUnificator.get(OrePrefixes.gearGtSmall, Materials.Steel, 1),
-                        GT_ModHandler.getModItem("minecraft", "hopper", 1L, 0),
-                        GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 0),
-                        GT_Utility.getIntegratedCircuit(5)},
-                Materials.Redstone.getMolten(144),
-                GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 3), 600, 30);
+            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
+                            ItemList.Conveyor_Module_LV.get(2L),
+                            ItemList.Electric_Motor_LV.get(1L),
+                            GT_OreDictUnificator.get(OrePrefixes.gearGtSmall, Materials.Steel, 1),
+                            GT_ModHandler.getModItem("minecraft", "hopper", 1L, 0),
+                            farmBlock.getBase(),
+                            GT_Utility.getIntegratedCircuit(6)},
+                    Materials.Redstone.getMolten(144),
+                    tagFunction.apply(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 3)), 600, 30);
 
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
-                        ItemList.Electric_Pump_LV.get(2L),
-                        ItemList.Electric_Motor_LV.get(1L),
-                        GT_OreDictUnificator.get(OrePrefixes.gearGtSmall, Materials.Steel, 1),
-                        GT_OreDictUnificator.get(OrePrefixes.ring,Materials.Rubber, 1L),
-                        GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 0),
-                        GT_Utility.getIntegratedCircuit(5)},
-                Materials.Redstone.getMolten(144),
-                GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 4), 600, 30);
+            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
+                            ItemList.Electric_Pump_LV.get(2L),
+                            ItemList.Electric_Motor_LV.get(1L),
+                            GT_OreDictUnificator.get(OrePrefixes.gearGtSmall, Materials.Steel, 1),
+                            GT_OreDictUnificator.get(OrePrefixes.ring, Materials.Rubber, 1L),
+                            farmBlock.getBase(),
+                            GT_Utility.getIntegratedCircuit(6)},
+                    Materials.Redstone.getMolten(144),
+                    tagFunction.apply(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 4)), 600, 30);
 
-        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
-                        ItemList.Electric_Motor_LV.get(1L),
-                        GT_OreDictUnificator.get(OrePrefixes.gearGtSmall, Materials.Steel, 1),
-                        GT_OreDictUnificator.get(OrePrefixes.cableGt01,Materials.Tin, 1L),
-                        GT_OreDictUnificator.get(OrePrefixes.circuit,Materials.Basic, 2),
-                        GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 0),
-                        GT_Utility.getIntegratedCircuit(5)},
-                Materials.Redstone.getMolten(144),
-                GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 5), 600, 30);
+            GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
+                            ItemList.Electric_Motor_LV.get(1L),
+                            GT_OreDictUnificator.get(OrePrefixes.gearGtSmall, Materials.Steel, 1),
+                            GT_OreDictUnificator.get(OrePrefixes.cableGt01, Materials.Tin, 1L),
+                            GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Basic, 2),
+                            farmBlock.getBase(),
+                            GT_Utility.getIntegratedCircuit(6)},
+                    Materials.Redstone.getMolten(144),
+                    tagFunction.apply(GT_ModHandler.getModItem(aTextForestry, "ffarm", 1L, 5)), 600, 30);
+        }
     }
 }
