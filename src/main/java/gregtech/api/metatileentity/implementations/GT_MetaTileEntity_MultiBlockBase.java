@@ -14,6 +14,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
+import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Pollution;
@@ -31,7 +32,7 @@ import static gregtech.api.enums.GT_Values.V;
 public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
 
     public static boolean disableMaintenance;
-    public boolean mMachine = false, mWrench = false, mScrewdriver = false, mSoftHammer = false, mHardHammer = false, mSolderingTool = false, mCrowbar = false, mRunningOnLoad = false;
+    public boolean mMachine = false, mWrench = false, mScrewdriver = false, mSoftHammer = false, mHardHammer = false, mSolderingTool = false, mCrowbar = false, mRunningOnLoad = false, mResolveRecipeConflicts;
     public int mPollution = 0, mProgresstime = 0, mMaxProgresstime = 0, mEUt = 0, mEfficiencyIncrease = 0, mUpdate = 0, mStartUpCheck = 100, mRuntime = 0, mEfficiency = 0;
     public ItemStack[] mOutputItems = null;
     public FluidStack[] mOutputFluids = null;
@@ -141,6 +142,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         aNBT.setBoolean("mHardHammer", mHardHammer);
         aNBT.setBoolean("mSolderingTool", mSolderingTool);
         aNBT.setBoolean("mCrowbar", mCrowbar);
+
+        aNBT.setBoolean("mConflicts", mResolveRecipeConflicts);
     }
 
     @Override
@@ -174,6 +177,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         mHardHammer = aNBT.getBoolean("mHardHammer");
         mSolderingTool = aNBT.getBoolean("mSolderingTool");
         mCrowbar = aNBT.getBoolean("mCrowbar");
+        mResolveRecipeConflicts = aNBT.getBoolean("mConflicts");
     }
 
     @Override
@@ -923,5 +927,28 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
 
     public void onContainersUpdated(GT_MetaTileEntity_Hatch aContainer) {
         /* */
+    }
+
+    protected GT_Recipe findRecipe(GT_Recipe.GT_Recipe_Map map, GT_Recipe aLastRecipe, ItemStack[] aInputs, FluidStack[] aFluids, long aVoltage) {
+        return map.findRecipe(getBaseMetaTileEntity(), aLastRecipe, false, !mResolveRecipeConflicts,  aVoltage, aFluids, aInputs);
+    }
+
+    protected boolean canHaveRecipeConflicts() {
+        return false;
+    }
+
+    @Override
+    public boolean onWireCutterRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        if (!canHaveRecipeConflicts()) {
+            return super.onWireCutterRightClick(aSide, aWrenchingSide, aPlayer, aX, aY, aZ);
+        }
+        mResolveRecipeConflicts = !mResolveRecipeConflicts;
+        if (mResolveRecipeConflicts) {
+            GT_Utility.sendChatToPlayer(aPlayer, "Resolve Conflicts Mode Enabled");
+        }
+        else {
+            GT_Utility.sendChatToPlayer(aPlayer, "Resolve Conflicts Mode Disabled");
+        }
+        return true;
     }
 }

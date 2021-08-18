@@ -434,18 +434,6 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         OrePrefixes.cellPlasma.mContainerItem = ItemList.Cell_Empty.get(1L, new Object[0]);
         OrePrefixes.cell.mContainerItem = ItemList.Cell_Empty.get(1L, new Object[0]);
 
-        List<GT_ItemStack> tQuantumList = Stream.of("quantumHelmet", "quantumLeggings","quantumBoots", "quantumBodyarmor").map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
-        tQuantumList.add(new GT_ItemStack(new ItemStack(GameRegistry.findItem("GraviSuite","graviChestPlate"), 1, 32767)));
-
-        List<GT_ItemStack> tHazmatList = Stream.of("hazmatHelmet", "hazmatChestplate", "hazmatLeggings", "hazmatBoots" ).map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
-        tHazmatList.addAll(tQuantumList);
-
-        List<GT_ItemStack> tChainList = Stream.of(new ItemStack(Items.chainmail_helmet, 1, 32767), new ItemStack(Items.chainmail_chestplate, 1, 32767), new ItemStack(Items.chainmail_leggings, 1, 32767), new ItemStack(Items.chainmail_boots, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
-
-        GT_Utility.addAllToAll(tHazmatList, Arrays.asList(GregTech_API.sFrostHazmatList, GregTech_API.sHeatHazmatList, GregTech_API.sBioHazmatList, GregTech_API.sElectroHazmatList, GregTech_API.sRadioHazmatList, GregTech_API.sGasHazmatList));
-        GregTech_API.sQuantumArmorList.addAll(tQuantumList);
-        GregTech_API.sElectroHazmatList.addAll(tChainList);
-
         GT_ModHandler.sNonReplaceableItems.add(new ItemStack(Items.bow, 1, 32767));
         GT_ModHandler.sNonReplaceableItems.add(new ItemStack(Items.fishing_rod, 1, 32767));
         GT_ModHandler.sNonReplaceableItems.add(ItemList.IC2_ForgeHammer.getWithDamage(1L, 32767L, new Object[0]));
@@ -536,6 +524,20 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public void onPostLoad() {
         GT_Log.out.println("GT_Mod: Beginning PostLoad-Phase.");
         GT_Log.ore.println("GT_Mod: Beginning PostLoad-Phase.");
+
+        //lest just init armor lists when all items are certainly registered
+        List<GT_ItemStack> tQuantumList = Stream.of("quantumHelmet", "quantumLeggings","quantumBoots", "quantumBodyarmor").map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+        tQuantumList.add(new GT_ItemStack(new ItemStack(GameRegistry.findItem("GraviSuite","graviChestPlate"), 1, 32767)));
+
+        List<GT_ItemStack> tHazmatList = Stream.of("hazmatHelmet", "hazmatChestplate", "hazmatLeggings", "hazmatBoots" ).map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+        tHazmatList.addAll(tQuantumList);
+
+        List<GT_ItemStack> tChainList = Stream.of(new ItemStack(Items.chainmail_helmet, 1, 32767), new ItemStack(Items.chainmail_chestplate, 1, 32767), new ItemStack(Items.chainmail_leggings, 1, 32767), new ItemStack(Items.chainmail_boots, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+
+        GT_Utility.addAllToAll(tHazmatList, Arrays.asList(GregTech_API.sFrostHazmatList, GregTech_API.sHeatHazmatList, GregTech_API.sBioHazmatList, GregTech_API.sElectroHazmatList, GregTech_API.sRadioHazmatList, GregTech_API.sGasHazmatList));
+        GregTech_API.sQuantumArmorList.addAll(tQuantumList);
+        GregTech_API.sElectroHazmatList.addAll(tChainList);
+
         if (GT_Log.pal != null) {
             new Thread(new GT_PlayerActivityLogger()).start();
         }

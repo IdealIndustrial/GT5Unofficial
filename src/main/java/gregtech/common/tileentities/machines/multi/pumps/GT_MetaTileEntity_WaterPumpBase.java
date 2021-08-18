@@ -66,6 +66,12 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     public abstract int getFilterMeta();
 
     @Override
+    public boolean checkRecipe(ItemStack aStack) {
+        mScrewdriver = mWrench = mCrowbar = mHardHammer = mSoftHammer = mSolderingTool = true;
+        return false;
+    }
+
+    @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         mMainFacing = aNBT.getInteger("mMainF");
         mEfficiencyRate = aNBT.getDouble("mEffRate");

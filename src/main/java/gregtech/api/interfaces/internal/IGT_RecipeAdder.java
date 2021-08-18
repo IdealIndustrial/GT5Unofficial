@@ -673,7 +673,7 @@ public interface IGT_RecipeAdder {
 
     public boolean addDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutputs, int aDuration, int aEUt);
 
-    public boolean addFilterRecipe(FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt);
+    public boolean addFilterRecipe(int aCircuit, FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt);
 
     public boolean addReplicatorRecipe(ItemStack aInput, ItemStack aOutput, boolean aMetaGeneratedItem, int aScanDuration, int aScanEUt, int aMatterAmount, int aReplicationDuration, int aReplicationEUt);
 
