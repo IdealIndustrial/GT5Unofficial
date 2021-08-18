@@ -31,13 +31,7 @@ public class MiscValues {
         cellToStateMap.put(Prefixes.gasCell, MatterState.Gas);
         cellToStateMap.put(Prefixes.plasmaCell, MatterState.Plasma);
     }
-    @RegisterOresEvent
-    public static void registerExpected(II_OredictHandler handler) {
-        for (II_Material material : II_Materials.allMaterials) {
-            for (Prefixes prefix : material.getExpectedPrefixes()) {
-                handler.registerExpected(prefix, material);
-            }
-        }
-    }
+
+
 
 }

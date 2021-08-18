@@ -142,6 +142,7 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
             return;
         }
         in.set(index, stack);
+        metaTileEntity.onInInventoryModified();
     }
 
     @Override
@@ -303,6 +304,10 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
     @Override
     public II_EnergyHandler getEnergyHandler() {
         return handler;
+    }
+
+    public void onBufferFull() {
+        metaTileEntity.onBufferFull();
     }
 
     @Override

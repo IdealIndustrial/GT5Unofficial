@@ -2,6 +2,7 @@ package idealindustrial.textures;
 
 import gregtech.api.enums.GT_Values;
 import gregtech.api.interfaces.IIconContainer;
+import idealindustrial.util.misc.II_Paths;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -29,9 +30,9 @@ public abstract class BaseIconContainer implements IIconContainer, IRegistrableI
 
     @Override
     public void register(IIconRegister register) {
-        icon = register.registerIcon(GT_Values.RES_PATH_BLOCK + name);
+        icon = register.registerIcon(II_Paths.PATH_BLOCK_ICONS + name);
         if (hasOverlay) {
-            overlay = register.registerIcon(GT_Values.RES_PATH_BLOCK + name + "_OVERLAY");
+            overlay = register.registerIcon(II_Paths.PATH_BLOCK_ICONS + name + "_overlay");
         }
     }
 }

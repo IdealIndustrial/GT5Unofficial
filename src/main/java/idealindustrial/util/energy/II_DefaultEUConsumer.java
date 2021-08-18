@@ -1,11 +1,11 @@
 package idealindustrial.util.energy;
 
-import java.util.Objects;
-
 public class II_DefaultEUConsumer implements EUConsumer {
 
     protected II_BasicEnergyHandler handler;
     protected int side;
+    protected boolean notifyOnFull;
+
     public II_DefaultEUConsumer(II_BasicEnergyHandler handler, int side) {
         this.handler = handler;
         this.side = side;
@@ -27,6 +27,7 @@ public class II_DefaultEUConsumer implements EUConsumer {
             handler.baseTile.overVoltage();
         }
         handler.stored += voltage * amperage;
+
     }
 
     @Override

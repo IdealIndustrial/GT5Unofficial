@@ -13,9 +13,9 @@ import idealindustrial.commands.ReloadRecipesCommand;
 import idealindustrial.integration.ingameinfo.InGameInfoLoader;
 import idealindustrial.itemgen.fluids.II_Fluids;
 import idealindustrial.itemgen.implementation.II_MetaGeneratedCellItem;
-import idealindustrial.itemgen.material.II_Material;
 import idealindustrial.itemgen.material.II_Materials;
 import idealindustrial.itemgen.oredict.II_OreDict;
+import idealindustrial.itemgen.recipes.II_AutogenRecipes;
 import idealindustrial.loader.II_BlocksLoader;
 import idealindustrial.loader.II_ItemsLoader;
 import idealindustrial.itemgen.oredict.II_OredictHandler;
@@ -27,13 +27,11 @@ import idealindustrial.tile.gui.II_GuiHandler;
 import idealindustrial.tools.II_ToolRegistry;
 import idealindustrial.util.lang.II_Lang;
 import idealindustrial.util.world.II_WorldTickHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ReportedException;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
@@ -59,6 +57,7 @@ public class II_Core {
     II_ItemsLoader itemsLoader;
     II_BlocksLoader blocksLoader;
     II_OredictHandler oredictLoader;
+    II_AutogenRecipes autogen;
 
     public II_Core() {
         FMLCommonHandler.instance().bus().register(this);
@@ -71,8 +70,10 @@ public class II_Core {
         itemsLoader = new II_ItemsLoader();
         blocksLoader = new II_BlocksLoader();
         oredictLoader = new II_OredictHandler();
+        autogen = new II_AutogenRecipes();
 
         MinecraftForge.EVENT_BUS.register(oredictLoader);
+        oredictLoader.loadAlreadyNicelyLoadedByForgeOreDictsWithoutFuckingEvents();
         //INSTANCE = this;
     }
 
@@ -130,6 +131,7 @@ public class II_Core {
         II_Lang.pushLocalToMinecraft();
         oredictLoader.init();
         II_Materials.initMaterialLoops();
+        autogen.init();
         II_OreDict.printAll(System.out);
     }
 

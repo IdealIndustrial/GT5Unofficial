@@ -25,6 +25,16 @@ public abstract class II_EnergyHandler implements II_NBTSerializable {
 
     }
 
+    public boolean drain(long energy, boolean doDrain) {
+        if (stored >= energy) {
+            if (doDrain) {
+                stored -= energy;
+            }
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void nbtLoad(NBTTagCompound tag, String prefix) {
         stored = tag.getLong(prefix + "stored");

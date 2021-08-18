@@ -4,7 +4,7 @@ import idealindustrial.util.misc.II_NBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public interface II_FluidHandler extends IFluidHandler, II_NBTSerializable {
+public interface II_FluidHandler extends IFluidHandler, II_NBTSerializable, Iterable<FluidStack> {
 
     FluidStack[] getFluids();
 

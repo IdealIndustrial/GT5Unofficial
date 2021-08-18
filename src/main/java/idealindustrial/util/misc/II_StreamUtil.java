@@ -5,6 +5,9 @@ import com.google.common.io.ByteArrayDataOutput;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import java.util.Arrays;
+import java.util.function.IntFunction;
+
 public class II_StreamUtil {
 
     public static void writeIntArray(int[] array, ByteArrayDataOutput stream) {
@@ -50,4 +53,16 @@ public class II_StreamUtil {
         }
         return ar;
     }
+
+    public static <T> T[] concatArrays(T[] a, T[] b) {
+        T[] result = Arrays.copyOf(a, a.length + b.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+        return result;
+    }
+
+    public static <T> T[] arrayOf(T t, T[] ar) {
+        Arrays.fill(ar, t);
+        return ar;
+    }
+
 }

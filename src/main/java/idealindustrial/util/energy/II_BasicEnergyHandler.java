@@ -1,9 +1,8 @@
 package idealindustrial.util.energy;
 
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
-import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class II_BasicEnergyHandler extends II_EnergyHandler{
+public abstract class II_BasicEnergyHandler extends II_EnergyHandler {
 
     protected II_BaseMachineTile baseTile;
     protected long minEnergyAmount, maxCapacity;
@@ -18,5 +17,16 @@ public abstract class II_BasicEnergyHandler extends II_EnergyHandler{
         this.amperageIn = amperageIn;
         this.voltageOut = voltageOut;
         this.amperageOut = amperageOut;
+    }
+
+    @Override
+    public boolean drain(long energy, boolean doDrain) {
+        if (stored >= energy - minEnergyAmount) {
+            if (doDrain) {
+                stored -= energy;
+            }
+            return true;
+        }
+        return false;
     }
 }

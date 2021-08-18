@@ -11,6 +11,9 @@ import java.util.function.Consumer;
 public class II_TextureManager {
 
     public static final II_TextureManager INSTANCE = new II_TextureManager();
+    static {
+        II_Textures.init();
+    }
 
     List<IRegistrableIcon> items = new ArrayList<>(), blocks = new ArrayList<>();
     List<Runnable> postIconLoad = new ArrayList<>();
@@ -48,12 +51,9 @@ public class II_TextureManager {
     public void initBlocks(IIconRegister register) {
         blocks.forEach(b -> b.register(register));
         postIconLoad.forEach(Runnable::run);
-        postIconLoad = null;
-        blocks = null;
     }
 
     public void initItems(IIconRegister register) {
         items.forEach(b -> b.register(register));
-        items = null;
     }
 }

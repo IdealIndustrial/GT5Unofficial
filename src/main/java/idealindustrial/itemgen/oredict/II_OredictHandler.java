@@ -66,6 +66,14 @@ public class II_OredictHandler {
         II_OreDict.add(info);
     }
 
+    public void loadAlreadyNicelyLoadedByForgeOreDictsWithoutFuckingEvents() {
+        for (String name : OreDictionary.getOreNames()) {
+            for (ItemStack is : OreDictionary.getOres(name)) {
+                delayedOres.add(new OrePair(name, is));
+            }
+        }
+    }
+
     private static class OrePair {
         String name;
         ItemStack stack;

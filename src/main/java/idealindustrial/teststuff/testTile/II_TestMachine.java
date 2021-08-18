@@ -1,17 +1,23 @@
 package idealindustrial.teststuff.testTile;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.gui.base.II_GenericGuiContainer;
 import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
-import idealindustrial.tile.interfaces.meta.II_MetaTile;
-import idealindustrial.util.energy.II_OutputEnergyHandler;
 import idealindustrial.util.energy.II_OutputFacingEnergyHandler;
 import idealindustrial.util.inventory.II_ArrayRecipedInventory;
 import idealindustrial.util.inventory.II_EmptyInventory;
+import idealindustrial.util.item.CheckType;
+import idealindustrial.util.item.II_ItemStack;
+import idealindustrial.util.item.II_StackSignature;
+import idealindustrial.util.json.JsonStackSignatureSerializer;
+import idealindustrial.util.json.NbtToJson;
 import idealindustrial.util.misc.II_Paths;
+import idealindustrial.recipe.json.Test;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -70,6 +76,25 @@ public class II_TestMachine extends II_BaseMetaTile_Facing1Output<II_BaseMachine
         super.onPostTick(timer, serverSide);
         if (serverSide && baseTile.isActive()) {
             energyHandler.stored += 32;
+        }
+        try {
+            II_StackSignature stack = Test.test("{material: \"iron\", prefix: \"plate\", amount: 13}");
+            II_StackSignature stack2 = Test.test("{mod: \"minecraft\", name:\"apple\", damage: 1,  amount: 13}");
+            II_StackSignature stack3 = Test.test("{ore: \"plankWood\",  amount: 13}");
+
+            Gson gson = NbtToJson.registerSmartNBTSerializer(new GsonBuilder())
+                    .registerTypeAdapter(II_StackSignature.class, new JsonStackSignatureSerializer())
+                    .create();
+            if (inventoryIn.get(0) != null) {
+                II_ItemStack is = inventoryIn.iterator().next();
+                II_StackSignature ss = new II_StackSignature(is, CheckType.DIRECT);
+                String str = gson.toJson(ss, II_StackSignature.class);
+                int n= 0;
+            }
+            int a = 0;
+        }
+        catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 

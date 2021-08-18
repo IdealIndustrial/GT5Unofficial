@@ -7,6 +7,16 @@ import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;
+import idealindustrial.util.energy.II_EnergyHandler;
+import idealindustrial.util.energy.II_InputEnergyHandler;
+import idealindustrial.util.fluid.II_EmptyTank;
+import idealindustrial.util.fluid.II_FluidHandler;
+import idealindustrial.util.fluid.II_MultiFluidHandler;
+import idealindustrial.util.fluid.II_SingleFluidHandler;
+import idealindustrial.util.inventory.II_ArrayRecipedInventory;
+import idealindustrial.util.inventory.II_EmptyInventory;
+import idealindustrial.util.inventory.II_InternalInventory;
+import idealindustrial.util.inventory.II_RecipedInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -104,4 +114,30 @@ public class II_TileUtil {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         return tileEntity instanceof II_BaseTile ? (II_BaseTile) tileEntity : null;
     }
+
+    public static II_FluidHandler constructFluidHandler(int fluidCount, int capacity) {
+        if (fluidCount == 0) {
+            return II_EmptyTank.INSTANCE;
+        }
+        if (fluidCount == 1) {
+            return new II_SingleFluidHandler(capacity);
+        }
+        return new II_MultiFluidHandler(fluidCount, capacity);
+    }
+
+
+    public static II_RecipedInventory constructRecipedInventory(int slotCount, int stackSize) {
+        if (slotCount == 0) {
+            return II_EmptyInventory.INSTANCE;
+        }
+       return new II_ArrayRecipedInventory(slotCount, stackSize);
+    }
+
+    public static II_InternalInventory constructInternalInventory(int slotCount, int stackSize) {
+        if (slotCount == 0) {
+            return II_EmptyInventory.INSTANCE;
+        }
+        return new II_ArrayRecipedInventory(slotCount, stackSize);
+    }
+
 }

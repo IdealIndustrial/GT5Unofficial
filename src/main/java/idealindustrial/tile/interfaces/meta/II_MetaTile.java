@@ -30,7 +30,6 @@ public interface II_MetaTile<BaseTileType extends II_BaseTile> extends IUpdatabl
 
     II_MetaTile<BaseTileType> newMetaTile(BaseTileType baseTile);
 
-
     boolean hasRenderer();
 
     II_CustomRenderer getRenderer();
@@ -83,6 +82,9 @@ public interface II_MetaTile<BaseTileType extends II_BaseTile> extends IUpdatabl
         return 64;
     }
 
+    default void onInInventoryModified() {
+    }
+
     default boolean hasFluidTank() {
         return false;
     }
@@ -120,6 +122,10 @@ public interface II_MetaTile<BaseTileType extends II_BaseTile> extends IUpdatabl
 
     default II_EnergyHandler getEnergyHandler() {
         return null;
+    }
+
+    default void onBufferFull() {
+
     }
 
     default void receiveNeighbourIOConfigChange(IOType type) {

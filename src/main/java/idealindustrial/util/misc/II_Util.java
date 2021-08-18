@@ -1,6 +1,7 @@
 package idealindustrial.util.misc;
 
 import org.omg.CORBA.Object;
+import scala.Int;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -53,5 +54,19 @@ public class II_Util {
 
     public static int intBFromLong(long l)  {
         return (int) l;
+    }
+
+    public static int getTier(long usage) {
+        if (usage <= 8) {
+            return 0;
+        }
+        return (int) Math.floor(Math.log10(usage * 2 - 1)/Math.log10(4)) - 1;
+    }
+
+    public static long getVoltage(int tier) {
+        return 1L << (tier * 2 + 3);
+    }
+
+    public static void main(String[] args) {
     }
 }

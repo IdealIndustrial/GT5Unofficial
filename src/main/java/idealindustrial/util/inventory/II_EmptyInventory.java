@@ -1,11 +1,14 @@
 package idealindustrial.util.inventory;
 
 import idealindustrial.util.item.II_ItemStack;
+import idealindustrial.util.item.II_StackSignature;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-public class II_EmptyInventory implements II_InternalInventory {
+public class II_EmptyInventory implements II_RecipedInventory {
 
     public static final II_EmptyInventory INSTANCE = new II_EmptyInventory();
     private II_EmptyInventory() {
@@ -44,5 +47,20 @@ public class II_EmptyInventory implements II_InternalInventory {
                 return null;
             }
         };
+    }
+
+    @Override
+    public boolean hasMatch(II_StackSignature signature) {
+        return false;
+    }
+
+    @Override
+    public void extract(II_StackSignature signature) {
+
+    }
+
+    @Override
+    public List<II_ItemStack> getContents() {
+        return new ArrayList<>();
     }
 }

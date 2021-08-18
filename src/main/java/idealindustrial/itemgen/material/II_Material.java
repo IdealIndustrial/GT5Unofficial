@@ -3,6 +3,7 @@ package idealindustrial.itemgen.material;
 import idealindustrial.itemgen.material.submaterial.*;
 import idealindustrial.itemgen.material.submaterial.render.RenderInfo;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -53,6 +54,10 @@ public class II_Material {
         return blockInfo;
     }
 
+    public MaterialAutogenInfo getAutogenInfo() {
+        return autogenInfo;
+    }
+
     public String name() {
         return name;
     }
@@ -67,5 +72,10 @@ public class II_Material {
 
     public Set<Prefixes> getExpectedPrefixes() {
         return expectedPrefixes;
+    }
+
+    @Override
+    public String toString() {
+        return name.toLowerCase();
     }
 }

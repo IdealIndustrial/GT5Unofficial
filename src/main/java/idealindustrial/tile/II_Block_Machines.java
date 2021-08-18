@@ -16,6 +16,7 @@ import gregtech.common.render.GT_Renderer_Block;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.itemgen.blocks.base.II_Base_Block;
+import idealindustrial.textures.II_TextureManager;
 import idealindustrial.tile.interfaces.IClickableTileEntity;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.interfaces.base.II_BasePipeTile;
@@ -25,6 +26,7 @@ import idealindustrial.tools.II_ToolRegistry;
 import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -488,5 +490,10 @@ public class II_Block_Machines
             return;
         }
         super.onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister register) {
+        II_TextureManager.INSTANCE.initBlocks(register);
     }
 }

@@ -6,6 +6,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
+import java.util.Iterator;
+
 public class II_EmptyTank implements II_FluidHandler {
 
     public static final II_EmptyTank INSTANCE = new II_EmptyTank();
@@ -57,5 +59,20 @@ public class II_EmptyTank implements II_FluidHandler {
     @Override
     public FluidStack[] getFluids() {
         return new FluidStack[0];
+    }
+
+    @Override
+    public Iterator<FluidStack> iterator() {
+        return new Iterator<FluidStack>() {
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public FluidStack next() {
+                return null;
+            }
+        };
     }
 }

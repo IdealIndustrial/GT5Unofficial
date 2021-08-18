@@ -7,6 +7,7 @@ import idealindustrial.itemgen.material.submaterial.*;
 import idealindustrial.itemgen.material.submaterial.render.FluidRenderInfo;
 import idealindustrial.itemgen.material.submaterial.render.RenderInfo;
 import idealindustrial.itemgen.material.submaterial.render.SolidRenderInfo;
+import idealindustrial.itemgen.recipes.RecipeAction;
 import idealindustrial.util.misc.MiscValues;
 
 import java.awt.*;
@@ -27,6 +28,7 @@ public class II_MaterialBuilder {
     private final Set<Prefixes> expectedPrefixes = new HashSet<>();
     private FuelInfo fuelInfo;
     private BlockInfo blockInfo;
+    private MaterialAutogenInfo autogenInfo;
 
     public static II_MaterialBuilder make(int id, String name) {
         return new II_MaterialBuilder(id, name);
@@ -74,6 +76,9 @@ public class II_MaterialBuilder {
         return new LiquidFormBuilder(MatterState.Plasma).setTemperature(10_000);
     }
 
+    public AutogenBuilder recipeAutogen() {
+        return new AutogenBuilder();
+    }
 
 
     public II_Material construct() {
@@ -84,6 +89,7 @@ public class II_MaterialBuilder {
         material.fluidInfo = fluidInfo;
         material.normalForm = normalForm;
         material.expectedPrefixes = expectedPrefixes;
+        material.autogenInfo = autogenInfo == null ? new MaterialAutogenInfo(new HashSet<>()) : autogenInfo;
         
         if (id >= 0 && id < 1000) {
             II_Materials.materialsK1[id] = material;
@@ -143,6 +149,25 @@ public class II_MaterialBuilder {
             fluidInfo.set(form, new FluidDef(form, temperature));
             return II_MaterialBuilder.this;
         }
+    }
+
+    public class AutogenBuilder {
+        Set<RecipeAction> actions = new HashSet<>();
+
+        public AutogenBuilder addActions(RecipeAction... actions) {
+            this.actions.addAll(Arrays.asList(actions));
+            return this;
+        }
+
+        public AutogenBuilder addMetallicActions() {
+            return addActions(RecipeAction.plateBending);
+        }
+
+        public II_MaterialBuilder add() {
+            autogenInfo = new MaterialAutogenInfo(actions);
+            return II_MaterialBuilder.this;
+        }
+
     }
 
 

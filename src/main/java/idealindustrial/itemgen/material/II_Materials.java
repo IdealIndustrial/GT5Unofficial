@@ -2,6 +2,9 @@ package idealindustrial.itemgen.material;
 
 import gregtech.api.enums.TextureSet;
 import idealindustrial.itemgen.material.submaterial.BlockType;
+import idealindustrial.itemgen.oredict.II_OredictHandler;
+import idealindustrial.itemgen.oredict.RegisterOresEvent;
+import idealindustrial.reflection.events.II_EventListener;
 import idealindustrial.tile.covers.II_CoverRegistry;
 
 import java.awt.*;
@@ -12,6 +15,7 @@ import java.util.List;
 import static idealindustrial.itemgen.material.II_MaterialBuilder.make;
 import static idealindustrial.itemgen.material.Prefixes.*;
 
+@II_EventListener
 public class II_Materials {
 
     public static final II_Material[] materialsK1 = new II_Material[1000];
@@ -30,12 +34,22 @@ public class II_Materials {
                 .addPlasma().addCell().setRender(new Color(116, 239, 116))
                 .addPrefixes(dust, dustSmall, dustTiny, plate)
                 .addExpectedPrefixes(ingot)
+                .recipeAutogen().addMetallicActions().add()
                 .construct();
     }
 
 
     public static void initMaterialLoops() {
         II_CoverRegistry.init();
+    }
+
+    @RegisterOresEvent
+    public static void registerExpected(II_OredictHandler handler) {
+        for (II_Material material : II_Materials.allMaterials) {
+            for (Prefixes prefix : material.getExpectedPrefixes()) {
+                handler.registerExpected(prefix, material);
+            }
+        }
     }
 
 

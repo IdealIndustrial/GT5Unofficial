@@ -7,6 +7,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import java.util.Iterator;
+
 public class II_SingleFluidHandler implements II_FluidHandler {
 
     FluidStack fluid;
@@ -114,5 +116,21 @@ public class II_SingleFluidHandler implements II_FluidHandler {
     @Override
     public FluidStack[] getFluids() {
         return new FluidStack[]{fluid};
+    }
+
+    @Override
+    public Iterator<FluidStack> iterator() {
+        return new Iterator<FluidStack>() {
+            int i = 0;
+            @Override
+            public boolean hasNext() {
+                return i < 1;
+            }
+
+            @Override
+            public FluidStack next() {
+                return i++ == 0 ? fluid : null;
+            }
+        };
     }
 }

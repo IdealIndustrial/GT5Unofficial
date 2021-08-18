@@ -4,9 +4,11 @@ import gregtech.api.util.GT_ItsNotMyFaultException;
 import gregtech.api.util.GT_Utility;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
+import idealindustrial.textures.II_TextureManager;
 import idealindustrial.tile.base.II_BaseTileImpl;
 import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -84,5 +86,10 @@ public class II_Item_Machines
             this.field_150939_a.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
         }
         return true;
+    }
+
+    @Override
+    public void registerIcons(IIconRegister register) {
+        II_TextureManager.INSTANCE.initItems(register);
     }
 }

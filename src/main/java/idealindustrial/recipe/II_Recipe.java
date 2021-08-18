@@ -1,4 +1,4 @@
-package idealindustrial.util.recipe;
+package idealindustrial.recipe;
 
 import idealindustrial.util.item.II_HashedStack;
 import idealindustrial.util.item.II_ItemStack;
@@ -7,7 +7,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public interface Recipe {
+public interface II_Recipe {
 
 
     List<II_HashedStack> getAllPossibleInputs(); // all possible inputs for this recipe
@@ -20,9 +20,5 @@ public interface Recipe {
 
     FluidStack[] getFluidOutputs();
 
-    long energy();
-
-    long duration();
-
-    MachineParams recipeParams();
+    II_MachineEnergyParams recipeParams();
 }

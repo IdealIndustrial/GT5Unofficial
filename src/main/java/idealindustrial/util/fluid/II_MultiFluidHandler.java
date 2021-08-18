@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class II_MultiFluidHandler implements II_FluidHandler {
 
@@ -18,6 +19,12 @@ public class II_MultiFluidHandler implements II_FluidHandler {
         this.size = size;
         this.capacity = capacity;
         this.fluids = new FluidStack[size];
+    }
+
+    public II_MultiFluidHandler(FluidStack[] fluids) {
+        this.size = fluids.length;
+        this.capacity = Arrays.stream(fluids).mapToInt(fs -> fs.amount).max().orElse(Integer.MAX_VALUE);
+        this.fluids = fluids;
     }
 
     @Override
@@ -143,5 +150,21 @@ public class II_MultiFluidHandler implements II_FluidHandler {
     @Override
     public int capacity() {
         return capacity;
+    }
+
+    @Override
+    public Iterator<FluidStack> iterator() {
+        return new Iterator<FluidStack>() {
+            int i = 0;
+            @Override
+            public boolean hasNext() {
+                return i < fluids.length;
+            }
+
+            @Override
+            public FluidStack next() {
+                return fluids[i++];
+            }
+        };
     }
 }

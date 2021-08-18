@@ -4,6 +4,7 @@ import idealindustrial.itemgen.material.II_Material;
 import idealindustrial.itemgen.material.Prefixes;
 import idealindustrial.util.item.II_HashedStack;
 import idealindustrial.util.item.II_ItemStack;
+import idealindustrial.util.item.II_StackSignature;
 import net.minecraft.item.ItemStack;
 
 import java.io.PrintStream;
@@ -49,6 +50,10 @@ public class II_OreDict {
 
     public static II_OreInfo get(Prefixes prefixes, II_Material material) {
         return get(prefixes.name() + material.name());
+    }
+
+    public static II_StackSignature get(Prefixes prefixes, II_Material material, int amount) {
+        return new II_StackSignature(get(prefixes, material), amount);
     }
 
     public static II_OreInfo get(String name) {

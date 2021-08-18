@@ -22,6 +22,7 @@ package idealindustrial.util.item;
 
 import appeng.util.Platform;
 import appeng.util.item.AESharedNBT;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -182,6 +183,9 @@ public class ItemDef
 
 	UniqueIdentifier getUniqueID()
 	{
+		if (uniqueID == null) {
+			uniqueID = GameRegistry.findUniqueIdentifierFor(item);
+		}
 		return this.uniqueID;
 	}
 

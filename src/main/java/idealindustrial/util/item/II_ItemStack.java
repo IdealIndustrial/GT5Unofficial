@@ -3,6 +3,7 @@ package idealindustrial.util.item;
 
 import appeng.util.item.AESharedNBT;
 import appeng.util.item.II_Hackery;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -108,5 +109,17 @@ public class II_ItemStack {
     public static II_ItemStack loadFromNBT(NBTTagCompound tagCompound) {
         ItemStack is = ItemStack.loadItemStackFromNBT(tagCompound);
         return is == null ? null : new II_ItemStack(is);
+    }
+
+    public GameRegistry.UniqueIdentifier getUniqueID() {
+        return def.getUniqueID();
+    }
+
+    public int getDamageValue() {
+        return def.getDamageValue();
+    }
+
+    public AESharedNBT getTagCompound() {
+        return def.getTagCompound();
     }
 }
