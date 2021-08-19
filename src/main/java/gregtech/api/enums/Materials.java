@@ -961,7 +961,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         Cobaltite				.setDirectSmelting(Cobalt		);
         Stibnite				.setDirectSmelting(Antimony		);
         Cooperite				.setDirectSmelting(Platinum		).add(SubTag.DONT_ADD_DEFAULT_BBF_RECIPE);
-        Pyrolusite				.setDirectSmelting(Manganese	).add(SubTag.DONT_ADD_DEFAULT_BBF_RECIPE);
+        Pyrolusite				.setDirectSmelting(Manganese	);
         Magnesite				.setDirectSmelting(Magnesium	).add(SubTag.DONT_ADD_DEFAULT_BBF_RECIPE);
         Molybdenite				.setDirectSmelting(Molybdenum	).add(SubTag.DONT_ADD_DEFAULT_BBF_RECIPE);
         Galena 					.setDirectSmelting(Lead			).add(SubTag.DONT_ADD_DEFAULT_BBF_RECIPE);
