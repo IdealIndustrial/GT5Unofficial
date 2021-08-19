@@ -1,6 +1,7 @@
 package gregtech.api.interfaces.internal;
 
 import gregtech.api.util.GT_Recipe;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -131,7 +132,9 @@ public interface IGT_RecipeAdder {
      * @param aDuration must be > 0
      */
     public boolean addChemicalRecipeForBasicMachineOnly(ItemStack aInput1, ItemStack aInput2, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, ItemStack aOutput2, int aDuration, int aEUtick);
-    
+    public boolean addChemicalRecipeForBasicMachineOnly(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, ItemStack aOutput2, int aDuration, int aEUtick);
+    public boolean addChemicalRecipeForBasicMachineOnly(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, ItemStack aOutput2, ItemStack aOutput3, int aDuration, int aEUtick);
+
     /**
      * Adds Recipes for creating a radically polymerized polymer from a base Material (for example Ethylene -> Polyethylene)
      * @param aBasicMaterial The basic Material
@@ -162,6 +165,8 @@ public interface IGT_RecipeAdder {
      * @param aEUtick   must be > 0
      */
     public boolean addChemicalRecipe(ItemStack aInput1, ItemStack aInput2, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, ItemStack aOutput2, int aDuration, int aEUtick);
+    public boolean addChemicalRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, ItemStack aOutput2, int aDuration, int aEUtick);
+    public boolean addChemicalRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aInput3, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, ItemStack aOutput2, ItemStack aOutput3, int aDuration, int aEUtick);
 
     /**
      * Adds a Chemical Recipe that only exists in the Large Chemical Reactor
