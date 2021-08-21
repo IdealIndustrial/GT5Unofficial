@@ -25,6 +25,11 @@ public class II_EmptyInventory implements II_RecipedInventory {
     }
 
     @Override
+    public boolean canStore(II_ItemStack[] contents) {
+        return false;
+    }
+
+    @Override
     public void nbtSave(NBTTagCompound tag, String prefix) {
 
     }

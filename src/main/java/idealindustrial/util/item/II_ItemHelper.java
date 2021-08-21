@@ -1,5 +1,6 @@
 package idealindustrial.util.item;
 
+import com.google.common.collect.HashMultimap;
 import idealindustrial.util.misc.II_Util;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class II_ItemHelper {
 
     private static final List<II_HashedStack> hashedStacks = new ArrayList<>();
     private static final List<HashMap<? extends II_HashedStack, ?>> hashMaps = new ArrayList<>();
+    private static final List<HashMultimap<? extends II_HashedStack, ?>> hashMultiMaps = new ArrayList<>();
     /**
      * Minecraft Item IDs can change during server start up
      * so we need to fix hash of stack if this happens
@@ -26,13 +28,25 @@ public class II_ItemHelper {
         return map;
     }
 
-    public static void onIDsCharge() { //todo : link and think about clearing list from memory
+    public static <K extends II_HashedStack, V> HashMultimap<K, V> queryMap(HashMultimap<K, V> map) {
+        hashMultiMaps.add(map);
+        return map;
+    }
+
+    public static void onIDsCharge() { //todo : link
         for (II_HashedStack stack : hashedStacks) {
             stack.fixHash();
         }
         for (HashMap<? extends II_HashedStack, ?> map : hashMaps) {//non hackery solution, idk if it's possible here
             for (Map.Entry<? extends II_HashedStack, ?> entry : map.entrySet()) {
                 entry.getKey().fixHash();
+            }
+            II_Util.rehash(map);
+        }
+
+        for (HashMultimap<? extends II_HashedStack, ?> map : hashMultiMaps) {//non hackery solution, idk if it's possible here
+            for (Object stack : map.keySet()) {
+                ((II_HashedStack) stack).fixHash();
             }
             II_Util.rehash(map);
         }

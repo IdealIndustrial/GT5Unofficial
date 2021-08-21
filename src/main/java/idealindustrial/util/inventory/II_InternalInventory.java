@@ -11,4 +11,6 @@ public interface II_InternalInventory extends Iterable<II_ItemStack>, II_BaseInv
 
     int insert(II_ItemStack is, boolean doInsert);
 
+    boolean canStore(II_ItemStack[] contents);
+
 }

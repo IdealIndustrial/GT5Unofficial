@@ -5,7 +5,7 @@ import idealindustrial.util.item.II_StackSignature;
 
 import java.util.List;
 
-public interface II_RecipedInventory extends II_InternalInventory{
+public interface II_RecipedInventory extends II_InternalInventory {
 
     boolean hasMatch(II_StackSignature signature);
 

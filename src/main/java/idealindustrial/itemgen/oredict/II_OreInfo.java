@@ -28,11 +28,11 @@ public class II_OreInfo {
     }
 
     public boolean isSingleton() {
-        return subItems.size() == 1; // or check special unification params (WIP)
+        return subItems.size() == 1; // or check special unification params
     }
 
     public II_HashedStack getUnified() {
-        assert subItems.size() == 1; // or check special unification params (WIP)
+        assert subItems.size() == 1; // or check special unification params
         return subItems.get(0);
     }
 
@@ -50,13 +50,18 @@ public class II_OreInfo {
         ListUtil.addOrMoveFirst(subItems, hashedStack);
     }
 
-    void addStack(ItemStack stack) {
+    II_OreInfo addStack(ItemStack stack) {
         II_HashedStack hashedStack = new II_HashedStack(stack);
         assert !subItems.contains(hashedStack);
         subItems.add(hashedStack);
         if (prefix != null && prefix.isUnifiable()) {
             II_OreDict.addInfo(hashedStack, this);
         }
+        return this;
+    }
+
+    public II_HashedStack getMain() {
+        return subItems.get(0);
     }
 
     @Override

@@ -123,6 +123,7 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
     public ItemStack decrStackSize(int index, int amount) {
         assert index >= 0 && index < inSize + outSize;
         if (index >= inSize) {
+            metaTileEntity.onInInventoryModified(1);
             return out.reduce(index - inSize, amount);
         }
         return in.reduce(index, amount);
@@ -139,10 +140,11 @@ public class II_BaseMachineTileImpl extends II_BaseTileImpl implements II_BaseMa
         assert index >= 0 && index < inSize + outSize;
         if (index >= inSize) {
             out.set(index - inSize, stack);
+            metaTileEntity.onInInventoryModified(1);
             return;
         }
         in.set(index, stack);
-        metaTileEntity.onInInventoryModified();
+        metaTileEntity.onInInventoryModified(0);
     }
 
     @Override

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class II_ArrayRecipedInventory implements II_RecipedInventory {
 
-    II_ItemStack[] contents;
-    int maxStackSize;
+    protected II_ItemStack[] contents;
+    protected int maxStackSize;
 
     public II_ArrayRecipedInventory(II_ItemStack[] contents) {
         this.contents = contents;
@@ -118,19 +118,61 @@ public class II_ArrayRecipedInventory implements II_RecipedInventory {
 
     @Override
     public Iterator<II_ItemStack> iterator() {
-        return new Iterator<II_ItemStack>() {
-            int i = 0;
+        return new II_ArrayInventoryIterator();
+    }
 
-            @Override
-            public boolean hasNext() {
-                return i < contents.length;
+    @Override
+    public boolean canStore(II_ItemStack[] contents) {
+        int empty = emptySlots();
+        if (empty >= contents.length) {
+            return true;
+        }
+        int usedSpace = 0;
+        a:
+        for (II_ItemStack toStore : contents) {
+            for (II_ItemStack stored : this.contents) {
+                if (stored != null && stored.equals(toStore)) {
+                    if (stored.amount + toStore.amount <= maxStackSize) {
+                        continue a;
+                    }
+                    break;
+                }
             }
+            usedSpace++;
+        }
+        return empty >= usedSpace;
+    }
 
-            @Override
-            public II_ItemStack next() {
-                return contents[i++];
+    public int emptySlots() {
+        int slots = 0;
+        for (II_ItemStack content : contents) {
+            if (content == null) {
+                slots++;
             }
-        };
+        }
+        return slots;
+    }
+
+    protected class II_ArrayInventoryIterator implements Iterator<II_ItemStack> {
+
+        int i;
+
+        public II_ArrayInventoryIterator() {
+            i = 0;
+            while (i < contents.length && contents[i] == null) {
+                i++;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return i < contents.length;
+        }
+
+        @Override
+        public II_ItemStack next() {
+            return contents[i++];
+        }
     }
 
     @Override
@@ -183,7 +225,7 @@ public class II_ArrayRecipedInventory implements II_RecipedInventory {
             return;
         }
         for (int i = 0; i < size(); i++) {
-            NBTTagCompound itemTag = inventoryTag.getCompoundTag(""+i);
+            NBTTagCompound itemTag = inventoryTag.getCompoundTag("" + i);
             if (itemTag == null) {
                 continue;
             }

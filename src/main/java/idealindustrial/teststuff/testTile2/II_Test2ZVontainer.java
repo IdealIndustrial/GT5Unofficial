@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class II_Test2ZVontainer extends II_GenericContainer {
     public II_Test2ZVontainer(II_BaseMachineTile tile, EntityPlayer player) {
-        super(tile, player, true);
+        super(tile, player, true,true);
     }
 
     @Override

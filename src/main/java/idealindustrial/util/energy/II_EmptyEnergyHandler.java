@@ -14,6 +14,11 @@ public class II_EmptyEnergyHandler extends II_EnergyHandler {
     }
 
     @Override
+    public boolean isAlmostFull() {
+        return false;
+    }
+
+    @Override
     public void nbtSave(NBTTagCompound tag, String prefix) {
 
     }

@@ -1,8 +1,11 @@
 package idealindustrial.recipe;
 
+import idealindustrial.util.fluid.II_FluidHandler;
+import idealindustrial.util.inventory.II_RecipedInventory;
 import idealindustrial.util.item.II_HashedStack;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -13,10 +16,10 @@ public class II_BasicRecipe implements II_Recipe {
     protected II_StackSignature[] inputs;
     protected II_ItemStack[] outputs;
     protected FluidStack[] fluidInputs, fluidOutputs;
-    protected II_MachineEnergyParams params;
+    protected II_RecipeEnergyParams params;
 
 
-    public II_BasicRecipe(II_StackSignature[] inputs, II_ItemStack[] outputs, FluidStack[] fluidInputs, FluidStack[] fluidOutputs, II_MachineEnergyParams params) {
+    public II_BasicRecipe(II_StackSignature[] inputs, II_ItemStack[] outputs, FluidStack[] fluidInputs, FluidStack[] fluidOutputs, II_RecipeEnergyParams params) {
         this.inputs = inputs;
         this.outputs = outputs;
         this.fluidInputs = fluidInputs;
@@ -54,7 +57,37 @@ public class II_BasicRecipe implements II_Recipe {
     }
 
     @Override
-    public II_MachineEnergyParams recipeParams() {
+    public II_RecipeEnergyParams recipeParams() {
         return params;
+    }
+
+    @Override
+    public boolean isInputEqualStacks(II_RecipedInventory inventory, II_FluidHandler fluidInputs, boolean doConsume) {
+        for (II_StackSignature signature : inputs) {
+            if (inventory.hasMatch(signature)) {
+                if (doConsume) {
+                    inventory.extract(signature);
+                }
+            } else {
+                return false;
+            }
+        }
+        for (FluidStack fluid : fluidInputs) {
+            FluidStack st = fluidInputs.drain(ForgeDirection.UNKNOWN, fluid, false);
+            if (st == null || st.amount < fluid.amount) {
+                return false;
+            }
+            if (doConsume) {
+                fluidInputs.drain(ForgeDirection.UNKNOWN, fluid, true);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void optimize() {
+        for (II_StackSignature input : inputs) {
+            input.optimize();
+        }
     }
 }

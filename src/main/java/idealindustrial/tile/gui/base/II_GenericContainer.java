@@ -6,6 +6,7 @@ import gregtech.api.gui.GT_Slot_Output;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
+import idealindustrial.util.fluid.II_EmptyFluidRepresentation;
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.fluid.II_FluidHelper;
 import idealindustrial.util.fluid.II_FluidInventoryRepresentation;
@@ -21,7 +22,7 @@ public class II_GenericContainer extends Container {
 
     public II_BaseMachineTile tile;
     public EntityPlayer player;
-    public final boolean bindInventory;
+    public boolean bindInventory;
     public II_FluidInventoryRepresentation representation;
 
     @Override
@@ -29,13 +30,18 @@ public class II_GenericContainer extends Container {
         return player.getDistance(tile.getXCoord(), tile.getYCoord(), tile.getZCoord()) < 5d;
     }
 
-    public II_GenericContainer(II_BaseMachineTile tile, EntityPlayer player, boolean bindInventory) {
+    public II_GenericContainer(II_BaseMachineTile tile, EntityPlayer player, boolean addSlots, boolean bindInventory) {
         this.tile = tile;
         if (tile.hasFluidTank()) {
             representation = tile.getFluidRepresentation();
         }
+        else {
+            representation = II_EmptyFluidRepresentation.INSTANCE;
+        }
         this.player = player;
-        addSlots();
+        if (addSlots) {
+            addSlots();
+        }
         this.bindInventory = bindInventory;
         if (bindInventory) {
             bindPlayerInventory(player.inventory, 0, 0);

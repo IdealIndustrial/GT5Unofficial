@@ -20,6 +20,8 @@ import idealindustrial.loader.II_BlocksLoader;
 import idealindustrial.loader.II_ItemsLoader;
 import idealindustrial.itemgen.oredict.II_OredictHandler;
 import idealindustrial.loader.II_Render;
+import idealindustrial.recipe.II_RecipeMap;
+import idealindustrial.recipe.II_RecipeMaps;
 import idealindustrial.teststuff.RenderTest;
 import idealindustrial.teststuff.TestBlock;
 import idealindustrial.teststuff.TestTile;
@@ -133,6 +135,7 @@ public class II_Core {
         II_Materials.initMaterialLoops();
         autogen.init();
         II_OreDict.printAll(System.out);
+        II_RecipeMaps.optimize();
     }
 
     @Mod.EventHandler

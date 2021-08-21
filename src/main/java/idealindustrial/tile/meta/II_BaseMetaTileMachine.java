@@ -3,6 +3,7 @@ package idealindustrial.tile.meta;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.util.GT_Utility;
 import idealindustrial.render.II_CustomRenderer;
 import idealindustrial.tile.base.II_BaseMachineTileImpl;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
@@ -152,7 +153,8 @@ public abstract class II_BaseMetaTileMachine<BaseTileType extends II_BaseMachine
     @Override
     public boolean onSoftHammerClick(EntityPlayer player, ItemStack item, int side) {
         if (baseTile.isServerSide()) {
-            getBase().setActive(!getBase().isActive());
+            getBase().setAllowedToWork(!getBase().isAllowedToWork());
+            GT_Utility.sendChatToPlayer(player, "Processing " + (baseTile.isAllowedToWork() ? "Enabled" : "Disabled"));
         }
         return true;
     }

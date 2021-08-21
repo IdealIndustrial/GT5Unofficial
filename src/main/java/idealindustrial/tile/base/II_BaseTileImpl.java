@@ -364,12 +364,12 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     }
 
     @Override
-    public boolean allowedToWork() {
+    public boolean isAllowedToWork() {
         return allowedToWork;
     }
 
     @Override
-    public void allowWork(boolean allow) {
+    public void setAllowedToWork(boolean allow) {
         if (!allowedToWork && allow) {
             allowedToWork = true;
             onEnabled();
@@ -379,7 +379,9 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
 
     public void issueTextureUpdate() {
         rebakeMap();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 
     @Override

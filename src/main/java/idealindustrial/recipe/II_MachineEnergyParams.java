@@ -1,6 +1,6 @@
 package idealindustrial.recipe;
 
-import idealindustrial.util.misc.II_RecipedMachineStats;
+import idealindustrial.util.parameter.II_RecipedMachineStats;
 
 public class II_MachineEnergyParams {
 
@@ -21,8 +21,7 @@ public class II_MachineEnergyParams {
 
 
     public boolean areValid(II_MachineEnergyParams directMachineParams) {
-        return getClass() == directMachineParams.getClass() &&
-                directMachineParams.amperage >= amperage &&
+        return  directMachineParams.amperage >= amperage &&
                 directMachineParams.voltage >= voltage &&
                 directMachineParams.tier >= tier;
     }

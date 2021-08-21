@@ -5,7 +5,7 @@ import idealindustrial.recipe.II_BasicRecipe;
 import idealindustrial.recipe.II_RecipeMap;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;
-import idealindustrial.util.misc.II_RecipedMachineStats;
+import idealindustrial.util.parameter.II_RecipedMachineStats;
 
 public class II_MetaTileMachineRecipe extends II_BaseMetaTileMachineReciped<II_BaseMachineTile, II_BasicRecipe> {
 

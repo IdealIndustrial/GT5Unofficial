@@ -6,12 +6,14 @@ import idealindustrial.util.misc.Defaultable;
 import idealindustrial.util.misc.II_Util;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.Arrays;
+
 public abstract class II_RecipeBuilder<R extends II_Recipe> {
 
     protected Defaultable<II_StackSignature[]> inputs = II_Util.makeDefault(new II_StackSignature[0]);
     protected Defaultable<II_ItemStack[]> outputs = II_Util.makeDefault(new II_ItemStack[0]);
     protected Defaultable<FluidStack[]> fluidInputs = II_Util.makeDefault(new FluidStack[0]), fluidOutputs = II_Util.makeDefault(new FluidStack[0]);
-    protected Defaultable<II_MachineEnergyParams> machineParams = II_Util.makeDefault(new II_MachineEnergyParams(0, 0, 0));
+    protected Defaultable<II_RecipeEnergyParams> machineParams = II_Util.makeDefault(new II_RecipeEnergyParams( 0, 0, 20));
 
     public abstract R construct();
 
@@ -21,7 +23,10 @@ public abstract class II_RecipeBuilder<R extends II_Recipe> {
     }
 
     public II_RecipeBuilder<R> addOutputs(II_ItemStack... outputs) {
-        this.outputs.set(outputs);
+        this.outputs.set(Arrays.stream(outputs)
+                .map(is -> is instanceof II_StackSignature ? ((II_StackSignature) is).getAsStack() : is)
+                .toArray(II_ItemStack[]::new)
+        );
         return this;
     }
 
@@ -35,8 +40,8 @@ public abstract class II_RecipeBuilder<R extends II_Recipe> {
         return this;
     }
 
-    public II_RecipeBuilder<R> addEnergyValues(long usage, long duration) {
-        this.machineParams.set(new II_MachineEnergyParams(II_Util.getTier(usage), usage, duration));
+    public II_RecipeBuilder<R> addEnergyValues(long usage, long amperage, long duration) {
+        this.machineParams.set(new II_RecipeEnergyParams(usage, amperage, duration));
         return this;
     }
 

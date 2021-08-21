@@ -1,5 +1,7 @@
 package idealindustrial.recipe;
 
+import idealindustrial.util.fluid.II_FluidHandler;
+import idealindustrial.util.inventory.II_RecipedInventory;
 import idealindustrial.util.item.II_HashedStack;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;
@@ -20,5 +22,9 @@ public interface II_Recipe {
 
     FluidStack[] getFluidOutputs();
 
-    II_MachineEnergyParams recipeParams();
+    II_RecipeEnergyParams recipeParams();
+
+    boolean isInputEqualStacks(II_RecipedInventory inventory, II_FluidHandler fluidInputs, boolean doConsume);
+
+    void optimize();
 }

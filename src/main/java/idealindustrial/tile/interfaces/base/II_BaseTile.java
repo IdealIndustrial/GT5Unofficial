@@ -26,8 +26,8 @@ public interface II_BaseTile extends IUpdatableTileEntity, IHasWorldObjectAndCoo
 
     void receiveNeighbourIOConfigChange(IOType type);
 
-    boolean allowedToWork();
-    void allowWork(boolean allow);
+    boolean isAllowedToWork();
+    void setAllowedToWork(boolean allow);
     boolean isActive();
     void setActive(boolean active);
 

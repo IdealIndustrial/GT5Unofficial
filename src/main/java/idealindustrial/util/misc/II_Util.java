@@ -1,5 +1,6 @@
 package idealindustrial.util.misc;
 
+import com.google.common.collect.HashMultimap;
 import org.omg.CORBA.Object;
 import scala.Int;
 
@@ -23,6 +24,21 @@ public class II_Util {
         V[] values = (V[]) new Object[map.size()];//not using entries to save some performance
         int i = 0;
         for (Map.Entry<K, V> entry : map.entrySet()) {
+            keys[i] = entry.getKey();
+            values[i] = entry.getValue();
+            ++i;
+        }
+        map.clear();
+        for (int j = 0; j < i; j++) {
+            map.put(keys[j], values[j]);
+        }
+    }
+
+    public static <K, V> void rehash(HashMultimap<K, V> map) {
+        K[] keys = (K[]) new Object[map.size()];
+        V[] values = (V[]) new Object[map.size()];//not using entries to save some performance
+        int i = 0;
+        for (Map.Entry<K, V> entry : map.entries()) {
             keys[i] = entry.getKey();
             values[i] = entry.getValue();
             ++i;

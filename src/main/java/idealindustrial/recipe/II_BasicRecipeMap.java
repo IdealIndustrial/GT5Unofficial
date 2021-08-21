@@ -5,6 +5,7 @@ import idealindustrial.util.fluid.II_MultiFluidHandler;
 import idealindustrial.util.inventory.II_ArrayRecipedInventory;
 import idealindustrial.util.inventory.II_RecipedInventory;
 import idealindustrial.util.item.II_HashedStack;
+import idealindustrial.util.item.II_ItemHelper;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -21,11 +22,15 @@ public class II_BasicRecipeMap<R extends II_Recipe> implements II_RecipeMap<R> {
     protected boolean checkConflicts, allowNulls;
     protected Map<II_HashedStack, List<R>> map = new HashMap<>();
     protected List<R> allRecipes = new ArrayList<>();
+    protected II_RecipeGuiParams params;
+    protected Map<II_HashedStack, Set<R>> outputMap = II_ItemHelper.queryMap(new HashMap<>()), inputMap = II_ItemHelper.queryMap(new HashMap<>());
 
-    public II_BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls) {
+    public II_BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls, II_RecipeGuiParams guiParams) {
         this.name = name;
         this.checkConflicts = checkConflicts;
         this.allowNulls = allowNulls;
+        this.params = guiParams;
+        II_RecipeMaps.allRecipeMaps.add(this);
     }
 
     @Override
@@ -33,7 +38,7 @@ public class II_BasicRecipeMap<R extends II_Recipe> implements II_RecipeMap<R> {
         for (II_ItemStack stack : inventory) {
             if (map.containsKey(stack.toHashedStack())) {
                 for (R recipe : map.get(stack.toHashedStack())) {
-                    if (isInputEqualStacks(recipe, inventory, fluidHandler, false) && recipe.recipeParams().areValid(params)) {
+                    if (recipe.isInputEqualStacks(inventory, fluidHandler, false) && recipe.recipeParams().areValid(params)) {
                         return recipe;
                     }
                 }
@@ -42,27 +47,7 @@ public class II_BasicRecipeMap<R extends II_Recipe> implements II_RecipeMap<R> {
         return null;
     }
 
-    protected boolean isInputEqualStacks(II_Recipe recipe, II_RecipedInventory inventory, II_FluidHandler fluidInputs, boolean doConsume) {
-        for (II_StackSignature signature : recipe.getInputs()) {
-            if (inventory.hasMatch(signature)) {
-                if (doConsume) {
-                    inventory.extract(signature);
-                }
-            } else {
-                return false;
-            }
-        }
-        for (FluidStack fluid : recipe.getFluidInputs()) {
-            FluidStack st = fluidInputs.drain(ForgeDirection.UNKNOWN, fluid, false);
-            if (st == null || st.amount < fluid.amount) {
-                return false;
-            }
-            if (doConsume) {
-                fluidInputs.drain(ForgeDirection.UNKNOWN, fluid, true);
-            }
-        }
-        return true;
-    }
+
 
 
     protected R findRecipe(R recipe) {
@@ -85,12 +70,25 @@ public class II_BasicRecipeMap<R extends II_Recipe> implements II_RecipeMap<R> {
                 .allMatch(arr -> Arrays.stream(arr).noneMatch(Objects::isNull))) {
             throw new IllegalStateException("recipe contains null fluid or item");
         }
+        addToLists(recipe);
+        return true;
+
+    }
+
+    protected void addToLists(R recipe) {
         for (II_HashedStack stack : recipe.getAllPossibleInputs()) {
             map.computeIfAbsent(stack, s -> new ArrayList<>()).add(recipe);
         }
         allRecipes.add(recipe);
-        return true;
-
+        for (II_StackSignature signature : recipe.getInputs()) {
+            for (II_HashedStack stack : signature.correspondingStacks()) {
+                inputMap.computeIfAbsent(stack, s -> new HashSet<>()).add(recipe);
+            }
+        }
+        for (II_ItemStack signature : recipe.getOutputs()) {
+            II_HashedStack stack = signature.toHashedStack();
+            outputMap.computeIfAbsent(stack, s -> new HashSet<>()).add(recipe);
+        }
     }
 
     @Override
@@ -98,5 +96,41 @@ public class II_BasicRecipeMap<R extends II_Recipe> implements II_RecipeMap<R> {
         return allRecipes;
     }
 
+    @Override
+    public void optimize() {
+        for (II_Recipe recipe : allRecipes) {
+            recipe.optimize();
+        }
+    }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public II_RecipeGuiParams getGuiParams() {
+        return params;
+    }
+
+    @Override
+    public Set<R> getCraftingRecipes(II_StackSignature stackSignature) {
+        return loadRecipes(stackSignature, outputMap);
+    }
+
+    @Override
+    public Set<R> getUsageRecipes(II_StackSignature signature) {
+        return loadRecipes(signature, inputMap);
+    }
+
+    protected Set<R> loadRecipes(II_StackSignature signature, Map<II_HashedStack, Set<R>> inputMap) {
+        Set<R> out = new HashSet<>();
+        for (II_HashedStack stack : signature.correspondingStacks()) {
+            Set<R> toAdd = inputMap.get(stack);
+            if (toAdd != null) {
+                out.addAll(toAdd);
+            }
+        }
+        return out;
+    }
 }

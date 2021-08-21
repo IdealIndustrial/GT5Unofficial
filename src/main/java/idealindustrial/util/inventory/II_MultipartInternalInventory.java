@@ -53,6 +53,11 @@ public class II_MultipartInternalInventory implements II_InternalInventory {
     }
 
     @Override
+    public boolean canStore(II_ItemStack[] contents) {
+       throw new IllegalStateException("not implemented yet");
+    }
+
+    @Override
     @NotNull
     public Iterator<II_ItemStack> iterator() {
         return new Iterator<II_ItemStack>() {

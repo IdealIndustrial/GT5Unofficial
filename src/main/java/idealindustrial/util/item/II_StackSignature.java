@@ -75,7 +75,7 @@ public class II_StackSignature extends II_ItemStack {
             case DAMAGE:
                 return equalsIgnoreNBT(stack);
             case OREDICT:
-                return stack.def.hasOre(oreInfo.getName());
+                return stack.hasOre(oreInfo.getName());
         }
         throw new IllegalStateException("never thrown");
     }
@@ -91,5 +91,17 @@ public class II_StackSignature extends II_ItemStack {
 
     public II_OreInfo getOreInfo() {
         return oreInfo;
+    }
+
+    public II_ItemStack getAsStack() {
+        switch (type) {
+            case DIRECT:
+                return new II_ItemStack(this);
+            case DAMAGE:
+                return new II_ItemStack(def.getItem(), def.getDamageValue(), amount);
+            case OREDICT:
+                return new II_ItemStack(oreInfo.getMain().item, oreInfo.getMain().getDamage(), amount);
+        }
+        throw new IllegalStateException("never thrown");
     }
 }

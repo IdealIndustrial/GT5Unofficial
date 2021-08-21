@@ -21,12 +21,17 @@ public abstract class II_BasicEnergyHandler extends II_EnergyHandler {
 
     @Override
     public boolean drain(long energy, boolean doDrain) {
-        if (stored >= energy - minEnergyAmount) {
+        if (stored >= energy + minEnergyAmount) {
             if (doDrain) {
                 stored -= energy;
             }
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isAlmostFull() {
+        return maxCapacity - stored  < maxCapacity / 10;
     }
 }

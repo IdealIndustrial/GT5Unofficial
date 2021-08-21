@@ -1,8 +1,10 @@
-package idealindustrial.util.misc;
+package idealindustrial.util.parameter;
 
 import idealindustrial.util.fluid.II_FluidHandler;
 import idealindustrial.util.inventory.II_InternalInventory;
 import idealindustrial.util.inventory.II_RecipedInventory;
+import idealindustrial.util.misc.II_TileUtil;
+import idealindustrial.util.misc.II_Util;
 
 public class II_RecipedMachineStats {
 
@@ -41,6 +43,19 @@ public class II_RecipedMachineStats {
     public II_InternalInventory inventoryOut() {
         return II_TileUtil.constructInternalInventory(outSlots, stackSize);
     }
+
+    public int totalSlotsToRender() {
+        return inSlots + outSlots + fluidsIn + fluidsOut;
+    }
+
+    public int inventorySize() {
+        return inSlots + outSlots;
+    }
+
+    public int fluidInventorySize() {
+        return fluidsIn + fluidsOut;
+    }
+
 
 
 }

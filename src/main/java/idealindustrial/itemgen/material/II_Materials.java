@@ -20,6 +20,7 @@ public class II_Materials {
 
     public static final II_Material[] materialsK1 = new II_Material[1000];
     public static final List<II_Material> allMaterials = new ArrayList<>();
+    //elements
     public static II_Material iron;
 
     static {
@@ -27,6 +28,10 @@ public class II_Materials {
         init();
     }
     private static void init() {
+        initElements();
+    }
+
+    private static void initElements() {
         iron = make(0, "Iron")
                 .addSolid().addBlock(0, BlockType.METALLIC).setRender(new Color(100, 100, 100), TextureSet.SET_METALLIC)
                 .addFluid().setTemperature(1000).addCell().setRender(new Color(156, 2, 2))

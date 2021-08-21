@@ -4,6 +4,8 @@ package idealindustrial.util.item;
 import appeng.util.item.AESharedNBT;
 import appeng.util.item.II_Hackery;
 import cpw.mods.fml.common.registry.GameRegistry;
+import idealindustrial.itemgen.oredict.II_OreDict;
+import idealindustrial.itemgen.oredict.II_OreInfo;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,15 +38,14 @@ public class II_ItemStack {
         this.amount = amount;
     }
 
+
     protected II_ItemStack() {
 
     }
 
     protected II_ItemStack(II_ItemStack stack) {
-        this.def =  stack.def;
+        this.def =  stack.def.copy();
         this.amount = stack.amount;
-        this.cachedStack = stack.cachedStack;
-        this.cachedMCStack = stack.cachedMCStack;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class II_ItemStack {
         if (this == o) return true;
         if (o instanceof II_HashedStack) {
             II_HashedStack that = ((II_HashedStack) o);
-            return that.itemID == def.getItemID() && that.damage == def.getDamageValue();
+
         }
         if (o == null || getClass() != o.getClass()) return false;
         II_ItemStack that = (II_ItemStack) o;
@@ -61,6 +62,10 @@ public class II_ItemStack {
 
     public boolean equalsIgnoreNBT(II_ItemStack stack) {
         return def.getItemID() == stack.def.getItemID() && def.getDamageValue() == stack.def.getDamageValue();
+    }
+
+    public boolean equalsHashedStack(II_HashedStack stack) {
+        return stack.itemID == def.getItemID() && stack.damage == def.getDamageValue();
     }
 
     @Override
@@ -78,7 +83,16 @@ public class II_ItemStack {
     }
 
     public boolean hasOre(String ore) {
-        return def.hasOre(ore);
+        II_OreInfo oreInfo = II_OreDict.get(ore);
+        if (oreInfo == null) {
+            return false;
+        }
+        for (II_HashedStack stack : oreInfo.getSubItems()) {
+            if (equalsHashedStack(stack)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -121,5 +135,9 @@ public class II_ItemStack {
 
     public AESharedNBT getTagCompound() {
         return def.getTagCompound();
+    }
+
+    public II_ItemStack copy() {
+        return new II_ItemStack(this);
     }
 }

@@ -24,38 +24,21 @@ import appeng.util.Platform;
 import appeng.util.item.AESharedNBT;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * modified version of AEItemDef for GT proposes
  */
 public class ItemDef
 {
-
-	static final AESharedNBT LOW_TAG = new AESharedNBT( Integer.MIN_VALUE );
-	static final AESharedNBT HIGH_TAG = new AESharedNBT( Integer.MAX_VALUE );
-
 	private final int itemID;
 	private final Item item;
 	private int myHash;
 	private int def;
 	private int damageValue;
-	private int displayDamage;
-	private int maxDamage;
 	private AESharedNBT tagCompound;
-	private Set<String> ores;
-	@SideOnly( Side.CLIENT )
-	private String displayName;
-	@SideOnly( Side.CLIENT )
-	private List tooltip;
-	@SideOnly( Side.CLIENT )
 	private UniqueIdentifier uniqueID;
 
 	public ItemDef(final Item it )
@@ -69,8 +52,6 @@ public class ItemDef
 		final ItemDef t = new ItemDef( this.getItem() );
 		t.def = this.def;
 		t.setDamageValue( this.getDamageValue() );
-		t.setDisplayDamage( this.getDisplayDamage() );
-		t.setMaxDamage( this.getMaxDamage() );
 		t.setTagCompound( this.getTagCompound() );
 		return t;
 	}
@@ -150,37 +131,6 @@ public class ItemDef
 		return this.item;
 	}
 
-	int getDisplayDamage()
-	{
-		return this.displayDamage;
-	}
-
-	void setDisplayDamage( final int displayDamage )
-	{
-		this.displayDamage = displayDamage;
-	}
-
-	String getDisplayName()
-	{
-		return this.displayName;
-	}
-
-	void setDisplayName( final String displayName )
-	{
-		this.displayName = displayName;
-	}
-
-	List getTooltip()
-	{
-		return this.tooltip;
-	}
-
-	List setTooltip( final List tooltip )
-	{
-		this.tooltip = tooltip;
-		return tooltip;
-	}
-
 	UniqueIdentifier getUniqueID()
 	{
 		if (uniqueID == null) {
@@ -189,26 +139,11 @@ public class ItemDef
 		return this.uniqueID;
 	}
 
-	UniqueIdentifier setUniqueID( final UniqueIdentifier uniqueID )
-	{
-		this.uniqueID = uniqueID;
-		return uniqueID;
-	}
-
 	int getItemID()
 	{
 		return this.itemID;
 	}
 
-	int getMaxDamage()
-	{
-		return this.maxDamage;
-	}
-
-	void setMaxDamage( final int maxDamage )
-	{
-		this.maxDamage = maxDamage;
-	}
 
 	/**
 	 * TODO: Check if replaceable by hashCode();
@@ -218,9 +153,6 @@ public class ItemDef
 		return this.myHash;
 	}
 
-	boolean hasOre(String ore) {
-		return ores.contains(ore);
-	}
 
 
 

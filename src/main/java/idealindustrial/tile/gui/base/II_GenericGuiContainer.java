@@ -1,16 +1,17 @@
 package idealindustrial.tile.gui.base;
 
 import idealindustrial.tile.gui.base.component.II_Slot;
-import idealindustrial.tile.gui.base.component.II_Slots;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 
-public class II_GenericGuiContainer extends GuiContainer {
-    II_GenericContainer container;
-    ResourceLocation background;
+import static idealindustrial.tile.gui.base.component.II_GuiTextures.SLOTS;
 
-    public II_GenericGuiContainer(II_GenericContainer container, String background) {
+public class II_GenericGuiContainer<ContainerType extends II_GenericContainer> extends GuiContainer {
+    protected ContainerType container;
+    protected ResourceLocation background;
+
+    public II_GenericGuiContainer(ContainerType container, String background) {
         super(container);
         this.container = container;
         this.background = new ResourceLocation(background);
@@ -29,14 +30,14 @@ public class II_GenericGuiContainer extends GuiContainer {
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
-        Minecraft.getMinecraft().renderEngine.bindTexture(II_Slots.LOCATION);
+        Minecraft.getMinecraft().renderEngine.bindTexture(SLOTS.location());
         for (Object o : container.inventorySlots) {
             if (!(o instanceof II_Slot)) {
                 continue;
             }
             II_Slot slot = (II_Slot) o;
             int id = slot.texture;
-            int textureX = II_Slots.idToX(id), textureY = II_Slots.idToY(id);
+            int textureX = SLOTS.idToTextureX(id), textureY = SLOTS.idToTextureY(id);
             drawTexturedModalRect(slot.xDisplayPosition + x - 1, slot.yDisplayPosition + y - 1, textureX, textureY, 18, 18);
         }
 

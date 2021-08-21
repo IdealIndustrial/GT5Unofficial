@@ -35,6 +35,8 @@ public abstract class II_EnergyHandler implements II_NBTSerializable {
         return false;
     }
 
+    public abstract boolean isAlmostFull();
+
     @Override
     public void nbtLoad(NBTTagCompound tag, String prefix) {
         stored = tag.getLong(prefix + "stored");

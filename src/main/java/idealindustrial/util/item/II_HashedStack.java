@@ -57,8 +57,16 @@ public class II_HashedStack {
         return toIIStack(1);
     }
 
+    public ItemStack toItemStack(int amount) {
+        return new ItemStack(item, amount, damage);
+    }
+
     public int getDamage() {//untested, so todo: check
         return item.isDamageable() ? 0 : (hash & 0xFFFF0000) >>> 16;
+    }
+
+    public Item getItem() {
+        return item;
     }
 
     @Override

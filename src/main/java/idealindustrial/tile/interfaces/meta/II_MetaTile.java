@@ -82,7 +82,7 @@ public interface II_MetaTile<BaseTileType extends II_BaseTile> extends IUpdatabl
         return 64;
     }
 
-    default void onInInventoryModified() {
+    default void onInInventoryModified(int inventory) {
     }
 
     default boolean hasFluidTank() {
