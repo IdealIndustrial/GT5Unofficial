@@ -1,6 +1,5 @@
 package idealindustrial.itemgen.recipes;
 
-import com.google.gson.GsonBuilder;
 import idealindustrial.itemgen.material.II_Material;
 import scala.actors.threadpool.Arrays;
 
@@ -10,7 +9,7 @@ import java.util.Set;
 public abstract class II_AutogenRecipeAdder {
     public Set<AutogenRecipeDefinition> blackList = new HashSet<>();
 
-    private final AutogenRecipeDefinition definition = new AutogenRecipeDefinition(null, null);
+    private transient final AutogenRecipeDefinition definition = new AutogenRecipeDefinition(null, null);
 
     public boolean isBlackListed(II_Material material, RecipeAction action) {
         definition.material = material;

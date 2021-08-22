@@ -8,8 +8,7 @@ import idealindustrial.reflection.events.II_EventListener;
 import idealindustrial.tile.covers.II_CoverRegistry;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 import static idealindustrial.itemgen.material.II_MaterialBuilder.make;
@@ -55,6 +54,14 @@ public class II_Materials {
                 handler.registerExpected(prefix, material);
             }
         }
+    }
+
+    static Map<String, II_Material> nameToMaterial = new HashMap<>();
+    public static II_Material materialForName(String name) {
+        if (nameToMaterial.isEmpty()) {
+            II_Materials.allMaterials.forEach(m -> nameToMaterial.put(m.name().toLowerCase(), m));
+        }
+        return nameToMaterial.get(name);
     }
 
 

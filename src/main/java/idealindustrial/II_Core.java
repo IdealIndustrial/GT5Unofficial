@@ -40,6 +40,8 @@ import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 @Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false, dependencies = "after:gregtech")
 public class II_Core {
@@ -133,7 +135,7 @@ public class II_Core {
         II_Lang.pushLocalToMinecraft();
         oredictLoader.init();
         II_Materials.initMaterialLoops();
-        autogen.init();
+        initAutogenFromCore();
         II_OreDict.printAll(System.out);
         II_RecipeMaps.optimize();
     }
@@ -187,5 +189,10 @@ public class II_Core {
 
     public static String getVersion() {
         return version;
+    }
+
+    private void initAutogenFromCore() {
+        InputStream stream = II_Core.class.getResourceAsStream("autogen.json");
+        II_AutogenRecipes.loadAndInit(stream == null ? null : new InputStreamReader(stream));
     }
 }

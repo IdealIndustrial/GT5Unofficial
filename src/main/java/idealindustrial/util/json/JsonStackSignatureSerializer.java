@@ -24,7 +24,7 @@ public class JsonStackSignatureSerializer implements JsonSerializer<II_StackSign
         JsonObject object = json.getAsJsonObject();
         int amount = object.get("amount").getAsInt();
         if (object.has("material")) {
-            II_Material material = materialForName(object.get("material").getAsString());
+            II_Material material = II_Materials.materialForName(object.get("material").getAsString());
             Prefixes prefix = prefixForName(object.get("prefix").getAsString());
             return new II_StackSignature(II_OreDict.get(prefix, material), amount);
         }
@@ -51,13 +51,7 @@ public class JsonStackSignatureSerializer implements JsonSerializer<II_StackSign
     }
 
 
-    static Map<String, II_Material> nameToMaterial = new HashMap<>();
-    private II_Material materialForName(String name) {
-        if (nameToMaterial.isEmpty()) {
-            II_Materials.allMaterials.forEach(m -> nameToMaterial.put(m.name().toLowerCase(), m));
-        }
-        return nameToMaterial.get(name);
-    }
+
 
     private Prefixes prefixForName(String name) {
         return Prefixes.valueOf(name);
