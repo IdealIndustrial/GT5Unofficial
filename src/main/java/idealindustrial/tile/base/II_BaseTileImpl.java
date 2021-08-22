@@ -66,6 +66,8 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
             worldObj.setBlock(xCoord, yCoord, zCoord, Blocks.air);
         }
         super.writeToNBT(tag);
+        tag.setBoolean("allowWork", allowedToWork);
+        tag.setBoolean("active", active);
         tag.setIntArray("covers", coverIDs);
         II_StreamUtil.writeNBTLongArray(tag, coverValues, "coverValues");
         tag.setInteger("mID", metaTileID);
@@ -77,7 +79,8 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
         super.readFromNBT(tag);
         setInitialValuesAsNBT(tag.getInteger("mID"));
 
-
+        allowedToWork = tag.getBoolean("allowWork");
+        active = tag.getBoolean("active");
         coverIDs = tag.getIntArray("covers");
         for (int i = 0; i < coverIDs.length; i++) {
             if (coverIDs[i] != 0) {

@@ -30,12 +30,12 @@ public class II_InputEnergyHandler extends II_BasicEnergyHandler {
 
     @Override
     public void nbtSave(NBTTagCompound tag, String prefix) {
-
+        super.nbtSave(tag, prefix);
     }
 
     @Override
     public void nbtLoad(NBTTagCompound tag, String prefix) {
-
+        super.nbtLoad(tag, prefix);
     }
 
     @Override

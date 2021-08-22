@@ -1,25 +1,24 @@
 package idealindustrial.tile.meta.recipe;
 
 import gregtech.api.interfaces.ITexture;
+import idealindustrial.recipe.II_BasicRecipe;
 import idealindustrial.recipe.II_MachineEnergyParams;
 import idealindustrial.recipe.II_Recipe;
 import idealindustrial.recipe.II_RecipeMap;
 import idealindustrial.tile.gui.II_RecipedContainer;
 import idealindustrial.tile.gui.II_RecipedGuiContainer;
-import idealindustrial.tile.gui.base.component.II_GuiTextures.SlotTextures;
 import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
 import idealindustrial.tile.meta.II_BaseMetaTile_Facing2Main;
 import idealindustrial.util.energy.II_InputEnergyHandler;
 import idealindustrial.util.inventory.II_EmptyInventory;
-import idealindustrial.util.inventory.II_InternalInventory;
 import idealindustrial.util.inventory.II_RecipedInventory;
 import idealindustrial.util.item.II_ItemStack;
+import idealindustrial.util.json.II_JsonUtil;
 import idealindustrial.util.misc.II_Paths;
 import idealindustrial.util.parameter.II_RecipedMachineStats;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class II_BaseMetaTileMachineReciped<BaseTileType extends II_BaseMachineTile, RecipeType extends II_Recipe> extends II_BaseMetaTile_Facing2Main<BaseTileType> {
@@ -45,7 +44,6 @@ public abstract class II_BaseMetaTileMachineReciped<BaseTileType extends II_Base
         this.inventoryIn = stats.inventoryIn();
         this.inventoryOut = stats.inventoryOut();
         this.inventorySpecial = II_EmptyInventory.INSTANCE;
-        this.slotTextures = provideSlotTextures();
     }
 
     @Override
@@ -77,7 +75,9 @@ public abstract class II_BaseMetaTileMachineReciped<BaseTileType extends II_Base
         } else {
             if (endProcessing(recipe)) {
                 progress = maxProgress = usage = 0;
-                tryStartRecipe();
+                if (baseTile.isAllowedToWork()) {
+                    tryStartRecipe();
+                }
             }
         }
     }
@@ -142,18 +142,6 @@ public abstract class II_BaseMetaTileMachineReciped<BaseTileType extends II_Base
     }
 
 
-    protected int[] provideSlotTextures() {
-        int[] textures = new int[stats.totalSlotsToRender()];
-        for (int i = 0; i < stats.inventorySize(); i++) {
-            textures[i] = SlotTextures.SLOT_DEFAULT;
-        }
-        int fluidOffset = stats.inventorySize();
-        for (int i = 0; i < stats.fluidInventorySize(); i++) {
-            textures[i + fluidOffset] = SlotTextures.SLOT_FLUID_DEFAULT;
-        }
-        return textures;
-    }
-
     @Override
     public II_RecipedContainer getServerGUI(EntityPlayer player, int internalID) {
         return new II_RecipedContainer(baseTile, player, recipeMap.getGuiParams());
@@ -168,27 +156,62 @@ public abstract class II_BaseMetaTileMachineReciped<BaseTileType extends II_Base
     public void onInInventoryModified(int id) {
         if (id == 0) {
             inputUpdated = true;
-        }
-        else if (id == 1) {
+        } else if (id == 1) {
             outputUpdated = true;
         }
     }
 
     @Override
     public boolean onSoftHammerClick(EntityPlayer player, ItemStack item, int side) {
-         super.onSoftHammerClick(player, item, side);
-         if (baseTile.isAllowedToWork()) {
-             inputUpdated = true;
-         }
-         return true;
+        super.onSoftHammerClick(player, item, side);
+        if (baseTile.isAllowedToWork()) {
+            inputUpdated = true;
+        }
+        return true;
     }
 
     /**
      * value that represents the machine progress clamped between 0 and 20
      * used to render progress arrow on client
+     *
      * @return progress representation
      */
     public short getProgress() {
-        return (short) (20d * ((double)progress / maxProgress));
+        return (short) (20d * ((double) progress / maxProgress));
+    }
+
+    @Override
+    public NBTTagCompound saveToNBT(NBTTagCompound nbt) {
+        nbt.setLong("progress", progress);
+        if (recipe != null) {
+            nbt.setString("recipe", recipeToString(recipe));
+        }
+        return super.saveToNBT(nbt);
+    }
+
+    @Override
+    public void loadFromNBT(NBTTagCompound nbt) {
+        super.loadFromNBT(nbt);
+        progress = nbt.getLong("progress");
+        String recipe = nbt.getString("recipe");
+        if (!recipe.equals("")) {
+            this.recipe = recipeFromString(recipe);
+            setRecipe(this.recipe);
+        }
+    }
+
+    protected String recipeToString(RecipeType recipe) {
+        String str = II_JsonUtil.recipeDefaultGson.toJson(recipe);
+        System.out.println(str);
+        return str;
+    }
+
+    protected RecipeType recipeFromString(String recipe) {
+        return (RecipeType) II_JsonUtil.recipeDefaultGson.fromJson(recipe, II_BasicRecipe.class);
+    }
+
+    protected void setRecipe(RecipeType recipe) {
+        this.maxProgress = recipe.recipeParams().duration;
+        this.usage = recipe.recipeParams().voltage * recipe.recipeParams().amperage;
     }
 }
