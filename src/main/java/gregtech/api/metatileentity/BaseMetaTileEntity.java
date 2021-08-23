@@ -12,6 +12,7 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachin
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.net.GT_Packet_TileEntity;
 import gregtech.api.objects.GT_ItemStack;
+import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.*;
 import gregtech.common.GT_Pollution;
 import ic2.api.Direction;
@@ -20,6 +21,7 @@ import net.minecraft.block.BlockFire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,6 +35,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidBlock;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -59,13 +62,14 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     private byte[] mSidedRedstone = new byte[]{15, 15, 15, 15, 15, 15};
     private int[] mCoverSides = new int[]{0, 0, 0, 0, 0, 0}, mCoverData = new int[]{0, 0, 0, 0, 0, 0}, mTimeStatistics = new int[GregTech_API.TICKS_FOR_LAG_AVERAGING];
     private boolean mHasEnoughEnergy = true, mRunningThroughTick = false, mInputDisabled = false, mOutputDisabled = false, mMuffler = false, mLockUpgrade = false, mActive = false, mRedstone = false, mWorkUpdate = false, mSteamConverter = false, mInventoryChanged = false, mWorks = true, mNeedsUpdate = true, mNeedsBlockUpdate = true, mSendClientData = false, oRedstone = false;
-    private byte mColor = 0, oColor = 0, mStrongRedstone = 0, oRedstoneData = 63, oTextureData = 0, oUpdateData = 0, oTexturePage=0, oLightValueClient = -1, oLightValue = -1, mLightValue = 0, mOtherUpgrades = 0, mFacing = 0, oFacing = 0, mWorkData = 0;
+    private byte mColor = 0, oColor = 0, oStrongRedstone = 0, mStrongRedstone = 0, oRedstoneData = 63, oTextureData = 0, oUpdateData = 0, oTexturePage=0, oLightValueClient = -1, oLightValue = -1, mLightValue = 0, mOtherUpgrades = 0, mFacing = 0, oFacing = 0, mWorkData = 0;
     private int mDisplayErrorCode = 0, oX = 0, oY = 0, oZ = 0, mTimeStatisticsIndex = 0, mLagWarningCount = 0;
     private short mID = 0;
     private long mTickTimer = 0, oOutput = 0, mAcceptedAmperes = Long.MAX_VALUE;
     private String mOwnerName = "";
     private NBTTagCompound mRecipeStuff = new NBTTagCompound();
-    
+    public boolean mWaterProof = false;
+
     private static final Field ENTITY_ITEM_HEALTH_FIELD;
     static
     {
@@ -117,6 +121,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             aNBT.setBoolean("mActive", mActive);
             aNBT.setBoolean("mRedstone", mRedstone);
             aNBT.setBoolean("mWorks", !mWorks);
+            aNBT.setBoolean("mWaterProof", mWaterProof);
             aNBT.setBoolean("mInputDisabled", mInputDisabled);
             aNBT.setBoolean("mOutputDisabled", mOutputDisabled);
             aNBT.setTag("GT.CraftingComponents", mRecipeStuff);
@@ -189,6 +194,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             mCoverData = aNBT.getIntArray("mCoverData");
             mSidedRedstone = aNBT.getByteArray("mRedstoneSided");
             mRecipeStuff = aNBT.getCompoundTag("GT.CraftingComponents");
+            mWaterProof = aNBT.getBoolean("mWaterProof");
             int nbtVersion = aNBT.getInteger("nbtVersion");
             
             if (mCoverData.length != 6) mCoverData = new int[]{0, 0, 0, 0, 0, 0};
@@ -268,7 +274,6 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     @Override
     public void updateEntity() {
         super.updateEntity();
-
         if (!hasValidMetaTileEntity()) {
             if (mMetaTileEntity == null) return;
             mMetaTileEntity.setBaseMetaTileEntity(this);
@@ -294,6 +299,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                     dropCover(i, i, true);
                         worldObj.markTileEntityChunkModified(xCoord, yCoord, zCoord, this);
                         mMetaTileEntity.onFirstTick(this);
+                        if(aSideClient)
+                            rebakeMap();
                         if (!hasValidMetaTileEntity()) {
                             mRunningThroughTick = false;
                             return;
@@ -431,17 +438,26 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                     return;
                                 }
 
-                                if (getRandomNumber(1000) == 0) {
-                                    if ((getCoverIDAtSide((byte) 1) == 0 && worldObj.getPrecipitationHeight(xCoord, zCoord) - 2 < yCoord)
-                                            || (getCoverIDAtSide((byte) 2) == 0 && worldObj.getPrecipitationHeight(xCoord, zCoord - 1) - 1 < yCoord)
-                                            || (getCoverIDAtSide((byte) 3) == 0 && worldObj.getPrecipitationHeight(xCoord, zCoord + 1) - 1 < yCoord)
-                                            || (getCoverIDAtSide((byte) 4) == 0 && worldObj.getPrecipitationHeight(xCoord - 1, zCoord) - 1 < yCoord)
-                                            || (getCoverIDAtSide((byte) 5) == 0 && worldObj.getPrecipitationHeight(xCoord + 1, zCoord) - 1 < yCoord)) {
+                                if (!mWaterProof && !getMetaTileEntity().isWaterProofByDefault() && (mTickTimer&512) == 512 && getRandomNumber(10) == 0) {
+                                    if (Arrays.stream(new Block[]{
+                                            worldObj.getBlock(xCoord + 1, yCoord, zCoord), worldObj.getBlock(xCoord - 1, yCoord, zCoord),
+                                            worldObj.getBlock(xCoord, yCoord + 1, zCoord), 
+                                            worldObj.getBlock(xCoord, yCoord, zCoord + 1), worldObj.getBlock(xCoord, yCoord, zCoord - 1)})
+                                            .anyMatch( (Block b) -> b == Blocks.water || b == Blocks.flowing_water || b == Blocks.lava || b == Blocks.flowing_lava || b instanceof IFluidBlock)) {
+                                        doEnergyExplosion();
+                                    }
+                                    if (worldObj.getPrecipitationHeight(xCoord, zCoord) - 2 < yCoord
+                                            || worldObj.getPrecipitationHeight(xCoord, zCoord - 1) - 1 < yCoord
+                                            || worldObj.getPrecipitationHeight(xCoord, zCoord + 1) - 1 < yCoord
+                                            || worldObj.getPrecipitationHeight(xCoord - 1, zCoord) - 1 < yCoord
+                                            || worldObj.getPrecipitationHeight(xCoord + 1, zCoord) - 1 < yCoord) {
                                         if (GregTech_API.sMachineRainExplosions && worldObj.isRaining() && getBiome().rainfall > 0) {
                                             if (getRandomNumber(10) == 0) {
                                                 try{GT_Mod.instance.achievements.issueAchievement(this.getWorldObj().getPlayerEntityByName(mOwnerName), "badweather");}catch(Exception e){}
                                                 doEnergyExplosion();
-                                            } else setOnFire();
+                                            } else {
+                                                setOnFire();
+                                            }
                                         }
                                         if (!hasValidMetaTileEntity()) {
                                             mRunningThroughTick = false;
@@ -472,11 +488,13 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                        if((getStoredEU() + ic2.api.info.Info.itemEnergy.getEnergyValue(mMetaTileEntity.mInventory[i]))<getEUCapacity()){
                                            increaseStoredEnergyUnits((long)ic2.api.info.Info.itemEnergy.getEnergyValue(mMetaTileEntity.mInventory[i]),false);
                                            mMetaTileEntity.mInventory[i].stackSize--;
+					   mInventoryChanged = true;    
                                        }
                                     }
-                                    if (mMetaTileEntity.mInventory[i].stackSize <= 0)
+                                    if (mMetaTileEntity.mInventory[i].stackSize <= 0) {
                                         mMetaTileEntity.mInventory[i] = null;
-                                    mInventoryChanged = true;
+                                        mInventoryChanged = true;
+                                    }
                                 }
                             }
                         }
@@ -488,9 +506,10 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                             for (int i = mMetaTileEntity.rechargerSlotStartIndex(), k = mMetaTileEntity.rechargerSlotCount() + i; i < k; i++) {
                                 if (getStoredEU() > 0 && mMetaTileEntity.mInventory[i] != null) {
                                     chargeItem(mMetaTileEntity.mInventory[i]);
-                                    if (mMetaTileEntity.mInventory[i].stackSize <= 0)
+                                        if (mMetaTileEntity.mInventory[i].stackSize <= 0) {
                                         mMetaTileEntity.mInventory[i] = null;
-                                    mInventoryChanged = true;
+                                        mInventoryChanged = true;
+                                    }
                                 }
                             }
                         }
@@ -521,8 +540,9 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                                 oTexturePage = (hasValidMetaTileEntity() && mMetaTileEntity instanceof GT_MetaTileEntity_Hatch) ? ((GT_MetaTileEntity_Hatch) mMetaTileEntity).getTexturePage() : 0,
                                                 oUpdateData = hasValidMetaTileEntity() ? mMetaTileEntity.getUpdateData() : 0,
                                                 oRedstoneData = (byte) (((mSidedRedstone[0] > 0) ? 1 : 0) | ((mSidedRedstone[1] > 0) ? 2 : 0) | ((mSidedRedstone[2] > 0) ? 4 : 0) | ((mSidedRedstone[3] > 0) ? 8 : 0) | ((mSidedRedstone[4] > 0) ? 16 : 0) | ((mSidedRedstone[5] > 0) ? 32 : 0)),
-                                                oColor = mColor), 
+                                                oColor = mColor, mWaterProof),
                                         xCoord, zCoord);
+                                mMetaTileEntity.sendClientData();
                                 mSendClientData = false;
                             }
                         }
@@ -555,7 +575,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                         }
 
                         if (mNeedsBlockUpdate) {
-                            worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockOffset(0, 0, 0));
+                            updateNeighbours(mStrongRedstone, oStrongRedstone);
+                            oStrongRedstone = mStrongRedstone;
                             mNeedsBlockUpdate = false;
                         }
                     }
@@ -585,7 +606,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         return null;
     }
 
-    public final void receiveMetaTileEntityData(short aID, int aCover0, int aCover1, int aCover2, int aCover3, int aCover4, int aCover5, byte aTextureData, byte aTexturePage, byte aUpdateData, byte aRedstoneData, byte aColorData) {
+    public final void receiveMetaTileEntityData(short aID, int aCover0, int aCover1, int aCover2, int aCover3, int aCover4, int aCover5, byte aTextureData, byte aTexturePage, byte aUpdateData, byte aRedstoneData, byte aColorData, boolean aWaterProof) {
         issueTextureUpdate();
         if (mID != aID && aID > 0) {
             mID = aID;
@@ -606,6 +627,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         receiveClientEvent(1, aTexturePage | 0x80);
         receiveClientEvent(2, aColorData);
         receiveClientEvent(3, aRedstoneData);
+        mWaterProof = aWaterProof;
+        rebakeMap();
     }
 
     @Deprecated
@@ -630,6 +653,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         receiveClientEvent(1, 0x80);
         receiveClientEvent(2, aColorData);
         receiveClientEvent(3, aRedstoneData);
+        rebakeMap();
     }
 
     @Override
@@ -652,7 +676,10 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             issueTextureUpdate();
             switch (aEventID) {
                 case 0:
-                    mFacing = (byte) (aValue & 7);
+                    if(mFacing!= (aValue&7)) {
+                        mFacing = (byte) (aValue & 7);
+                        rebakeMap();
+                    }
                     mActive = ((aValue & 8) != 0);
                     mRedstone = ((aValue & 16) != 0);
 				    //mLockUpgrade	= ((aValue&32) != 0);
@@ -663,6 +690,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                             mMetaTileEntity.onValueUpdate((byte) (aValue & 0x7F));
                         else if (mMetaTileEntity instanceof GT_MetaTileEntity_Hatch)//is texture page and hatch
                                 ((GT_MetaTileEntity_Hatch) mMetaTileEntity).onTexturePageUpdate((byte) (aValue & 0x7F));
+                        rebakeMap();
                     }
                     break;
                 case 2:
@@ -691,6 +719,10 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                     break;
                 case 7:
                     mLightValue = (byte) aValue;
+                    break;
+                case 8:
+                    mWaterProof = aValue == 1;
+                    rebakeMap();
                     break;
             }
         }
@@ -744,6 +776,12 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     @Override
+    public void receiveCoverData(byte coverSide, int coverID, int coverData) {
+        if ((coverSide >= 0 && coverSide < 6) && (mCoverSides[coverSide] == coverID))
+            setCoverDataAtSide(coverSide, coverData);
+    }
+
+    @Override
     public byte getStrongestRedstone() {
         return (byte) Math.max(getInternalInputRedstoneSignal((byte) 0), Math.max(getInternalInputRedstoneSignal((byte) 1), Math.max(getInternalInputRedstoneSignal((byte) 2), Math.max(getInternalInputRedstoneSignal((byte) 3), Math.max(getInternalInputRedstoneSignal((byte) 4), getInternalInputRedstoneSignal((byte) 5))))));
     }
@@ -788,6 +826,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     public void setFrontFacing(byte aFacing) {
         if (isValidFacing(aFacing)) {
             mFacing = aFacing;
+            if(isClientSide())
+                rebakeMap();
             mMetaTileEntity.onFacingChange();
             onMachineBlockUpdate();
         }
@@ -1079,9 +1119,116 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     public ITexture[] getTexture(Block aBlock, byte aSide) {
         if(getCoverIDAtSide(aSide)!=0)
             return new ITexture[]{getCoverTexture(aSide)};
-        if (hasValidMetaTileEntity())
-            return mMetaTileEntity.getTexture(this, aSide, mFacing, (byte) (mColor - 1), mActive, getOutputRedstoneSignal(aSide) > 0);
+        if (hasValidMetaTileEntity()) {
+            if(mWaterProof){
+                ITexture[] textures = mMetaTileEntity.getTexture(this, aSide, mFacing, (byte) (mColor - 1), mActive, getOutputRedstoneSignal(aSide) > 0);
+                ITexture[] out = new ITexture[textures.length+1];
+                System.arraycopy(textures,0,out,0,textures.length);
+                out[out.length-1] = new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_WATERPROOF);
+                return out;
+            }
+            else {
+                return mMetaTileEntity.getTexture(this, aSide, mFacing, (byte) (mColor - 1), mActive, getOutputRedstoneSignal(aSide) > 0);
+            }
+        }
         return Textures.BlockIcons.ERROR_RENDERING;
+    }
+
+    @Override
+    public ITexture[][] getTextures() {
+        return mTextures[mActive?1:0][mColor];
+    }
+
+    private static final int[] EMPTY = new int[]{0,0,0,0,0,0};
+
+    @Override
+    public ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers) {
+        ITexture[][] tOut = new ITexture[6][];
+        boolean cActive = mActive, cWaterProof = mWaterProof;
+        mActive = aActive;
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        byte cColorIndex= mColor, cFacing = mFacing;
+        int[] cCoverSides = mCoverSides, cCoverData = mCoverData;
+        mFacing = aFacing;
+        if (tNBT != null) {
+            mColor = tNBT.getByte("mColor");
+            mCoverSides = tNBT.getIntArray("mCoverSides");
+            mCoverData = tNBT.getIntArray("mCoverData");
+            mWaterProof = tNBT.getBoolean("mWaterProof");
+        }
+        if (mCoverSides.length == 0) {
+            mCoverSides = EMPTY;
+            mCoverData = EMPTY;
+        }
+        else {
+            mCoverSides = mCoverSides.clone();
+            mCoverData = mCoverData.clone();
+        }
+
+        if (placeCovers) {
+            mCoverSides[mFacing + 1] = mCoverSides[mFacing];
+            mCoverSides[mFacing] = 0;
+            int cover = 0;
+            for (byte i = 2; i < 6; i++) {
+                if (i == aFacing)
+                    continue;
+                if (mCoverSides[i] != 0) {
+                    cover = mCoverSides[i];
+                    break;
+                }
+            }
+            mCoverSides[3] = cover;
+        }
+        else {
+            for(int i = 2; i < 6; i++) {
+                if(mCoverSides[i] == 0){
+                    mFacing = (byte)i;
+                    break;
+                }
+            }
+        }
+
+
+        for (byte i = 0; i < 6; i++) {
+            tOut[i] = getTexture(null, i);
+        }
+        mFacing = cFacing;
+        mActive = cActive;
+        mColor = cColorIndex;
+        mWaterProof = cWaterProof;
+        mCoverSides = cCoverSides;
+        mCoverData = cCoverData;
+        return tOut;
+    }
+
+    @Override
+    public ITexture[][] getTextures(boolean tCovered) {
+        return getTextures();
+    }
+
+    public ITexture[][][][] mTextures = new ITexture[2][17][6][];
+
+    public void bakeTextureMap(){
+        Block b = worldObj.getBlock(xCoord,yCoord,zCoord);
+        byte q = mColor;
+        boolean a = mActive;
+        for(int s = 0; s < 2; s++) {
+            mActive = s == 1;
+            for (byte c = 0; c < 17; c++) {
+                mColor = c;
+                for (byte i = 0; i < 6; i++) {
+                    mTextures[s][c][i] = getTexture(b, i);
+                }
+            }
+        }
+        mColor = q;
+        mActive = a;
+    }
+
+    @Override
+    public void rebakeMap() {
+        mTextures = new ITexture[2][17][6][];
+        bakeTextureMap();
     }
 
     private boolean isEnergyInputSide(byte aSide) {
@@ -1106,7 +1253,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         return false;
     }
 
-    protected boolean hasValidMetaTileEntity() {
+    protected boolean hasValidMetaTileEntity() { //definitely overused method
         return mMetaTileEntity != null && mMetaTileEntity.getBaseMetaTileEntity() == this;
     }
 
@@ -1242,6 +1389,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         if (mColor > 0) tNBT.setByte("mColor", mColor);
         if (mOtherUpgrades > 0) tNBT.setByte("mOtherUpgrades", mOtherUpgrades);
         if (mStrongRedstone > 0) tNBT.setByte("mStrongRedstone", mStrongRedstone);
+        if (mWaterProof) tNBT.setBoolean("mWaterProof", mWaterProof);
         for (byte i = 0; i < mCoverSides.length; i++) {
             if (mCoverSides[i] != 0) {
                 tNBT.setIntArray("mCoverData", mCoverData);
@@ -1261,7 +1409,13 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     @Override
     public boolean onRightclick(EntityPlayer aPlayer, byte aSide, float aX, float aY, float aZ) {
         if (isClientSide()) {
-            if (getCoverBehaviorAtSide(aSide).onCoverRightclickClient(aSide, this, aPlayer, aX, aY, aZ)) return true;
+            //Configure Cover, sneak can also be: screwdriver, wrench, side cutter, soldering iron
+            if (aPlayer.isSneaking()) {
+                byte tSide = (getCoverIDAtSide(aSide) == 0) ? GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ) : aSide;
+                return (getCoverBehaviorAtSide(tSide).hasCoverGUI());
+            } else if (getCoverBehaviorAtSide(aSide).onCoverRightclickClient(aSide, this, aPlayer, aX, aY, aZ)) {
+                return true;
+            }
             if (!getCoverBehaviorAtSide(aSide).isGUIClickable(aSide, getCoverIDAtSide(aSide), getCoverDataAtSide(aSide), this))
                 return false;
         }
@@ -1269,11 +1423,11 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             if (!privateAccess() || aPlayer.getDisplayName().equalsIgnoreCase(getOwnerName())) {
                 ItemStack tCurrentItem = aPlayer.inventory.getCurrentItem();
                 if (tCurrentItem != null) {
-                    if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
-                        tCurrentItem.func_150996_a(Items.bucket);
-                        setColorization((byte) (getColorization() >= 16 ? -2 : -1));
-                        return true;
-                    }
+//                    if (getColorization() >= 0 && GT_Utility.areStacksEqual(new ItemStack(Items.water_bucket, 1), tCurrentItem)) {
+//                        tCurrentItem.func_150996_a(Items.bucket);
+//                        setColorization((byte) (getColorization() >= 16 ? -2 : -1));
+//                        return true;
+//                    }
                     if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWrenchList)) {
                     	if(aPlayer.isSneaking() && mMetaTileEntity instanceof GT_MetaTileEntity_BasicMachine && ((GT_MetaTileEntity_BasicMachine)mMetaTileEntity).setMainFacing(GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ))){
                             GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 1000, aPlayer);
@@ -1307,11 +1461,13 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                     if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sSoftHammerList)) {
                         if (GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 1000, aPlayer)) {
                             if (mWorks) disableWorking();
-                            else enableWorking();{
-                            	String tChat = trans("090","Machine Processing: ") + (isAllowedToWork() ? trans("088","Enabled") : trans("087","Disabled"));
-                            	if(getMetaTileEntity() !=null && getMetaTileEntity().hasAlternativeModeText())
-                            		tChat = getMetaTileEntity().getAlternativeModeText();
-                            GT_Utility.sendChatToPlayer(aPlayer, tChat);}
+                            else enableWorking();
+                            {
+                                String tChat = trans("090", "Machine Processing: ") + (isAllowedToWork() ? trans("088", "Enabled") : trans("087", "Disabled"));
+                                if (getMetaTileEntity() != null && getMetaTileEntity().hasAlternativeModeText())
+                                    tChat = getMetaTileEntity().getAlternativeModeText();
+                                GT_Utility.sendChatToPlayer(aPlayer, tChat);
+                            }
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(101), 1.0F, -1, xCoord, yCoord, zCoord);
                         }
                         return true;
@@ -1326,7 +1482,8 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                             mStrongRedstone ^= (1 << tSide);
                             GT_Utility.sendChatToPlayer(aPlayer, trans("091","Redstone Output at Side ") + tSide + trans("092"," set to: ") + ((mStrongRedstone & (1 << tSide)) != 0 ? trans("093","Strong") : trans("094","Weak")));
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(103), 3.0F, -1, xCoord, yCoord, zCoord);
-                        } 
+                            issueBlockUpdate();
+                        }
                         return true;
                     }
                     
@@ -1339,10 +1496,11 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                         return true;
                     }
 
-                    if (getCoverIDAtSide(aSide) == 0) {
+                    byte tSide = GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ);
+                    if (getCoverIDAtSide(tSide) == 0) {
                         if (GregTech_API.sCovers.containsKey(new GT_ItemStack(tCurrentItem))) {
-                            if (GregTech_API.getCoverBehavior(tCurrentItem).isCoverPlaceable(aSide, new GT_ItemStack(tCurrentItem), this) && mMetaTileEntity.allowCoverOnSide(aSide, new GT_ItemStack(tCurrentItem))) {
-                                setCoverItemAtSide(aSide, tCurrentItem);
+                            if (GregTech_API.getCoverBehavior(tCurrentItem).isCoverPlaceable(tSide, new GT_ItemStack(tCurrentItem), this) && mMetaTileEntity.allowCoverOnSide(tSide, new GT_ItemStack(tCurrentItem))) {
+                                setCoverItemAtSide(tSide, tCurrentItem);
                                 if (!aPlayer.capabilities.isCreativeMode) tCurrentItem.stackSize--;
                                 GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(100), 1.0F, -1, xCoord, yCoord, zCoord);
                             }
@@ -1352,11 +1510,14 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                         if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sCrowbarList)) {
                             if (GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 1000, aPlayer)) {
                                 GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(0), 1.0F, -1, xCoord, yCoord, zCoord);
-                                dropCover(aSide, aSide, false);
+                                dropCover(tSide, aSide, false);
                             }
                             return true;
                         }
                     }
+                } else if (aPlayer.isSneaking()) { //Sneak click, no tool -> open cover config if possible.
+                    aSide = (getCoverIDAtSide(aSide) == 0) ? GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ) : aSide;
+                    return getCoverIDAtSide(aSide) > 0 && getCoverBehaviorAtSide(aSide).onCoverShiftRightclick(aSide, getCoverIDAtSide(aSide), getCoverDataAtSide(aSide), this, aPlayer);
                 }
 
                 if (getCoverBehaviorAtSide(aSide).onCoverRightclick(aSide, getCoverIDAtSide(aSide), getCoverDataAtSide(aSide), this, aPlayer, aX, aY, aZ))
@@ -1365,14 +1526,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                 if (!getCoverBehaviorAtSide(aSide).isGUIClickable(aSide, getCoverIDAtSide(aSide), getCoverDataAtSide(aSide), this))
                     return false;
 
-                if (isUpgradable() && aPlayer.inventory.getCurrentItem() != null) {/*
-                    if (ItemList.Upgrade_SteamEngine.isStackEqual(aPlayer.inventory.getCurrentItem())) {
-						if (addSteamEngineUpgrade()) {
-							GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(3), 1.0F, -1, xCoord, yCoord, zCoord);
-							if (!aPlayer.capabilities.isCreativeMode) aPlayer.inventory.getCurrentItem().stackSize--;
-						}
-						return true;
-					}*/
+                if (isUpgradable() && tCurrentItem != null) {
                     if (ItemList.Upgrade_Muffler.isStackEqual(aPlayer.inventory.getCurrentItem())) {
                         if (addMufflerUpgrade()) {
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(3), 1.0F, -1, xCoord, yCoord, zCoord);
@@ -1394,13 +1548,13 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         }
 
         try {
-            if (hasValidMetaTileEntity()) return mMetaTileEntity.onRightclick(this, aPlayer, aSide, aX, aY, aZ);
+            if (!aPlayer.isSneaking() && hasValidMetaTileEntity()) return mMetaTileEntity.onRightclick(this, aPlayer, aSide, aX, aY, aZ);
         } catch (Throwable e) {
-            GT_Log.err.println("Encountered Exception while rightclicking TileEntity, the Game should've crashed now, but I prevented that. Please report immidietly to GregTech Intergalactical!!!");
+            GT_Log.err.println("Encountered Exception while rightclicking TileEntity, the Game should've crashed now, but I prevented that. Please report immediately  to GregTech Intergalactical!!!");
             e.printStackTrace(GT_Log.err);
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -1482,7 +1636,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     @Override
-    public byte getInputRedstoneSignal(byte aSide) {
+    public byte getInputRedstoneSignal(byte aSide) { //why this thing is checked every tick everywhere??
         return (byte) (worldObj.getIndirectPowerLevelTo(getOffsetX(aSide, 1), getOffsetY(aSide, 1), getOffsetZ(aSide, 1), aSide) & 15);
     }
 

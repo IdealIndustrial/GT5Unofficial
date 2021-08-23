@@ -15,6 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class GT_MetaTileEntity_Replicator
@@ -41,37 +43,50 @@ public class GT_MetaTileEntity_Replicator
         FluidStack tFluid = getFillableStack();
         if ((tFluid != null) && (tFluid.isFluidEqual(Materials.UUMatter.getFluid(1L)))) {
             ItemStack tDataOrb = getSpecialSlot();
-            if ((ItemList.Tool_DataOrb.isStackEqual(tDataOrb, false, true)) && (Behaviour_DataOrb.getDataTitle(tDataOrb).equals("Elemental-Scan"))) {
-                Materials tMaterial = (Materials) Element.get(Behaviour_DataOrb.getDataName(tDataOrb)).mLinkedMaterials.get(0);
-                long tMass = tMaterial.getMass();
-                if ((tFluid.amount >= tMass) && (tMass > 0L)) {
-                    this.mEUt = ((int) gregtech.api.enums.GT_Values.V[this.mTier]);
-                    this.mMaxProgresstime = ((int) (tMass * 512L / (1 << this.mTier - 1)));
-                    if ((this.mOutputItems[0] = GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial, 1L)) == null) {
-                        if ((this.mOutputItems[0] = GT_OreDictUnificator.get(OrePrefixes.cell, tMaterial, 1L)) != null) {
-                            if ((this.mOutputFluid = GT_Utility.getFluidForFilledItem(this.mOutputItems[0], true)) == null) {
-                                if (ItemList.Cell_Empty.isStackEqual(getInputAt(0))) {
-                                    if (canOutput(new ItemStack[]{this.mOutputItems[0]})) {
-                                        getInputAt(0).stackSize -= 1;
-                                        FluidStack
-                                                tmp231_230 = tFluid;
-                                        tmp231_230.amount = ((int) (tmp231_230.amount - tMass));
+            if ((ItemList.Tool_DataOrb.isStackEqual(tDataOrb, false, true))) {
+                if (Behaviour_DataOrb.getDataTitle(tDataOrb).equals("Elemental-Scan")) {
+                    Materials tMaterial = (Materials) Element.get(Behaviour_DataOrb.getDataName(tDataOrb)).mLinkedMaterials.get(0);
+                    long tMass = tMaterial.getMass();
+                    if ((tFluid.amount >= tMass) && (tMass > 0L)) {
+                        this.mEUt = ((int) gregtech.api.enums.GT_Values.V[this.mTier]);
+                        this.mMaxProgresstime = ((int) (tMass * 512L / (1 << this.mTier - 1)));
+                        if ((this.mOutputItems[0] = GT_OreDictUnificator.get(OrePrefixes.dust, tMaterial, 1L)) == null) {
+                            if ((this.mOutputItems[0] = GT_OreDictUnificator.get(OrePrefixes.cell, tMaterial, 1L)) != null) {
+                                if ((this.mOutputFluid = GT_Utility.getFluidForFilledItem(this.mOutputItems[0], true)) == null) {
+                                    if (ItemList.Cell_Empty.isStackEqual(getInputAt(0))) {
+                                        if (canOutput(new ItemStack[]{this.mOutputItems[0]})) {
+                                            getInputAt(0).stackSize -= 1;
+                                            FluidStack
+                                                    tmp231_230 = tFluid;
+                                            tmp231_230.amount = ((int) (tmp231_230.amount - tMass));
+                                            return 2;
+                                        }
+                                    }
+                                } else {
+                                    this.mOutputItems[0] = null;
+                                    if ((getDrainableStack() == null) || ((getDrainableStack().isFluidEqual(this.mOutputFluid)) && (getDrainableStack().amount < 16000))) {
+                                        FluidStack tmp287_286 = tFluid;
+                                        tmp287_286.amount = ((int) (tmp287_286.amount - tMass));
                                         return 2;
                                     }
                                 }
-                            } else {
-                                this.mOutputItems[0] = null;
-                                if ((getDrainableStack() == null) || ((getDrainableStack().isFluidEqual(this.mOutputFluid)) && (getDrainableStack().amount < 16000))) {
-                                    FluidStack tmp287_286 = tFluid;
-                                    tmp287_286.amount = ((int) (tmp287_286.amount - tMass));
-                                    return 2;
-                                }
                             }
+                        } else if (canOutput(new ItemStack[]{this.mOutputItems[0]})) {
+                            FluidStack tmp322_321 = tFluid;
+                            tmp322_321.amount = ((int) (tmp322_321.amount - tMass));
+                            return 2;
                         }
-                    } else if (canOutput(new ItemStack[]{this.mOutputItems[0]})) {
-                        FluidStack tmp322_321 = tFluid;
-                        tmp322_321.amount = ((int) (tmp322_321.amount - tMass));
-                        return 2;
+                    }
+                }
+                else if (Behaviour_DataOrb.getDataTitle(tDataOrb).equals("Substance-Scan")) {
+                    GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sReplicatorRecipes.get(Behaviour_DataOrb.getDataID(tDataOrb));
+                    if (tRecipe != null) {
+                        if (tFluid.amount >= tRecipe.mFluidInputs[0].amount) {
+                            mOutputItems[0] = tRecipe.mOutputs[0];
+                            tFluid.amount -= tRecipe.mFluidInputs[0].amount;
+                            calculateOverclockedNess(tRecipe.mEUt, tRecipe.mDuration);
+                            return 2;
+                        }
                     }
                 }
             }

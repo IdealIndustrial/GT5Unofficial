@@ -219,10 +219,10 @@ public class GT_NEI_AssLineHandler
         String[] recipeDesc = ((CachedDefaultRecipe) this.arecipes.get(aRecipeIndex)).mRecipe.getNeiDesc();
         if (recipeDesc == null) {
             if (tEUt != 0) {
-                drawText(10, 73, trans("152","Total: ") + NumberFormat.getNumberInstance().format((long)tDuration * tEUt) + " EU", -16777216);
-                drawText(10, 83, trans("153","Usage: ") + NumberFormat.getNumberInstance().format(tEUt) + " EU/t", -16777216);
+                drawText(10, 73, trans("152","Total: ") + GT_Utility.formatNumbers((long)tDuration * tEUt) + " EU", -16777216);
+                drawText(10, 83, trans("153","Usage: ") + GT_Utility.formatNumbers(tEUt) + " EU/t", -16777216);
                 if (this.mRecipeMap.mShowVoltageAmperageInNEI) {
-                    drawText(10, 93, trans("154","Voltage: ") + NumberFormat.getNumberInstance().format(tEUt / this.mRecipeMap.mAmperage) + " EU", -16777216);
+                    drawText(10, 93, trans("154","Voltage: ") + GT_Utility.formatNumbers(tEUt / this.mRecipeMap.mAmperage) + " EU", -16777216);
                     drawText(10, 103, trans("155","Amperage: ") + this.mRecipeMap.mAmperage, -16777216);
                 } else {
                     drawText(10, 93, trans("156","Voltage: unspecified"), -16777216);
@@ -230,7 +230,7 @@ public class GT_NEI_AssLineHandler
                 }
             }
             if (tDuration > 0) {
-                drawText(10, 113, trans("158","Time: ")+String.format("%.2f " + trans("161"," secs"), 0.05F * tDuration), -16777216);
+                drawText(10, 113, trans("158","Time: ") + GT_Utility.formatNumbers(0.05F * tDuration) + trans("161"," secs"), -16777216);
             }
             int tSpecial = ((CachedDefaultRecipe) this.arecipes.get(aRecipeIndex)).mRecipe.mSpecialValue;
             if (tSpecial == -100 && GT_Mod.gregtechproxy.mLowGravProcessing) {
@@ -238,7 +238,7 @@ public class GT_NEI_AssLineHandler
             } else if (tSpecial == -200 && GT_Mod.gregtechproxy.mEnableCleanroom) {
                 drawText(10, 123, trans("160","Needs Cleanroom"), -16777216);
             } else if ((GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePre)) || (GT_Utility.isStringValid(this.mRecipeMap.mNEISpecialValuePost))) {
-                drawText(10, 123, this.mRecipeMap.mNEISpecialValuePre + tSpecial * this.mRecipeMap.mNEISpecialValueMultiplier + this.mRecipeMap.mNEISpecialValuePost, -16777216);
+                drawText(10, 123, this.mRecipeMap.mNEISpecialValuePre + GT_Utility.formatNumbers(tSpecial * this.mRecipeMap.mNEISpecialValueMultiplier) + this.mRecipeMap.mNEISpecialValuePost, -16777216);
             }
         } else {
             int i = 0;

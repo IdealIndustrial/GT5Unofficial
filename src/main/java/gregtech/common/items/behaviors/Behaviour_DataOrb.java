@@ -28,6 +28,14 @@ public class Behaviour_DataOrb
         return tNBT.getString("mDataName");
     }
 
+    public static String getDataID(ItemStack aStack) {
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        if (tNBT == null) {
+            return "";
+        }
+        return tNBT.getString("mDataID");
+    }
+
     public static String getDataTitle(ItemStack aStack) {
         NBTTagCompound tNBT = aStack.getTagCompound();
         if (tNBT == null) {
@@ -42,6 +50,16 @@ public class Behaviour_DataOrb
             tNBT = new NBTTagCompound();
         }
         tNBT.setString("mDataName", aDataName);
+        aStack.setTagCompound(tNBT);
+        return tNBT;
+    }
+
+    public static NBTTagCompound setDataID(ItemStack aStack, String aDataName) {
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        if (tNBT == null) {
+            tNBT = new NBTTagCompound();
+        }
+        tNBT.setString("mDataID", aDataName);
         aStack.setTagCompound(tNBT);
         return tNBT;
     }

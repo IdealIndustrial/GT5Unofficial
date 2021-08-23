@@ -2,6 +2,7 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
@@ -56,8 +57,9 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 "1x Energy Hatch (Any casing)",
                 "Robust Tungstensteel Machine Casings for the rest (16 at least!)",
                 "Place up to 16 Single Block GT Machines into the Controller Inventory",
-                "Screwdriver rightclick to process all buses separately",
-                "Screwdriver rightclick while sneaking enables fluid autocanning"};
+                "Screwdriver right click to process all buses separately",
+                "Screwdriver right click while sneaking enables fluid autocanning",
+                "Right click with wire cutter to toggle recipe conflicts resolving"};
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
@@ -158,6 +160,8 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
             return GT_Recipe.GT_Recipe_Map.sAmplifiers;
         } else if (tmp.startsWith("circuitassembler")) {
             return GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes;
+        } else if (tmp.startsWith("filter")) {
+            return GT_Recipe.GT_Recipe_Map.sFilterRecipes;            
         }
         return null;
     }
@@ -224,7 +228,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                     i = 0;
                     tInputs = tBus.mInventory;
                     tInputList = new ArrayList<>(Arrays.asList(tInputs));
-                    tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                    tRecipe = findRecipe(map, mLastRecipe, tInputs, tFluids, GT_Values.V[tTier]);
                     if(tRecipe == null && processFluidCells){
                         for(FluidStack tFluid : tFluids){
                             if(tFluid.amount%1000!=0)
@@ -235,7 +239,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                         for(int q = 0; q < s; q++)
                             tInputList.add(GT_ModHandler.getIC2Item("cell", 64));
                         tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
-                        tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                        tRecipe = findRecipe(map, mLastRecipe, tInputs, tFluids, V[tTier]);
                         if(tRecipe==null||tRecipe.mOutputs.length>0&&GT_Utility.areStacksEqual(tRecipe.mOutputs[0],GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L),true))
                             continue a;
                     }
@@ -258,7 +262,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 if(!tSucceed)
                     return false;
             }else {
-                tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                tRecipe = findRecipe(map, mLastRecipe, tInputs, tFluids, V[tTier]);
                 if(tRecipe == null && processFluidCells) {
                     for (FluidStack tFluid : tFluids) {
                         if (tFluid.amount % 1000 != 0)
@@ -269,7 +273,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                     for (int q = 0; q < s; q++)
                         tInputList.add(GT_ModHandler.getIC2Item("cell", 64));
                     tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
-                    tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                    tRecipe = findRecipe(map, mLastRecipe, tInputs, tFluids, V[tTier]);
                     if (tRecipe == null || tRecipe.mOutputs.length > 0 && GT_Utility.areStacksEqual(tRecipe.mOutputs[0], GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L), true))
                         return false;
                 }
@@ -374,7 +378,9 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
         }
         return false;
     }
-    
+
+
+
     public static ItemStack[] clean(final ItemStack[] v) {
         List<ItemStack> list = new ArrayList<ItemStack>(Arrays.asList(v));
         list.removeAll(Collections.singleton(null));
@@ -443,6 +449,8 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 GT_Utility.sendChatToPlayer(aPlayer, "Processing all buses together");
         }
     }
+
+
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
@@ -562,4 +570,8 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
     }
 
 
+    @Override
+    protected boolean canHaveRecipeConflicts() {
+        return true;
+    }
 }

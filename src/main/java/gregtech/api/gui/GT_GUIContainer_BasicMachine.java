@@ -2,6 +2,7 @@ package gregtech.api.gui;
 
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,14 @@ public class GT_GUIContainer_BasicMachine extends GT_GUIContainerMetaTile_Machin
         mNEI = aNEI;
     }
 
+    public GT_GUIContainer_BasicMachine(GT_Container_BasicMachine aContainer, String aName, String aTextureFile, String aNEI) {
+        super(aContainer, RES_PATH_GUI + "basicmachines/" + aTextureFile);
+        mProgressBarDirection = 0;
+        mProgressBarAmount = 1;
+        mName = aName;
+        mNEI = aNEI;
+    }
+
     @Override
     public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
@@ -52,6 +61,7 @@ public class GT_GUIContainer_BasicMachine extends GT_GUIContainerMetaTile_Machin
         if (y >= 67 && y <= 84) {
             if (x >= 7 && x <= 24) {
                 list.add("Fluid Auto-Output");
+                list.add(EnumChatFormatting.GRAY + "Shift + Click to Swap Fluids");
             }
             if (x >= 25 && x <= 42) {
                 list.add("Item Auto-Output");

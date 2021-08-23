@@ -10,6 +10,7 @@ import gregtech.common.GT_Pollution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Collection;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import static gregtech.api.enums.GT_Values.V;
 
 public abstract class GT_MetaTileEntity_BasicGenerator extends GT_MetaTileEntity_BasicTank {
+    public int inputOverride = 0;
     public GT_MetaTileEntity_BasicGenerator(int aID, String aName, String aNameRegional, int aTier, String aDescription, ITexture... aTextures) {
         super(aID, aName, aNameRegional, aTier, 3, aDescription, aTextures);
     }
@@ -163,7 +165,7 @@ public abstract class GT_MetaTileEntity_BasicGenerator extends GT_MetaTileEntity
 
     @Override
     public boolean canTankBeFilled() {
-        return getBaseMetaTileEntity().isAllowedToWork();
+        return getBaseMetaTileEntity().isAllowedToWork()&&(mFluid==null||mFluid.amount<getCapacity()-1000*inputOverride);
     }
 
     @Override
@@ -184,6 +186,20 @@ public abstract class GT_MetaTileEntity_BasicGenerator extends GT_MetaTileEntity
     @Override
     public boolean isFluidInputAllowed(FluidStack aFluid) {
         return getFuelValue(aFluid) > 0;
+    }
+
+    @Override
+    public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        if(aPlayer.isSneaking())
+            inputOverride++;
+        else
+            inputOverride--;
+        int c = getCapacity()/1000;
+        if(inputOverride<0)
+            inputOverride+= c;
+        if(inputOverride>=c)
+            inputOverride -= c;
+        GT_Utility.sendChatToPlayer(aPlayer,"max allowed capacity is: "+((c-inputOverride)*1000));
     }
 
     @Override
@@ -272,5 +288,17 @@ public abstract class GT_MetaTileEntity_BasicGenerator extends GT_MetaTileEntity
     @Override
     public int getTankPressure() {
         return -100;
+    }
+
+    @Override
+    public void saveNBTData(NBTTagCompound aNBT) {
+        aNBT.setInteger("inputOverride",inputOverride);
+        super.saveNBTData(aNBT);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound aNBT) {
+        inputOverride = aNBT.getInteger("inputOverride");
+        super.loadNBTData(aNBT);
     }
 }

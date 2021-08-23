@@ -1,50 +1,27 @@
 package gregtech.common.tileentities.machines.basic;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_Container_BasicTank;
-import gregtech.api.gui.GT_GUIContainer_BasicTank;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.BaseTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.ChunkPosition;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fluids.IFluidHandler;
-
-import java.util.ArrayDeque;
-import java.util.Iterator;
-import java.util.HashSet;
-import java.util.Set;
-
-import static gregtech.api.enums.GT_Values.D1;
-import static gregtech.api.enums.GT_Values.V;
-import static gregtech.api.util.GT_Utility.getFakePlayer;
 
 public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
 
-    static {
-        RADIUS = new int[]{8, 10, 20, 60,180,40,48,56,64,72,80};
-        SPEED = new int[]{160, 160, 80, 40,20,10,5,2,2,2,2};
-        ENERGY = new int[]{8, 2, 8, 32,128,512,8192,32768,131072,524288};
-    }
+    protected static int[] RADIUS = new int[]{8, 10, 20, 40,80,160,48,56,64,72,80},
+        SPEED = new int[]{80, 80, 40, 20, 10, 5,5,2,2,2,2},
+        ENERGY = new int[]{8, 4, 16, 64, 256, 1024, 2048 ,32768,131072,524288};
+
 
     public GT_MetaTileEntity_Pump(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID,aName,aNameRegional,aTier,new String[]{"The best way to empty Oceans!",
+        super(aID,aName,aNameRegional,aTier,new String[]{"The best way to empty Oceans of lava!",
                         "Pumping Area: " + (RADIUS[aTier]* 2 + 1) + "x" + (RADIUS[aTier] * 2 + 1),
                 "Uses: "+ENERGY[aTier]+" EU per tick",
                 "Pumps one fluid block each "+SPEED[aTier]+" ticks"}
@@ -113,6 +90,21 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
     }
 
     @Override
+    public int getRadius(int aTier) {
+        return RADIUS[aTier];
+    }
+
+    @Override
+    public int getSpeed(int aTier) {
+        return SPEED[aTier];
+    }
+
+    @Override
+    public int getEnergy(int aTier) {
+        return ENERGY[aTier];
+    }
+
+    @Override
     public boolean workBlock(IGregTechTileEntity aBaseMetaTileEntity) {
         return pumpBlock(aBaseMetaTileEntity,drillX,drillY,drillZ);
     }
@@ -130,7 +122,8 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
         if(aBaseTileEntity.getAirOffset(aX,aY,aZ))
             return false;
         Block tBlock = aBaseTileEntity.getBlockOffset(aX,aY,aZ);
-        if(tBlock == Blocks.water){
+        int aMeta = aBaseTileEntity.getMetaIDOffset(aX, aY, aZ);
+        if(tBlock == Blocks.water && aMeta == 0){
             if(aBaseTileEntity.getWorld().setBlock(aBaseTileEntity.getXCoord()+aX,aBaseTileEntity.getYCoord()+aY,aBaseTileEntity.getZCoord()+aZ,Blocks.air,0,2)) {
                 if (mOutputFluid == null)
                     mOutputFluid = GT_ModHandler.getWater(1000L);
@@ -140,7 +133,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
             }
 
         }
-        else if(tBlock == Blocks.lava){
+        else if(tBlock == Blocks.lava && aMeta == 0){
             if(aBaseTileEntity.getWorld().setBlock(aBaseTileEntity.getXCoord()+aX,aBaseTileEntity.getYCoord()+aY,aBaseTileEntity.getZCoord()+aZ,Blocks.air,0,2)) {
                 if (mOutputFluid == null)
                     mOutputFluid = GT_ModHandler.getLava(1000L);
@@ -150,7 +143,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
             }
 
         }
-        else if(tBlock == Blocks.flowing_lava || tBlock == Blocks.flowing_water) {
+        else if(tBlock == Blocks.lava || tBlock == Blocks.water) {
             aBaseTileEntity.getWorld().setBlock(aBaseTileEntity.getXCoord() + aX, aBaseTileEntity.getYCoord() + aY, aBaseTileEntity.getZCoord() + aZ,Blocks.air,0,2);
             return true;
         }

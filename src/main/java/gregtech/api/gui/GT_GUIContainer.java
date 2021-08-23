@@ -3,6 +3,7 @@ package gregtech.api.gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -52,6 +53,10 @@ public class GT_GUIContainer extends GuiContainer {
                 //
             }
         }
+    }
+
+    public boolean isTheMouseOverSlot(Slot aSlot, int aMouseX, int aMouseY) {
+        return aMouseX >= aSlot.xDisplayPosition && aMouseX <= aSlot.xDisplayPosition + 16 && aMouseY >= aSlot.yDisplayPosition && aMouseY <= aSlot.yDisplayPosition + 16;
     }
     /*
     @Override

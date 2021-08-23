@@ -14,10 +14,7 @@ import org.lwjgl.Sys;
 import static gregtech.api.enums.GT_Values.V;
 
 public abstract class GT_MetaTileEntity_BasicDrillerBase extends GT_MetaTileEntity_BasicMachine {
-
-    static int[] RADIUS, //Miner radius per tier
-    SPEED, //Miner cycle time per tier
-    ENERGY ; //Miner energy consumption per tier
+    
 
     protected static final ItemStack MINING_PIPE = GT_ModHandler.getIC2Item("miningPipe", 0);
     protected static final Block MINING_PIPE_BLOCK = GT_Utility.getBlockFromStack(MINING_PIPE);
@@ -45,7 +42,7 @@ public abstract class GT_MetaTileEntity_BasicDrillerBase extends GT_MetaTileEnti
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPostTick(aBaseMetaTileEntity, aTick);
         if (aBaseMetaTileEntity.isServerSide()) {
-            if (aBaseMetaTileEntity.isAllowedToWork() && aBaseMetaTileEntity.isUniversalEnergyStored(ENERGY[mTier] * (SPEED[mTier] - mProgresstime)) && hasFreeSpace()) {
+            if (aBaseMetaTileEntity.isAllowedToWork() && aBaseMetaTileEntity.isUniversalEnergyStored(getEnergy(mTier) * (getSpeed(mTier) - mProgresstime)) && hasFreeSpace()) {
                 miningPipe:
                 if (waitMiningPipe) {
                     mMaxProgresstime = 0;
@@ -58,13 +55,13 @@ public abstract class GT_MetaTileEntity_BasicDrillerBase extends GT_MetaTileEnti
                     }
                     return;
                 }
-                aBaseMetaTileEntity.decreaseStoredEnergyUnits(ENERGY[mTier], true);
-                mMaxProgresstime = SPEED[mTier];
+                aBaseMetaTileEntity.decreaseStoredEnergyUnits(getEnergy(mTier), true);
+                mMaxProgresstime = getSpeed(mTier);
             } else {
                 mMaxProgresstime = 0;
                 return;
             }
-            if (mProgresstime == SPEED[mTier] - 1) {
+            if (mProgresstime == getSpeed(mTier) - 1) {
                 if (isPickingPipes) {
                     if (drillY == 0) {
                         aBaseMetaTileEntity.disableWorking();
@@ -81,22 +78,26 @@ public abstract class GT_MetaTileEntity_BasicDrillerBase extends GT_MetaTileEnti
                     moveOneDown(aBaseMetaTileEntity);
                     return;
                 }
-                if (drillZ > RADIUS[mTier]) {
+                if (drillZ > getRadius(mTier)) {
                     moveOneDown(aBaseMetaTileEntity);
                     return;
                 }
-                while (drillZ <= RADIUS[mTier]) {
-                    while (drillX <= RADIUS[mTier]) {
+                while (drillZ <= getRadius(mTier)) {
+                    while (drillX <= getRadius(mTier)) {
                         if(workBlock(aBaseMetaTileEntity))
                           return;
                         drillX++;
                     }
-                    drillX = -RADIUS[mTier];
+                    drillX = -getRadius(mTier);
                     drillZ++;
                 }
             }
         }
     }
+    
+    public abstract int getRadius(int aTier);
+    public abstract int getSpeed(int aTier);
+    public abstract int getEnergy(int aTier);
 
     @Override
     public long maxEUStore() {

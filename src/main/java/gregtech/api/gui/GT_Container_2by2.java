@@ -10,12 +10,16 @@ public class GT_Container_2by2 extends GT_ContainerMetaTile_Machine {
         super(aInventoryPlayer, aTileEntity);
     }
 
+    public GT_Container_2by2(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, SlotSupplier<Slot> aSupplier) {
+        super(aInventoryPlayer, aTileEntity, aSupplier);
+    }
+
     @Override
     public void addSlots(InventoryPlayer aInventoryPlayer) {
-        addSlotToContainer(new Slot(mTileEntity, 0, 71, 26));
-        addSlotToContainer(new Slot(mTileEntity, 1, 89, 26));
-        addSlotToContainer(new Slot(mTileEntity, 2, 71, 44));
-        addSlotToContainer(new Slot(mTileEntity, 3, 89, 44));
+        addSlotToContainer(mSupplier.provide(mTileEntity, 0, 71, 26));
+        addSlotToContainer(mSupplier.provide(mTileEntity, 1, 89, 26));
+        addSlotToContainer(mSupplier.provide(mTileEntity, 2, 71, 44));
+        addSlotToContainer(mSupplier.provide(mTileEntity, 3, 89, 44));
     }
 
     @Override

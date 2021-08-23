@@ -9,6 +9,7 @@ import gregtech.api.interfaces.IItemBehaviour;
 import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.objects.ItemData;
 import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.blocks.GT_Block_Ores_Abstract;
@@ -43,7 +44,7 @@ public class Behaviour_ProspectorsBook
     public static HashSet<String> prospectingOres = new HashSet<>();
 
     static {
-        radius = 112;
+        radius = 144;
         near = radius / 3;
         near = near + near % 2; // making near value even;
         middle = near * 2;
@@ -86,44 +87,15 @@ public class Behaviour_ProspectorsBook
     }
 
     private static String prospectWater(World aWorld, int aX, int aZ) {
-
-        FluidStack tFluid = null;
-
-        Chunk tChunk = aWorld.getChunkFromBlockCoords(aX, aZ);
-        int range = 6; //(int)Math.ceil((double)radius / 16);
-        int xChunk = (tChunk.xPosition / range) * range - ((tChunk.xPosition < 0 && tChunk.xPosition % range != 0) ? range : 0);
-        int zChunk = (tChunk.zPosition / range) * range - ((tChunk.zPosition < 0 && tChunk.zPosition % range != 0) ? range : 0);
-
-        LinkedHashMap<ChunkCoordIntPair, FluidStack> tFluids = new LinkedHashMap<>();
-        int oilFieldCount = 0;
-
-        try {
-            for (int z = -1; z <= 1; ++z) {
-                for (int x = -1; x <= 1; ++x) {
-                    ChunkCoordIntPair cInts = aWorld.getChunkFromChunkCoords(x, z).getChunkCoordIntPair();
-                    ArrayList<Integer> minMaxValue = new ArrayList<>();
-
-                    for (int i = 0; i < range; i++) {
-                        for (int j = 0; j < range; j++) {
-                            tChunk = aWorld.getChunkFromChunkCoords(xChunk + i + x * 6, zChunk + j + z * 6);
-                            tFluid = undergroundOilReadInformation(tChunk);
-                            if (tFluid != null) {
-                                if (!tFluids.containsKey(cInts)) {
-                                    tFluids.put(cInts, tFluid);
-                                }
-                                if(tFluid!=null&&GT_Utility.areFluidsEqual(tFluid, new FluidStack(FluidRegistry.WATER,100)))
-                                    return (""+(xChunk+x*6)+"|"+(zChunk+z*6)+"|"+tFluid.getLocalizedName());
-
-                            }
-                        }
-                    }
-
-                    int min = Collections.min(minMaxValue);
-                    int max = Collections.max(minMaxValue);
-
+        for(int x = -1; x < 2; x++){
+            for(int z = -1; z < 2; z++){
+                Chunk tChunk = aWorld.getChunkFromBlockCoords(aX + 16*6*x, aZ + 16*6*z);
+                FluidStack aFluid = undergroundOilReadInformation(tChunk);
+                if(GT_ModHandler.isWater(aFluid)){
+                    return (""+(aX+16*6*x)+"|"+(aZ+16*6*z)+"|"+aFluid.getLocalizedName());
                 }
             }
-        } catch (Exception e) {/*Do nothing*/}
+        }
         return "";
     }
 
@@ -134,7 +106,36 @@ public class Behaviour_ProspectorsBook
         int tLeftZBound = aZ - radius;
         int tRightZBound = tLeftZBound + 2*radius;
 
-        for (int i = tLeftXBound; i <= tRightXBound; i += step)
+        int x = 0;
+        int z = 0;
+        for(int i = 0; i <= (float)radius/step*4; i++){
+            int dirx = 0, dirz = 0;
+            switch (i%4){
+                case 0: //move up
+                    dirx++;
+                    break;
+                case 1:
+                    dirz++;
+                    break;
+                case 2:
+                    dirx--;
+                    break;
+                case 3:
+                    dirz--;
+                    break;
+
+            }
+            int size = (i+1)/2;
+            for(int j = 0; j < size; j++) {
+                x+=dirx;
+                z+=dirz;
+                prospectHole(aX + x, aZ + z, aAllOres, aWorld, aY);
+            }
+        }
+
+
+
+        /*for (int i = tLeftXBound; i <= tRightXBound; i += step)
             for (int k = tLeftZBound; k <= tRightZBound; k += step) {
                 int di = Math.abs(i - aX);
                 int dk = Math.abs(k - aZ);
@@ -145,7 +146,7 @@ public class Behaviour_ProspectorsBook
                     prospectHole(i, k, aAllOres, aWorld,aY);
                 else
                     prospectHole(i, k, aAllOres, aWorld, aY);
-            }
+            }*/
     }
 
     private static void prospectHole(int i, int k, Map<String, ArrayList<int[]>> aOres, World aWorld,  int aY) {
@@ -198,7 +199,27 @@ public class Behaviour_ProspectorsBook
         String tOil =  prospectWater(aWorld, aX, aZ);
 
         new StoryGenerator(aRandom,allOres,aStack,tOil,new int[]{aX,aY,aZ});
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        if(tNBT == null)
+            tNBT = new NBTTagCompound();
+        tNBT.setBoolean("inited", true);
+        aStack.setTagCompound(tNBT);
         return aStack;
+    }
+
+    public static ItemStack getBook(World aWorld, int aX, int aY, int aZ, Random aRandom, boolean aGenerate){
+        if(aGenerate)
+            return getBook(aWorld, aX, aY, aZ, aRandom);
+        else{
+            ItemStack aStack = ItemList.ProspectorsBook.get(1);
+            NBTTagCompound tNBT = new NBTTagCompound();
+            tNBT.setInteger("x", aX);
+            tNBT.setInteger("y", aY);
+            tNBT.setInteger("z", aZ);
+            tNBT.setBoolean( "inited", false);
+            aStack.setTagCompound(tNBT);
+            return aStack;
+        }
     }
 
     private static class StoryGenerator{
@@ -275,7 +296,7 @@ public class Behaviour_ProspectorsBook
             tPageText = "";
             if(aOil!=""){
                 String[] aWater = aOil.split("\\|");
-                tPageText += "It seems that there is underground water source at " + getDirectionZ(Integer.valueOf(aWater[1])*16-tilePos[2]) +" and "+ getDirectionX(Integer.valueOf(aWater[0])*16-tilePos[0]) + " ";
+                tPageText += "It seems that there is underground water source at " + getDirectionZ(Integer.valueOf(aWater[1])-tilePos[2]) +" and "+ getDirectionX(Integer.valueOf(aWater[0])-tilePos[0]) + " ";
             }
             tPageText += "now I'm leaving this place, may be sombody will find my diary and read it";
             tTagList.appendTag(new NBTTagString(tPageText));

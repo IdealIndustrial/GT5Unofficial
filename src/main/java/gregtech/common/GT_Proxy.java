@@ -12,22 +12,34 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.enums.TC_Aspects.TC_AspectStack;
 import gregtech.api.interfaces.IBlockOnWalkOver;
+import gregtech.api.interfaces.IItemBehaviour;
 import gregtech.api.interfaces.IProjectileItem;
 import gregtech.api.interfaces.internal.IGT_Mod;
 import gregtech.api.interfaces.internal.IThaumcraftCompat;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.items.GT_MetaGenerated_Item;
 import gregtech.api.items.GT_MetaGenerated_Tool;
+import gregtech.api.items.IBehaviorWithGui;
 import gregtech.api.net.GT_Packet_Pollution;
 import gregtech.api.objects.*;
+import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
 import gregtech.api.util.*;
+import gregtech.common.blocks.GT_Item_Machines;
+import gregtech.common.config.GT_DebugConfig;
 import gregtech.common.entities.GT_Entity_Arrow;
 import gregtech.common.gui.GT_ContainerVolumetricFlask;
 import gregtech.common.gui.GT_GUIContainerVolumetricFlask;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import gregtech.common.items.armor.ModularArmor_Item;
 import gregtech.common.items.armor.gui.*;
+import gregtech.common.items.behaviors.Behaviour_ProspectorsBook;
+import gregtech.nei.GT_NEI_DefaultHandler;
+import ic2.api.item.IC2Items;
+import ic2.core.IC2;
+import ic2.core.Ic2Items;
+import ic2.core.item.block.ItemDynamite;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -58,7 +70,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -78,8 +92,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     private static final EnumSet<OreGenEvent.GenerateMinable.EventType> PREVENTED_ORES = EnumSet.of(OreGenEvent.GenerateMinable.EventType.COAL,
@@ -135,6 +152,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
             "redalloyInsulated", "infusedteslatiteBundled"}));
     private final DateFormat mDateFormat = DateFormat.getInstance();
     public ArrayList<String> mBufferedPlayerActivity = new ArrayList();
+    public HashMap<GT_Recipe.GT_Recipe_Map,HashMap<GT_NEIItemStack,List<GT_Recipe>>> mConflictMaps = new HashMap<>();
     public boolean mHardcoreCables = false;
     public boolean mSmallLavaBoilerEfficiencyLoss = true;
     public boolean mDisableVanillaOres = true;
@@ -221,8 +239,14 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public boolean mMoreComplicatedChemicalRecipes = false;
     public boolean mHardRadonRecipe = true;
     public boolean disassemblerRecipeMapOn = false;
-    public boolean enableFixQuestsCommand = false;
-
+    public boolean enableFixQuestsCommand = true;
+    public boolean allowDisableToolTips = false;
+    public boolean debugRecipeConflicts = true;
+    public boolean betterFluidDisplay = true;
+    public boolean fixAE2SpatialPilons = false;
+    public boolean mHardComponentsRecipe = false;
+    public List<String> debugRecipeMapsFilter = Collections.emptyList();
+    public static final int GUI_ID_COVER_SIDE_BASE = 10; // Takes GUI ID 10 - 15
     
     public GT_Proxy() {
         GameRegistry.registerFuelHandler(this);
@@ -262,6 +286,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     }
 
     public void onPreLoad() {
+
+
+
         GT_Log.out.println("GT_Mod: Preload-Phase started!");
         GT_Log.ore.println("GT_Mod: Preload-Phase started!");
 
@@ -332,6 +359,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         ItemList.Cell_Universal_Fluid.set(GT_ModHandler.getIC2Item("FluidCell", 1L));
         ItemList.Cell_Empty.set(GT_ModHandler.getIC2Item("cell", 1L, GT_ModHandler.getIC2Item("cellEmpty", 1L, GT_ModHandler.getIC2Item("emptyCell", 1L))));
         ItemList.Cell_Water.set(GT_ModHandler.getIC2Item("waterCell", 1L, GT_ModHandler.getIC2Item("cellWater", 1L)));
+        ItemList.Cell_DistilledWater.set(GT_ModHandler.getIC2Item("distilledwaterCell", 1L, GT_ModHandler.getIC2Item("distilledwaterCell", 1L)));
         ItemList.Cell_Lava.set(GT_ModHandler.getIC2Item("lavaCell", 1L, GT_ModHandler.getIC2Item("cellLava", 1L)));
         ItemList.Cell_Air.set(GT_ModHandler.getIC2Item("airCell", 1L, GT_ModHandler.getIC2Item("cellAir", 1L, GT_ModHandler.getIC2Item("cellOxygen", 1L))));
 
@@ -374,10 +402,6 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         ItemList.IC2_EnergyCrystal.set(GT_ModHandler.getIC2Item("energyCrystal", 1L));
         ItemList.IC2_LapotronCrystal.set(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
 
-        ItemList.IC2_LapotronCrystal.set(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
-        ItemList.IC2_LapotronCrystal.set(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
-        ItemList.IC2_LapotronCrystal.set(GT_ModHandler.getIC2Item("lapotronCrystal", 1L));
-
         ItemList.Tool_Sword_Bronze.set(GT_ModHandler.getIC2Item("bronzeSword", 1L));
         ItemList.Tool_Pickaxe_Bronze.set(GT_ModHandler.getIC2Item("bronzePickaxe", 1L));
         ItemList.Tool_Shovel_Bronze.set(GT_ModHandler.getIC2Item("bronzeShovel", 1L));
@@ -409,40 +433,6 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         OrePrefixes.bucket.mContainerItem = new ItemStack(Items.bucket, 1);
         OrePrefixes.cellPlasma.mContainerItem = ItemList.Cell_Empty.get(1L, new Object[0]);
         OrePrefixes.cell.mContainerItem = ItemList.Cell_Empty.get(1L, new Object[0]);
-
-        GregTech_API.sFrostHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sFrostHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sFrostHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sFrostHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-
-        GregTech_API.sHeatHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sHeatHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sHeatHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sHeatHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-
-        GregTech_API.sBioHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sBioHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sBioHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sBioHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-
-        GregTech_API.sGasHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sGasHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sGasHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sGasHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-
-        GregTech_API.sRadioHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sRadioHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sRadioHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sRadioHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-
-        GregTech_API.sElectroHazmatList.add(GT_ModHandler.getIC2Item("hazmatHelmet", 1L, 32767));
-        GregTech_API.sElectroHazmatList.add(GT_ModHandler.getIC2Item("hazmatChestplate", 1L, 32767));
-        GregTech_API.sElectroHazmatList.add(GT_ModHandler.getIC2Item("hazmatLeggings", 1L, 32767));
-        GregTech_API.sElectroHazmatList.add(GT_ModHandler.getIC2Item("hazmatBoots", 1L, 32767));
-        GregTech_API.sElectroHazmatList.add(new ItemStack(Items.chainmail_helmet, 1, 32767));
-        GregTech_API.sElectroHazmatList.add(new ItemStack(Items.chainmail_chestplate, 1, 32767));
-        GregTech_API.sElectroHazmatList.add(new ItemStack(Items.chainmail_leggings, 1, 32767));
-        GregTech_API.sElectroHazmatList.add(new ItemStack(Items.chainmail_boots, 1, 32767));
 
         GT_ModHandler.sNonReplaceableItems.add(new ItemStack(Items.bow, 1, 32767));
         GT_ModHandler.sNonReplaceableItems.add(new ItemStack(Items.fishing_rod, 1, 32767));
@@ -506,6 +496,10 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
         RecipeSorter.register("gregtech:shaped", GT_Shaped_Recipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
         RecipeSorter.register("gregtech:shapeless", GT_Shapeless_Recipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+
+        GT_ModHandler.sIgnoreLessTierList.add(new GT_NEIItemStack(IC2Items.getItem("cropnalyzer")));
+        //EnderIO:itemMagnet
+        GT_ModHandler.sIgnoreLessTierList.add(new GT_NEIItemStack(GT_ModHandler.getModItem("EnderIO", "itemMagnet", 1)));
     }
 
     public void onLoad() {
@@ -530,6 +524,20 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     public void onPostLoad() {
         GT_Log.out.println("GT_Mod: Beginning PostLoad-Phase.");
         GT_Log.ore.println("GT_Mod: Beginning PostLoad-Phase.");
+
+        //lest just init armor lists when all items are certainly registered
+        List<GT_ItemStack> tQuantumList = Stream.of("quantumHelmet", "quantumLeggings","quantumBoots", "quantumBodyarmor").map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+        tQuantumList.add(new GT_ItemStack(new ItemStack(GameRegistry.findItem("GraviSuite","graviChestPlate"), 1, 32767)));
+
+        List<GT_ItemStack> tHazmatList = Stream.of("hazmatHelmet", "hazmatChestplate", "hazmatLeggings", "hazmatBoots" ).map(id -> GT_ModHandler.getIC2Item(id, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+        tHazmatList.addAll(tQuantumList);
+
+        List<GT_ItemStack> tChainList = Stream.of(new ItemStack(Items.chainmail_helmet, 1, 32767), new ItemStack(Items.chainmail_chestplate, 1, 32767), new ItemStack(Items.chainmail_leggings, 1, 32767), new ItemStack(Items.chainmail_boots, 1, 32767)).map(GT_ItemStack::new).collect(Collectors.toList());
+
+        GT_Utility.addAllToAll(tHazmatList, Arrays.asList(GregTech_API.sFrostHazmatList, GregTech_API.sHeatHazmatList, GregTech_API.sBioHazmatList, GregTech_API.sElectroHazmatList, GregTech_API.sRadioHazmatList, GregTech_API.sGasHazmatList));
+        GregTech_API.sQuantumArmorList.addAll(tQuantumList);
+        GregTech_API.sElectroHazmatList.addAll(tChainList);
+
         if (GT_Log.pal != null) {
             new Thread(new GT_PlayerActivityLogger()).start();
         }
@@ -585,6 +593,7 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                         new Object[]{"XXX", "XXX", "XXX", 'X', OrePrefixes.dustTiny.get(aMaterial)});
             }
         }
+        GT_Item_Machines.postInit();
     }
 
     public void onServerStarting() {
@@ -657,6 +666,43 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
     @SubscribeEvent
     public void onClientConnectedToServerEvent(FMLNetworkEvent.ClientConnectedToServerEvent aEvent) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            GT_NEI_DefaultHandler.inputMaps = new HashMap<>();
+            GT_NEI_DefaultHandler.outputMaps = new HashMap<>();
+            if (GT_DebugConfig.recipeConflicts) {
+                mConflictMaps.forEach((map, recipes) -> {
+                    HashMap<GT_NEIItemStack, List<GT_Recipe>> inMap = GT_NEI_DefaultHandler.inputMaps.computeIfAbsent(map, m-> new HashMap<>());
+
+
+                    recipes.forEach((stack, recipeList) -> {
+                        List<GT_Recipe> tMapRecipes = inMap.computeIfAbsent(stack, k -> new ArrayList<>());
+                        tMapRecipes.addAll(recipeList);
+                    });
+                });
+            }
+            try {
+                Class cl = Class.forName("codechicken.nei.recipe.ShapedRecipeHandler");
+                Field uses = cl.getField("usesMap");
+                Field recipe = cl.getField("recipesMap");
+                uses.set(null, new HashMap<>());
+                recipe.set(null, new HashMap<>());
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignored) {
+
+            }
+            
+            try {
+                Class cl = Class.forName("codechicken.nei.recipe.FuelRecipeHandler");
+                Field fuels = cl.getField("afuels");
+                ArrayList list = (ArrayList)fuels.get(null);
+                if (list != null) {
+                    list = (ArrayList) list.stream().filter(Objects::nonNull).collect(Collectors.toList());
+                    fuels.set(null, list);
+                }
+            } catch (Exception ignored) {
+
+            }
+
+        }
     }
 
     @SubscribeEvent
@@ -1236,6 +1282,9 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
 
     @SubscribeEvent
     public void onServerTickEvent(TickEvent.ServerTickEvent aEvent) {
+        if (aEvent.phase == TickEvent.Phase.END) {
+            GT_Runnable_MachineBlockUpdate.onTick();
+        }
     }
 
     @SubscribeEvent
@@ -1326,6 +1375,14 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
                         if (this.mInventoryUnification) {
                             GT_OreDictUnificator.setStack(true, tStack);
                         }
+                        if (GT_Utility.areStacksEqual(ItemList.ProspectorsBook.get(1), tStack, true)) {
+                            NBTTagCompound tNBT = tStack.getTagCompound();
+                            if(tNBT != null){
+                                if(!tNBT.getBoolean("inited")){
+                                    aEvent.player.inventory.setInventorySlotContents(i, Behaviour_ProspectorsBook.getBook(aEvent.player.worldObj,tNBT.getInteger("x"), tNBT.getInteger("y"), tNBT.getInteger("z"),new XSTR(aEvent.player.worldObj.getSeed())));
+                                }
+                            }
+                        }
                     }
                 }
                 for (int i = 0; i < 4; i++) {
@@ -1379,18 +1436,32 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         	int tSlot = aID / 100;
             int ID = aID%100;
             switch(ID){
-            case 0:
-                return new ContainerBasicArmor(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
-            case 1:
-                return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
-            case 2:
-                return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
-            default:
-                return getRightItem(aPlayer, ID);
+                case 0:
+                    return new ContainerBasicArmor(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
+                case 1:
+                    return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
+                case 2:
+                    return new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot)));
+                default:
+                    return getRightItem(aPlayer, ID);
+            }
         }
+        ItemStack aStack = aPlayer.getHeldItem();
+        if (aStack != null && aStack.getItem() instanceof GT_MetaBase_Item) {
+            ArrayList<IItemBehaviour<GT_MetaBase_Item>> tBehaviors = ((GT_MetaBase_Item)aStack.getItem()).getBehaviorsFromStack(aStack);
+            if (tBehaviors != null) {
+                for(IItemBehaviour<GT_MetaBase_Item> tBehavior : tBehaviors) {
+                    if (tBehavior instanceof IBehaviorWithGui) {
+                        return ((IBehaviorWithGui) tBehavior).getServerGui(aPlayer, aStack, aID);
+                    }
+                }
+            }
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                return null;
+            }
             IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
             if (tMetaTileEntity != null) {
                 return tMetaTileEntity.getServerGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
@@ -1435,21 +1506,43 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
         	int tSlot = aID / 100;
             int ID = aID%100;
             switch(ID){
-            case 0:
-                return new GuiModularArmor(new ContainerBasicArmor(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
-            case 1:
-                return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
-            case 2:
-                return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
-            default:
-                return getRightItem(aPlayer, ID);
+                case 0:
+                    return new GuiModularArmor(new ContainerBasicArmor(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
+                case 1:
+                    return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
+                case 2:
+                    return new GuiElectricArmor1(new ContainerElectricArmor1(aPlayer, new InventoryArmor(ModularArmor_Item.class, aPlayer.getEquipmentInSlot(tSlot))), aPlayer);
+                default:
+                    return getRightItem(aPlayer, ID);
+            }
         }
+        ItemStack aStack = aPlayer.getHeldItem();
+        if (aStack != null && aStack.getItem() instanceof GT_MetaBase_Item) {
+            ArrayList<IItemBehaviour<GT_MetaBase_Item>> tBehaviors = ((GT_MetaBase_Item)aStack.getItem()).getBehaviorsFromStack(aStack);
+            if (tBehaviors != null) {
+                for(IItemBehaviour<GT_MetaBase_Item> tBehavior : tBehaviors) {
+                    if (tBehavior instanceof IBehaviorWithGui) {
+                        return ((IBehaviorWithGui) tBehavior).getClientGui(aPlayer, aStack, aID);
+                    }
+                }
+            }
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
-            IMetaTileEntity tMetaTileEntity = ((IGregTechTileEntity) tTileEntity).getMetaTileEntity();
+            IGregTechTileEntity tile = (IGregTechTileEntity) tTileEntity;
+
+            if (GUI_ID_COVER_SIDE_BASE <= aID && aID < GUI_ID_COVER_SIDE_BASE+6) {
+                byte side = (byte) (aID - GT_Proxy.GUI_ID_COVER_SIDE_BASE);
+                GT_CoverBehavior cover = tile.getCoverBehaviorAtSide(side);
+
+                if (cover.hasCoverGUI()) {
+                    return cover.getClientGUI(side, tile.getCoverIDAtSide(side), tile.getCoverDataAtSide(side), tile);
+                }
+                return null;
+            }
+            IMetaTileEntity tMetaTileEntity = tile.getMetaTileEntity();
             if (tMetaTileEntity != null) {
-                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, (IGregTechTileEntity) tTileEntity);
+                return tMetaTileEntity.getClientGUI(aID, aPlayer.inventory, tile);
             }
         }
         return null;
@@ -1919,5 +2012,23 @@ public abstract class GT_Proxy implements IGT_Mod, IGuiHandler, IFuelHandler {
     		GregTech_API.causeMachineUpdate(event.world, event.x, event.y, event.z);
     }
 
+    @SubscribeEvent
+    public void onDamagedEvent(LivingHurtEvent event) {
+
+    }
+
+    @SubscribeEvent
+    public void onAttackedEvent(LivingAttackEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            String source = event.source != null ? event.source.damageType != null ?  event.source.damageType : null :null;
+            if (source == null)
+                return;
+            if(DamageSources.isProtected(source, (EntityLivingBase)event.entity)) {
+                event.setCanceled(true);
+            }
+
+        }
+
+    }
 
 }

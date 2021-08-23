@@ -55,7 +55,7 @@ public class GregTech_API {
     /**
      * Fixes the HashMap Mappings for ItemStacks once the Server started
      */
-    public static final Collection<Map<GT_ItemStack, ?>> sItemStackMappings = new ArrayList<Map<GT_ItemStack, ?>>();
+    public static final Collection<Map<? extends GT_ItemStack, ?>> sItemStackMappings = new ArrayList<>();
     public static final Collection<Map<Fluid, ?>> sFluidMappings = new ArrayList<Map<Fluid, ?>>();
     /**
      * The MetaTileEntity-ID-List-Length
@@ -64,7 +64,9 @@ public class GregTech_API {
     /**
      * My Creative Tab
      */
-    public static final CreativeTabs TAB_GREGTECH = new GT_CreativeTab("Main", "Main"), TAB_GREGTECH_MATERIALS = new GT_CreativeTab("Materials", "Materials"), TAB_GREGTECH_ORES = new GT_CreativeTab("Ores", "Ores");
+    public static final CreativeTabs TAB_GREGTECH = new GT_CreativeTab("Main", "Main"),
+            TAB_GREGTECH_MATERIALS = new GT_CreativeTab("Materials", "Materials"),
+            TAB_GREGTECH_ORES = new GT_CreativeTab("Ores", "Ores");
     /**
      * A List of all registered MetaTileEntities
      * <p/>
@@ -132,11 +134,18 @@ public class GregTech_API {
     /**
      * The List of Tools, which can be used. Accepts regular damageable Items and Electric Items
      */
-    public static final GT_HashSet<GT_ItemStack> sToolList = new GT_HashSet<GT_ItemStack>(), sCrowbarList = new GT_HashSet<GT_ItemStack>(), sScrewdriverList = new GT_HashSet<GT_ItemStack>(), sWrenchList = new GT_HashSet<GT_ItemStack>(), sSoftHammerList = new GT_HashSet<GT_ItemStack>(), sHardHammerList = new GT_HashSet<GT_ItemStack>(),  sWireCutterList = new GT_HashSet<GT_ItemStack>(), sSolderingToolList = new GT_HashSet<GT_ItemStack>(), sSolderingMetalList = new GT_HashSet<GT_ItemStack>();
+    public static final GT_HashSet<GT_ItemStack> sToolList = new GT_HashSet<GT_ItemStack>(),
+            sCrowbarList = new GT_HashSet<GT_ItemStack>(), sScrewdriverList = new GT_HashSet<GT_ItemStack>(),
+            sWrenchList = new GT_HashSet<GT_ItemStack>(), sSoftHammerList = new GT_HashSet<GT_ItemStack>(),
+            sHardHammerList = new GT_HashSet<GT_ItemStack>(), sWireCutterList = new GT_HashSet<GT_ItemStack>(),
+            sSolderingToolList = new GT_HashSet<GT_ItemStack>(), sSolderingMetalList = new GT_HashSet<GT_ItemStack>();
     /**
      * The List of Hazmat Armors
      */
-    public static final GT_HashSet<GT_ItemStack> sGasHazmatList = new GT_HashSet<GT_ItemStack>(), sBioHazmatList = new GT_HashSet<GT_ItemStack>(), sFrostHazmatList = new GT_HashSet<GT_ItemStack>(), sHeatHazmatList = new GT_HashSet<GT_ItemStack>(), sRadioHazmatList = new GT_HashSet<GT_ItemStack>(), sElectroHazmatList = new GT_HashSet<GT_ItemStack>();
+    public static final GT_HashSet<GT_ItemStack> sGasHazmatList = new GT_HashSet<GT_ItemStack>(),
+            sBioHazmatList = new GT_HashSet<GT_ItemStack>(), sFrostHazmatList = new GT_HashSet<GT_ItemStack>(),
+            sHeatHazmatList = new GT_HashSet<GT_ItemStack>(), sRadioHazmatList = new GT_HashSet<GT_ItemStack>(),
+            sElectroHazmatList = new GT_HashSet<GT_ItemStack>(), sQuantumArmorList = new GT_HashSet<GT_ItemStack>();
     /**
      * The List of Dimensions, which are Whitelisted for the Teleporter. This list should not contain other Planets.
      * Mystcraft Dimensions and other Dimensional Things should be allowed.
@@ -166,9 +175,16 @@ public class GregTech_API {
      */
     public static IThaumcraftCompat sThaumcraftCompat;
     /**
-     * These Lists are getting executed at their respective timings. Useful if you have to do things right before/after I do them, without having to control the load order. Add your "Commands" in the Constructor or in a static Code Block of your Mods Main Class. These are not Threaded, I just use a native Java Interface for their execution. Implement just the Method run() and everything should work
+     * These Lists are getting executed at their respective timings. Useful if you have to do things right before/after I do them,
+     * without having to control the load order. Add your "Commands" in the Constructor or in a static Code Block of your Mods Main Class.
+     * These are not Threaded, I just use a native Java Interface for their execution. Implement just the Method run() and everything should work
      */
-    public static List<Runnable> sBeforeGTPreload = new ArrayList<Runnable>(), sAfterGTPreload = new ArrayList<Runnable>(), sBeforeGTLoad = new ArrayList<Runnable>(), sAfterGTLoad = new ArrayList<Runnable>(), sBeforeGTPostload = new ArrayList<Runnable>(), sAfterGTPostload = new ArrayList<Runnable>(), sBeforeGTServerstart = new ArrayList<Runnable>(), sAfterGTServerstart = new ArrayList<Runnable>(), sBeforeGTServerstop = new ArrayList<Runnable>(), sAfterGTServerstop = new ArrayList<Runnable>(), sGTBlockIconload = new ArrayList<Runnable>(), sGTItemIconload = new ArrayList<Runnable>();
+    public static List<Runnable> sBeforeGTPreload = new ArrayList<Runnable>(), sAfterGTPreload = new ArrayList<Runnable>(),
+            sBeforeGTLoad = new ArrayList<Runnable>(), sAfterGTLoad = new ArrayList<Runnable>(),
+            sBeforeGTPostload = new ArrayList<Runnable>(), sAfterGTPostload = new ArrayList<Runnable>(),
+            sBeforeGTServerstart = new ArrayList<Runnable>(), sAfterGTServerstart = new ArrayList<Runnable>(),
+            sBeforeGTServerstop = new ArrayList<Runnable>(), sAfterGTServerstop = new ArrayList<Runnable>(),
+            sGTBlockIconload = new ArrayList<Runnable>(), sGTItemIconload = new ArrayList<Runnable>();
     /**
      * The Icon Registers from Blocks and Items. They will get set right before the corresponding Icon Load Phase as executed in the Runnable List above.
      */
@@ -177,20 +193,27 @@ public class GregTech_API {
     /**
      * The Configuration Objects
      */
-    public static GT_Config sRecipeFile = null, sMachineFile = null, sWorldgenFile = null, sModularArmor = null, sMaterialProperties = null, sMaterialComponents = null, sUnification = null, sSpecialFile = null, sClientDataFile, sOPStuff = null;
+    public static GT_Config sRecipeFile = null, sMachineFile = null, sWorldgenFile = null,
+            sModularArmor = null, sMaterialProperties = null, sMaterialComponents = null,
+            sUnification = null, sSpecialFile = null, sClientDataFile, sOPStuff = null;
     public static int TICKS_FOR_LAG_AVERAGING = 25, MILLISECOND_THRESHOLD_UNTIL_LAG_WARNING = 100;
     /**
      * Initialized by the Block creation.
      */
     public static Block sBlockMachines;
 
-    public static Block sBlockOres1, sBlockOresUb1, sBlockOresUb2, sBlockOresUb3, sBlockOresGC, sBlockGem, sBlockMetal1, sBlockMetal2, sBlockMetal3, sBlockMetal4, sBlockMetal5, sBlockMetal6, sBlockMetal7, sBlockMetal8, sBlockGem1, sBlockGem2, sBlockGem3, sBlockReinforced;
-    public static Block sBlockGranites, sBlockConcretes, sBlockStones;
-    public static Block sBlockCasings1, sBlockCasings2, sBlockCasings3, sBlockCasings4, sBlockCasings5, sBlockCasings8;
+    public static Block sBlockOres1, sBlockOresUb1, sBlockOresUb2, sBlockOresUb3, sBlockOresGC, sBlockGem,
+            sBlockMetal1, sBlockMetal2, sBlockMetal3, sBlockMetal4, sBlockMetal5, sBlockMetal6, sBlockMetal7,
+            sBlockMetal8, sBlockGem1, sBlockGem2, sBlockGem3, sBlockReinforced;
+    public static Block sBlockGranites, sBlockConcretes, sBlockStones, sBlockGlass;
+    public static Block sBlockCasings1, sBlockCasings2, sBlockCasings3, sBlockCasings4, sBlockCasings5, sBlockCasings6, sBlockCasings8;
     /**
      * Getting assigned by the Config
      */
-    public static boolean sTimber = true, sDrinksAlwaysDrinkable = false, sMultiThreadedSounds = false, sDoShowAllItemsInCreative = false, sColoredGUI = true, sConstantEnergy = true, sMachineExplosions = true, sMachineFlammable = true, sMachineNonWrenchExplosions = true, sMachineRainExplosions = true, sMachineThunderExplosions = true, sMachineFireExplosions = true, sMachineWireFire = true;
+    public static boolean sTimber = true, sDrinksAlwaysDrinkable = false, sMultiThreadedSounds = false,
+            sDoShowAllItemsInCreative = false, sColoredGUI = true, sConstantEnergy = true, sMachineExplosions = true,
+            sMachineFlammable = true, sMachineNonWrenchExplosions = true, sMachineRainExplosions = true,
+            sMachineThunderExplosions = true, sMachineFireExplosions = true, sMachineWireFire = true;
     public static boolean mOutputRF = false;
     public static boolean mInputRF = false;
     public static boolean meIOLoaded = false;
@@ -212,7 +235,8 @@ public class GregTech_API {
     /**
      * Getting assigned by the Mod loading
      */
-    public static boolean sUnificationEntriesRegistered = false, sPreloadStarted = false, sPreloadFinished = false, sLoadStarted = false, sLoadFinished = false, sPostloadStarted = false, sPostloadFinished = false;
+    public static boolean sUnificationEntriesRegistered = false, sPreloadStarted = false, sPreloadFinished = false,
+            sLoadStarted = false, sLoadFinished = false, sPostloadStarted = false, sPostloadFinished = false;
     private static Class sBaseMetaTileEntityClass = null;
 
     /**
@@ -261,14 +285,17 @@ public class GregTech_API {
 
     /**
      * You want OreDict-Unification for YOUR Mod/Addon, when GregTech is installed? This Function is especially for YOU.
-     * Call this Function after the load-Phase, as I register the the most of the Unification at that Phase (Redpowers Storageblocks are registered at postload).
-     * A recommended use of this Function is inside your Recipe-System itself (if you have one), as the unification then makes 100% sure, that every added non-unificated Output gets automatically unificated.
+     * Call this Function after the load-Phase, as I register the the most of the Unification
+     * at that Phase (Redpowers Storageblocks are registered at postload).
+     * A recommended use of this Function is inside your Recipe-System itself (if you have one), as the unification then makes 100% sure,
+     * that every added non-unificated Output gets automatically unificated.
      * <p/>
      * I will personally make sure, that only common prefixes of Ores get registered at the Unificator, as of now there are:
      * pulp, dust, dustSmall, ingot, nugget, gem, ore and block
      * If another Mod-Author messes these up, then it's not my fault and it's especially not your fault. As these are commonly used prefixes.
      * <p/>
-     * This Unificator-API-Function uses the same Functions I use, for unificating Items. So if there is something messed up (very unlikely), then everything is messed up.
+     * This Unificator-API-Function uses the same Functions I use, for unificating Items. So if there is something messed up (very unlikely),
+     * then everything is messed up.
      * <p/>
      * You shouldn't use this to unificate the Inputs of your Recipes, this is only meant for the Outputs.
      *
@@ -277,7 +304,8 @@ public class GregTech_API {
      */
     public static ItemStack getUnificatedOreDictStack(ItemStack aOreStack) {
         if (!GregTech_API.sPreloadFinished)
-            GT_Log.err.println("GregTech_API ERROR: " + aOreStack.getItem() + "." + aOreStack.getItemDamage() + " - OreDict Unification Entries are not registered now, please call it in the postload phase.");
+            GT_Log.err.println("GregTech_API ERROR: " + aOreStack.getItem() + "." + aOreStack.getItemDamage()
+                    + " - OreDict Unification Entries are not registered now, please call it in the postload phase.");
         return GT_OreDictUnificator.get(true, aOreStack);
     }
 
@@ -293,7 +321,13 @@ public class GregTech_API {
      */
     public static boolean causeMachineUpdate(World aWorld, int aX, int aY, int aZ) {
         if (!aWorld.isRemote)
-            new Thread(new GT_Runnable_MachineBlockUpdate(aWorld, aX, aY, aZ), "Machine Block Updating").start();
+            new GT_Runnable_MachineBlockUpdate(aWorld, aX, aY, aZ);
+        return true;
+    }
+
+    public static boolean causeMachineUpdate(World aWorld, int aX, int aY, int aZ, int aDelay, int aRadius) {
+        if (!aWorld.isRemote)
+            new GT_Runnable_MachineBlockUpdate(aWorld, aX, aY, aZ, aDelay, aRadius);
         return true;
     }
 

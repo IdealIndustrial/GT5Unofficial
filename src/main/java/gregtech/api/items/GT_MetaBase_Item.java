@@ -66,6 +66,12 @@ public abstract class GT_MetaBase_Item extends GT_Generic_Item implements ISpeci
         return this;
     }
 
+    public ArrayList<IItemBehaviour<GT_MetaBase_Item>> getBehaviorsFromStack(ItemStack aStack) {
+        if (aStack == null || !(aStack.getItem() instanceof GT_MetaBase_Item))
+            return null;
+        return mItemBehaviors.get((short)aStack.getItemDamage());
+    }
+
     public abstract Long[] getElectricStats(ItemStack aStack);
 
     public abstract Long[] getFluidContainerStats(ItemStack aStack);
