@@ -1728,7 +1728,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
     public static class GT_Recipe_Map_Disassembler extends GT_Recipe_Map {
 
         public GT_Recipe_Map_Disassembler() {
-            super(new HashSet<>(1000),"gt.recipe.disassembler","Disassembling",null,RES_PATH_GUI + "basicmachines/Disassembler", 1, 9,1,0,1, E, 1, E,true, true);
+            super(new HashSet<>(1000),"gt.recipe.disassembler","Disassembling",null,RES_PATH_GUI + "basicmachines/Disassembler", 1,9,1,0,1, E, 1, E,true, true);
         }
 
         public static ArrayList<GT_Shaped_Recipe> recipeCache = new ArrayList<>(1000);
