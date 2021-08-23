@@ -50,11 +50,11 @@ public class Behaviour_DataReader
             }
             nbt.setInteger("GT.ItemCharge", tCharge);
             //remove energy
-            int tProgress = 0;
-            nbt.setInteger("prog", tProgress = nbt.getInteger("prog") + 1);
-            if (tProgress >= 1000 / (1 << (mTier - 2))) {
-                ItemStack tStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("s0"));
-                if (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, true)) {
+            ItemStack tStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("s0"));
+            if (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, true)) {
+                int tProgress = 0;
+                nbt.setInteger("prog", tProgress = nbt.getInteger("prog") + 1);
+                if (tProgress >= 1000 / (1 << (mTier - 2))) {
                     if (GT_Utility.ItemNBT.getBookTitle(tStack).equals("Raw Prospection Data")) {
                         GT_Utility.ItemNBT.setBookTitle(tStack, "Analyzed Prospection Data");
                         GT_Utility.ItemNBT.convertProspectionData(tStack);
@@ -65,7 +65,11 @@ public class Behaviour_DataReader
                             ((GT_Container_DataReader) container).mInventory.setInventorySlotContents(0, tStack);
                         }
                     }
+
                 }
+            }
+            else {
+                nbt.setInteger("prog", 0);
             }
         } else {
             ItemStack tStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("s0"));

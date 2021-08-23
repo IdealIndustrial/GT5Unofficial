@@ -7,15 +7,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class GT_ItemInventory implements IInventory {
+    ICallbackProvider provider;
     ItemStack[] mContents;
     boolean mDropItems;
     String mName;
 
 
-    public GT_ItemInventory(int aSize, boolean aDropItemsOnClosing, String aName) {
+    public GT_ItemInventory(int aSize, boolean aDropItemsOnClosing, String aName, ICallbackProvider inventorySaver) {
         mContents = new ItemStack[aSize];
         mDropItems = aDropItemsOnClosing;
         mName = aName;
+        provider = inventorySaver;
     }
     @Override
     public int getSizeInventory() {
@@ -39,6 +41,7 @@ public class GT_ItemInventory implements IInventory {
                     setInventorySlotContents(aIndex, null);
             }
         }
+        provider.call();
         return rStack;
     }
 
@@ -52,6 +55,7 @@ public class GT_ItemInventory implements IInventory {
     @Override
     public void setInventorySlotContents(int aIndex, ItemStack aStack) {
         mContents[aIndex] = aStack;
+        provider.call();
     }
 
     @Override
@@ -108,5 +112,9 @@ public class GT_ItemInventory implements IInventory {
     @Override
     public boolean isItemValidForSlot(int aIndex, ItemStack aStack) {
         return true;
+    }
+
+    public interface ICallbackProvider {
+        void call();
     }
 }
