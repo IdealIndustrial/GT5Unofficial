@@ -1,8 +1,17 @@
 package gregtech.loaders.postload;
 
+import cpw.mods.fml.common.Loader;
+import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
+import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
+import net.minecraft.client.Minecraft;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import static gregtech.api.enums.GT_Values.RA;
 import static gregtech.api.util.GT_OreDictUnificator.get;
@@ -16,6 +25,12 @@ public class GT_MachineRecipeLoader2 implements Runnable {
         RA.addElectrolyzerRecipe(get(OrePrefixes.dust, Materials.AluminiumSulfite, 20), null, null,
                 Materials.Oxygen.getGas(9000L), get(OrePrefixes.dust, Materials.Aluminium, 8), get(OrePrefixes.dust, Materials.Sulfur, 3), null, null, null, null,
                 null, 20 * 20, 90);
+
+        if (Loader.isModLoaded("ProjRed|Integration") && Loader.isModLoaded("ProjRed|Core")) {
+            RA.addDisassemblerRecipe(GT_ModHandler.getModItem("ProjRed|Integration", "projectred.integration.gate", 1, 34),
+                    new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Basic, 8), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Good, 4),
+                            GT_ModHandler.getModItem("ProjRed|Core", "projectred.core.part", 8)}, 2400, 16);
+        }
     }
 
     private void addTungstenProcessing() {
