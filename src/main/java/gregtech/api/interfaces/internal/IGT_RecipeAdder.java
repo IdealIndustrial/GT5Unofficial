@@ -677,6 +677,7 @@ public interface IGT_RecipeAdder {
 
 
     public boolean addDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutputs, int aDuration, int aEUt);
+    public boolean addFakeDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutputs, int aDuration, int aEUt);
 
     public boolean addFilterRecipe(int aCircuit, FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt);
 

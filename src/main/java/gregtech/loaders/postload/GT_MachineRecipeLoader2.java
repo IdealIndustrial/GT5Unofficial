@@ -31,6 +31,7 @@ public class GT_MachineRecipeLoader2 implements Runnable {
                     new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Basic, 8), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Good, 4),
                             GT_ModHandler.getModItem("ProjRed|Core", "projectred.core.part", 8)}, 2400, 16);
         }
+        RA.addFakeDisassemblerRecipe(new ItemStack(Items.egg, 1), new ItemStack[]{ItemList.Circuit_Chip_Stemcell.getWithName(1, "Chance (%) is equal to machine tier")}, 2400, 16);
     }
 
     private void addTungstenProcessing() {

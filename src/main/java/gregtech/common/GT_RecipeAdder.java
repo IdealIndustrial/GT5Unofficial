@@ -1236,6 +1236,18 @@ public class GT_RecipeAdder
     }
 
     @Override
+    public boolean addFakeDisassemblerRecipe(ItemStack aInput, ItemStack[] aOutputs, int aDuration, int aEUt) {
+        if (aInput == null) {
+            return false;
+        }
+        if (aOutputs == null || aOutputs.length == 0|| aOutputs[0] == null) {
+            return false;
+        }
+        GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes.addFakeRecipe(true, new ItemStack[]{aInput}, aOutputs, null, new FluidStack[0],new FluidStack[0], aDuration, aEUt, 0);
+        return true;
+    }
+
+    @Override
     public boolean addFilterRecipe(int aCircuit, FluidStack aInput, FluidStack aOutput, ItemStack[] aOutputs, int aDuration, int aEUt){
 	    GT_Recipe.GT_Recipe_Map.sFilterRecipes.addRecipe(true, new ItemStack[]{GT_Utility.getIntegratedCircuit(aCircuit)}, aOutputs, null, new FluidStack[]{aInput}, new FluidStack[]{aOutput},aDuration,aEUt,0);
         return true;
