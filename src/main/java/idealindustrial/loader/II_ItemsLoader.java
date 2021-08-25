@@ -3,7 +3,7 @@ package idealindustrial.loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.ITexture;
-import idealindustrial.itemgen.implementation.II_MetaGeneratedItem_1;
+import idealindustrial.autogen.implementation.II_MetaGeneratedItem_1;
 import idealindustrial.recipe.II_RecipeMaps;
 import idealindustrial.teststuff.testTile.II_TestMachine;
 import idealindustrial.teststuff.testTile2.II_TestMachine2;

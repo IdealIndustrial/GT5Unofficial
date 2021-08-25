@@ -1,9 +1,8 @@
 package idealindustrial.render;
 
 import cpw.mods.fml.relauncher.SideOnly;
-import idealindustrial.II_Core;
 import idealindustrial.II_Values;
-import idealindustrial.itemgen.blocks.II_Blocks;
+import idealindustrial.autogen.blocks.II_Blocks;
 import idealindustrial.tile.II_Item_Machines;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;

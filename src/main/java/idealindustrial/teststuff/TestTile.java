@@ -1,8 +1,8 @@
 package idealindustrial.teststuff;
 
 import gregtech.api.interfaces.IIconContainer;
-import idealindustrial.itemgen.material.II_Materials;
-import idealindustrial.itemgen.material.Prefixes;
+import idealindustrial.autogen.material.II_Materials;
+import idealindustrial.autogen.material.Prefixes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

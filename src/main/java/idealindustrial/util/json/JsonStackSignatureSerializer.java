@@ -2,11 +2,11 @@ package idealindustrial.util.json;
 
 import com.google.gson.*;
 import cpw.mods.fml.common.registry.GameRegistry;
-import idealindustrial.itemgen.material.II_Material;
-import idealindustrial.itemgen.material.II_Materials;
-import idealindustrial.itemgen.material.Prefixes;
-import idealindustrial.itemgen.oredict.II_OreDict;
-import idealindustrial.itemgen.oredict.II_OreInfo;
+import idealindustrial.autogen.material.II_Material;
+import idealindustrial.autogen.material.II_Materials;
+import idealindustrial.autogen.material.Prefixes;
+import idealindustrial.autogen.oredict.II_OreDict;
+import idealindustrial.autogen.oredict.II_OreInfo;
 import idealindustrial.util.item.CheckType;
 import idealindustrial.util.item.II_StackSignature;
 import net.minecraft.item.Item;
@@ -14,8 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JsonStackSignatureSerializer implements JsonSerializer<II_StackSignature>, JsonDeserializer<II_StackSignature> {
 

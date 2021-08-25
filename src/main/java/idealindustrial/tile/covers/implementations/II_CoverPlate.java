@@ -2,13 +2,11 @@ package idealindustrial.tile.covers.implementations;
 
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
-import idealindustrial.itemgen.material.II_Material;
-import idealindustrial.itemgen.material.Prefixes;
+import idealindustrial.autogen.material.II_Material;
+import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.covers.II_BaseCoverBehavior;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 public class II_CoverPlate implements II_BaseCoverBehavior<II_BaseTile> {
 

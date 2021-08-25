@@ -1,6 +1,6 @@
 package idealindustrial.loader;
 
-import idealindustrial.itemgen.blocks.II_Blocks;
+import idealindustrial.autogen.blocks.II_Blocks;
 
 public class II_BlocksLoader {
 

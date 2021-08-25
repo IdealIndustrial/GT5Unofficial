@@ -1,10 +1,9 @@
 package idealindustrial.teststuff;
 
-import idealindustrial.itemgen.blocks.II_MetaBlock_Item;
-import idealindustrial.itemgen.blocks.base.II_Base_Block;
+import idealindustrial.autogen.blocks.II_MetaBlock_Item;
+import idealindustrial.autogen.blocks.base.II_Base_Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

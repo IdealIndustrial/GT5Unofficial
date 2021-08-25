@@ -1,8 +1,8 @@
 package idealindustrial.util.json;
 
 import com.google.gson.*;
-import idealindustrial.itemgen.material.II_Material;
-import idealindustrial.itemgen.material.II_Materials;
+import idealindustrial.autogen.material.II_Material;
+import idealindustrial.autogen.material.II_Materials;
 
 import java.lang.reflect.Type;
 

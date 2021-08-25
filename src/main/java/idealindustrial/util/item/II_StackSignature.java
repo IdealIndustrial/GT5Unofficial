@@ -1,7 +1,7 @@
 package idealindustrial.util.item;
 
 import appeng.util.item.II_Hackery;
-import idealindustrial.itemgen.oredict.II_OreInfo;
+import idealindustrial.autogen.oredict.II_OreInfo;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 

@@ -4,13 +4,12 @@ package idealindustrial.util.item;
 import appeng.util.item.AESharedNBT;
 import appeng.util.item.II_Hackery;
 import cpw.mods.fml.common.registry.GameRegistry;
-import idealindustrial.itemgen.oredict.II_OreDict;
-import idealindustrial.itemgen.oredict.II_OreInfo;
+import idealindustrial.autogen.oredict.II_OreDict;
+import idealindustrial.autogen.oredict.II_OreInfo;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * class for all itemStack work in GT, has fast hashCode and equals for NBT

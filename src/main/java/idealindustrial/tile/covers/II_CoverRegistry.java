@@ -1,15 +1,14 @@
 package idealindustrial.tile.covers;
 
 import gregtech.api.enums.ItemList;
-import idealindustrial.itemgen.material.II_Material;
-import idealindustrial.itemgen.material.II_Materials;
-import idealindustrial.itemgen.material.Prefixes;
-import idealindustrial.itemgen.oredict.II_OreDict;
+import idealindustrial.autogen.material.II_Material;
+import idealindustrial.autogen.material.II_Materials;
+import idealindustrial.autogen.material.Prefixes;
+import idealindustrial.autogen.oredict.II_OreDict;
 import idealindustrial.tile.covers.implementations.II_CoverChameleon;
 import idealindustrial.tile.covers.implementations.II_CoverPlate;
 import idealindustrial.util.item.II_HashedStack;
 import idealindustrial.util.item.II_ItemHelper;
-import net.minecraft.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;

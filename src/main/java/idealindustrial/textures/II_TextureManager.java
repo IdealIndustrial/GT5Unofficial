@@ -1,7 +1,6 @@
 package idealindustrial.textures;
 
 import gregtech.api.interfaces.IIconContainer;
-import idealindustrial.itemgen.material.II_Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 
 import java.util.ArrayList;
