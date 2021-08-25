@@ -6,6 +6,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import idealindustrial.autogen.recipes.II_RecipeManager;
 import idealindustrial.commands.CommandFixMaterials;
 import idealindustrial.commands.CommandFixQuests;
 import idealindustrial.commands.DimTPCommand;
@@ -134,9 +135,8 @@ public class II_Core {
         II_Lang.pushLocalToMinecraft();
         oredictLoader.init();
         II_Materials.initMaterialLoops();
-        initAutogenFromCore();
+        II_RecipeManager.load();
         II_OreDict.printAll(System.out);
-        II_RecipeMaps.optimize();
     }
 
     @Mod.EventHandler
@@ -190,8 +190,5 @@ public class II_Core {
         return version;
     }
 
-    private void initAutogenFromCore() {
-        InputStream stream = II_Core.class.getResourceAsStream("autogen.json");
-        II_AutogenRecipes.loadAndInit(stream == null ? null : new InputStreamReader(stream));
-    }
+
 }

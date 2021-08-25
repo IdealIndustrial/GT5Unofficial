@@ -1,10 +1,10 @@
 {
-  "benderAutogenRecipes": {
-    "blackList": [
-      {
-        "material": "iron",
-        "action": "plateBending"
-      }
-    ]
-  }
+    "benderAutogenRecipes": {
+        "blackList": [
+            {
+                "material": "iron",
+                "action": "plateBending"
+            }
+        ]
+    }
 }

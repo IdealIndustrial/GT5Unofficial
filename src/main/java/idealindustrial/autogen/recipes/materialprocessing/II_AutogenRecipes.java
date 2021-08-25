@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.II_Materials;
-import idealindustrial.autogen.recipes.AutogenRecipeDefinition;
 import idealindustrial.autogen.recipes.RecipeAction;
 import idealindustrial.util.json.JsonMaterialSerializer;
 

@@ -1,7 +1,6 @@
 package idealindustrial.autogen.recipes.materialprocessing;
 
 import idealindustrial.autogen.material.II_Material;
-import idealindustrial.autogen.recipes.AutogenRecipeDefinition;
 import idealindustrial.autogen.recipes.RecipeAction;
 
 import java.util.HashSet;

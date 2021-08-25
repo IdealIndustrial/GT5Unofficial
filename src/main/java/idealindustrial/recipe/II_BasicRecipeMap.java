@@ -24,13 +24,15 @@ public class II_BasicRecipeMap<R extends II_Recipe> implements II_RecipeMap<R> {
     protected List<R> allRecipes = new ArrayList<>();
     protected II_RecipeGuiParams params;
     protected Map<II_HashedStack, Set<R>> outputMap = II_ItemHelper.queryMap(new HashMap<>()), inputMap = II_ItemHelper.queryMap(new HashMap<>());
+    protected II_RecipeMapStorage<R> storage;
 
-    public II_BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls, II_RecipeGuiParams guiParams) {
+    public II_BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls, II_RecipeGuiParams guiParams, Class<R> recipeType) {
         this.name = name;
         this.checkConflicts = checkConflicts;
         this.allowNulls = allowNulls;
         this.params = guiParams;
         II_RecipeMaps.allRecipeMaps.add(this);
+        this.storage = new II_RecipeMapStorage<>(name.replace(' ', '.').toLowerCase() + ".json", recipeType);
     }
 
     @Override
@@ -121,6 +123,11 @@ public class II_BasicRecipeMap<R extends II_Recipe> implements II_RecipeMap<R> {
     @Override
     public Set<R> getUsageRecipes(II_StackSignature signature) {
         return loadRecipes(signature, inputMap);
+    }
+
+    @Override
+    public II_RecipeMapStorage<R> getJsonReflection() {
+        return storage;
     }
 
     protected Set<R> loadRecipes(II_StackSignature signature, Map<II_HashedStack, Set<R>> inputMap) {

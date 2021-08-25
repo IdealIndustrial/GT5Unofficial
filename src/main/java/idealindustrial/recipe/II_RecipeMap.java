@@ -25,6 +25,8 @@ public interface II_RecipeMap<R extends II_Recipe> {
 
     Set<R> getUsageRecipes(II_StackSignature signature);
 
+    II_RecipeMapStorage<R> getJsonReflection();
+
 //    boolean isInputEqualStacks(R recipe, II_RecipedInventory inventory, II_FluidHandler fluidInputs, boolean doConsume);
 
     //todo reinit call on IDs reFuck

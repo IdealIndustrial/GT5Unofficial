@@ -1,0 +1,27 @@
+{
+    "contents": [
+        {
+            "inputs": [
+                {
+                    "ore": "ingotCopper",
+                    "amount": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "mod": "gregtech",
+                    "name": "gt.metaitem.01",
+                    "damage": 17035,
+                    "amount": 1
+                }
+            ],
+            "fluidInputs": [],
+            "fluidOutputs": [],
+            "params": {
+                "voltage": 10,
+                "amperage": 1,
+                "duration": 30
+            }
+        }
+    ]
+}

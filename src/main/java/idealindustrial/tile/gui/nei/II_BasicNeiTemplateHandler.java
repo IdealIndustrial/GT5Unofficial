@@ -165,6 +165,8 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
         public II_PositionedStack(FluidStack signature, II_GuiSlotDefinition definition) {
             this(GT_Utility.getFluidDisplayStack(signature, true), definition.x, definition.y);
         }
+
+
     }
 
     public class II_CachedRecipe extends CachedRecipe {
@@ -194,7 +196,7 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
 
         @Override
         public List<PositionedStack> getIngredients() {
-            return inputs;
+            return getCycledIngredients(II_BasicNeiTemplateHandler.this.cycleticks / 10, this.inputs);
         }
 
         @Override
