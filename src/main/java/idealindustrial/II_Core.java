@@ -15,7 +15,7 @@ import idealindustrial.autogen.fluids.II_Fluids;
 import idealindustrial.autogen.implementation.II_MetaGeneratedCellItem;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.oredict.II_OreDict;
-import idealindustrial.autogen.recipes.II_AutogenRecipes;
+import idealindustrial.autogen.recipes.materialprocessing.II_AutogenRecipes;
 import idealindustrial.loader.II_BlocksLoader;
 import idealindustrial.loader.II_ItemsLoader;
 import idealindustrial.autogen.oredict.II_OredictHandler;
