@@ -106,7 +106,7 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
     public int checkRecipe() {
         ItemStack aStack = getInputAt(0);
         ItemStack tStack = getSpecialSlot();
-        if (aStack != null && tStack.stackSize == 1 &&
+        if (aStack != null && tStack != null && tStack.stackSize == 1 &&
                 (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, false))) {
             if ((GT_Utility.consumeItems(null, aStack, Item.getItemFromBlock(Blocks.tnt), 32)
                     || GT_Utility.consumeItems(null, aStack, Ic2Items.industrialTnt.getItem(), 16)

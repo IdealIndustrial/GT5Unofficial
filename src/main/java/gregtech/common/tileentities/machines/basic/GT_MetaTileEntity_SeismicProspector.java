@@ -80,8 +80,8 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
                         (aStack.getItem() == ItemList.Block_Powderbarrel.getItem() && aStack.stackSize > 7) ||
                         (aStack.getItem() == Ic2Items.industrialTnt.getItem() && aStack.stackSize > 1) ||
                         (aStack.getItem() == Ic2Items.dynamite.getItem() && aStack.stackSize > 7) ||
-                        (GT_OreDictUnificator.getItemData(aStack).mMaterial.mMaterial == Materials.Glyceryl && aStack.stackSize > 0)) &&
-                                tStack.stackSize == 1 && (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, false))
+                        (GT_OreDictUnificator.getItemData(aStack) != null && GT_OreDictUnificator.getItemData(aStack).mMaterial.mMaterial == Materials.Glyceryl && aStack.stackSize > 0)) &&
+                           tStack != null && tStack.stackSize == 1 && (ItemList.Tool_DataStick.isStackEqual(tStack, false, true) || ItemList.Tool_CD.isStackEqual(tStack, false, false))
         ) {
             if (aStack.getItem() == Item.getItemFromBlock(Blocks.tnt)) {
                 aStack.stackSize -= 4;
