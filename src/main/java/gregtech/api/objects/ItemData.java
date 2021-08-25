@@ -88,6 +88,7 @@ public class ItemData {
         mByProducts = rList.toArray(new MaterialStack[0]);
     }
 
+
     public final boolean hasValidPrefixMaterialData() {
         return mPrefix != null && mMaterial != null && mMaterial.mMaterial != null;
     }

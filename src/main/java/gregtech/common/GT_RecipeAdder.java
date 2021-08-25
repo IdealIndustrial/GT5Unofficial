@@ -13,6 +13,7 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.interfaces.internal.IGT_RecipeAdder;
+import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.objects.GT_FluidStack;
 import gregtech.api.objects.ItemData;
 import gregtech.api.util.*;
@@ -405,15 +406,20 @@ public class GT_RecipeAdder
     }
 
     public boolean addAssemblerRecipe(ItemStack[] aInputs, Object aOreDict, int aAmount, FluidStack aFluidInput, ItemStack aOutput1, int aDuration, int aEUt){
-    	for(ItemStack tStack : GT_OreDictUnificator.getOres(aOreDict)){
-    		if(GT_Utility.isStackValid(tStack)) {
-    			ItemStack[] extendedInputs = new ItemStack[aInputs.length + 1];
-    			System.arraycopy(aInputs, 0, extendedInputs, 0, aInputs.length);
-    			extendedInputs[aInputs.length] = GT_Utility.copyAmount(aAmount, tStack);
-    			addAssemblerRecipe(extendedInputs, aFluidInput, aOutput1, aDuration, aEUt);
-    		}
-    	}
+	    addAssemblerRecipe(aInputs, aOreDict, aAmount, aFluidInput, aOutput1, aDuration, aEUt, false);
     	return true;
+    }
+
+    public boolean addAssemblerRecipe(ItemStack[] aInputs, Object aOreDict, int aAmount, FluidStack aFluidInput, ItemStack aOutput1, int aDuration, int aEUt, boolean registerReverseSmelting){
+        for(ItemStack tStack : GT_OreDictUnificator.getOres(aOreDict)){
+            if(GT_Utility.isStackValid(tStack)) {
+                ItemStack[] extendedInputs = new ItemStack[aInputs.length + 1];
+                System.arraycopy(aInputs, 0, extendedInputs, 0, aInputs.length);
+                extendedInputs[aInputs.length] = GT_Utility.copyAmount(aAmount, tStack);
+                addAssemblerRecipe(extendedInputs, aFluidInput, aOutput1, aDuration, aEUt, registerReverseSmelting);
+            }
+        }
+        return true;
     }
 
     public boolean addAssemblerRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput1, int aDuration, int aEUt) {
@@ -432,16 +438,25 @@ public class GT_RecipeAdder
     }
 
     public boolean addAssemblerRecipe(ItemStack[] aInputs, FluidStack aFluidInput, ItemStack aOutput1, int aDuration, int aEUt) {
-    	if (areItemsAndFluidsBothNull(aInputs, new FluidStack[]{aFluidInput})) {
-    		return false;
-    	}
-    	if (aOutput1 == null) {
-    		return false;
-    	}
-    	if ((aDuration = GregTech_API.sRecipeFile.get("assembling", aOutput1, aDuration)) <= 0) {
+	    addAssemblerRecipe(aInputs, aFluidInput, aOutput1, aDuration, aEUt, false);
+        return true;
+    }
+
+    public boolean addAssemblerRecipe(ItemStack[] aInputs, FluidStack aFluidInput, ItemStack aOutput1, int aDuration, int aEUt, boolean addReverseSmelting) {
+        if (areItemsAndFluidsBothNull(aInputs, new FluidStack[]{aFluidInput})) {
+            return false;
+        }
+        if (aOutput1 == null) {
+            return false;
+        }
+        if ((aDuration = GregTech_API.sRecipeFile.get("assembling", aOutput1, aDuration)) <= 0) {
             return false;
         }
         GT_Recipe.GT_Recipe_Map.sAssemblerRecipes.addRecipe(true, aInputs, new ItemStack[]{aOutput1}, null, new FluidStack[]{aFluidInput}, null, aDuration, aEUt, 0);
+        if (addReverseSmelting) {
+            GT_ModHandler.registerItemDataForRecipe(aOutput1, aInputs, aFluidInput);
+            addDisassemblerRecipe(aOutput1, aInputs, 2400, 16);
+        }
         return true;
     }
 
@@ -1232,6 +1247,15 @@ public class GT_RecipeAdder
         if (aOutputs == null || aOutputs.length == 0|| aOutputs[0] == null) {
             return false;
         }
+        aOutputs = Arrays.stream(aOutputs).filter(is -> is != null && !(is.getItem() instanceof GT_IntegratedCircuit_Item) && !(is.getItem() instanceof GT_MetaGenerated_Tool))
+                .map(is -> {
+                    if (is.getItemDamage() == GT_Values.W) {
+                        ItemStack copy = is.copy();
+                        is.setItemDamage(0);
+                        return copy;
+                    }
+                    return is;
+                }).toArray(ItemStack[]::new);
         GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes.addRecipe(true, new ItemStack[]{aInput}, aOutputs, null, new FluidStack[0],new FluidStack[0], aDuration, aEUt, 0);
         return true;
     }

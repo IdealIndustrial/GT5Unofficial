@@ -1213,6 +1213,26 @@ public class GT_ModHandler {
         return true;
     }
 
+    public static void registerItemDataForRecipe(ItemStack result, ItemStack[] inputs, FluidStack fluidInput) {
+        ItemData[] tItemDataMap = new ItemData[Arrays.stream(inputs).mapToInt(is -> is == null ? 0 : is.stackSize).sum() + (fluidInput == null ? 0 : 1)];
+        int ptr = 0;
+        for (ItemStack in : inputs) {
+            if (in != null) {
+                for (int j = 0; j < in.stackSize; j++) {
+                    tItemDataMap[ptr++] = GT_OreDictUnificator.getItemData(in);
+                }
+            }
+        }
+
+        if (fluidInput != null) {
+            tItemDataMap[tItemDataMap.length - 1] = Materials.forFluid(fluidInput.getFluid()) != null ? new ItemData(Materials.forFluid(fluidInput.getFluid()), M * fluidInput.amount / 144) : null;
+        }
+        if ( result != null) {
+            if (GT_Utility.arrayContainsNonNull(tItemDataMap))
+                GT_OreDictUnificator.addItemData(result, new ItemData(tItemDataMap));
+        }
+    }
+
     /**
      * Shapeless Crafting Recipes. Deletes conflicting Recipes too.
      */
