@@ -5,6 +5,7 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.gui.GT_Slot_Holo;
 import gregtech.api.gui.GT_Slot_RestrictedContents;
 import gregtech.api.util.GT_Log;
+import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_ItemInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -66,8 +67,6 @@ public class GT_Container_DataReader extends Container {
 
     @Override
     public ItemStack slotClick(int aSlotIndex, int aMouseclick, int aShifthold, EntityPlayer aPlayer) {
-        if (GT_Mod.gregtechproxy.isServerSide())
-            System.out.println(aSlotIndex + " " + aMouseclick + " " + aShifthold);
         if (aSlotIndex == (mRestrictedSlot + 27))
             return null;
         if (aShifthold == 2 && aMouseclick == mRestrictedSlot)
@@ -100,7 +99,23 @@ public class GT_Container_DataReader extends Container {
 
 
         } else if (aSlotIndex == 36) {
-            return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
+            ItemStack before = mInventory.getStackInSlot(0);
+            ItemStack tmp = super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
+            ItemStack after = mInventory.getStackInSlot(0);
+            if (before == null ^ after == null || !GT_Utility.areStacksEqual(before, after, false)) {
+                ItemStack aTool = aPlayer.getHeldItem();
+                if (aTool == null) {
+                    return tmp;
+                }
+                NBTTagCompound tNbt = aTool.getTagCompound();
+                if (tNbt == null) {
+                    tNbt = new NBTTagCompound();
+                }
+                tNbt.setInteger("page", 0);
+                aTool.setTagCompound(tNbt);
+
+            }
+            return tmp;
         }
         return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
     }
