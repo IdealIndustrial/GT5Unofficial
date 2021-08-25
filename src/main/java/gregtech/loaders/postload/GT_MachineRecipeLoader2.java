@@ -26,10 +26,9 @@ public class GT_MachineRecipeLoader2 implements Runnable {
                 Materials.Oxygen.getGas(9000L), get(OrePrefixes.dust, Materials.Aluminium, 8), get(OrePrefixes.dust, Materials.Sulfur, 3), null, null, null, null,
                 null, 20 * 20, 90);
 
-        if (Loader.isModLoaded("ProjRed|Integration") && Loader.isModLoaded("ProjRed|Core")) {
-            RA.addDisassemblerRecipe(GT_ModHandler.getModItem("ProjRed|Integration", "projectred.integration.gate", 1, 34),
-                    new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Basic, 8), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Good, 4),
-                            GT_ModHandler.getModItem("ProjRed|Core", "projectred.core.part", 8)}, 2400, 16);
+        if (Loader.isModLoaded("ProjRed|Fabrication") && Loader.isModLoaded("ProjRed|Core")) {
+            RA.addDisassemblerRecipe(GT_ModHandler.getModItem("ProjRed|Fabrication", "projectred.fabrication.icchip", 1),
+                    new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Basic, 8), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Good, 4)}, 2400, 16);
         }
         RA.addFakeDisassemblerRecipe(new ItemStack(Items.egg, 1), new ItemStack[]{ItemList.Circuit_Chip_Stemcell.getWithName(1, "Chance (%) is equal to machine tier")}, 2400, 16);
     }
