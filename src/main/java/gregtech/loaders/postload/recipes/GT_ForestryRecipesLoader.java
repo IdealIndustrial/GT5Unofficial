@@ -35,6 +35,8 @@ public class GT_ForestryRecipesLoader implements Runnable {
         GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "sturdyMachine", 1L, 0), GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Diamond, 4L), Materials.Water.getFluid(5000L), ItemList.FR_Casing_Hardened.get(1L), 64, 32);
         GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, Materials.Bronze, 8L), ItemList.Circuit_Integrated.getWithDamage(0L, 8L), GT_Values.NF, ItemList.FR_Casing_Sturdy.get(1L), 32, 16);
         GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 5L, 1), ItemList.Circuit_Integrated.getWithDamage(0L, 5L), GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnderPearl, 1L), 64, 8);
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_ModHandler.getModItem(aTextForestry, "pollen", 1L, 0), GT_ModHandler.getModItem(aTextForestry, "royalJelly", 1L, 0),GT_ModHandler.getModItem(aTextForestry, "beeswax", 2L, 0), 
+		GT_OreDictUnificator.get(OrePrefixes.plank, Materials.Wood, 3L),}, Materials.Honey.getFluid(500L), GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 1L, 6), 80, 64);	    
     }	
 	
     private void addThermionicTubesRecipes() {
