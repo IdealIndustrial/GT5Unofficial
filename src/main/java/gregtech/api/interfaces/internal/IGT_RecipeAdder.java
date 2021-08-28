@@ -314,6 +314,7 @@ public interface IGT_RecipeAdder {
      * @param aEUt      should be > 0
      */
     public boolean addAssemblylineRecipe(ItemStack aResearchItem, int aResearchTime, ItemStack[] aInputs, FluidStack[] aFluidInputs, ItemStack aOutput1, int aDuration, int aEUt);
+    public boolean addAssemblylineRecipe(ItemStack aResearchItem, int aResearchTime, ItemStack[] aInputs, FluidStack[] aFluidInputs, ItemStack aOutput1, int aDuration, int aEUt, boolean addRecyclingRecipes);
 
     /**
      * Adds a Assemblyline Recipe
@@ -322,6 +323,7 @@ public interface IGT_RecipeAdder {
      *                                      {OreDict, amount} for oredict.
      */
     public boolean addAssemblylineRecipe(ItemStack aResearchItem, int aResearchTime, Object[] aInputs, FluidStack[] aFluidInputs, ItemStack aOutput1, int aDuration, int aEUt);
+    public boolean addAssemblylineRecipe(ItemStack aResearchItem, int aResearchTime, Object[] aInputs, FluidStack[] aFluidInputs, ItemStack aOutput1, int aDuration, int aEUt, boolean addRecyclingRecipes);
 
     /**
      * Adds a Forge Hammer Recipe
