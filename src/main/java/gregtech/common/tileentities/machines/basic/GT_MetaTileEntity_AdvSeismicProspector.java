@@ -70,7 +70,8 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
                 "32 TNT, 16 Industrial TNT, 8 Glyceryl",
                 "Use Data Stick for save data",
                 "Ore prospection area 191x191 blocks",
-                "Oil prospection area 3x3 oilfields"};
+                "Oil prospection area 3x3 oilfields",
+                "Uses " + 240*800 + "EU per scan"};
     }
 
     protected GT_MetaTileEntity_AdvSeismicProspector(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures,
@@ -115,6 +116,7 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
                     mInventory[getInputSlot()] = null;
                 }
                 mMaxProgresstime = 800;
+                mEUt = 240;
                 return 2;
             }
         }
@@ -149,10 +151,6 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
                 GT_Utility.sortByValueToList(tFarOres),
                 near, middle, radius);
         getBaseMetaTileEntity().disableWorking();
-    }
-
-    public long getMinimumStoredEU() {
-        return 0;
     }
 
 
