@@ -61,7 +61,9 @@ public class Behaviour_DataReader
                         nbt.removeTag("prog");
                         nbt.setTag("s0", tStack.writeToNBT(new NBTTagCompound()));
                         Container container = ((EntityPlayer) aPlayer).openContainer;
-                        if (container instanceof GT_Container_DataReader) {//if gui is open we should replace stack with new stack or it will save old stack
+                        if (container instanceof GT_Container_DataReader &&
+                                GT_Utility.areStacksEqual(((GT_Container_DataReader) container).mInventory.getStackInSlot(0), tStack, false)) {
+                            //if gui is open we should replace stack with new stack or it will save old stack
                             ((GT_Container_DataReader) container).mInventory.setInventorySlotContents(0, tStack);
                         }
                     }
