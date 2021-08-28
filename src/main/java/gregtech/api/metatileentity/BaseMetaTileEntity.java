@@ -438,7 +438,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                     return;
                                 }
 
-                                if (!mWaterProof && !getMetaTileEntity().isWaterProofByDefault() && (mTickTimer&512) == 512 && getRandomNumber(10) == 0) {
+                                if (!mWaterProof && !getMetaTileEntity().isWaterProofByDefault() && (mTickTimer&512) == 512 && getRandomNumber(3) == 0) {
                                     if (Arrays.stream(new Block[]{
                                             worldObj.getBlock(xCoord + 1, yCoord, zCoord), worldObj.getBlock(xCoord - 1, yCoord, zCoord),
                                             worldObj.getBlock(xCoord, yCoord + 1, zCoord), 
