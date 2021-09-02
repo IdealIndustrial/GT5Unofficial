@@ -930,7 +930,10 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     protected GT_Recipe findRecipe(GT_Recipe.GT_Recipe_Map map, GT_Recipe aLastRecipe, ItemStack[] aInputs, FluidStack[] aFluids, long aVoltage) {
-        return map.findRecipe(getBaseMetaTileEntity(), aLastRecipe, false, !mResolveRecipeConflicts,  aVoltage, aFluids, aInputs);
+        if (mResolveRecipeConflicts) {
+             return map.findRecipe(getBaseMetaTileEntity(), aLastRecipe, false, false, aVoltage, aFluids, aInputs);
+        }
+        return  map.findRecipe(getBaseMetaTileEntity(), aLastRecipe, false, aVoltage, aFluids, aInputs);
     }
 
     protected boolean canHaveRecipeConflicts() {
