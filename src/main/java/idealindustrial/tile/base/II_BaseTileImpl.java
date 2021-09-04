@@ -18,6 +18,7 @@ import idealindustrial.tile.covers.II_CoverRegistry;
 import idealindustrial.tile.interfaces.base.II_BaseTile;
 import idealindustrial.tile.interfaces.meta.II_MetaTile;
 import idealindustrial.tile.meta.II_BaseMetaTile_Facing1Output;
+import idealindustrial.tile.meta.II_BaseMetaTile_Facing2Main;
 import idealindustrial.tools.II_ToolRegistry;
 import idealindustrial.util.item.II_HashedStack;
 import idealindustrial.util.misc.II_StreamUtil;
@@ -187,17 +188,17 @@ public class II_BaseTileImpl extends BaseTileEntity implements II_BaseTile {
     @SuppressWarnings("rawtypes")//shitty, extremely shitty
     public ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers) {
         int oldFacing = 0;
-        if (metaTileEntity instanceof II_BaseMetaTile_Facing1Output) {//shitty but works for now
-            oldFacing = ((II_BaseMetaTile_Facing1Output) metaTileEntity).outputFacing;
-            ((II_BaseMetaTile_Facing1Output) metaTileEntity).outputFacing = aFacing;
+        if (metaTileEntity instanceof II_BaseMetaTile_Facing2Main) {//shitty but works for now
+            oldFacing = ((II_BaseMetaTile_Facing2Main) metaTileEntity).mainFacing;
+            ((II_BaseMetaTile_Facing2Main) metaTileEntity).mainFacing = aFacing;
         }
         ITexture[][] textures = new ITexture[6][];
         for (int side = 0; side < 6; side++) {
             textures[side] = provideTexture(aActive, side);
         }
 
-        if (metaTileEntity instanceof II_BaseMetaTile_Facing1Output) {
-            ((II_BaseMetaTile_Facing1Output) metaTileEntity).outputFacing = oldFacing;
+        if (metaTileEntity instanceof II_BaseMetaTile_Facing2Main) {
+            ((II_BaseMetaTile_Facing2Main) metaTileEntity).mainFacing = oldFacing;
         }
         return textures;//inventory
     }

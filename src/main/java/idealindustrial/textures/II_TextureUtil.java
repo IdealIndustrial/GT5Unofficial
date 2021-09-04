@@ -9,8 +9,8 @@ import idealindustrial.util.misc.II_StreamUtil;
 import java.util.Arrays;
 
 public class II_TextureUtil {
-    public static final TextureConfiguration facing1Configuration = new TextureConfiguration(true,"bottom", "top", "side", "output");
-    public static final TextureConfiguration facing2Configuration = new TextureConfiguration(true,"bottom", "top", "side", "output", "main");
+    public static final TextureConfiguration facing1Configuration = new TextureConfiguration(true,"bottom", "top", "side", "out");
+    public static final TextureConfiguration facing2Configuration = new TextureConfiguration(true,"bottom", "top", "side", "out", "main");
 
     public static class TextureConfiguration {
         public final String[] textureNames;
