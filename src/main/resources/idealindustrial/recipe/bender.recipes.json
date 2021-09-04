@@ -9,9 +9,7 @@
             ],
             "outputs": [
                 {
-                    "mod": "gregtech",
-                    "name": "gt.metaitem.01",
-                    "damage": 17035,
+                    "ore": "plateCopper",
                     "amount": 1
                 }
             ],

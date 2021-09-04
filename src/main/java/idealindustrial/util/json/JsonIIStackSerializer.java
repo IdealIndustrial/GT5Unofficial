@@ -2,6 +2,8 @@ package idealindustrial.util.json;
 
 import com.google.gson.*;
 import cpw.mods.fml.common.registry.GameRegistry;
+import idealindustrial.autogen.oredict.II_OreDict;
+import idealindustrial.autogen.oredict.II_OreInfo;
 import idealindustrial.util.item.II_ItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,12 +28,23 @@ public class JsonIIStackSerializer implements JsonSerializer<II_ItemStack>, Json
     @Override
     public II_ItemStack deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = json.getAsJsonObject();
-        String mod = object.get("mod").getAsString();
-        String name = object.get("name").getAsString();
-        int damage = object.get("damage").getAsInt();
         int amount = object.get("amount").getAsInt();
         NBTTagCompound nbtTagCompound = object.has("nbt") ? context.deserialize(object.get("nbt"), NBTTagCompound.class) : null;
-        ItemStack is = new ItemStack(GameRegistry.findItem(mod, name), amount, damage);
+        ItemStack is;
+        if (object.has("ore")) {
+            String ore = object.get("ore").getAsString();
+            II_OreInfo info = II_OreDict.get(ore);
+            if (info == null) {
+                return null;
+            }
+            is = info.getMain().toItemStack(amount);
+        }
+        else {
+            String mod = object.get("mod").getAsString();
+            String name = object.get("name").getAsString();
+            int damage = object.get("damage").getAsInt();
+            is = new ItemStack(GameRegistry.findItem(mod, name), amount, damage);
+        }
         is.setTagCompound(nbtTagCompound);
         return new II_ItemStack(is);//todo make properly constructor for II_Stack with nbt and without vanilla ItemStack
     }
