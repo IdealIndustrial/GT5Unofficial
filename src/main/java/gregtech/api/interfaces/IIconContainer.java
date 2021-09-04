@@ -12,7 +12,7 @@ public interface IIconContainer {
     /**
      * @return Icon of the Overlay (or null if there is no Icon)
      */
-    public IIcon getOverlayIcon();
+    public IIcon getOverlayIcon();//todo remove overlay, its unnecessary
 
     /**
      * @return the Default Texture File for this Icon.

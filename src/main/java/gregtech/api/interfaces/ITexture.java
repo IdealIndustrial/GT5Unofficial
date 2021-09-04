@@ -17,4 +17,8 @@ public interface ITexture {
     public void renderZNeg(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ);
 
     public boolean isValidTexture();
+
+    default IIconContainer getContainer() {
+        return null;//temp compat, todo: remove when GT-code removed
+    }
 }

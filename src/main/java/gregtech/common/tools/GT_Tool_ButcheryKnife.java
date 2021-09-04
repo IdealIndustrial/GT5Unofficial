@@ -77,4 +77,5 @@ public class GT_Tool_ButcheryKnife
     public boolean isMinableBlock(Block aBlock, byte aMetaData) {
         return false;
     }
+
 }

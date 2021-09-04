@@ -76,7 +76,7 @@ public abstract class II_BaseItem extends Item {
         if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
             list.add("gg");
         }
-        //
+        //todo: add more info on I
     }
 
     public boolean isItemStackUsable(ItemStack stack) {
