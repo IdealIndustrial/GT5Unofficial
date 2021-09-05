@@ -3,13 +3,13 @@ package idealindustrial.tile.gui.nei;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiUsageRecipe;
-import idealindustrial.recipe.II_RecipeMap;
-import idealindustrial.recipe.II_RecipeMaps;
+import idealindustrial.recipe.RecipeMap;
+import idealindustrial.recipe.RecipeMaps;
 
 public class NEI_II_Config implements IConfigureNEI {
 
     public void loadConfig() {
-        for (II_RecipeMap<?> map : II_RecipeMaps.allRecipeMaps) {
+        for (RecipeMap<?> map : RecipeMaps.allRecipeMaps) {
             II_BasicNeiTemplateHandler handler = new II_BasicNeiTemplateHandler(map);
             GuiCraftingRecipe.craftinghandlers.add(handler);
             GuiUsageRecipe.usagehandlers.add(handler);

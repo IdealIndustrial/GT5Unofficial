@@ -1,6 +1,6 @@
 package idealindustrial.tile.meta.multi.struct;
 
-import idealindustrial.entity.II_CubeRenderedParticle;
+import idealindustrial.entity.CubeRenderedParticle;
 import idealindustrial.util.worldgen.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class DirectBlockPredicate implements ICoordPredicate{
                     MachineStructureException.invalidBlockAt(position);
                 }
             case RENDER:
-                Minecraft.getMinecraft().effectRenderer.addEffect(new II_CubeRenderedParticle(w, position, params.renderer).setTextures(block, meta));
+                Minecraft.getMinecraft().effectRenderer.addEffect(new CubeRenderedParticle(w, position, params.renderer).setTextures(block, meta));
                 break;
         }
     }

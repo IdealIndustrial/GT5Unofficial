@@ -2,8 +2,8 @@ package idealindustrial.util.json;
 
 import com.google.gson.*;
 import cpw.mods.fml.common.registry.GameRegistry;
-import idealindustrial.autogen.oredict.II_OreDict;
-import idealindustrial.autogen.oredict.II_OreInfo;
+import idealindustrial.autogen.oredict.OreDict;
+import idealindustrial.autogen.oredict.OreInfo;
 import idealindustrial.util.item.II_ItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,7 +33,7 @@ public class JsonIIStackSerializer implements JsonSerializer<II_ItemStack>, Json
         ItemStack is;
         if (object.has("ore")) {
             String ore = object.get("ore").getAsString();
-            II_OreInfo info = II_OreDict.get(ore);
+            OreInfo info = OreDict.get(ore);
             if (info == null) {
                 return null;
             }

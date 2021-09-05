@@ -5,8 +5,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
-import idealindustrial.autogen.oredict.II_OreDict;
-import idealindustrial.autogen.oredict.II_OreInfo;
+import idealindustrial.autogen.oredict.OreDict;
+import idealindustrial.autogen.oredict.OreInfo;
 import idealindustrial.util.item.CheckType;
 import idealindustrial.util.item.II_StackSignature;
 import net.minecraft.item.Item;
@@ -24,10 +24,10 @@ public class JsonStackSignatureSerializer implements JsonSerializer<II_StackSign
         if (object.has("material")) {
             II_Material material = II_Materials.materialForName(object.get("material").getAsString());
             Prefixes prefix = prefixForName(object.get("prefix").getAsString());
-            return new II_StackSignature(II_OreDict.get(prefix, material), amount);
+            return new II_StackSignature(OreDict.get(prefix, material), amount);
         }
         if (object.has("ore")) {
-            return new II_StackSignature(II_OreDict.get(object.get("ore").getAsString()), amount);
+            return new II_StackSignature(OreDict.get(object.get("ore").getAsString()), amount);
         }
         NBTTagCompound nbtTag = null;
         if (object.has("nbt")) {
@@ -73,7 +73,7 @@ public class JsonStackSignatureSerializer implements JsonSerializer<II_StackSign
                 object.addProperty("damage", src.getDamageValue());
                 break;
             case OREDICT:
-                II_OreInfo info = src.getOreInfo();
+                OreInfo info = src.getOreInfo();
                 object.addProperty("ore", info.getName());
                 break;
         }
