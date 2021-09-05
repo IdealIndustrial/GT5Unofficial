@@ -14,23 +14,23 @@ public class MachineStructureBuilder<MachineTile extends IStructuredMachine> {
     List<MultiMachineStructureBox> boxes = new ArrayList<>();
     List<Consumer<MachineTile>> predicates = new ArrayList<>();
 
-    public ShapeAdded addShape(String[][] shape) {
-        return new ShapeAdded(shape);
+    public ShapeAdder addShape(String[][] shape) {
+        return new ShapeAdder(shape);
     }
 
     public MultiMachineShape<MachineTile> create() {
         return new MultiMachineShape<>(boxes, predicates);
     }
 
-    protected class ShapeAdded {
+    protected class ShapeAdder {
         String[][] shape;
         Map<Character, ICoordPredicate> signatureMap = new HashMap<>();
 
-        public ShapeAdded(String[][] shape) {
+        public ShapeAdder(String[][] shape) {
             this.shape = shape;
         }
 
-        public ShapeAdded define(char ch, ICoordPredicate predicate) {
+        public ShapeAdder define(char ch, ICoordPredicate predicate) {
             signatureMap.put(ch, predicate);
             return this;
         }

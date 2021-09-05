@@ -40,7 +40,7 @@ public class DirectBlockPredicate implements ICoordPredicate{
                     MachineStructureException.invalidBlockAt(position);
                 }
             case RENDER:
-                Minecraft.getMinecraft().effectRenderer.addEffect(new II_CubeRenderedParticle(w, position, params.renderer));
+                Minecraft.getMinecraft().effectRenderer.addEffect(new II_CubeRenderedParticle(w, position, params.renderer).setTextures(block, meta));
                 break;
         }
     }

@@ -18,16 +18,19 @@ public class II_CubeRenderedParticle extends EntityFX {
     private boolean texturesAreSet = false;
 
     public II_CubeRenderedParticle(World world, int x, int y, int z, IGuideRenderer renderer) {
-        super(world, x+.25, y+.5, z+.25);
+        super(world, x + .25, y + .5, z + .25);
         particleGravity = 0;
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
         noClip = true;
-        particleMaxAge = 40;
 
-        if(renderer!=null)
+        if (renderer != null) {
             renderer.registerNewParticle(this);
+            particleMaxAge = renderer.getMaxAge();
+        } else {
+            particleMaxAge = 40;
+        }
     }
 
     public II_CubeRenderedParticle(World world, Vector3 position, IGuideRenderer renderer) {
@@ -75,11 +78,11 @@ public class II_CubeRenderedParticle extends EntityFX {
 
         //var8, var9 - X U
         //var 10, var 11 - Y V
-        for(int i=0;i<6;i++){
-            if(icons[i]==null) {
+        for (int i = 0; i < 6; i++) {
+            if (icons[i] == null) {
                 continue;
             }
-            for (int textureI = 0; textureI < icons[i].length; textureI++ ) {
+            for (int textureI = 0; textureI < icons[i].length; textureI++) {
                 IIcon toRender = icons[i][textureI];
                 double u = toRender.getMinU();
                 double U = toRender.getMaxU();
@@ -136,6 +139,6 @@ public class II_CubeRenderedParticle extends EntityFX {
 
     @Override
     public boolean shouldRenderInPass(int pass) {
-        return pass==2;
+        return pass == 2;
     }
 }
