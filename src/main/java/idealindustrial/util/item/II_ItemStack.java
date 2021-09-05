@@ -4,8 +4,8 @@ package idealindustrial.util.item;
 import appeng.util.item.AESharedNBT;
 import appeng.util.item.II_Hackery;
 import cpw.mods.fml.common.registry.GameRegistry;
-import idealindustrial.autogen.oredict.II_OreDict;
-import idealindustrial.autogen.oredict.II_OreInfo;
+import idealindustrial.autogen.oredict.OreDict;
+import idealindustrial.autogen.oredict.OreInfo;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class II_ItemStack {
     ItemDef def;
     public int amount;
-    II_HashedStack cachedStack;
+    HashedStack cachedStack;
     ItemStack cachedMCStack;
 
     public II_ItemStack(ItemStack is) {
@@ -50,8 +50,8 @@ public class II_ItemStack {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof II_HashedStack) {
-            II_HashedStack that = ((II_HashedStack) o);
+        if (o instanceof HashedStack) {
+            HashedStack that = ((HashedStack) o);
 
         }
         if (o == null || getClass() != o.getClass()) return false;
@@ -63,7 +63,7 @@ public class II_ItemStack {
         return def.getItemID() == stack.def.getItemID() && def.getDamageValue() == stack.def.getDamageValue();
     }
 
-    public boolean equalsHashedStack(II_HashedStack stack) {
+    public boolean equalsHashedStack(HashedStack stack) {
         return stack.itemID == def.getItemID() && stack.damage == def.getDamageValue();
     }
 
@@ -82,11 +82,11 @@ public class II_ItemStack {
     }
 
     public boolean hasOre(String ore) {
-        II_OreInfo oreInfo = II_OreDict.get(ore);
+        OreInfo oreInfo = OreDict.get(ore);
         if (oreInfo == null) {
             return false;
         }
-        for (II_HashedStack stack : oreInfo.getSubItems()) {
+        for (HashedStack stack : oreInfo.getSubItems()) {
             if (equalsHashedStack(stack)) {
                 return true;
             }
@@ -95,9 +95,9 @@ public class II_ItemStack {
     }
 
 
-    public II_HashedStack toHashedStack() {
+    public HashedStack toHashedStack() {
         if (cachedStack == null) {
-            return cachedStack = new II_HashedStack(def.getItem(), def.getDamageValue());
+            return cachedStack = new HashedStack(def.getItem(), def.getDamageValue());
         }
         return cachedStack;
     }

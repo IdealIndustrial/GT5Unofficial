@@ -1,14 +1,12 @@
 package idealindustrial.util.energy;
 
-import idealindustrial.util.energy.system.II_CableSystem;
-
-import java.util.Objects;
+import idealindustrial.util.energy.system.CableSystem;
 
 public class II_DefaultEUProducer implements EUProducer {
-    protected II_BasicEnergyHandler handler;
-    protected II_CableSystem system = null;
+    protected BasicEnergyHandler handler;
+    protected CableSystem system = null;
 
-    public II_DefaultEUProducer(II_BasicEnergyHandler handler) {
+    public II_DefaultEUProducer(BasicEnergyHandler handler) {
         this.handler = handler;
     }
 
@@ -40,7 +38,7 @@ public class II_DefaultEUProducer implements EUProducer {
     }
 
     @Override
-    public void setSystem(II_CableSystem system) {
+    public void setSystem(CableSystem system) {
         this.system = system;
     }
 

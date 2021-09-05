@@ -8,7 +8,7 @@ public class LangTest {
     @LocalizeEvent
     public static void addNumbers() {
         for (int i = 0; i < 10; i++) {
-            II_Lang.add("bin:" + i, Integer.toBinaryString(i));
+            LangHandler.add("bin:" + i, Integer.toBinaryString(i));
         }
     }
 

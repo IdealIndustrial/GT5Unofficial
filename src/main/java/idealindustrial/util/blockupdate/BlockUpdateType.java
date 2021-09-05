@@ -1,8 +1,5 @@
 package idealindustrial.util.blockupdate;
 
-import idealindustrial.tile.meta.connected.II_MetaConnected_Cable;
-import idealindustrial.util.misc.II_TileUtil;
-
 public enum BlockUpdateType {
 
     ;

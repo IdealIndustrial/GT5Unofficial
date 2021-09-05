@@ -1,15 +1,15 @@
 package idealindustrial.teststuff;
 
-import idealindustrial.autogen.blocks.II_MetaBlock_Item;
-import idealindustrial.autogen.blocks.base.II_Base_Block;
+import idealindustrial.autogen.blocks.MetaBlock_Item;
+import idealindustrial.autogen.blocks.base.BaseBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class TestBlock extends II_Base_Block implements ITileEntityProvider {
+public class TestBlock extends BaseBlock implements ITileEntityProvider {
     public TestBlock() {
-        super(II_MetaBlock_Item.class, "testBlockZBS", Material.iron);
+        super(MetaBlock_Item.class, "testBlockZBS", Material.iron);
 
     }
 

@@ -5,7 +5,7 @@ import gregtech.api.objects.GT_ItemStack;
 
 import java.lang.reflect.Method;
 
-public class II_GT_ToolDef implements II_ToolDefinition {
+public class II_GT_ToolDef implements ToolDefinition {
     protected GT_HashSet<GT_ItemStack> set;
     protected Method toInvoke;
     protected boolean fullArgs;

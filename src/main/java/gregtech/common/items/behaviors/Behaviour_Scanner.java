@@ -12,7 +12,7 @@ import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Proxy;
-import idealindustrial.entity.II_CubeRenderedParticle;
+import idealindustrial.entity.CubeRenderedParticle;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,7 +56,7 @@ public class Behaviour_Scanner
 
             return true;
         }
-        Minecraft.getMinecraft().effectRenderer.addEffect(new II_CubeRenderedParticle(aWorld, aX, aY + 1, aZ, null).setTextures(GregTech_API.sBlockCasings3, 13));
+        Minecraft.getMinecraft().effectRenderer.addEffect(new CubeRenderedParticle(aWorld, aX, aY + 1, aZ, null).setTextures(GregTech_API.sBlockCasings3, 13));
         GT_Utility.doSoundAtClient(GregTech_API.sSoundList.get(108), 1, 1.0F, aX, aY, aZ);
         return aPlayer instanceof EntityPlayerMP;
     }

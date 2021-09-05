@@ -46,7 +46,7 @@ public class NodeProducer implements IEnergyNode, EUProducer {
     }
 
     @Override
-    public void setSystem(II_CableSystem system) {
+    public void setSystem(CableSystem system) {
         producer.setSystem(system);
     }
 

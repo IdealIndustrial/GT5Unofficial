@@ -2,16 +2,16 @@ package idealindustrial.autogen.material;
 
 import gregtech.api.enums.TextureSet;
 import idealindustrial.autogen.material.submaterial.BlockType;
-import idealindustrial.autogen.oredict.II_OredictHandler;
+import idealindustrial.autogen.oredict.OredictHandler;
 import idealindustrial.autogen.oredict.RegisterOresEvent;
 import idealindustrial.reflection.events.II_EventListener;
-import idealindustrial.tile.covers.II_CoverRegistry;
+import idealindustrial.tile.covers.CoverRegistry;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static idealindustrial.autogen.material.II_MaterialBuilder.make;
+import static idealindustrial.autogen.material.MaterialBuilder.make;
 import static idealindustrial.autogen.material.Prefixes.*;
 
 @II_EventListener
@@ -44,11 +44,11 @@ public class II_Materials {
 
 
     public static void initMaterialLoops() {
-        II_CoverRegistry.init();
+        CoverRegistry.init();
     }
 
     @RegisterOresEvent
-    public static void registerExpected(II_OredictHandler handler) {
+    public static void registerExpected(OredictHandler handler) {
         for (II_Material material : II_Materials.allMaterials) {
             for (Prefixes prefix : material.getExpectedPrefixes()) {
                 handler.registerExpected(prefix, material);

@@ -1,7 +1,7 @@
 package idealindustrial.util.item;
 
 import appeng.util.item.II_Hackery;
-import idealindustrial.autogen.oredict.II_OreInfo;
+import idealindustrial.autogen.oredict.OreInfo;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -10,14 +10,14 @@ import java.util.List;
 
 public class II_StackSignature extends II_ItemStack {
     CheckType type;
-    II_OreInfo oreInfo;
+    OreInfo oreInfo;
 
     public II_StackSignature(Item item, int damage, int amount) {
         super(item, damage, amount);
         this.type = CheckType.DAMAGE;
     }
 
-    public II_StackSignature(II_OreInfo oreInfo, int amount) {
+    public II_StackSignature(OreInfo oreInfo, int amount) {
         assert oreInfo != null;
         this.type = CheckType.OREDICT;
         this.oreInfo = oreInfo;
@@ -56,7 +56,7 @@ public class II_StackSignature extends II_ItemStack {
      *
      * @return all possible stacks with this oreName
      */
-    public List<II_HashedStack> correspondingStacks() {
+    public List<HashedStack> correspondingStacks() {
         if (type == CheckType.OREDICT) {
             return oreInfo.getSubItems();
         }
@@ -89,7 +89,7 @@ public class II_StackSignature extends II_ItemStack {
         return oreInfo.getName();
     }
 
-    public II_OreInfo getOreInfo() {
+    public OreInfo getOreInfo() {
         return oreInfo;
     }
 

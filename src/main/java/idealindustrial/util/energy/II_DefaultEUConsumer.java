@@ -2,11 +2,11 @@ package idealindustrial.util.energy;
 
 public class II_DefaultEUConsumer implements EUConsumer {
 
-    protected II_BasicEnergyHandler handler;
+    protected BasicEnergyHandler handler;
     protected int side;
     protected boolean notifyOnFull;
 
-    public II_DefaultEUConsumer(II_BasicEnergyHandler handler, int side) {
+    public II_DefaultEUConsumer(BasicEnergyHandler handler, int side) {
         this.handler = handler;
         this.side = side;
     }

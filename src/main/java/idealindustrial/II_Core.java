@@ -6,29 +6,28 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import idealindustrial.autogen.recipes.II_RecipeManager;
+import idealindustrial.autogen.oredict.OreDict;
+import idealindustrial.autogen.oredict.OredictHandler;
+import idealindustrial.autogen.recipes.RecipeManager;
+import idealindustrial.autogen.recipes.materialprocessing.AutogenRecipes;
 import idealindustrial.commands.CommandFixMaterials;
 import idealindustrial.commands.CommandFixQuests;
 import idealindustrial.commands.DimTPCommand;
 import idealindustrial.commands.ReloadRecipesCommand;
 import idealindustrial.integration.ingameinfo.InGameInfoLoader;
 import idealindustrial.autogen.fluids.II_Fluids;
-import idealindustrial.autogen.implementation.II_MetaGeneratedCellItem;
+import idealindustrial.autogen.implementation.MetaGeneratedCellItem;
 import idealindustrial.autogen.material.II_Materials;
-import idealindustrial.autogen.oredict.II_OreDict;
-import idealindustrial.autogen.recipes.materialprocessing.II_AutogenRecipes;
-import idealindustrial.loader.II_BlocksLoader;
-import idealindustrial.loader.II_ItemsLoader;
-import idealindustrial.autogen.oredict.II_OredictHandler;
-import idealindustrial.loader.II_Render;
-import idealindustrial.recipe.II_RecipeMaps;
+import idealindustrial.loader.BlocksLoader;
+import idealindustrial.loader.ItemsLoader;
+import idealindustrial.loader.RenderLoader;
 import idealindustrial.teststuff.RenderTest;
 import idealindustrial.teststuff.TestBlock;
 import idealindustrial.teststuff.TestTile;
 import idealindustrial.tile.gui.II_GuiHandler;
-import idealindustrial.tools.II_ToolRegistry;
-import idealindustrial.util.lang.II_Lang;
-import idealindustrial.util.world.II_WorldTickHandler;
+import idealindustrial.tools.ToolRegistry;
+import idealindustrial.util.lang.LangHandler;
+import idealindustrial.util.world.WorldTickHandler;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -40,8 +39,6 @@ import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 @Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false, dependencies = "after:gregtech")
 public class II_Core {
@@ -57,24 +54,24 @@ public class II_Core {
 
     private static final String version = "1.17.1";
 
-    II_Render renderLoader;
-    II_ItemsLoader itemsLoader;
-    II_BlocksLoader blocksLoader;
-    II_OredictHandler oredictLoader;
-    II_AutogenRecipes autogen;
+    RenderLoader renderLoader;
+    ItemsLoader itemsLoader;
+    BlocksLoader blocksLoader;
+    OredictHandler oredictLoader;
+    AutogenRecipes autogen;
 
     public II_Core() {
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
-        FMLCommonHandler.instance().bus().register(II_WorldTickHandler.INSTANCE);
-        MinecraftForge.EVENT_BUS.register(II_WorldTickHandler.INSTANCE);
+        FMLCommonHandler.instance().bus().register(WorldTickHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(WorldTickHandler.INSTANCE);
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-            renderLoader = new II_Render();
+            renderLoader = new RenderLoader();
         }
-        itemsLoader = new II_ItemsLoader();
-        blocksLoader = new II_BlocksLoader();
-        oredictLoader = new II_OredictHandler();
-        autogen = new II_AutogenRecipes();
+        itemsLoader = new ItemsLoader();
+        blocksLoader = new BlocksLoader();
+        oredictLoader = new OredictHandler();
+        autogen = new AutogenRecipes();
 
         MinecraftForge.EVENT_BUS.register(oredictLoader);
         oredictLoader.loadAlreadyNicelyLoadedByForgeOreDictsWithoutFuckingEvents();
@@ -107,7 +104,7 @@ public class II_Core {
         itemsLoader.preLoad();
         blocksLoader.preLoad();
         II_Fluids.INSTANCE.init();
-        new II_MetaGeneratedCellItem();
+        new MetaGeneratedCellItem();
 
         new TestBlock();
         GameRegistry.registerTileEntity(TestTile.class, "testTile");
@@ -127,16 +124,16 @@ public class II_Core {
     @Mod.EventHandler
     public void onPostLoad(FMLPostInitializationEvent aEvent) {
         try {
-            II_ToolRegistry.initTools();
+            ToolRegistry.initTools();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        II_Lang.dumpAll();
-        II_Lang.pushLocalToMinecraft();
+        LangHandler.dumpAll();
+        LangHandler.pushLocalToMinecraft();
         oredictLoader.init();
         II_Materials.initMaterialLoops();
-        II_RecipeManager.load();
-        II_OreDict.printAll(System.out);
+        RecipeManager.load();
+        OreDict.printAll(System.out);
     }
 
     @Mod.EventHandler

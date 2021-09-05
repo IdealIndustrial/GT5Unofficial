@@ -4,11 +4,11 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import gregtech.api.util.GT_Utility;
-import idealindustrial.autogen.oredict.II_OreDict;
-import idealindustrial.autogen.oredict.II_OreInfo;
+import idealindustrial.autogen.oredict.OreDict;
+import idealindustrial.autogen.oredict.OreInfo;
 import idealindustrial.recipe.*;
 import idealindustrial.util.item.CheckType;
-import idealindustrial.util.item.II_HashedStack;
+import idealindustrial.util.item.HashedStack;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;
 import idealindustrial.util.misc.Function2;
@@ -21,15 +21,15 @@ import org.lwjgl.opengl.GL11;
 import java.util.*;
 import java.util.function.Function;
 
-import static idealindustrial.tile.gui.base.component.II_GuiTextures.PROCESSING_ARROWS;
-import static idealindustrial.tile.gui.base.component.II_GuiTextures.SLOTS;
+import static idealindustrial.tile.gui.base.component.GuiTextures.PROCESSING_ARROWS;
+import static idealindustrial.tile.gui.base.component.GuiTextures.SLOTS;
 
 public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
 
-    II_RecipeMap<?> map;
-    II_RecipeGuiParams params;
+    RecipeMap<?> map;
+    IRecipeGuiParams params;
 
-    public II_BasicNeiTemplateHandler(II_RecipeMap<?> map) {
+    public II_BasicNeiTemplateHandler(RecipeMap<?> map) {
         this.map = map;
         this.params = map.getGuiParams();
     }
@@ -52,14 +52,14 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
 
         int x = -4, y = -8;
         GuiDraw.changeTexture(SLOTS.location());
-        for (II_GuiSlotDefinition slot : params) {
+        for (GuiSlotDefinition slot : params) {
             int id = slot.textureID;
             int textureX = SLOTS.idToTextureX(id), textureY = SLOTS.idToTextureY(id);
             GuiDraw.drawTexturedModalRect(slot.x + x - 1, slot.y + y - 1, textureX, textureY, 18, 18);
         }
 
         GuiDraw.changeTexture(PROCESSING_ARROWS.location());
-        II_GuiArrowDefinition arrow = params.getArrow();
+        GuiArrowDefinition arrow = params.getArrow();
         int arrowX = x + arrow.x, arrowY = y + arrow.y;
         int textureX = PROCESSING_ARROWS.idToTextureX(arrow.textureID), textureY = PROCESSING_ARROWS.idToTextureY(arrow.textureID);
         GuiDraw.drawTexturedModalRect(arrowX, arrowY, textureX, textureY, 20, 17);
@@ -69,11 +69,11 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
 
     @Override
     public void drawExtras(int recipeID) {
-        II_Recipe recipe = arecipes.get(recipeID) instanceof II_CachedRecipe ? ((II_CachedRecipe) arecipes.get(recipeID)).recipe : null;
+        IMachineRecipe recipe = arecipes.get(recipeID) instanceof II_CachedRecipe ? ((II_CachedRecipe) arecipes.get(recipeID)).recipe : null;
         if (recipe == null) {
             return;
         }
-        II_RecipeEnergyParams params = recipe.recipeParams();
+        RecipeEnergyParams params = recipe.recipeParams();
         String[] ar = new String[]{
                 "Total: " + params.total() + " EU",
                 "Usage: " + params.voltage * params.amperage + " EU/t",
@@ -104,7 +104,7 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
         if (result == null) {
             return;
         }
-        Set<II_Recipe> out = loadRecipes(result, map::getCraftingRecipes);
+        Set<IMachineRecipe> out = loadRecipes(result, map::getCraftingRecipes);
         out.forEach(recipe -> arecipes.add(new II_CachedRecipe(recipe)));
 
     }
@@ -114,18 +114,18 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
         return new II_BasicNeiTemplateHandler(map);
     }
 
-    protected Set<II_Recipe> loadRecipes(ItemStack result, Function<II_StackSignature, Set<? extends II_Recipe>> recipeFunction) {
-        Set<II_Recipe> out = new HashSet<>();
-        Collection<II_OreInfo> infoSet = II_OreDict.getInfo(new II_HashedStack(result));
+    protected Set<IMachineRecipe> loadRecipes(ItemStack result, Function<II_StackSignature, Set<? extends IMachineRecipe>> recipeFunction) {
+        Set<IMachineRecipe> out = new HashSet<>();
+        Collection<OreInfo> infoSet = OreDict.getInfo(new HashedStack(result));
         if (infoSet != null) {
-            for (II_OreInfo info : infoSet) {
-                Set<? extends II_Recipe> recipes = recipeFunction.apply(new II_StackSignature(info, 1));
+            for (OreInfo info : infoSet) {
+                Set<? extends IMachineRecipe> recipes = recipeFunction.apply(new II_StackSignature(info, 1));
                 if (recipes != null) {
                     out.addAll(recipes);
                 }
             }
         } else {
-            Set<? extends II_Recipe> recipes = recipeFunction.apply(new II_StackSignature(result, CheckType.DAMAGE));
+            Set<? extends IMachineRecipe> recipes = recipeFunction.apply(new II_StackSignature(result, CheckType.DAMAGE));
             if (recipes != null) {
                 out.addAll(recipes);
             }
@@ -144,13 +144,13 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
         if (ingredient == null) {
             return;
         }
-        Set<II_Recipe> out = loadRecipes(ingredient, map::getUsageRecipes);
+        Set<IMachineRecipe> out = loadRecipes(ingredient, map::getUsageRecipes);
         out.forEach(recipe -> arecipes.add(new II_CachedRecipe(recipe)));
     }
 
     protected static class II_PositionedStack extends PositionedStack {
 
-        public II_PositionedStack(II_StackSignature signature, II_GuiSlotDefinition definition) {
+        public II_PositionedStack(II_StackSignature signature, GuiSlotDefinition definition) {
             this(signature.correspondingStacks().stream().map(hs -> hs.toItemStack(signature.amount)).toArray(ItemStack[]::new), definition.x, definition.y);
         }
 
@@ -158,11 +158,11 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
             super(stack, x - 4, y - 8, false);
         }
 
-        public II_PositionedStack(II_ItemStack signature, II_GuiSlotDefinition definition) {
+        public II_PositionedStack(II_ItemStack signature, GuiSlotDefinition definition) {
             this(signature.toMCStack(), definition.x, definition.y);
         }
 
-        public II_PositionedStack(FluidStack signature, II_GuiSlotDefinition definition) {
+        public II_PositionedStack(FluidStack signature, GuiSlotDefinition definition) {
             this(GT_Utility.getFluidDisplayStack(signature, true), definition.x, definition.y);
         }
 
@@ -171,11 +171,11 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
 
     public class II_CachedRecipe extends CachedRecipe {
 
-        II_Recipe recipe;
+        IMachineRecipe recipe;
         List<PositionedStack> inputs;
         List<PositionedStack> outputs;
 
-        public II_CachedRecipe(II_Recipe recipe) {
+        public II_CachedRecipe(IMachineRecipe recipe) {
             this.recipe = recipe;
             this.inputs = new ArrayList<>(recipe.getInputs().length + recipe.getFluidInputs().length);
             this.outputs = new ArrayList<>(recipe.getOutputs().length + recipe.getFluidOutputs().length);
@@ -188,7 +188,7 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
 
         }
 
-        protected <T> void addTo(List<PositionedStack> list, T[] objects, II_GuiSlotDefinition[] definitions, Function2<T, II_GuiSlotDefinition, PositionedStack> converter) {
+        protected <T> void addTo(List<PositionedStack> list, T[] objects, GuiSlotDefinition[] definitions, Function2<T, GuiSlotDefinition, PositionedStack> converter) {
             for (int i = 0; i < objects.length; i++) {
                 list.add(converter.apply(objects[i], definitions[i]));
             }

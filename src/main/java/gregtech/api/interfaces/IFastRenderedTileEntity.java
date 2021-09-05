@@ -1,6 +1,6 @@
 package gregtech.api.interfaces;
 
-import idealindustrial.render.II_CustomRenderer;
+import idealindustrial.render.CustomRenderer;
 import net.minecraft.item.ItemStack;
 
 public interface IFastRenderedTileEntity {
@@ -13,7 +13,7 @@ public interface IFastRenderedTileEntity {
 
     void rebakeMap();
 
-    default II_CustomRenderer getCustomRenderer() { //todo : remove default
+    default CustomRenderer getCustomRenderer() { //todo : remove default
         return null;
     }
 }

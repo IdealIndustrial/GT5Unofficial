@@ -6,8 +6,8 @@ import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.autogen.material.submaterial.BlockInfo;
 import idealindustrial.autogen.material.submaterial.BlockType;
 import idealindustrial.reflection.events.II_EventListener;
-import idealindustrial.tile.II_Block_Machines;
-import idealindustrial.util.lang.II_Lang;
+import idealindustrial.tile.BlockMachines;
+import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.lang.LocalizeEvent;
 import idealindustrial.util.lang.materials.EngLocalizer;
 import idealindustrial.util.lang.materials.MaterialLocalizer;
@@ -20,13 +20,13 @@ public class II_Blocks {
 
     public static II_Blocks INSTANCE = new II_Blocks();
 
-    public final II_MetaGeneratedBlock[][] materialBlocks = new II_MetaGeneratedBlock[BlockType.values().length][];
-    public final List<II_MetaGeneratedBlock> metaGeneratedBlocks = new ArrayList<>();
-    public II_Block_Machines blockMachines;
+    public final MetaGeneratedBlock[][] materialBlocks = new MetaGeneratedBlock[BlockType.values().length][];
+    public final List<MetaGeneratedBlock> metaGeneratedBlocks = new ArrayList<>();
+    public BlockMachines blockMachines;
 
     protected II_Blocks() {
         for (int i = 0; i < materialBlocks.length; i++) {
-            materialBlocks[i] = new II_MetaGeneratedBlock[BlockType.values()[i].getClassCount()];
+            materialBlocks[i] = new MetaGeneratedBlock[BlockType.values()[i].getClassCount()];
         }
     }
 
@@ -36,33 +36,33 @@ public class II_Blocks {
                 continue;
             }
             BlockInfo blockInfo = material.getBlockInfo();
-            II_MetaGeneratedBlock[] blocks = materialBlocks[blockInfo.getType().ordinal()];
+            MetaGeneratedBlock[] blocks = materialBlocks[blockInfo.getType().ordinal()];
             int id = blockInfo.getId();
             int subID = id / 16;
             assert blocks[subID] == null || !blocks[subID].isEnabled(id % 16) :
                     "blocks of " + (blocks[subID].getMaterials()[id % 16].name()) + " and " + material.name() +
                             " have same type and ID";
             if (blocks[id] == null) {
-                blocks[id] = new II_MetaGeneratedBlock(material.getBlockInfo().getType().name().toLowerCase(), subID,
+                blocks[id] = new MetaGeneratedBlock(material.getBlockInfo().getType().name().toLowerCase(), subID,
                         blockInfo.getType().getMaterial(), blockInfo.getType().getSoundType());
                 metaGeneratedBlocks.add(blocks[id]);
             }
             blocks[id].addBlock(id % 16, Prefixes.block, material);//todo think about other block prefixes
         }
 
-        blockMachines = new II_Block_Machines();
+        blockMachines = new BlockMachines();
     }
 
     @LocalizeEvent
     public static void localize() {
         MaterialLocalizer localizer = EngLocalizer.getInstance();
-        for (II_MetaGeneratedBlock block : INSTANCE.metaGeneratedBlocks) {
+        for (MetaGeneratedBlock block : INSTANCE.metaGeneratedBlocks) {
             for (int i = 0; i < 16; i++) {
                 if (!block.isEnabled(i)) {
                     continue;
                 }
                 String unlocalized = block.getUnlocalizedName() + "." + i;
-                II_Lang.add(unlocalized + ".name", localizer.get(block.getMaterials()[i], Prefixes.block));
+                LangHandler.add(unlocalized + ".name", localizer.get(block.getMaterials()[i], Prefixes.block));
             }
         }
     }

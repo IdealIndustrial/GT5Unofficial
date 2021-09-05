@@ -1,22 +1,18 @@
 package idealindustrial.util.misc;
 
 import idealindustrial.II_Values;
-import idealindustrial.tile.base.II_BaseMachineTileImpl;
-import idealindustrial.tile.base.II_BasePipeTileImpl;
-import idealindustrial.tile.base.II_BaseTileImpl;
-import idealindustrial.tile.interfaces.base.II_BaseMachineTile;
-import idealindustrial.tile.interfaces.base.II_BaseTile;
-import idealindustrial.tile.interfaces.meta.II_MetaTile;
-import idealindustrial.util.energy.II_EnergyHandler;
-import idealindustrial.util.energy.II_InputEnergyHandler;
-import idealindustrial.util.fluid.II_EmptyTank;
-import idealindustrial.util.fluid.II_FluidHandler;
-import idealindustrial.util.fluid.II_MultiFluidHandler;
-import idealindustrial.util.fluid.II_SingleFluidHandler;
-import idealindustrial.util.inventory.II_ArrayRecipedInventory;
-import idealindustrial.util.inventory.II_EmptyInventory;
-import idealindustrial.util.inventory.II_InternalInventory;
-import idealindustrial.util.inventory.II_RecipedInventory;
+import idealindustrial.tile.base.BasePipeTileImpl;
+import idealindustrial.tile.base.BaseMachineTileImpl;
+import idealindustrial.tile.base.BaseTileImpl;
+import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import idealindustrial.tile.interfaces.base.BaseTile;
+import idealindustrial.tile.interfaces.meta.MetaTile;
+import idealindustrial.util.fluid.*;
+import idealindustrial.util.fluid.SingleFluidHandler;
+import idealindustrial.util.fluid.MultiFluidHandler;
+import idealindustrial.util.inventory.*;
+import idealindustrial.util.inventory.EmptyInventory;
+import idealindustrial.util.inventory.InternalInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -30,7 +26,7 @@ public class II_TileUtil {
 
 
     @SuppressWarnings("unchecked")
-    private static final Class<? extends TileEntity>[] tileClasses = new Class[]{II_BaseTileImpl.class, II_BaseMachineTileImpl.class, II_BasePipeTileImpl.class};
+    private static final Class<? extends TileEntity>[] tileClasses = new Class[]{BaseTileImpl.class, BaseMachineTileImpl.class, BasePipeTileImpl.class};
     private static final Map<Class<? extends TileEntity>, Integer> classToMeta = new HashMap<>();
 
     static {
@@ -63,41 +59,41 @@ public class II_TileUtil {
         return null;
     }
 
-    public static void registerMetaTile(int id, II_MetaTile<?> metaTile) {
+    public static void registerMetaTile(int id, MetaTile<?> metaTile) {
         II_Values.metaTiles[id] = metaTile;
         metaTile.getBase().setMetaTileID(id);
     }
 
-    public static II_BaseTile makeBaseTile() {
-        return new II_BaseTileImpl();
+    public static BaseTile makeBaseTile() {
+        return new BaseTileImpl();
     }
 
-    public static II_BaseMachineTile makeBaseMachineTile() {
-        return new II_BaseMachineTileImpl();
+    public static BaseMachineTile makeBaseMachineTile() {
+        return new BaseMachineTileImpl();
     }
 
-    public static II_MetaTile<?> getMetaTile(World world, int x, int y, int z) {
+    public static MetaTile<?> getMetaTile(World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof II_BaseTile) {
-            return ((II_BaseTile) tile).getMetaTile();
+        if (tile instanceof BaseTile) {
+            return ((BaseTile) tile).getMetaTile();
         }
         return null;
     }
 
-    public static II_BaseMachineTile getMachineTileAtSide(II_BaseTile tile, int side) {
+    public static BaseMachineTile getMachineTileAtSide(BaseTile tile, int side) {
         TileEntity tileEntity = tile.getTileEntityAtSide(side);
-        return tileEntity instanceof II_BaseMachineTile ? (II_BaseMachineTile) tileEntity : null;
+        return tileEntity instanceof BaseMachineTile ? (BaseMachineTile) tileEntity : null;
     }
 
-    public static II_MetaTile<?> getMetaTileAtSide(II_BaseTile tile, int side) {
+    public static MetaTile<?> getMetaTileAtSide(BaseTile tile, int side) {
         TileEntity tileEntity = tile.getTileEntityAtSide(side);
-        if (tileEntity instanceof II_BaseTile) {
-            return ((II_BaseTile) tileEntity).getMetaTile();
+        if (tileEntity instanceof BaseTile) {
+            return ((BaseTile) tileEntity).getMetaTile();
         }
         return null;
     }
 
-    public static <T extends II_BaseTile> T getBaseTileOfClass(World world, int x, int y, int z, Class<T> clazz) {
+    public static <T extends BaseTile> T getBaseTileOfClass(World world, int x, int y, int z, Class<T> clazz) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         return checkTileForClass(tileEntity, clazz);
     }
@@ -110,34 +106,34 @@ public class II_TileUtil {
         return (T) tileEntity;
     }
 
-    public static II_BaseTile getBaseTile(IBlockAccess world, int x, int y, int z) {
+    public static BaseTile getBaseTile(IBlockAccess world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        return tileEntity instanceof II_BaseTile ? (II_BaseTile) tileEntity : null;
+        return tileEntity instanceof BaseTile ? (BaseTile) tileEntity : null;
     }
 
-    public static II_FluidHandler constructFluidHandler(int fluidCount, int capacity) {
+    public static FluidHandler constructFluidHandler(int fluidCount, int capacity) {
         if (fluidCount == 0) {
-            return II_EmptyTank.INSTANCE;
+            return EmptyTank.INSTANCE;
         }
         if (fluidCount == 1) {
-            return new II_SingleFluidHandler(capacity);
+            return new SingleFluidHandler(capacity);
         }
-        return new II_MultiFluidHandler(fluidCount, capacity);
+        return new MultiFluidHandler(fluidCount, capacity);
     }
 
 
-    public static II_RecipedInventory constructRecipedInventory(int slotCount, int stackSize) {
+    public static RecipedInventory constructRecipedInventory(int slotCount, int stackSize) {
         if (slotCount == 0) {
-            return II_EmptyInventory.INSTANCE;
+            return EmptyInventory.INSTANCE;
         }
-       return new II_ArrayRecipedInventory(slotCount, stackSize);
+       return new ArrayRecipedInventory(slotCount, stackSize);
     }
 
-    public static II_InternalInventory constructInternalInventory(int slotCount, int stackSize) {
+    public static InternalInventory constructInternalInventory(int slotCount, int stackSize) {
         if (slotCount == 0) {
-            return II_EmptyInventory.INSTANCE;
+            return EmptyInventory.INSTANCE;
         }
-        return new II_ArrayRecipedInventory(slotCount, stackSize);
+        return new ArrayRecipedInventory(slotCount, stackSize);
     }
 
 }

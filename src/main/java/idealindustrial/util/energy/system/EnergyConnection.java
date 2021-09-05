@@ -1,20 +1,20 @@
 package idealindustrial.util.energy.system;
 
-import idealindustrial.tile.meta.connected.II_MetaConnected_Cable;
+import idealindustrial.tile.meta.connected.MetaConnected_Cable;
 
 import java.util.List;
 
 public class EnergyConnection implements IInfoEnergyPassThrough {
     protected long maxAmperage, maxVoltage, loss;
     protected long currentAmperage, currentVoltage;
-    protected List<II_MetaConnected_Cable> cables;
+    protected List<MetaConnected_Cable> cables;
     protected IEnergyNode node1, node2;
 
-    public EnergyConnection(List<II_MetaConnected_Cable> cables, IEnergyNode node1, IEnergyNode node2) { //todo: think about lazy loss amperage and voltage
+    public EnergyConnection(List<MetaConnected_Cable> cables, IEnergyNode node1, IEnergyNode node2) { //todo: think about lazy loss amperage and voltage
         this.cables = cables;
-        this.maxAmperage = cables.stream().mapToLong(II_MetaConnected_Cable::getAmperage).min().orElse(Long.MAX_VALUE);
-        this.maxVoltage = cables.stream().mapToLong(II_MetaConnected_Cable::getVoltage).min().orElse(Long.MAX_VALUE);
-        this.loss = cables.stream().mapToLong(II_MetaConnected_Cable::getLoss).sum();
+        this.maxAmperage = cables.stream().mapToLong(MetaConnected_Cable::getAmperage).min().orElse(Long.MAX_VALUE);
+        this.maxVoltage = cables.stream().mapToLong(MetaConnected_Cable::getVoltage).min().orElse(Long.MAX_VALUE);
+        this.loss = cables.stream().mapToLong(MetaConnected_Cable::getLoss).sum();
         this.node1 = node1;
         this.node2 = node2;
     }
@@ -35,7 +35,7 @@ public class EnergyConnection implements IInfoEnergyPassThrough {
     }
 
     @Override
-    public void setSystem(II_CableSystem system) {
+    public void setSystem(CableSystem system) {
         cables.forEach(c -> c.system = system);
     }
 
@@ -47,7 +47,7 @@ public class EnergyConnection implements IInfoEnergyPassThrough {
 
     @Override
     public void invalidate() {
-        cables.forEach(II_MetaConnected_Cable::onSystemInvalidate);
+        cables.forEach(MetaConnected_Cable::onSystemInvalidate);
     }
 
     @Override

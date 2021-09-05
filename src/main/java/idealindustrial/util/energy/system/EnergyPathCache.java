@@ -7,11 +7,11 @@ import java.util.*;
 
 public class EnergyPathCache {
 
-    protected final II_CableSystem system;
+    protected final CableSystem system;
     protected Map<Pair<NodeProducer, NodeConsumer>, EnergyPath> cache = new HashMap<>();
 
 
-    public EnergyPathCache(II_CableSystem system) {
+    public EnergyPathCache(CableSystem system) {
         this.system = system;
     }
 

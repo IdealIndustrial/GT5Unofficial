@@ -1,7 +1,7 @@
 package idealindustrial.autogen.fluids;
 
 import idealindustrial.autogen.material.submaterial.render.RenderInfo;
-import idealindustrial.textures.II_TextureManager;
+import idealindustrial.textures.TextureManager;
 import net.minecraftforge.fluids.Fluid;
 
 public class II_Fluid extends Fluid {
@@ -14,7 +14,7 @@ public class II_Fluid extends Fluid {
 
     public II_Fluid setRender(RenderInfo info) {
         color = info.getColorAsInt();
-        II_TextureManager.INSTANCE.onPostIconLoad(() -> setIcons(info.getTexture().getIcon()));
+        TextureManager.INSTANCE.onPostIconLoad(() -> setIcons(info.getTexture().getIcon()));
         return this;
     }
 

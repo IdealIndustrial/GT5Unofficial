@@ -8,7 +8,7 @@ public interface IEnergyPassThrough {
 
     void onPassing(long voltage, long amperage);
 
-    default void setSystem(II_CableSystem system) {
+    default void setSystem(CableSystem system) {
 
     }
 
