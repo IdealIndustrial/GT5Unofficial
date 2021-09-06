@@ -37,7 +37,13 @@ public class GT_GraviSuiteRecipesLoader implements Runnable {
 			'E', GT_ModHandler.getModItem("IC2","itemBatCrystal", 1L, GT_Values.W),  
 			'W', OrePrefixes.wireGt04.get(Materials.Platinum), 
 			'P', OrePrefixes.circuit.get(Materials.Data)});
-	    
+
+            GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("GraviSuite", "advLappack", 1, GT_Values.W), 
+			new Object[]{" J ", " P ", " E ",
+			'J', GT_ModHandler.getModItem("IC2","itemArmorEnergypack", 1L, GT_Values.W), 
+			'E', GT_ModHandler.getModItem("IC2","itemBatLamaCrystal", 1L, GT_Values.W),  
+			'P', OrePrefixes.circuit.get(Materials.Advanced)});	    
+
 	    GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getModItem("GraviSuite", "ultimateLappack", 1, GT_Values.W));
             GT_ModHandler.addCraftingRecipe(GT_ModHandler.getModItem("GraviSuite", "ultimateLappack", 1, GT_Values.W), 
 			new Object[]{"LPL", "LJL", "LSL", 
