@@ -21,11 +21,11 @@ public class GT_Block_Casings8
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".1.name", "PTFE Pipe Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".2.name", "Robust HSS-G Machine Casing");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".10.name", "Primitive Pump Intake");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".11.name", "Simple Pump Intake");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".12.name", "Advanced Pump Intake");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".13.name", "Advanced Pump Intake II");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".14.name", "Advanced Pump Intake III");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".15.name", "Advanced Pump Intake IV");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".11.name", "LV Pump Intake");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".12.name", "MV Pump Intake");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".13.name", "HV Pump Intake");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".14.name", "EV Pump Intake");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".15.name", "IV Pump Intake");
 
 
         ItemList.Casing_Chemically_Inert.set(new ItemStack(this, 1, 0));
