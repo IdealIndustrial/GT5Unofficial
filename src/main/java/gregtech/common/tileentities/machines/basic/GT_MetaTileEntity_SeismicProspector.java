@@ -44,8 +44,7 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
         return new String[]{
                 "Activate with explosives:",
                 "8 Dynamite or Powderbarrel, 4 TNT, 2 Industrial TNT, 1 Glyceryl",
-                "Use Data Stick for save data",
-                "Uses " + 30*200 + " EU per scan"};
+                "Use Data Stick for save data"};
     }
 
     public GT_MetaTileEntity_SeismicProspector(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, String aGUIName, String aNEIName) {
@@ -98,8 +97,7 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
             if (aStack.stackSize == 0) {
                 mInventory[getInputSlot()] = null;
             }
-            mMaxProgresstime = 200;
-            mEUt = 30;
+            mMaxProgresstime = 200;			
             return 2;
         }
         return 0;
@@ -154,5 +152,9 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
         GT_Utility.ItemNBT.setProspectionData(aStack, this.getBaseMetaTileEntity().getXCoord(), this.getBaseMetaTileEntity().getYCoord(), this.getBaseMetaTileEntity().getZCoord(), this.getBaseMetaTileEntity().getWorld().provider.dimensionId, tFluid, tStringArray);
         getBaseMetaTileEntity().disableWorking();
     }
-
+	
+    @Override
+    public long getMinimumStoredEU() {
+        return 0;
+    }	
 }
