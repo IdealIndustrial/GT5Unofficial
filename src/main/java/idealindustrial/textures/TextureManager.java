@@ -1,10 +1,15 @@
 package idealindustrial.textures;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.LoaderState;
 import gregtech.api.interfaces.IIconContainer;
+import gregtech.api.interfaces.ITexture;
 import net.minecraft.client.renderer.texture.IIconRegister;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class TextureManager {
@@ -16,6 +21,7 @@ public class TextureManager {
 
     List<IRegistrableIcon> items = new ArrayList<>(), blocks = new ArrayList<>();
     List<Runnable> postIconLoad = new ArrayList<>();
+    Map<Integer, INetworkedTexture> networkedTextureMap = new HashMap<>();
 
     public IIconContainer blockTexture(String name) {
         BlockIconContainer container = new BlockIconContainer(name, false);
@@ -30,7 +36,7 @@ public class TextureManager {
     }
 
     public IIconContainer itemTexture(String name) {
-        ItemIconContainer container = new ItemIconContainer(name, true);
+        ItemIconContainer container = new ItemIconContainer(name, false);
         items.add(container);
         return container;
     }
@@ -54,5 +60,16 @@ public class TextureManager {
 
     public void initItems(IIconRegister register) {
         items.forEach(b -> b.register(register));
+    }
+
+    protected int registerNetworkedTexture(INetworkedTexture networkedTexture) {
+        assert Loader.instance().getLoaderState().ordinal() <= LoaderState.POSTINITIALIZATION.ordinal();
+        int id = networkedTextureMap.size();
+        networkedTextureMap.put(id, networkedTexture);
+        return id;
+    }
+
+    public INetworkedTexture getNetworkedTexture(int textureID) {
+        return networkedTextureMap.get(textureID);
     }
 }

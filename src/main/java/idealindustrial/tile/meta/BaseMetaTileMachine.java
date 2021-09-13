@@ -49,6 +49,16 @@ public abstract class BaseMetaTileMachine<BaseTileType extends BaseMachineTile> 
         this.overlays = overlays;
     }
 
+    protected BaseMetaTileMachine(BaseTileType baseTile, BaseMetaTileMachine<?> copyFrom) {
+        this.baseTile = baseTile;
+
+        this.name = copyFrom.name;
+        this.baseTextures = copyFrom.baseTextures;
+        this.overlays = copyFrom.overlays;
+    }
+
+
+
     @Override
     public boolean hasInventory() {
         return hasInventory;

@@ -246,6 +246,7 @@ public class BaseTileImpl extends BaseTileEntity implements BaseTile {
         return null;//todo implement
     }
 
+    @Override
     public void syncTileEntity() {
         ByteArrayDataOutput stream = ByteStreams.newDataOutput(10);
         writeTile(stream);
@@ -437,7 +438,7 @@ public class BaseTileImpl extends BaseTileEntity implements BaseTile {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BaseTileImpl that = (BaseTileImpl) o;
-        return xCoord == that.xCoord && yCoord == that.yCoord && zCoord == that.zCoord;
+        return xCoord == that.xCoord && yCoord == that.yCoord && zCoord == that.zCoord && worldObj == that.worldObj;
     }
 
     @Override

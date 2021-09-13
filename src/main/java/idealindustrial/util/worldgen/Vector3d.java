@@ -21,7 +21,7 @@ public class Vector3d {
     }
 
     public Vector3 toVector() {
-        return new Vector3((int) x, (int) y, (int) z);
+        return new Vector3((int)Math.round(x), (int) Math.round(y), (int) Math.round(z));
     }
 
     @Override

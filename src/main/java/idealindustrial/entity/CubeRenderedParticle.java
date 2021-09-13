@@ -39,6 +39,9 @@ public class CubeRenderedParticle extends EntityFX {
 
     //now idk how to do it better =(
     public CubeRenderedParticle setTextures(Block block, int meta) {
+        if (meta == -1) {
+            meta = 0;
+        }
         for (int i = 0; i < 6; i++) {
             icons[i] = new IIcon[]{block.getIcon(i, meta)};
         }

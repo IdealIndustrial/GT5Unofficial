@@ -89,6 +89,6 @@ public class Item_Machines
 
     @Override
     public void registerIcons(IIconRegister register) {
-        TextureManager.INSTANCE.initItems(register);
+
     }
 }

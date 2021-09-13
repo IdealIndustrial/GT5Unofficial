@@ -14,8 +14,13 @@ public class WorldTickHandler {
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.side == Side.SERVER) {
-            EnergySystemHandler.onTick();
+        if (event.side == Side.SERVER) {
+            if (event.phase == TickEvent.Phase.END) {
+                EnergySystemHandler.onTick();
+            }
+            else {
+                ChunkLoadingMonitor.tickStart();
+            }
         }
     }
 }

@@ -15,4 +15,5 @@ public interface ICoordPredicate extends ICoordConsumer<CheckMachineParams> {
     default ICoordPredicate or(ICoordPredicate predicate) {
         return new OrPredicate(this, predicate);
     }
+
 }

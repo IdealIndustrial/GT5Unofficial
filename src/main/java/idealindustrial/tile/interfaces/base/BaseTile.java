@@ -19,6 +19,8 @@ public interface BaseTile extends IUpdatableTileEntity, IHasWorldObjectAndCoords
 
     ArrayList<ItemStack> getDrops();
 
+    void syncTileEntity();
+
     void sendEvent(int id, int value);
     void issueTextureUpdate();
 

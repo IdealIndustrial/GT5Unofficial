@@ -23,6 +23,10 @@ public abstract class BaseMetaTile_Facing1Output<B extends BaseMachineTile> exte
         super(baseTile, name, baseTextures, overlays);
     }
 
+    protected BaseMetaTile_Facing1Output(B baseTile, BaseMetaTile_Facing1Output<?> copyFrom) {
+        super(baseTile, copyFrom);
+    }
+
 
     @Override
     public ITexture[] provideTexture(boolean active, int side) {

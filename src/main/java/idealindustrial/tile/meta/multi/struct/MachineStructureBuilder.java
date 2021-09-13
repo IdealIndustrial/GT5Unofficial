@@ -10,19 +10,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class MachineStructureBuilder<MachineTile extends IStructuredMachine> {
+public class MachineStructureBuilder {
     List<MultiMachineStructureBox> boxes = new ArrayList<>();
-    List<Consumer<MachineTile>> predicates = new ArrayList<>();
+    List<Consumer<IStructuredMachine>> predicates = new ArrayList<>();
+
+
+    public static MachineStructureBuilder start() {
+        return new MachineStructureBuilder();
+    }
 
     public ShapeAdder addShape(String[][] shape) {
         return new ShapeAdder(shape);
     }
 
-    public MultiMachineShape<MachineTile> create() {
-        return new MultiMachineShape<>(boxes, predicates);
+    public MultiMachineShape create() {
+        return new MultiMachineShape(boxes, predicates);
     }
 
-    protected class ShapeAdder {
+    public class ShapeAdder {
         String[][] shape;
         Map<Character, ICoordPredicate> signatureMap = new HashMap<>();
 
@@ -35,7 +40,7 @@ public class MachineStructureBuilder<MachineTile extends IStructuredMachine> {
             return this;
         }
 
-        public MachineStructureBuilder<MachineTile> added() {
+        public MachineStructureBuilder added() {
             addToStruct();
             return MachineStructureBuilder.this;
         }
@@ -73,38 +78,30 @@ public class MachineStructureBuilder<MachineTile extends IStructuredMachine> {
         return null;//todo impl
     }
 
-    public static DirectBlockPredicate blockPredicate(Block block, int meta) {
-        return new DirectBlockPredicate(block, meta, 0);
-    }
-
-    public static DirectBlockPredicate blockPredicate(Block block, int meta, int minAmount) {
-        return new DirectBlockPredicate(block, meta, minAmount);
-    }
-
-    static {
-        new MachineStructureBuilder<IStructuredMachine>()
-                .addShape(new String[][]{
-                        {
-                                "AAA",
-                                "AAA",
-                                "AAA"
-                        },
-                        {
-                                "AAA",
-                                "AaA",
-                                "AcA"
-                        },
-                        {
-                                "BBB",
-                                "BBB",
-                                "BBB"
-                        }
-
-                })
-                .define('A', blockPredicate(Blocks.iron_block, -1))
-                .define('B', blockPredicate(Blocks.bedrock, -1))
-                .define('a', blockPredicate(Blocks.air, -1)).addToStruct();
-    }
+//    static { //example
+//        new MachineStructureBuilder()
+//                .addShape(new String[][]{
+//                        {
+//                                "AAA",
+//                                "AAA",
+//                                "AAA"
+//                        },
+//                        {
+//                                "AAA",
+//                                "AaA",
+//                                "AcA"
+//                        },
+//                        {
+//                                "BBB",
+//                                "BBB",
+//                                "BBB"
+//                        }
+//
+//                })
+//                .define('A', blockPredicate(Blocks.iron_block, -1))
+//                .define('B', blockPredicate(Blocks.bedrock, -1))
+//                .define('a', blockPredicate(Blocks.air, -1)).addToStruct();
+//    }
 
 
 }

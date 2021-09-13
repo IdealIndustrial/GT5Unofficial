@@ -12,7 +12,7 @@ public class OrPredicate extends BiPredicate {
         try {
             left.apply(mode, position, rotation);
         } catch (MachineStructureException ignored) {
+            right.apply(mode, position, rotation);
         }
-        right.apply(mode, position, rotation);
     }
 }

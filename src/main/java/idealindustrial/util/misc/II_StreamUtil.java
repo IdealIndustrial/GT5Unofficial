@@ -2,11 +2,16 @@ package idealindustrial.util.misc;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+import com.sun.prism.Texture;
+import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.INetworkedTexture;
+import idealindustrial.textures.TextureManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import java.util.Arrays;
 import java.util.function.IntFunction;
+import java.util.stream.Stream;
 
 public class II_StreamUtil {
 
@@ -24,6 +29,33 @@ public class II_StreamUtil {
         }
         return array;
     }
+
+    public static void writeTextureArray(ITexture[] array, ByteArrayDataOutput stream) {
+        stream.writeInt(array.length);
+        for (ITexture texture : array) {
+            if (texture instanceof INetworkedTexture) {
+                stream.writeInt(((INetworkedTexture) texture).getID());
+            }
+            else {
+                stream.writeInt(-1);
+            }
+        }
+    }
+
+    public static ITexture[] readTextureArray(ByteArrayDataInput stream, ITexture[] basicArray) {
+        ITexture[] array = new ITexture[stream.readInt()];
+        for (int i = 0; i < array.length; i++) {
+            int id = stream.readInt();
+            if (id == -1) {
+                array[i] = basicArray[i];
+            }
+            else {
+                array[i] = TextureManager.INSTANCE.getNetworkedTexture(id);
+            }
+        }
+        return array;
+    }
+
 
     public static void writeLongArray(long[] array, ByteArrayDataOutput stream) {
         stream.writeInt(array.length);
@@ -63,6 +95,10 @@ public class II_StreamUtil {
     public static <T> T[] arrayOf(T t, T[] ar) {
         Arrays.fill(ar, t);
         return ar;
+    }
+
+    public static <T> Stream<T> repeated(T t, int times) {
+        return Stream.generate(() -> t).limit(times);
     }
 
 }

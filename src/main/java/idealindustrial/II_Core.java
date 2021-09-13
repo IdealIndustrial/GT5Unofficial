@@ -6,6 +6,9 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import idealindustrial.autogen.fluids.II_Fluids;
+import idealindustrial.autogen.implementation.MetaGeneratedCellItem;
+import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.oredict.OreDict;
 import idealindustrial.autogen.oredict.OredictHandler;
 import idealindustrial.autogen.recipes.RecipeManager;
@@ -15,10 +18,8 @@ import idealindustrial.commands.CommandFixQuests;
 import idealindustrial.commands.DimTPCommand;
 import idealindustrial.commands.ReloadRecipesCommand;
 import idealindustrial.integration.ingameinfo.InGameInfoLoader;
-import idealindustrial.autogen.fluids.II_Fluids;
-import idealindustrial.autogen.implementation.MetaGeneratedCellItem;
-import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.loader.BlocksLoader;
+import idealindustrial.loader.ConfigsLoader;
 import idealindustrial.loader.ItemsLoader;
 import idealindustrial.loader.RenderLoader;
 import idealindustrial.teststuff.RenderTest;
@@ -27,6 +28,7 @@ import idealindustrial.teststuff.TestTile;
 import idealindustrial.tile.gui.II_GuiHandler;
 import idealindustrial.tools.ToolRegistry;
 import idealindustrial.util.lang.LangHandler;
+import idealindustrial.util.world.ChunkLoadingMonitor;
 import idealindustrial.util.world.WorldTickHandler;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
@@ -35,6 +37,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ReportedException;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
@@ -79,7 +82,6 @@ public class II_Core {
     }
 
 
-
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
 
@@ -105,6 +107,7 @@ public class II_Core {
         blocksLoader.preLoad();
         II_Fluids.INSTANCE.init();
         new MetaGeneratedCellItem();
+        new ConfigsLoader(aEvent).run();
 
         new TestBlock();
         GameRegistry.registerTileEntity(TestTile.class, "testTile");
@@ -138,8 +141,21 @@ public class II_Core {
 
     @Mod.EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
-
     }
+
+    @Mod.EventHandler
+    public void onChunkLoading(ChunkEvent.Load event) {
+        if (!event.world.isRemote) {
+            ChunkLoadingMonitor.chunkLoaded(event.world, event.getChunk().xPosition, event.getChunk().zPosition);
+        }
+    }
+
+    public void onChunkUnloading(ChunkEvent.Unload event) {
+        if (!event.world.isRemote) {
+            ChunkLoadingMonitor.chunkUnloaded(event.world, event.getChunk().xPosition, event.getChunk().zPosition);
+        }
+    }
+
 
     private static boolean checkEnvironment() {
         try {

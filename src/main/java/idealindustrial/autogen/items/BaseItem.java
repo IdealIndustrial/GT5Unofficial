@@ -3,6 +3,7 @@ package idealindustrial.autogen.items;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import idealindustrial.textures.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -53,6 +54,7 @@ public abstract class BaseItem extends Item {
     public void registerIcons(IIconRegister iconRegister) {
         icon = iconRegister.registerIcon(RES_PATH_ITEM + unlocalizeName);
     }
+
 
     @Override
     public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player) {

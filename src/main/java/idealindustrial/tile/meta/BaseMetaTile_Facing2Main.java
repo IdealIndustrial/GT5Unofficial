@@ -25,6 +25,10 @@ public abstract class BaseMetaTile_Facing2Main<BaseTileType extends BaseMachineT
         super(baseTile, name, baseTextures, overlays == null ? new ITexture[10] : overlays);
     }
 
+    protected BaseMetaTile_Facing2Main(BaseTileType baseTile, BaseMetaTile_Facing2Main<?> copyFrom) {
+        super(baseTile, copyFrom);
+    }
+
     @Override
     public ITexture[] provideTexture(boolean active, int side) {
         int index = side == mainFacing ? 4 : side == outputFacing ? 3 : II_DirUtil.directionToSide(side);
