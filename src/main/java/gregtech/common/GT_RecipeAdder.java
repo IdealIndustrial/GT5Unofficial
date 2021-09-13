@@ -1269,7 +1269,7 @@ public class GT_RecipeAdder
                 .map(is -> {
                     if (is.getItemDamage() == GT_Values.W) {
                         ItemStack copy = is.copy();
-                        is.setItemDamage(0);
+                        copy.setItemDamage(0);
                         return copy;
                     }
                     return is;
