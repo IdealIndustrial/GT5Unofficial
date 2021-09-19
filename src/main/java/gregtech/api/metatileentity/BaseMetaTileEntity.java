@@ -899,6 +899,9 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     @Override
     public void onChunkUnload() {
         super.onChunkUnload();
+        if (mMetaTileEntity != null) {
+            mMetaTileEntity.onChunkUnload();
+        }
     }
 
     @Override
@@ -2242,5 +2245,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     	}
     	return slotIndex + indexShift;
     }
+
+
 
 }

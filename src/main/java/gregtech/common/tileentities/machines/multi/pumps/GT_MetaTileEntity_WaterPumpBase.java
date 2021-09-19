@@ -343,6 +343,13 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     }
 
     @Override
+    public void onChunkUnload() {
+        if (getBaseMetaTileEntity().isServerSide()) {
+            onRemoval();
+        }
+    }
+
+    @Override
     public boolean onWrenchRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         if (!aPlayer.isSneaking()) {
             if (aWrenchingSide > 1 && getBaseMetaTileEntity().isServerSide()) {
@@ -367,6 +374,12 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
             getBaseMetaTileEntity().rebakeMap();
         }
 
+    }
+
+    @Override
+    public void sendClientData() {
+        super.sendClientData();
+        getBaseMetaTileEntity().sendBlockEvent((byte) 1, (byte) mMainFacing);
     }
 
     public abstract ITexture getBaseTexture();

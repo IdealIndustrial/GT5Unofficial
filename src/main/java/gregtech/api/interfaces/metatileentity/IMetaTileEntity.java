@@ -412,4 +412,6 @@ public interface IMetaTileEntity extends ISidedInventory, IFluidTank, IFluidHand
     boolean isWaterProofByDefault();
 
     void sendClientData();
+
+    void onChunkUnload();
 }
