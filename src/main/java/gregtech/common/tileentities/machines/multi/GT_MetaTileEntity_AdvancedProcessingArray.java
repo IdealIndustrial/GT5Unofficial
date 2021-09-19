@@ -161,7 +161,7 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
             return GT_Recipe.GT_Recipe_Map.sDistilleryRecipes;
         } else if (tmp.startsWith("slicer")) {
             return GT_Recipe.GT_Recipe_Map.sSlicerRecipes;
-        } else if (tmp.startsWith("amplifier")) {
+        } else if (tmp.startsWith("amplifab")) {
             return GT_Recipe.GT_Recipe_Map.sAmplifiers;
         } else if (tmp.startsWith("circuitassembler")) {
             return GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes;
@@ -377,11 +377,31 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
             tOut = tSList.toArray(new ItemStack[tSList.size()]);
             this.mOutputItems = tOut;
             this.mOutputFluids = tFOuts.toArray(new FluidStack[tFOuts.size()]);
+
+             if (tRecipe.mSpecialValue == -200) {
+                 for (int k = 0; k < mOutputItems.length; k++) {
+                     if (mOutputItems[k] != null && getBaseMetaTileEntity().getRandomNumber(10000) > mCleanroom.mEfficiency) {
+                         mOutputItems[k] = null;
+                     }
+                 }
+             }
             updateSlots();
             return true;
 
         }
         return false;
+    }
+
+    @Override
+    protected GT_Recipe findRecipe(GT_Recipe.GT_Recipe_Map map, GT_Recipe aLastRecipe, ItemStack[] aInputs, FluidStack[] aFluids, long aVoltage) {
+        GT_Recipe recipe = super.findRecipe(map, aLastRecipe, aInputs, aFluids, aVoltage);
+        if (recipe == null) {
+            return recipe;
+        }
+        if (recipe.mSpecialValue == -200 && (mCleanroom == null || mCleanroom.mEfficiency == 0)) {
+            return null;
+        }
+        return recipe;
     }
 
     public static ItemStack[] clean(final ItemStack[] v) {

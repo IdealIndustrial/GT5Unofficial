@@ -228,8 +228,11 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                     IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(dX, dY, dZ);
                     if (tTileEntity != null) {
                         IMetaTileEntity aMetaTileEntity = tTileEntity.getMetaTileEntity();
-                        if (aMetaTileEntity != null && aMetaTileEntity instanceof GT_MetaTileEntity_BasicMachine_GT_Recipe) {
+                        if (aMetaTileEntity instanceof GT_MetaTileEntity_BasicMachine_GT_Recipe) {
                             ((GT_MetaTileEntity_BasicMachine_GT_Recipe) aMetaTileEntity).mCleanroom = this;
+                        }
+                        if (aMetaTileEntity instanceof GT_MetaTileEntity_MultiBlockBase) {
+                            ((GT_MetaTileEntity_MultiBlockBase) aMetaTileEntity).mCleanroom = this;
                         }
                     }
                 }

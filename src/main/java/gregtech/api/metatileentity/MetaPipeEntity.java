@@ -834,4 +834,9 @@ public abstract class MetaPipeEntity implements IMetaTileEntity, IConnectable {
     public void sendClientData() {
 
     }
+
+    @Override
+    public void onChunkUnload() {
+
+    }
 }

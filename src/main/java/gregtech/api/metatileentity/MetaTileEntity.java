@@ -928,4 +928,9 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     public void sendClientData() {
 
     }
+
+    @Override
+    public void onChunkUnload() {
+
+    }
 }
