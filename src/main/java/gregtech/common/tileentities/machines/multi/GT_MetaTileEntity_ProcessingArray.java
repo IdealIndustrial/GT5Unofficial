@@ -372,6 +372,13 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
             tOut = tSList.toArray(new ItemStack[tSList.size()]);
             this.mOutputItems = tOut;
             this.mOutputFluids = tFOuts.toArray(new FluidStack[tFOuts.size()]);
+            if (tRecipe.mSpecialValue == -200) {
+                for (int k = 0; k < mOutputItems.length; k++) {
+                    if (mOutputItems[k] != null && getBaseMetaTileEntity().getRandomNumber(10000) > mCleanroom.mEfficiency) {
+                        mOutputItems[k] = null;
+                    }
+                }
+            }
             updateSlots();
             return true;
 
@@ -379,7 +386,17 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
         return false;
     }
 
-
+    @Override
+    protected GT_Recipe findRecipe(GT_Recipe.GT_Recipe_Map map, GT_Recipe aLastRecipe, ItemStack[] aInputs, FluidStack[] aFluids, long aVoltage) {
+        GT_Recipe recipe = super.findRecipe(map, aLastRecipe, aInputs, aFluids, aVoltage);
+        if (recipe == null) {
+            return recipe;
+        }
+        if (recipe.mSpecialValue == -200 && (mCleanroom == null || mCleanroom.mEfficiency == 0)) {
+            return null;
+        }
+        return recipe;
+    }
 
     public static ItemStack[] clean(final ItemStack[] v) {
         List<ItemStack> list = new ArrayList<ItemStack>(Arrays.asList(v));
