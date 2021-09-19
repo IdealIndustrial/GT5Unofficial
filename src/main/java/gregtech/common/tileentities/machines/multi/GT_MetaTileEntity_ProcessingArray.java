@@ -156,7 +156,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
             return GT_Recipe.GT_Recipe_Map.sDistilleryRecipes;
         } else if (tmp.startsWith("slicer")) {
             return GT_Recipe.GT_Recipe_Map.sSlicerRecipes;
-        } else if (tmp.startsWith("amplifier")) {
+        } else if (tmp.startsWith("amplifab")) {
             return GT_Recipe.GT_Recipe_Map.sAmplifiers;
         } else if (tmp.startsWith("circuitassembler")) {
             return GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes;
