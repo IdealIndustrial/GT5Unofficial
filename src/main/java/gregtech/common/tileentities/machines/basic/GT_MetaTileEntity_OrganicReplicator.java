@@ -41,7 +41,10 @@ public class GT_MetaTileEntity_OrganicReplicator extends GT_MetaTileEntity_Basic
         FluidStack tFluid = getFillableStack();
         ItemStack aStack = getInputAt(0);
         float efficiency = Math.min((this.mTier+5)*10,100);
-        if ((tFluid != null) && (tFluid.isFluidEqual(Materials.UUMatter.getFluid(1L)))&& ItemList.IC2_Crop_Seeds.isStackEqual(aStack, true, true)&&isOutputEmpty()) {
+        if ((tFluid == null) || (!tFluid.isFluidEqual(Materials.UUMatter.getFluid(1L)))) {
+            return 0;
+        }
+        if (ItemList.IC2_Crop_Seeds.isStackEqual(aStack, true, true)&&isOutputEmpty()) {
             NBTTagCompound tNBT = aStack.getTagCompound();
             if (tNBT == null) {
                 tNBT = new NBTTagCompound();
@@ -55,7 +58,7 @@ public class GT_MetaTileEntity_OrganicReplicator extends GT_MetaTileEntity_Basic
                 int UUMConsume =  Math.round((aCropTier*4+aGain+aGrowth+aResistance)*UUMatterMultiplier);
                 if(UUMConsume>tFluid.amount)
                     return 0;
-                this.mEUt = ((int) gregtech.api.enums.GT_Values.V[this.mTier])*15/16;
+                this.mEUt = ((int) GT_Values.V[this.mTier])*15/16;
                 this.mMaxProgresstime = (aCropTier+1)*EUMultiplier/ (1 << this.mTier - 1);
                 //setFillableStack(new FluidStack(getFillableStack().fluid,Math.round(getFillableStack().amount-(aCropTier*4+aGain+aGrowth+aResistance)*UUMatterMultiplier)));
                 tFluid.amount = ((int) (tFluid.amount - UUMConsume));
@@ -67,6 +70,12 @@ public class GT_MetaTileEntity_OrganicReplicator extends GT_MetaTileEntity_Basic
                 return 2;
             }
 
+        }
+        if (super.checkRecipe() == 2) {
+            if(getBaseMetaTileEntity().getRandomNumber(100) > efficiency){
+                this.mOutputItems[0] = null;
+            }
+            return 2;
         }
         return 0;
     }
