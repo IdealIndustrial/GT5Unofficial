@@ -55,7 +55,7 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
     public float getBlockHardness(World aWorld, int aX, int aY, int aZ) {
         int tMeta = aWorld.getBlockMetadata(aX, aY, aZ);
         if (tMeta == 0) {
-            return 40.0F;
+            return 10.0F;
         }
         assert tMeta >= 0 && tMeta <= maxAllowedMeta : "GT_Block_Glass_Casings - Invalid Metadata: " + tMeta;
         return 1.0F;
