@@ -1,6 +1,5 @@
 package gregtech.common.tileentities.machines.basic;
 
-import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -80,7 +79,7 @@ public class GT_MetaTileEntity_OrganicReplicator extends GT_MetaTileEntity_Basic
 
     @Override
     public GT_Recipe.GT_Recipe_Map getRecipeList() {
-        return GT_Recipe.GT_Recipe_Map.sOrganicReplicatorFakeRecipes;
+        return GT_Recipe.GT_Recipe_Map.sOrganicReplicatorRecipes;
     }
 
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
