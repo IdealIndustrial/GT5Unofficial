@@ -65,7 +65,7 @@ public class GT_SensorCard_Item
 
     public List<PanelString> getStringData(int aSettings, ICardWrapper aCard, boolean aLabels) {
         List<PanelString> rList = new LinkedList();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 24; i++) {
             if ((aSettings & 1 << i) != 0) {
                 PanelString line = new PanelString();
                 line.textLeft = GT_LanguageManager.getTranslation(aCard.getString("mString" + i), "\\\\");
