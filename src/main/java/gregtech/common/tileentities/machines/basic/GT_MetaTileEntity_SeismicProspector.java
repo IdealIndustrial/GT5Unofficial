@@ -156,5 +156,10 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
     @Override
     public long getMinimumStoredEU() {
         return 0;
-    }	
+    }
+
+    @Override
+    public long maxEUStore() {
+        return 0;
+    }
 }

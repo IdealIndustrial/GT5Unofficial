@@ -122,6 +122,11 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
     }
 
     @Override
+    public int getCapacity() {
+        return 0;
+    }
+
+    @Override
     public void endProcess() {
         ItemStack aStack = getSpecialSlot();
         if (aStack == null || aStack.stackSize != 1 || (!ItemList.Tool_DataStick.isStackEqual(aStack, false, true) && !ItemList.Tool_CD.isStackEqual(aStack, false, false))) {
@@ -260,4 +265,8 @@ public class GT_MetaTileEntity_AdvSeismicProspector extends GT_MetaTileEntity_Ba
         map.put(ore, oldCount + 1);
     }
 
+    @Override
+    public long maxEUStore() {
+        return 0;
+    }
 }
