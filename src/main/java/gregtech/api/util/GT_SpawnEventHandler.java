@@ -28,22 +28,29 @@ public class GT_SpawnEventHandler {
         if (event.getResult() == Event.Result.ALLOW || (event.entityLiving instanceof EntityPlayer)) {
             return;
         }
-        if (event.entityLiving.isCreatureType(EnumCreatureType.monster, false) ||
-                (event.entityLiving instanceof EntityPigZombie) ||
-                (event.entityLiving instanceof EntityOcelot)
-            ) {
+        if (event.entityLiving.isCreatureType(EnumCreatureType.monster, false)
+            || event.entityLiving instanceof EntityPigZombie || event.entityLiving instanceof EntityOcelot
+            )
+        {
+            boolean spawnIsNeutral = (event.entityLiving instanceof EntityPigZombie || event.entityLiving instanceof EntityOcelot);
             for (int[] rep : mobReps) {
                 if (rep[3] == event.entity.worldObj.provider.dimensionId) {
                     TileEntity tTile = event.entity.worldObj.getTileEntity(rep[0], rep[1], rep[2]);
                     if (tTile instanceof BaseMetaTileEntity && ((BaseMetaTileEntity) tTile).getMetaTileEntity() instanceof GT_MetaTileEntity_MonsterRepellent) {
                         int r = ((GT_MetaTileEntity_MonsterRepellent) ((BaseMetaTileEntity) tTile).getMetaTileEntity()).mRange;
+                        boolean neutralsAllowed =
+                                ((GT_MetaTileEntity_MonsterRepellent) ((BaseMetaTileEntity) tTile).getMetaTileEntity()).mNeutralsAllowed;
                         double dx = rep[0] + 0.5F - event.entity.posX;
                         double dy = rep[1] + 0.5F - event.entity.posY;
                         double dz = rep[2] + 0.5F - event.entity.posZ;
                         //Original - sphere: (dx * dx + dz * dz + dy * dy) <= Math.pow(r, 2)
                         //New - cube: (Math.abs(dx) <= r && Math.abs(dz) <= r && Math.abs(dy) <= r)
                         if (Math.abs(dx) <= r && Math.abs(dz) <= r && Math.abs(dy) <= r) {
-                            event.setResult(Event.Result.DENY);
+                            if ((!neutralsAllowed && spawnIsNeutral) || (!spawnIsNeutral))
+                            {
+                                event.setResult(Event.Result.DENY);
+                                break;
+                            }
                         }
                     }
                 }
