@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.entity.player.EntityPlayer;
 
+import java.util.Arrays;
+
 import static gregtech.api.enums.GT_Values.V;
 
 public class GT_MetaTileEntity_MonsterRepellent extends GT_MetaTileEntity_TieredMachineBlock {
@@ -45,7 +47,8 @@ public class GT_MetaTileEntity_MonsterRepellent extends GT_MetaTileEntity_Tiered
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTimer) {
         if (aBaseMetaTileEntity.isAllowedToWork() && aBaseMetaTileEntity.isServerSide()) {
             int[] tCoords = new int[]{aBaseMetaTileEntity.getXCoord(), aBaseMetaTileEntity.getYCoord(), aBaseMetaTileEntity.getZCoord(), aBaseMetaTileEntity.getWorld().provider.dimensionId};
-            if ((aTimer % 600 == 0) && !GT_SpawnEventHandler.mobReps.contains(tCoords)) {
+            if ((aTimer % 600 == 0) && !GT_SpawnEventHandler.mobReps.stream().anyMatch(c -> Arrays.equals(c, tCoords)))
+            {
                 GT_SpawnEventHandler.mobReps.add(tCoords);
             }
             if (aBaseMetaTileEntity.isUniversalEnergyStored(getMinimumStoredEU()) && aBaseMetaTileEntity.decreaseStoredEnergyUnits(1 << (this.mTier * 2), false)) {
@@ -59,19 +62,21 @@ public class GT_MetaTileEntity_MonsterRepellent extends GT_MetaTileEntity_Tiered
     @Override
     public void onFirstTick(IGregTechTileEntity aBaseMetaTileEntity) {
         int[] tCoords = new int[]{aBaseMetaTileEntity.getXCoord(), aBaseMetaTileEntity.getYCoord(), aBaseMetaTileEntity.getZCoord(), aBaseMetaTileEntity.getWorld().provider.dimensionId};
-        GT_SpawnEventHandler.mobReps.add(tCoords);
+        if (GT_SpawnEventHandler.mobReps != null && !GT_SpawnEventHandler.mobReps.stream().anyMatch(c -> Arrays.equals(c, tCoords))){
+            GT_SpawnEventHandler.mobReps.add(tCoords);
+        }
     }
 
     @Override
     public void onRemoval() {
         int[] tCoords = new int[]{this.getBaseMetaTileEntity().getXCoord(), this.getBaseMetaTileEntity().getYCoord(), this.getBaseMetaTileEntity().getZCoord(), this.getBaseMetaTileEntity().getWorld().provider.dimensionId};
-        GT_SpawnEventHandler.mobReps.remove(tCoords);
+        GT_SpawnEventHandler.mobReps.removeIf(seh -> Arrays.equals(seh,tCoords));
     }
 
     @Override
     public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
             mNeutralsAllowed = !mNeutralsAllowed;
-            GT_Utility.sendChatToPlayer(aPlayer, mNeutralsAllowed ? trans("095","Prevents spawn of hostile creatures") : trans("096","Prevents spawn of hostile creatures, pig zombies and ocelots"));
+            GT_Utility.sendChatToPlayer(aPlayer, mNeutralsAllowed ? trans("217","Prevents spawn of hostile creatures") : trans("218","Prevents spawn of hostile creatures, pig zombies and ocelots"));
     }
 
 
