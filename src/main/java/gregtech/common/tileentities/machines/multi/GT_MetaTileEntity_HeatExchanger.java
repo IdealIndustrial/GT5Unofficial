@@ -179,9 +179,9 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
             for (int j = -1; j < 2; j++) {
                 if ((i != 0) || (j != 0)) {
                     for (int k = 0; k <= 3; k++) {
-                        if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex()) 
-                            && !addInputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex()) 
-                            && !addMaintenanceToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex()) 
+                        if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex())
+                            && !addInputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex())
+                            && !addMaintenanceToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex())
                             && !ignoreController(aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j))) {
                             if (aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j) != getCasingBlock()) {
                                 return false;
@@ -290,24 +290,24 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
     }
 
     @Override
-    public String[] getInfoData() {	    
+    public String[] getInfoData() {
     int tGeneratedEU = (int) (this.mEUt * 2L * this.mEfficiency / 10000L);
     int distilledConsumed = useWater(tGeneratedEU / 160f);
 	return new String[]{
-		StatCollector.translateToLocal("GT5U.multiblock.Progress")+": "+
+		StatCollector.translateToLocal("GT5U.multiblock.Progress")+": ",
 		EnumChatFormatting.GREEN + Integer.toString(mProgresstime/20) + EnumChatFormatting.RESET +" s / "+
-		EnumChatFormatting.YELLOW + Integer.toString(mMaxProgresstime/20) + EnumChatFormatting.RESET +" s",		
-		StatCollector.translateToLocal("Water/Steam L/t")+": "+
+		EnumChatFormatting.YELLOW + Integer.toString(mMaxProgresstime/20) + EnumChatFormatting.RESET +" s",
+		StatCollector.translateToLocal("Water/Steam L/t")+": ",
 		EnumChatFormatting.GREEN + Integer.toString(distilledConsumed) + EnumChatFormatting.RESET +" / "+
-		EnumChatFormatting.YELLOW + Integer.toString(distilledConsumed * 160) + EnumChatFormatting.RESET,		
-		StatCollector.translateToLocal("GT5U.multiblock.usage")+" "+StatCollector.translateToLocal("GT5U.LHE.steam")+": "+
+		EnumChatFormatting.YELLOW + Integer.toString(distilledConsumed * 160) + EnumChatFormatting.RESET,
+		StatCollector.translateToLocal("GT5U.multiblock.usage")+" "+StatCollector.translateToLocal("GT5U.LHE.steam")+": ",
 		(superheated?EnumChatFormatting.RED:EnumChatFormatting.YELLOW) + Integer.toString(superheated?-2*mEUt:-mEUt) + EnumChatFormatting.RESET + " EU/t",
-		StatCollector.translateToLocal("GT5U.multiblock.problems")+": "+
-		EnumChatFormatting.RED+ (getIdealStatus() - getRepairStatus())+EnumChatFormatting.RESET+
-		" "+StatCollector.translateToLocal("GT5U.multiblock.efficiency")+": "+
+		StatCollector.translateToLocal("GT5U.multiblock.problems")+": ",
+		EnumChatFormatting.RED+ "" +(getIdealStatus() - getRepairStatus())+EnumChatFormatting.RESET,
+		""+StatCollector.translateToLocal("GT5U.multiblock.efficiency")+": ",
 		EnumChatFormatting.YELLOW+Float.toString(mEfficiency / 100.0F)+EnumChatFormatting.RESET + " %",
 		StatCollector.translateToLocal("GT5U.LHE.superheated")+": "+ (superheated?EnumChatFormatting.RED:EnumChatFormatting.BLUE) + superheated + EnumChatFormatting.RESET,
-		StatCollector.translateToLocal("GT5U.LHE.superheated")+" "+StatCollector.translateToLocal("GT5U.LHE.threshold")+": "+ EnumChatFormatting.GREEN + superheated_threshold + EnumChatFormatting.RESET
-        };		
+		StatCollector.translateToLocal("GT5U.LHE.superheated")+" "+StatCollector.translateToLocal("GT5U.LHE.threshold")+": ", "" +EnumChatFormatting.GREEN + superheated_threshold + EnumChatFormatting.RESET
+        };
     }
 }

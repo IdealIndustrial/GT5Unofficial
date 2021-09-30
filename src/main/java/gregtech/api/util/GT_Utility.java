@@ -23,6 +23,7 @@ import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
 import gregtech.api.threads.GT_Runnable_Sound;
 import gregtech.common.GT_Proxy;
+import gregtech.common.items.GT_FluidDisplayItem;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeInputItemStack;
 import ic2.api.recipe.RecipeInputOreDict;
@@ -870,8 +871,21 @@ public class GT_Utility {
         }
         tNBT.setLong("mFluidDisplayHeat", aFluid.getFluid().getTemperature(aFluid));
         tNBT.setBoolean("mFluidState", aFluid.getFluid().isGaseous(aFluid));
+        tNBT.setInteger("mFluidAmount", aFluid.amount);
         rStack.setTagCompound(tNBT);
         return rStack;
+    }
+
+    public static FluidStack getFluidFromDisplayItem(ItemStack is) {
+        if (is == null || !(is.getItem() instanceof GT_FluidDisplayItem)) {
+            return null;
+        }
+        Fluid fl = FluidRegistry.getFluid(is.getItemDamage());
+        int amount = is.getTagCompound() == null ? 1 : is.getTagCompound().getInteger("mFluidAmount");
+        if (amount == 0 || fl == null) {
+            return null;
+        }
+        return new FluidStack(fl, amount);
     }
 
     public static boolean containsFluid(ItemStack aStack, FluidStack aFluid, boolean aCheckIFluidContainerItems) {

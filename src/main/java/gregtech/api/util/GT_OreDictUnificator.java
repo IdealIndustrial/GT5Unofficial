@@ -5,6 +5,8 @@ import gregtech.api.enums.Dyes;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.SubTag;
+import gregtech.api.items.GT_Generic_Item;
+import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.objects.GT_HashSet;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
@@ -13,10 +15,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static gregtech.api.enums.GT_Values.*;
@@ -65,6 +64,16 @@ public class GT_OreDictUnificator {
         set(aPrefix, aMaterial, aStack, true, false);
     }
 
+    public static Comparator<ItemStack> gtStacksSortOrder = (is1, is2) -> {
+        if (is1.getItem() instanceof GT_Generic_Item) {
+            return -1;
+        }
+        if (is2.getItem() instanceof GT_Generic_Item) {
+            return 1;
+        }
+        return 0;
+    };
+
     public static void set(OrePrefixes aPrefix, Materials aMaterial, ItemStack aStack, boolean aOverwrite, boolean aAlreadyRegistered) {
         if (aMaterial == null || aPrefix == null || GT_Utility.isStackInvalid(aStack) || Items.feather.getDamage(aStack) == W)
             return;
@@ -72,8 +81,21 @@ public class GT_OreDictUnificator {
         aStack = GT_Utility.copyAmount(1, aStack);
         if (!aAlreadyRegistered) registerOre(aPrefix.get(aMaterial), aStack);
         addAssociation(aPrefix, aMaterial, aStack, isBlacklisted(aStack));
-        if (aOverwrite || GT_Utility.isStackInvalid(sName2StackMap.get(aPrefix.get(aMaterial).toString())))
-            sName2StackMap.put(aPrefix.get(aMaterial).toString(), aStack);
+        String oreName = aPrefix.get(aMaterial).toString();
+        ItemStack old = sName2StackMap.get(oreName);
+        if (old == null) {
+            sName2StackMap.put(oreName, aStack);
+        }
+        else {
+            int order = gtStacksSortOrder.compare(old, aStack);
+            if (order > 0) {
+                sName2StackMap.put(oreName, aStack);
+            }
+            else if (order == 0 && aOverwrite) {
+                sName2StackMap.put(oreName, aStack);
+            }
+        }
+
         isAddingOre--;
     }
 
