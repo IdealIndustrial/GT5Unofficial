@@ -166,7 +166,9 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
         } else if (tmp.startsWith("circuitassembler")) {
             return GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes;
         } else if (tmp.startsWith("filter")) {
-            return GT_Recipe.GT_Recipe_Map.sFilterRecipes;            
+            return GT_Recipe.GT_Recipe_Map.sFilterRecipes;
+        } else if (tmp.startsWith("rockbreaker")) {
+            return GT_Recipe.GT_Recipe_Map.sRockBreakerRecipes;            
         }
         return null;
     }
