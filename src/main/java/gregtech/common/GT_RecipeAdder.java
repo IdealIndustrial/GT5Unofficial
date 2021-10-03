@@ -24,6 +24,7 @@ import mods.railcraft.common.blocks.aesthetics.cube.EnumCube;
 import mods.railcraft.common.items.RailcraftToolItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -1323,6 +1324,23 @@ public class GT_RecipeAdder
         return true;
     }
 
+    @Override
+    public boolean addRockBreakerRecipe(ItemStack aInput, int aCircuit, ItemStack aOutput, int aDuration, int aEUt) {
+        if (aOutput == null) {
+            return false;
+        }
+
+        ItemStack circuit = GT_Utility.getIntegratedCircuit(aCircuit);
+        FluidStack lava = GT_ModHandler.getLava(0);
+        ItemStack water = Materials.Water.getCells(1);
+        water.stackSize = 0;
+
+        GT_Recipe.GT_Recipe_Map.sRockBreakerRecipes.addRecipe(false, new ItemStack[] { circuit, water, aInput }, new ItemStack[] { aOutput },
+            null, new FluidStack[] { lava }, null, aDuration, aEUt,0);
+
+        return true;
+    }	
+	
     private boolean areItemsAndFluidsBothNull(ItemStack[] items, FluidStack[] fluids){
     	boolean itemsNull = true;
     	if (items != null) {
