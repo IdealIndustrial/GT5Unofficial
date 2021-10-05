@@ -5,7 +5,7 @@ import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
-import idealindustrial.tile.meta.multi.BaseMultiMachine;
+import idealindustrial.tile.impl.multi.MultiMachineBase;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.world.World;
 
@@ -13,16 +13,16 @@ import java.util.*;
 
 public class ChunkLoadingMonitor {
     static Map<Integer, ChunkLoadingMonitor> monitors = new HashMap<>();
-    static List<BaseMultiMachine<?>> notifyListAdded = new ArrayList<>(), notifyListRemoved = new ArrayList<>();
+    static List<MultiMachineBase<?>> notifyListAdded = new ArrayList<>(), notifyListRemoved = new ArrayList<>();
     static final Object mutex = new Object();//now one general mutex, may be it will be good to replace it with some smaller
 
     public static void tickStart() {
         synchronized (mutex) {
-            for (BaseMultiMachine<?> machine : notifyListAdded) {
+            for (MultiMachineBase<?> machine : notifyListAdded) {
                 machine.chunkAdded();
             }
             notifyListAdded.clear();
-            for (BaseMultiMachine<?> machine : notifyListRemoved) {
+            for (MultiMachineBase<?> machine : notifyListRemoved) {
                 machine.chunkRemoved();
             }
             notifyListRemoved.clear();
@@ -53,11 +53,11 @@ public class ChunkLoadingMonitor {
     }
 
 
-    TLongObjectMap<List<BaseMultiMachine<?>>> loadListeners = new TLongObjectHashMap<>();
-    TLongObjectMap<Set<BaseMultiMachine<?>>> unloadListeners = new TLongObjectHashMap<>();
+    TLongObjectMap<List<MultiMachineBase<?>>> loadListeners = new TLongObjectHashMap<>();
+    TLongObjectMap<Set<MultiMachineBase<?>>> unloadListeners = new TLongObjectHashMap<>();
     TLongSet loaded = new TLongHashSet();
 
-    public int requestChunks(TLongSet chunks, BaseMultiMachine<?> machine) {
+    public int requestChunks(TLongSet chunks, MultiMachineBase<?> machine) {
         int alreadyLoaded = 0;
         System.out.println("Requested: ");
         print(chunks);
@@ -68,10 +68,10 @@ public class ChunkLoadingMonitor {
                     alreadyLoaded++;
                     continue;
                 }
-                List<BaseMultiMachine<?>> listeners = getListeners(chunk);
+                List<MultiMachineBase<?>> listeners = getListeners(chunk);
                 listeners.add(machine);
 
-                Set<BaseMultiMachine<?>> set = this.unloadListeners.get(chunk);
+                Set<MultiMachineBase<?>> set = this.unloadListeners.get(chunk);
                 if (set == null) {
                     set = new HashSet<>();
                     this.unloadListeners.put(chunk, set);
@@ -82,13 +82,13 @@ public class ChunkLoadingMonitor {
         return alreadyLoaded;
     }
 
-    public void removeTileFrom(TLongSet chunks, BaseMultiMachine<?> machine) {
+    public void removeTileFrom(TLongSet chunks, MultiMachineBase<?> machine) {
         System.out.println("Removal: ");
         print(chunks);
         synchronized (mutex) {
             for (TLongIterator iterator = chunks.iterator(); iterator.hasNext(); ) {
                 long chunk = iterator.next();
-                Set<BaseMultiMachine<?>> set = this.unloadListeners.get(chunk);
+                Set<MultiMachineBase<?>> set = this.unloadListeners.get(chunk);
                 if (set != null) {
                     set.remove(machine);
                 }
@@ -96,8 +96,8 @@ public class ChunkLoadingMonitor {
         }
     }
 
-    protected List<BaseMultiMachine<?>> getListeners(long chunk) {
-        List<BaseMultiMachine<?>> listeners = this.loadListeners.get(chunk);
+    protected List<MultiMachineBase<?>> getListeners(long chunk) {
+        List<MultiMachineBase<?>> listeners = this.loadListeners.get(chunk);
         if (listeners == null) {
             listeners = new ArrayList<>();
             this.loadListeners.put(chunk, listeners);
@@ -118,8 +118,8 @@ public class ChunkLoadingMonitor {
         long id = II_Util.intsToLong(chunkX, chunkY);
         loaded.remove(id);
         if (unloadListeners.containsKey(id)) {
-            Set<BaseMultiMachine<?>> set = unloadListeners.get(id);
-            set.removeIf(m -> m.getBase().isDead());
+            Set<MultiMachineBase<?>> set = unloadListeners.get(id);
+            set.removeIf(m -> m.getHost().isDead());
             notifyListRemoved.addAll(set);
             getListeners(id).addAll(set);
         }

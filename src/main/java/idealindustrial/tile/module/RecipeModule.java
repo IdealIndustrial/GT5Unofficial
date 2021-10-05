@@ -2,7 +2,7 @@ package idealindustrial.tile.module;
 
 import idealindustrial.recipe.IMachineRecipe;
 import idealindustrial.recipe.RecipeMap;
-import idealindustrial.tile.meta.BaseMetaTile_Facing2Main;
+import idealindustrial.tile.impl.TileFacing2Main;
 import idealindustrial.util.parameter.RecipedMachineStats;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -19,7 +19,7 @@ public interface RecipeModule<R extends IMachineRecipe> extends MetaTileModule {
 
    RecipeMap<R> getRecipeMap();
 
-   RecipeModule<R> reInit(BaseMetaTile_Facing2Main<?> machine);
+   RecipeModule<R> reInit(TileFacing2Main<?> machine);
 
    RecipedMachineStats getMachineStats();
 }

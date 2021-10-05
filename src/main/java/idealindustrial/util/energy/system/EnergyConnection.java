@@ -1,20 +1,20 @@
 package idealindustrial.util.energy.system;
 
-import idealindustrial.tile.meta.connected.MetaConnected_Cable;
+import idealindustrial.tile.impl.connected.ConnectedCable;
 
 import java.util.List;
 
 public class EnergyConnection implements IInfoEnergyPassThrough {
     protected long maxAmperage, maxVoltage, loss;
     protected long currentAmperage, currentVoltage;
-    protected List<MetaConnected_Cable> cables;
+    protected List<ConnectedCable> cables;
     protected IEnergyNode node1, node2;
 
-    public EnergyConnection(List<MetaConnected_Cable> cables, IEnergyNode node1, IEnergyNode node2) { //todo: think about lazy loss amperage and voltage
+    public EnergyConnection(List<ConnectedCable> cables, IEnergyNode node1, IEnergyNode node2) { //todo: think about lazy loss amperage and voltage
         this.cables = cables;
-        this.maxAmperage = cables.stream().mapToLong(MetaConnected_Cable::getAmperage).min().orElse(Long.MAX_VALUE);
-        this.maxVoltage = cables.stream().mapToLong(MetaConnected_Cable::getVoltage).min().orElse(Long.MAX_VALUE);
-        this.loss = cables.stream().mapToLong(MetaConnected_Cable::getLoss).sum();
+        this.maxAmperage = cables.stream().mapToLong(ConnectedCable::getAmperage).min().orElse(Long.MAX_VALUE);
+        this.maxVoltage = cables.stream().mapToLong(ConnectedCable::getVoltage).min().orElse(Long.MAX_VALUE);
+        this.loss = cables.stream().mapToLong(ConnectedCable::getLoss).sum();
         this.node1 = node1;
         this.node2 = node2;
     }
@@ -47,7 +47,7 @@ public class EnergyConnection implements IInfoEnergyPassThrough {
 
     @Override
     public void invalidate() {
-        cables.forEach(MetaConnected_Cable::onSystemInvalidate);
+        cables.forEach(ConnectedCable::onSystemInvalidate);
     }
 
     @Override

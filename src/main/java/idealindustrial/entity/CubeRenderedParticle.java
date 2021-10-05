@@ -3,7 +3,7 @@ package idealindustrial.entity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.interfaces.ITexture;
-import idealindustrial.tile.meta.multi.struct.IGuideRenderer;
+import idealindustrial.tile.impl.multi.struct.IGuideRenderer;
 import idealindustrial.util.worldgen.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.client.particle.EntityFX;
