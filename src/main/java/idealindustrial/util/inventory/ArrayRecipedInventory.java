@@ -1,5 +1,6 @@
 package idealindustrial.util.inventory;
 
+import idealindustrial.util.inventory.interfaces.RecipedInventory;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;
 import net.minecraft.item.ItemStack;
@@ -26,12 +27,16 @@ public class ArrayRecipedInventory implements RecipedInventory {
 
     @Override
     public boolean hasMatch(II_StackSignature signature) {
+        int have = 0;
         for (II_ItemStack stack : contents) {
             if (stack == null) {
                 continue;
             }
             if (signature.isEqual(stack)) {
-                return true;
+                have += stack.amount;
+                if (have >= signature.amount) {
+                    return true;
+                }
             }
         }
         return false;
@@ -230,6 +235,15 @@ public class ArrayRecipedInventory implements RecipedInventory {
                 continue;
             }
             contents[i] = II_ItemStack.loadFromNBT(itemTag);
+        }
+    }
+
+    @Override
+    public void validate() {
+        for (int i = 0; i < contents.length; i++) {
+            if (contents[i] != null && contents[i].amount <= 0) {
+                contents[i] = null;
+            }
         }
     }
 }

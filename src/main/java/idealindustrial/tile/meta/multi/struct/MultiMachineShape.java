@@ -57,9 +57,11 @@ public class MultiMachineShape {
         TLongSet set = new TLongHashSet();
         for (MultiMachineStructureBox box : boxes) {
             ICoordManipulator<?> manipulator = box.getManipulator();
+            manipulator.rotateY(tile.getRotation());
+            manipulator.move(tile.getPosition());
             BoundingBox bb = manipulator.getBox();
-            int startChunkX = bb.getMinX() << 4, endChunkX = bb.getMaxX() << 4;
-            int startChunkZ = bb.getMinZ() << 4, endChunkZ = bb.getMaxZ() << 4;
+            int startChunkX = bb.getMinX() >> 4, endChunkX = bb.getMaxX() >> 4;
+            int startChunkZ = bb.getMinZ() >> 4, endChunkZ = bb.getMaxZ() >> 4;
             for (int x = startChunkX; x <= endChunkX; x++) {
                 for (int z = startChunkZ; z <= endChunkZ; z++) {
                     set.add(II_Util.intsToLong(x, z));

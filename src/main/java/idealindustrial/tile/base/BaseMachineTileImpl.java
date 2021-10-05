@@ -13,7 +13,7 @@ import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.FluidInventoryRepresentation;
 import idealindustrial.util.fluid.FluidInventoryReprepresentationImpl;
 import idealindustrial.util.inventory.EmptyInventory;
-import idealindustrial.util.inventory.InternalInventory;
+import idealindustrial.util.inventory.interfaces.InternalInventory;
 import idealindustrial.util.misc.II_TileUtil;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -79,6 +79,11 @@ public class BaseMachineTileImpl extends BaseTileImpl implements BaseMachineTile
     @Override
     protected void setMetaTileEntity(MetaTile<?> metaTileEntity) {
         super.setMetaTileEntity(metaTileEntity);
+        reloadIOContainers(metaTileEntity);
+    }
+
+    @Override
+    public void reloadIOContainers(MetaTile<?> metaTile) {
         if (metaTileEntity.hasInventory()) {
             in = metaTileEntity.getInputsHandler();
             out = metaTileEntity.getOutputsHandler();
@@ -396,4 +401,10 @@ public class BaseMachineTileImpl extends BaseTileImpl implements BaseMachineTile
         return true;
     }
 
+    @Override
+    public void placedByPlayer(EntityPlayer player) {
+        if (metaTileEntity != null) {
+            metaTileEntity.placedByPlayer(player);
+        }
+    }
 }

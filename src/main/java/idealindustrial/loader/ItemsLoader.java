@@ -17,6 +17,7 @@ import idealindustrial.tile.base.BaseMachineTileImpl;
 import idealindustrial.tile.base.BaseTileImpl;
 import idealindustrial.tile.base.BasePipeTileImpl;
 import idealindustrial.tile.meta.connected.MetaConnected_Cable;
+import idealindustrial.tile.meta.multi.parts.Hatch_Item;
 import idealindustrial.tile.meta.recipe.MetaTileMachineRecipe;
 import idealindustrial.util.misc.II_Paths;
 import idealindustrial.util.parameter.RecipedMachineStats;
@@ -45,6 +46,9 @@ public class ItemsLoader {
                 RecipeMaps.benderRecipes,
                 new RecipedMachineStats(1,1, 1, 64, 0, 0, 0, 1, 10_000)));
         II_TileUtil.registerMetaTile(7, new TestMultiMachine1(makeBaseMachineTile()));
+        II_TileUtil.registerMetaTile(8, new Hatch_Item.InputBus(makeBaseMachineTile(), "input hatch", 1));
+        II_TileUtil.registerMetaTile(9, new Hatch_Item.OutputBus(makeBaseMachineTile(), "output hatch", 1));
+
         GameRegistry.registerTileEntity(BaseTileImpl.class, "ii.tile");
         GameRegistry.registerTileEntity(BaseMachineTileImpl.class, "ii.machine_tile");
         GameRegistry.registerTileEntity(BasePipeTileImpl.class, "ii.pipe_tile");

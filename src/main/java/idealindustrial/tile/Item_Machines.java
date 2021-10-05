@@ -5,6 +5,7 @@ import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.textures.TextureManager;
 import idealindustrial.tile.base.BaseTileImpl;
+import idealindustrial.tile.interfaces.base.BaseMachineTile;
 import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -75,6 +76,9 @@ public class Item_Machines
             BaseTileImpl tTileEntity = (BaseTileImpl) aWorld.getTileEntity(aX, aY, aZ);
             if (tTileEntity != null) {
                 tTileEntity.setInitialValuesAsNBT(tTileEntity.isServerSide() ? aStack.getTagCompound() : null, tDamage);
+                if (tTileEntity instanceof BaseMachineTile) {
+                    ((BaseMachineTile) tTileEntity).placedByPlayer(aPlayer);
+                }
                 tTileEntity.onPlaced();
             }
         } else if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, tDamage, 3)) {

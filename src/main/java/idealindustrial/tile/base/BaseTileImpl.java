@@ -428,6 +428,14 @@ public class BaseTileImpl extends BaseTileEntity implements BaseTile {
     }
 
     @Override
+    public void onChunkUnload() {
+        if (metaTileEntity != null) {
+            metaTileEntity.onRemoval();
+        }
+        super.onChunkUnload();
+    }
+
+    @Override
     public void receiveNeighbourIOConfigChange(IOType type) {
         metaTileEntity.receiveNeighbourIOConfigChange(type);
     }

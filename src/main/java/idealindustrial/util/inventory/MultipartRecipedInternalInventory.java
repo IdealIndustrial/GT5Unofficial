@@ -1,11 +1,49 @@
 package idealindustrial.util.inventory;
 
+import idealindustrial.tile.module.MultiMachineRecipedModule;
+import idealindustrial.util.inventory.interfaces.RecipedInventory;
 import idealindustrial.util.item.*;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class MultipartRecipedInternalInventory extends MultipartInternalInventory implements RecipedInventory {
+    public static class SubInv extends ArrayRecipedInventory {
+
+        MultipartInternalInventory parent;
+
+        public SubInv(ArrayRecipedInventory old, MultipartInternalInventory parent) {
+            super(old.contents);
+            this.parent = parent;
+        }
+
+        public SubInv(int size, int stackSize) {
+            super(size, stackSize);
+        }
+
+        @Override
+        public int insert(II_ItemStack is, boolean doInsert) {
+            if (doInsert) {
+                parent.insert(is, true);
+            }
+            return super.insert(is, doInsert);
+        }
+    }
+
+    MultiMachineRecipedModule<?> module;
+
+    public MultipartRecipedInternalInventory(MultiMachineRecipedModule<?> module) {
+        this.module = module;
+    }
+
+    @Override
+    public int insert(II_ItemStack is, boolean doInsert) {
+        if (doInsert) {
+            module.onInInventoryModified(0);
+        }
+        return super.insert(is, doInsert);
+    }
+
     @Override
     public boolean hasMatch(II_StackSignature signature) {
         if (signature.getType() == CheckType.OREDICT) {

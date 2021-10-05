@@ -3,7 +3,7 @@ package idealindustrial.recipe;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.MultiFluidHandler;
 import idealindustrial.util.inventory.ArrayRecipedInventory;
-import idealindustrial.util.inventory.RecipedInventory;
+import idealindustrial.util.inventory.interfaces.RecipedInventory;
 import idealindustrial.util.item.HashedStack;
 import idealindustrial.util.item.ItemHelper;
 import idealindustrial.util.item.II_ItemStack;

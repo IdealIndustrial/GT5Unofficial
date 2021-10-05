@@ -1,4 +1,4 @@
-package idealindustrial.util.inventory;
+package idealindustrial.util.inventory.interfaces;
 
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;

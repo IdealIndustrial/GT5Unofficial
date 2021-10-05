@@ -11,7 +11,7 @@ import idealindustrial.tile.interfaces.base.BaseTile;
 import idealindustrial.tile.interfaces.meta.MetaTile;
 import idealindustrial.util.energy.EnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
-import idealindustrial.util.inventory.InternalInventory;
+import idealindustrial.util.inventory.interfaces.InternalInventory;
 import idealindustrial.util.misc.II_DirUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,12 +30,12 @@ import java.util.stream.Stream;
  */
 public abstract class BaseMetaTileMachine<BaseTileType extends BaseMachineTile> implements MetaTile<BaseTileType> {
 
-    protected boolean hasInventory, hasTank, hasEnergy;
-    protected InternalInventory inventoryIn, inventoryOut, inventorySpecial;
-    protected FluidHandler tankIn, tankOut;
-    protected EnergyHandler energyHandler;
-    protected String name;
-    protected BaseTileType baseTile;
+    public boolean hasInventory, hasTank, hasEnergy;
+    public InternalInventory inventoryIn, inventoryOut, inventorySpecial;
+    public FluidHandler tankIn, tankOut;
+    public EnergyHandler energyHandler;
+    public String name;
+    public BaseTileType baseTile;
     /**
      * texture arrays, 0 - down, 1 - top, 2 - side, 3 - down active, 5 - top active...
      */

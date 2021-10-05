@@ -61,7 +61,7 @@ public class II_Util {
     }
 
     public static long intsToLong(int a, int b) {
-        return ((long) a) << 32 | ((long) b);
+        return ((long) a) << 32L | ((long) b & 0xFFFFFFFFL);
     }
 
     public static int intAFromLong(long l) {
@@ -84,5 +84,6 @@ public class II_Util {
     }
 
     public static void main(String[] args) {
+        System.out.println("   ");
     }
 }

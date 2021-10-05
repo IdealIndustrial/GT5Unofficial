@@ -1,7 +1,7 @@
 package idealindustrial.recipe;
 
 import idealindustrial.util.fluid.FluidHandler;
-import idealindustrial.util.inventory.RecipedInventory;
+import idealindustrial.util.inventory.interfaces.RecipedInventory;
 import idealindustrial.util.item.II_StackSignature;
 
 import java.util.List;

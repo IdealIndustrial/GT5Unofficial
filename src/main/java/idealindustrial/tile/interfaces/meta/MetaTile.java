@@ -10,7 +10,7 @@ import idealindustrial.tile.interfaces.IUpdatableTileEntity;
 import idealindustrial.tile.interfaces.base.BaseTile;
 import idealindustrial.util.energy.EnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
-import idealindustrial.util.inventory.InternalInventory;
+import idealindustrial.util.inventory.interfaces.InternalInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -152,6 +152,10 @@ public interface MetaTile<BaseTileType extends BaseTile> extends IUpdatableTileE
 
 
     default void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider) {
+
+    }
+
+    default void placedByPlayer(EntityPlayer player) {
 
     }
 }

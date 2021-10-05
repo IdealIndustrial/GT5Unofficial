@@ -20,14 +20,15 @@ public abstract class BasicEnergyHandler extends EnergyHandler {
     }
 
     @Override
-    public boolean drain(long energy, boolean doDrain) {
-        if (stored >= energy + minEnergyAmount) {
-            if (doDrain) {
-                stored -= energy;
-            }
-            return true;
+    public long drain(long energy, boolean doDrain) {
+        if (stored < minEnergyAmount) {
+            return 0;
         }
-        return false;
+        long drained = Math.min(energy, stored);
+        if (doDrain) {
+            stored -= drained;
+        }
+        return drained;
     }
 
     @Override

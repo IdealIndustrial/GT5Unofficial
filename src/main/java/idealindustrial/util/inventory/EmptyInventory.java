@@ -1,5 +1,6 @@
 package idealindustrial.util.inventory;
 
+import idealindustrial.util.inventory.interfaces.RecipedInventory;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;
 import net.minecraft.nbt.NBTTagCompound;
@@ -67,5 +68,10 @@ public class EmptyInventory implements RecipedInventory {
     @Override
     public List<II_ItemStack> getContents() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public void validate() {
+
     }
 }

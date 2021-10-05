@@ -70,6 +70,9 @@ public class TextureManager {
     }
 
     public INetworkedTexture getNetworkedTexture(int textureID) {
+        if (textureID < 0) {
+            return NetworkedTexture.load(textureID);
+        }
         return networkedTextureMap.get(textureID);
     }
 }

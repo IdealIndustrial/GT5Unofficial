@@ -1,8 +1,8 @@
 package idealindustrial.util.parameter;
 
 import idealindustrial.util.fluid.FluidHandler;
-import idealindustrial.util.inventory.InternalInventory;
-import idealindustrial.util.inventory.RecipedInventory;
+import idealindustrial.util.inventory.interfaces.InternalInventory;
+import idealindustrial.util.inventory.interfaces.RecipedInventory;
 import idealindustrial.util.misc.II_TileUtil;
 import idealindustrial.util.misc.II_Util;
 

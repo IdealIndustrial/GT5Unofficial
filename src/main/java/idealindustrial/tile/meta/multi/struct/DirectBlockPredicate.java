@@ -1,12 +1,18 @@
 package idealindustrial.tile.meta.multi.struct;
 
 import idealindustrial.entity.CubeRenderedParticle;
+import idealindustrial.tile.meta.multi.BaseMultiMachine;
+import idealindustrial.tile.meta.multi.BaseMultiMachine.HatchType;
 import idealindustrial.util.worldgen.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 
-public class DirectBlockPredicate implements ICoordPredicate{
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+public class DirectBlockPredicate implements ICoordPredicate {
 
     final Block block;
     final int meta, rotation, minAmount;
@@ -25,6 +31,7 @@ public class DirectBlockPredicate implements ICoordPredicate{
         this.rotation = rotation;
         this.minAmount = minAmount;
     }
+
 
     @Override
     public void apply(CheckMachineParams params, Vector3 position, int rotation) {
@@ -55,5 +62,13 @@ public class DirectBlockPredicate implements ICoordPredicate{
         if (amount < minAmount) {
             //todo throw not enough blocks
         }
+    }
+
+    @Override
+    public ICoordPredicate or(ICoordPredicate predicate) {
+        if (predicate instanceof BlockDependentPredicate) {
+            ((BlockDependentPredicate) predicate).addBlockInfo(this);
+        }
+        return ICoordPredicate.super.or(predicate);
     }
 }

@@ -21,7 +21,7 @@ public abstract class BaseMetaTile_Hatch<B extends BaseMachineTile, M extends Ba
         super(baseTile, name, baseTextures, overlays);
     }
 
-    protected BaseMetaTile_Hatch(B baseTile, BaseMetaTile_Hatch<?, ?> copyFrom) {
+    protected BaseMetaTile_Hatch(B baseTile, BaseMetaTile_Hatch<B, M> copyFrom) {
         super(baseTile, copyFrom);
         this.baseTextures = Arrays.copyOf(baseTextures, baseTextures.length);
         this.overlays = Arrays.copyOf(overlays, overlays.length);

@@ -15,8 +15,12 @@ public class MetaTileMachineRecipe extends BaseMetaTileMachineReciped<BaseMachin
         super(baseTile, name, baseTextures, overlays, recipeMap, stats);
     }
 
+    public MetaTileMachineRecipe(BaseMachineTile baseTile, BaseMetaTileMachineReciped<BaseMachineTile, BasicMachineRecipe> copyFrom) {
+        super(baseTile, copyFrom);
+    }
+
     @Override
     public MetaTile<BaseMachineTile> newMetaTile(BaseMachineTile baseTile) {
-        return new MetaTileMachineRecipe(baseTile, name, baseTextures, overlays, recipeMap, stats);
+        return new MetaTileMachineRecipe(baseTile, this);
     }
 }

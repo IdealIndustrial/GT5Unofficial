@@ -12,7 +12,9 @@ import idealindustrial.util.fluid.SingleFluidHandler;
 import idealindustrial.util.fluid.MultiFluidHandler;
 import idealindustrial.util.inventory.*;
 import idealindustrial.util.inventory.EmptyInventory;
-import idealindustrial.util.inventory.InternalInventory;
+import idealindustrial.util.inventory.interfaces.InternalInventory;
+import idealindustrial.util.inventory.interfaces.RecipedInventory;
+import idealindustrial.util.worldgen.Vector3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -72,6 +74,9 @@ public class II_TileUtil {
         return new BaseMachineTileImpl();
     }
 
+    public static MetaTile<?> getMetaTile(World world, Vector3 pos) {
+        return getMetaTile(world, pos.x, pos.y, pos.z);
+    }
     public static MetaTile<?> getMetaTile(World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof BaseTile) {

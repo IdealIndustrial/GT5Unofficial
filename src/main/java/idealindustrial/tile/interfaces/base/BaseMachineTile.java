@@ -2,10 +2,11 @@ package idealindustrial.tile.interfaces.base;
 
 import gregtech.api.metatileentity.IEnergyContainer;
 import idealindustrial.tile.IOType;
+import idealindustrial.tile.interfaces.meta.MetaTile;
 import idealindustrial.util.energy.EnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.FluidInventoryRepresentation;
-import idealindustrial.util.inventory.InternalInventory;
+import idealindustrial.util.inventory.interfaces.InternalInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -36,6 +37,8 @@ public interface BaseMachineTile extends BaseTile, IFluidHandler, ISidedInventor
 
     EnergyHandler getEnergyHandler();
 
+    void reloadIOContainers(MetaTile<?> metaTileEntity);
+
     void overVoltage();
 
     boolean[] getIO(IOType type);
@@ -45,5 +48,7 @@ public interface BaseMachineTile extends BaseTile, IFluidHandler, ISidedInventor
     void onIOConfigurationChanged();
 
     void notifyOnIOConfigChange(IOType type);
+
+    void placedByPlayer(EntityPlayer player);
 
 }

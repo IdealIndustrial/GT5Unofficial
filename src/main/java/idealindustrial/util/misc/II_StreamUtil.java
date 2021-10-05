@@ -97,6 +97,13 @@ public class II_StreamUtil {
         return ar;
     }
 
+    public static <T> T[] setInNullAr(T t, T[] ar, int... positions) {
+        for (int i : positions) {
+            ar[i] = t;
+        }
+        return ar;
+    }
+
     public static <T> Stream<T> repeated(T t, int times) {
         return Stream.generate(() -> t).limit(times);
     }

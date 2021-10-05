@@ -1,5 +1,10 @@
 package idealindustrial.util.worldgen;
 
+import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
+import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+
 public class Vector3d {
     public double x, y, z;
 
@@ -12,8 +17,27 @@ public class Vector3d {
         this.z = z;
     }
 
+    public Vector3d(Entity entity) {
+        this(entity.posX, entity.posY, entity.posZ);
+    }
+
+    public Vector3d(TileEntity entity) {
+        this(entity.xCoord, entity.yCoord, entity.zCoord);
+    }
+
+    public Vector3d(IHasWorldObjectAndCoords base) {
+        this(base.getXCoord(), base.getYCoord(), base.getZCoord());
+    }
+
     public Vector3d minus(Vector3d vec) {
         return new Vector3d(x - vec.x, y - vec.y, z - vec.z);
+    }
+
+    public Vector3d minusM(Vector3d vec) {
+        x -= vec.x;
+        y -= vec.y;
+        z -= vec.z;
+        return this;
     }
 
     public Vector3d add(Vector3d vec) {
@@ -64,6 +88,7 @@ public class Vector3d {
         double y = vec.x * Math.sin(angle) + vec.y * Math.cos(angle);
         return new Vec2d(x, y);
     }
+
 
 
 }

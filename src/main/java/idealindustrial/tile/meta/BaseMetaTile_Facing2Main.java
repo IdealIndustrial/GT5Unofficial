@@ -5,9 +5,13 @@ import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.tile.interfaces.base.BaseMachineTile;
 import idealindustrial.util.misc.II_DirUtil;
+import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.Vector3d;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -49,6 +53,7 @@ public abstract class BaseMetaTile_Facing2Main<BaseTileType extends BaseMachineT
         int sideTo = II_DirUtil.determineWrenchingSide(side, hitX, hitY, hitZ);
         if (isValidFacing(sideTo)) {
             mainFacing = sideTo;
+            onMainFacingChanged();
             baseTile.sendEvent(FACING_MAIN, sideTo);
             return true;
         }
@@ -91,5 +96,18 @@ public abstract class BaseMetaTile_Facing2Main<BaseTileType extends BaseMachineT
     public NBTTagCompound saveToNBT(NBTTagCompound nbt) {
         nbt.setInteger("mainF", mainFacing);
         return super.saveToNBT(nbt);
+    }
+
+    protected void onMainFacingChanged() {
+
+    }
+
+    @Override
+    public void placedByPlayer(EntityPlayer player) {
+        Vector3d playerPos = new Vector3d(player);
+        Vector3d blockPos = new Vector3d(getBase());
+        playerPos.minusM(blockPos);
+        mainFacing = II_DirUtil.getPlacingFace(player.rotationYaw, player.rotationPitch, isValidFacing(0) && isValidFacing(1));
+        baseTile.sendEvent(FACING_MAIN, mainFacing);
     }
 }

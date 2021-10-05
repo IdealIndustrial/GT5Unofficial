@@ -1,5 +1,7 @@
 package idealindustrial.util.worldgen;
 
+import scala.Int;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -49,7 +51,7 @@ public class BoundingBox {
 
 
     public static class BoxBuilder {
-        BoundingBox box = new BoundingBox(0, 0, 0, 0, 0, 0);
+        BoundingBox box = new BoundingBox(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
 
         public BoxBuilder addX(int x) {
             box.minX = min(x, box.minX);

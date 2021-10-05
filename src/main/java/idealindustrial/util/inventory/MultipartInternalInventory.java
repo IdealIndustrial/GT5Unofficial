@@ -1,6 +1,7 @@
 package idealindustrial.util.inventory;
 
 import com.sun.istack.internal.NotNull;
+import idealindustrial.util.inventory.interfaces.InternalInventory;
 import idealindustrial.util.item.HashedStack;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_LinkedStack;
@@ -91,6 +92,11 @@ public class MultipartInternalInventory implements InternalInventory {
 
     @Override
     public void nbtLoad(NBTTagCompound tag, String prefix) {
+
+    }
+
+    @Override
+    public void validate() {
 
     }
 }

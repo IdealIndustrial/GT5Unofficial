@@ -1,47 +1,32 @@
-package idealindustrial.tile.meta.recipe;
+package idealindustrial.tile.meta.multi;
 
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.recipe.IMachineRecipe;
 import idealindustrial.recipe.RecipeMap;
-import idealindustrial.tile.gui.RecipedContainer;
-import idealindustrial.tile.gui.RecipedGuiContainer;
 import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.meta.BaseMetaTile_Facing2Main;
-import idealindustrial.tile.module.BasicRecipeModule;
+import idealindustrial.tile.module.MultiMachineRecipedModule;
 import idealindustrial.tile.module.RecipeModule;
-import idealindustrial.util.misc.II_Paths;
 import idealindustrial.util.parameter.RecipedMachineStats;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class BaseMetaTileMachineReciped<BaseTileType extends BaseMachineTile, RecipeType extends IMachineRecipe> extends BaseMetaTile_Facing2Main<BaseTileType> {
+public abstract class BaseRecipedMultiMachine<BaseTileType extends BaseMachineTile, RecipeType extends IMachineRecipe> extends BaseMultiMachine<BaseTileType> {
     RecipeModule<RecipeType> module;
 
-    public BaseMetaTileMachineReciped(BaseTileType baseTile, String name, ITexture[] baseTextures, ITexture[] overlays, RecipeMap<RecipeType> recipeMap, RecipedMachineStats stats) {
+    public BaseRecipedMultiMachine(BaseTileType baseTile, String name, ITexture[] baseTextures, ITexture[] overlays, RecipeMap<RecipeType> recipeMap, RecipedMachineStats stats) {
         super(baseTile, name, baseTextures, overlays);
-        module = new BasicRecipeModule<RecipeType>(this, stats, recipeMap);
+        module = new MultiMachineRecipedModule<RecipeType>(this, stats, recipeMap);
     }
 
-    public BaseMetaTileMachineReciped(BaseTileType baseTile, BaseMetaTileMachineReciped<BaseTileType, RecipeType> copyFrom) {
+    protected BaseRecipedMultiMachine(BaseTileType baseTile, BaseRecipedMultiMachine<BaseTileType, RecipeType> copyFrom) {
         super(baseTile, copyFrom);
-        module = copyFrom.module.reInit(this);
+        this.module = copyFrom.module.reInit(this);
     }
 
     @Override
     public void onPostTick(long timer, boolean serverSide) {
         module.onPostTick(timer, serverSide);
-    }
-
-    @Override
-    public RecipedContainer getServerGUI(EntityPlayer player, int internalID) {
-        return new RecipedContainer(baseTile, player, module.getRecipeMap().getGuiParams());
-    }
-
-    @Override
-    public GuiContainer getClientGUI(EntityPlayer player, int internalID) {
-        return new RecipedGuiContainer(getServerGUI(player, internalID), II_Paths.PATH_GUI + "BasicGui.png");
     }
 
     @Override
@@ -79,5 +64,7 @@ public abstract class BaseMetaTileMachineReciped<BaseTileType extends BaseMachin
         super.loadFromNBT(nbt);
         module.loadFromNBT("R", nbt);
     }
+
+
 
 }

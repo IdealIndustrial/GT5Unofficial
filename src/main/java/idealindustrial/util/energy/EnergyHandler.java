@@ -24,14 +24,17 @@ public abstract class EnergyHandler implements II_NBTSerializable {
 
     }
 
-    public boolean drain(long energy, boolean doDrain) {
-        if (stored >= energy) {
-            if (doDrain) {
-                stored -= energy;
-            }
-            return true;
+    public void fill(long energy) {
+        stored += energy;
+    }
+
+    //ret: drained
+    public long drain(long energy, boolean doDrain) {
+        long drained = Math.min(energy, stored);
+        if (doDrain) {
+            stored -= drained;
         }
-        return false;
+        return drained;
     }
 
     public abstract boolean isAlmostFull();

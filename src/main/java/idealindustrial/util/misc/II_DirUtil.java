@@ -1,5 +1,12 @@
 package idealindustrial.util.misc;
 
+import idealindustrial.util.worldgen.Vector3d;
+import net.minecraft.util.MathHelper;
+
+import java.util.stream.IntStream;
+
+import static java.lang.Math.abs;
+
 public class II_DirUtil {
 
     /**
@@ -62,8 +69,49 @@ public class II_DirUtil {
         return -1;
     }
 
-    private static final int[] opposites = new int[]{1, 0, 3,2, 5, 4};
+    public static int getDirection(Vector3d vec) {
+        double[] plain = new double[6];
+        plain[0] = vec.y;
+        plain[2] = vec.z;
+        plain[4] = vec.x;
+        for (int i = 0; i < 6; i += 2) {
+            if (plain[i] > 0) {
+                plain[i + 1] = plain[i];
+                plain[i] = 0;
+            }
+        }
+        return IntStream.iterate(0, i -> ++i).limit(6).reduce((i1, i2) -> abs(plain[i1]) > abs(plain[i2]) ? i1 : i2).orElse(0);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getDirection(new Vector3d(-1, 0, 3)));
+    }
+
+    private static final int[] opposites = new int[]{1, 0, 3, 2, 5, 4};
+
     public static int getOppositeSide(int side) {
         return opposites[side];
+    }
+
+    public static int getPlacingFace(float rotationYaw, float rotationPitch, boolean useY) {
+        int var7 = MathHelper.floor_double(rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
+        int var8 = Math.round(rotationPitch);
+        if ((var8 >= 65) && useY) {
+            return 1;
+        } else if ((var8 <= -65) && useY) {
+            return 0;
+        } else {
+            switch (var7) {
+                case 0:
+                    return 2;
+                case 1:
+                    return 5;
+                case 2:
+                    return 3;
+                case 3:
+                    return 4;
+            }
+        }
+        return 2;
     }
 }
