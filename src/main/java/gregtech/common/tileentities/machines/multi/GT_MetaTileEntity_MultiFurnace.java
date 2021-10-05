@@ -102,7 +102,6 @@ public class GT_MetaTileEntity_MultiFurnace
             for (int i = 0; i < this.mOutputItems.length; i++) {
                 ItemStack tNewStack = tOutputStack.copy();
                 int size = Math.min(tCurrentParallel, 64);
-
                 tNewStack.stackSize = size;
                 tCurrentParallel -= size;
                 this.mOutputItems[i] = tNewStack;
@@ -121,7 +120,7 @@ public class GT_MetaTileEntity_MultiFurnace
         return false;
     }
 
-    private int divisionUp (int a, int b) {
+    private static int divisionUp (int a, int b) {
         return a / b + ((a % b == 0) ? 0 : 1);
     }
 
