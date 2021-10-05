@@ -5,9 +5,9 @@ import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_ModHandler;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.gui.base.GenericGuiContainer;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.interfaces.meta.MetaTile;
-import idealindustrial.tile.meta.BaseMetaTile_Facing2Main;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.interfaces.meta.Tile;
+import idealindustrial.tile.impl.TileFacing2Main;
 import idealindustrial.util.energy.InputEnergyHandler;
 import idealindustrial.util.fluid.MultiFluidHandler;
 import idealindustrial.util.inventory.ArrayRecipedInventory;
@@ -22,9 +22,9 @@ import java.util.stream.Stream;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
-public class TestMachine2 extends BaseMetaTile_Facing2Main<BaseMachineTile> {
+public class TestMachine2 extends TileFacing2Main<HostMachineTile> {
 
-    public TestMachine2(BaseMachineTile baseTile) {
+    public TestMachine2(HostMachineTile baseTile) {
         super(baseTile, "test2",
                 Stream.of(MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION,
                         MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION)
@@ -48,17 +48,17 @@ public class TestMachine2 extends BaseMetaTile_Facing2Main<BaseMachineTile> {
 
     @Override
     public GuiContainer getClientGUI(EntityPlayer player, int internalID) {
-        return new GenericGuiContainer(new Test2ZVontainer(getBase(), player), II_Paths.PATH_GUI + "BasicGui.png");
+        return new GenericGuiContainer(new Test2ZVontainer(getHost(), player), II_Paths.PATH_GUI + "BasicGui.png");
     }
 
     @Override
     public Container getServerGUI(EntityPlayer player, int internalID) {
-        return new Test2ZVontainer(getBase(), player);
+        return new Test2ZVontainer(getHost(), player);
     }
 
     @Override
     public void onTick(long timer, boolean serverSide) {
-        if (baseTile.isActive() && timer % 10 == 6 && energyHandler.stored > 60) {
+        if (hostTile.isActive() && timer % 10 == 6 && energyHandler.stored > 60) {
             energyHandler.stored -= 60;
             tankIn.fill(ForgeDirection.UNKNOWN, GT_ModHandler.getWater(1L), true);
         }
@@ -68,12 +68,12 @@ public class TestMachine2 extends BaseMetaTile_Facing2Main<BaseMachineTile> {
     protected void onOutputFacingChanged() {
         if (energyHandler != null) {
             energyHandler.onConfigurationChanged();
-            baseTile.notifyOnIOConfigChange(IOType.ENERGY);
+            hostTile.notifyOnIOConfigChange(IOType.ENERGY);
         }
     }
 
     @Override
-    public MetaTile<BaseMachineTile> newMetaTile(BaseMachineTile baseTile) {
+    public Tile<HostMachineTile> newMetaTile(HostMachineTile baseTile) {
         TestMachine2 testMachine = new TestMachine2(baseTile);
         testMachine.name = name;
         testMachine.baseTextures = baseTextures;

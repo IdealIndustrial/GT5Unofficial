@@ -3,14 +3,12 @@ package idealindustrial.teststuff.testmulti;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
 import idealindustrial.recipe.BasicMachineRecipe;
-import idealindustrial.recipe.IMachineRecipe;
 import idealindustrial.recipe.RecipeMaps;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.interfaces.meta.MetaTile;
-import idealindustrial.tile.meta.multi.BaseMultiMachine;
-import idealindustrial.tile.meta.multi.BaseRecipedMultiMachine;
-import idealindustrial.tile.meta.multi.struct.MachineStructureBuilder;
-import idealindustrial.tile.meta.multi.struct.MultiMachineShape;
+import idealindustrial.tile.impl.multi.RecipedMultiMachineBase;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.interfaces.meta.Tile;
+import idealindustrial.tile.impl.multi.struct.MachineStructureBuilder;
+import idealindustrial.tile.impl.multi.struct.MultiMachineShape;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.parameter.RecipedMachineStats;
 import net.minecraft.init.Blocks;
@@ -19,9 +17,9 @@ import java.util.stream.Stream;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
-public class TestMultiMachine1 extends BaseRecipedMultiMachine<BaseMachineTile, BasicMachineRecipe> {
+public class TestMultiMachine1 extends RecipedMultiMachineBase<HostMachineTile, BasicMachineRecipe> {
 
-    public TestMultiMachine1(BaseMachineTile baseTile) {
+    public TestMultiMachine1(HostMachineTile baseTile) {
         super(baseTile, "Test MultiMachine",
                 II_StreamUtil.repeated(MACHINE_CASING_CLEAN_STAINLESSSTEEL, 10)
                         .map(GT_RenderedTexture::new).toArray(ITexture[]::new),
@@ -31,7 +29,7 @@ public class TestMultiMachine1 extends BaseRecipedMultiMachine<BaseMachineTile, 
                 RecipeMaps.benderRecipes, new RecipedMachineStats(1, 0, 0, 64, 0, 0, 0, 0, 0));
     }
 
-    public TestMultiMachine1(BaseMachineTile baseTile, TestMultiMachine1 copyFrom) {
+    public TestMultiMachine1(HostMachineTile baseTile, TestMultiMachine1 copyFrom) {
         super(baseTile, copyFrom);
     }
 
@@ -62,7 +60,7 @@ public class TestMultiMachine1 extends BaseRecipedMultiMachine<BaseMachineTile, 
     }
 
     @Override
-    public MetaTile<BaseMachineTile> newMetaTile(BaseMachineTile baseTile) {
+    public Tile<HostMachineTile> newMetaTile(HostMachineTile baseTile) {
         return new TestMultiMachine1(baseTile, this);
     }
 }

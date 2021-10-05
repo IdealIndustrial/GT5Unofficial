@@ -6,9 +6,9 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_CopiedBlockTexture;
 import gregtech.api.objects.GT_RenderedTexture;
 import idealindustrial.tile.IOType;
-import idealindustrial.tile.base.PacketCover;
+import idealindustrial.tile.host.PacketCover;
 import idealindustrial.tile.covers.BaseCoverBehavior;
-import idealindustrial.tile.interfaces.base.BaseTile;
+import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.util.misc.II_Math;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.block.Block;
@@ -16,11 +16,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public class CoverChameleon implements BaseCoverBehavior<BaseTile> {
+public class CoverChameleon implements BaseCoverBehavior<HostTile> {
 
     protected static final ITexture defaultTexture = new GT_RenderedTexture(Textures.BlockIcons.DIESEL_GENERATOR_FRONT_ACTIVE);
     @Override
-    public ITexture getTexture(long var, int side, BaseTile tile) {
+    public ITexture getTexture(long var, int side, HostTile tile) {
         if (var == 0) {
             return defaultTexture;
         }
@@ -31,7 +31,7 @@ public class CoverChameleon implements BaseCoverBehavior<BaseTile> {
     }
 
     @Override
-    public boolean onRightClick(long var, int side, BaseTile tile, EntityPlayer player, ItemStack is, float hitX, float hitY, float hitZ) {
+    public boolean onRightClick(long var, int side, HostTile tile, EntityPlayer player, ItemStack is, float hitX, float hitY, float hitZ) {
         if (tile.isServerSide() && is != null && is.getItem() instanceof ItemBlock) {
             Block block = ((ItemBlock) is.getItem()).field_150939_a;
             int id = Block.getIdFromBlock(block);

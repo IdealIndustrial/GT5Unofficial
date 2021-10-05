@@ -1,7 +1,7 @@
 package idealindustrial.util.energy;
 
 import idealindustrial.tile.IOType;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class InputEnergyHandler extends BasicEnergyHandler {
@@ -9,7 +9,7 @@ public class InputEnergyHandler extends BasicEnergyHandler {
     protected EUConsumer universalConsumer;
     protected boolean[] allowedSides;
 
-    public InputEnergyHandler(BaseMachineTile baseTile, long minEnergyAmount, long maxCapacity, long voltageIn, long amperageIn) {
+    public InputEnergyHandler(HostMachineTile baseTile, long minEnergyAmount, long maxCapacity, long voltageIn, long amperageIn) {
         super(baseTile, minEnergyAmount, maxCapacity, voltageIn, amperageIn, 0, 0);
         this.allowedSides = baseTile.getIO(IOType.ENERGY);
         this.universalConsumer = new II_DefaultEUConsumer(this, -1);

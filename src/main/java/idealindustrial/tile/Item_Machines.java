@@ -3,9 +3,8 @@ package idealindustrial.tile;
 import gregtech.api.util.GT_ItsNotMyFaultException;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
-import idealindustrial.textures.TextureManager;
-import idealindustrial.tile.base.BaseTileImpl;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import idealindustrial.tile.host.HostTileImpl;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -51,7 +50,7 @@ public class Item_Machines
     public void onCreated(ItemStack aStack, World aWorld, EntityPlayer aPlayer) {
         super.onCreated(aStack, aWorld, aPlayer);
         short tDamage = (short) getDamage(aStack);
-        if ((tDamage < 0) || ((tDamage >= II_Values.metaTiles.length) && (II_Values.metaTiles[tDamage] != null))) {
+        if ((tDamage < 0) || ((tDamage >= II_Values.TILES.length) && (II_Values.TILES[tDamage] != null))) {
             //II_Values.metaTiles[tDamage].onCreated(aStack, aWorld, aPlayer);
         }
     }
@@ -60,10 +59,10 @@ public class Item_Machines
     public boolean placeBlockAt(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int side, float hitX, float hitY, float hitZ, int aMeta) {
         short tDamage = (short) getDamage(aStack);
         if (tDamage > 0) {
-            if (II_Values.metaTiles[tDamage] == null) {
+            if (II_Values.TILES[tDamage] == null) {
                 return false;
             }
-            int tMetaData = II_TileUtil.classToMeta(II_Values.metaTiles[tDamage].getBaseTileClass());
+            int tMetaData = II_TileUtil.classToMeta(II_Values.TILES[tDamage].getBaseTileClass());
             if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, tMetaData, 3)) {
                 return false;
             }
@@ -73,11 +72,11 @@ public class Item_Machines
             if (aWorld.getBlockMetadata(aX, aY, aZ) != tMetaData) {
                 throw new GT_ItsNotMyFaultException("Failed to set the MetaValue of the Block even though World.setBlock returned true. It COULD be MCPC/Bukkit causing that. In case you really have that installed, don't report this Bug to me, I don't know how to fix it.");
             }
-            BaseTileImpl tTileEntity = (BaseTileImpl) aWorld.getTileEntity(aX, aY, aZ);
+            HostTileImpl tTileEntity = (HostTileImpl) aWorld.getTileEntity(aX, aY, aZ);
             if (tTileEntity != null) {
                 tTileEntity.setInitialValuesAsNBT(tTileEntity.isServerSide() ? aStack.getTagCompound() : null, tDamage);
-                if (tTileEntity instanceof BaseMachineTile) {
-                    ((BaseMachineTile) tTileEntity).placedByPlayer(aPlayer);
+                if (tTileEntity instanceof HostMachineTile) {
+                    ((HostMachineTile) tTileEntity).placedByPlayer(aPlayer);
                 }
                 tTileEntity.onPlaced();
             }

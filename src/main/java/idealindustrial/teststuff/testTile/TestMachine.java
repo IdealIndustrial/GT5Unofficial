@@ -4,8 +4,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.gui.base.GenericGuiContainer;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.meta.BaseMetaTile_Facing1Output;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.impl.TileFacing1Output;
 import idealindustrial.util.energy.OutputFacingEnergyHandler;
 import idealindustrial.util.inventory.EmptyInventory;
 import idealindustrial.util.inventory.ArrayRecipedInventory;
@@ -19,9 +19,9 @@ import java.util.stream.Stream;
 
 import static gregtech.api.enums.Textures.BlockIcons.*;
 
-public class TestMachine extends BaseMetaTile_Facing1Output<BaseMachineTile> {
+public class TestMachine extends TileFacing1Output<HostMachineTile> {
 
-    public TestMachine(BaseMachineTile baseTile) {
+    public TestMachine(HostMachineTile baseTile) {
         super(baseTile, "test",
                 Stream.of(MACHINE_BRONZE_BOTTOM, MACHINE_BRONZE_TOP, MACHINE_BRONZE_SIDE, TURBINE[4],
                         MACHINE_8V_BOTTOM, MACHINE_8V_TOP, MACHINE_8V_SIDE, TURBINE_ACTIVE[4])
@@ -41,19 +41,19 @@ public class TestMachine extends BaseMetaTile_Facing1Output<BaseMachineTile> {
 
     @Override
     public GuiContainer getClientGUI(EntityPlayer player, int internalID) {
-        return new GenericGuiContainer(new TestContainer(getBase(), player), II_Paths.PATH_GUI + "BasicGui.png");
+        return new GenericGuiContainer(new TestContainer(getHost(), player), II_Paths.PATH_GUI + "BasicGui.png");
     }
 
     @Override
     public Container getServerGUI(EntityPlayer player, int internalID) {
-        return new TestContainer(getBase(), player);
+        return new TestContainer(getHost(), player);
     }
 
     @Override
     protected void onOutputFacingChanged() {
         if (energyHandler != null) {
             energyHandler.onConfigurationChanged();
-            baseTile.notifyOnIOConfigChange(IOType.ENERGY);
+            hostTile.notifyOnIOConfigChange(IOType.ENERGY);
         }
     }
 
@@ -67,7 +67,7 @@ public class TestMachine extends BaseMetaTile_Facing1Output<BaseMachineTile> {
     @Override
     public void onPostTick(long timer, boolean serverSide) {
         super.onPostTick(timer, serverSide);
-        if (serverSide && baseTile.isAllowedToWork()) {
+        if (serverSide && hostTile.isAllowedToWork()) {
             energyHandler.stored += 32;
         }
 //        try {
@@ -100,14 +100,14 @@ public class TestMachine extends BaseMetaTile_Facing1Output<BaseMachineTile> {
     @Override
     public boolean onSoftHammerClick(EntityPlayer player, ItemStack item, int side) {
         super.onSoftHammerClick(player, item, side);
-        if (baseTile.isServerSide()) {
-            baseTile.setActive(baseTile.isAllowedToWork());
+        if (hostTile.isServerSide()) {
+            hostTile.setActive(hostTile.isAllowedToWork());
         }
         return true;
     }
 
     @Override
-    public TestMachine newMetaTile(BaseMachineTile baseTile) {
+    public TestMachine newMetaTile(HostMachineTile baseTile) {
         TestMachine testMachine = new TestMachine(baseTile);
         testMachine.name = name;
         testMachine.baseTextures = baseTextures;

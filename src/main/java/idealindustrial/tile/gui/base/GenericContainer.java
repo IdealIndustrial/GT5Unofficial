@@ -5,7 +5,7 @@ import gregtech.api.gui.GT_Slot_Holo;
 import gregtech.api.gui.GT_Slot_Output;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.EmptyFluidRepresentation;
 import idealindustrial.util.fluid.II_FluidHelper;
@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class GenericContainer extends Container {
 
-    public BaseMachineTile tile;
+    public HostMachineTile tile;
     public EntityPlayer player;
     public boolean bindInventory;
     public FluidInventoryRepresentation representation;
@@ -30,7 +30,7 @@ public class GenericContainer extends Container {
         return player.getDistance(tile.getXCoord(), tile.getYCoord(), tile.getZCoord()) < 5d;
     }
 
-    public GenericContainer(BaseMachineTile tile, EntityPlayer player, boolean addSlots, boolean bindInventory) {
+    public GenericContainer(HostMachineTile tile, EntityPlayer player, boolean addSlots, boolean bindInventory) {
         this.tile = tile;
         if (tile.hasFluidTank()) {
             representation = tile.getFluidRepresentation();

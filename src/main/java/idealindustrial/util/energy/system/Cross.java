@@ -1,6 +1,6 @@
 package idealindustrial.util.energy.system;
 
-import idealindustrial.tile.meta.connected.MetaConnected_Cable;
+import idealindustrial.tile.impl.connected.ConnectedCable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,10 @@ import java.util.List;
 public class Cross implements IEnergyNode, IInfoEnergyPassThrough {
 
     protected List<EnergyConnection> connections;
-    protected MetaConnected_Cable cable;
+    protected ConnectedCable cable;
     protected long amperage, voltage;
 
-    public Cross(MetaConnected_Cable cable) {
+    public Cross(ConnectedCable cable) {
         this.connections = new ArrayList<>();
         this.cable = cable;
     }

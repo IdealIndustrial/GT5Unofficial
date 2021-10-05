@@ -1,6 +1,6 @@
 package idealindustrial.util.world;
 
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.energy.system.CableSystem;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class EnergySystemHandler {
      * @param tile - producer tile
      * @param side - side of tile with producer
      */
-    public static void initSystem(BaseMachineTile tile, int side) {
+    public static void initSystem(HostMachineTile tile, int side) {
         try {
             systems.add(new CableSystem(tile, side));
         }

@@ -1,12 +1,12 @@
 package idealindustrial.tile.gui.base.component;
 
-import idealindustrial.tile.interfaces.base.BaseTile;
+import idealindustrial.tile.interfaces.host.HostTile;
 
 public interface ISynchronizer<T> {
 
-    T getValue(BaseTile tile);
+    T getValue(HostTile tile);
 
-    void setValue(BaseTile tile, T value);
+    void setValue(HostTile tile, T value);
 
     int asInt(T value);
 

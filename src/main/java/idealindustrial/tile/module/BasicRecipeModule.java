@@ -4,9 +4,9 @@ import idealindustrial.recipe.BasicMachineRecipe;
 import idealindustrial.recipe.IMachineRecipe;
 import idealindustrial.recipe.MachineEnergyParams;
 import idealindustrial.recipe.RecipeMap;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.meta.BaseMetaTile_Facing1Output;
-import idealindustrial.tile.meta.BaseMetaTile_Facing2Main;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.impl.TileFacing1Output;
+import idealindustrial.tile.impl.TileFacing2Main;
 import idealindustrial.util.energy.EnergyHandler;
 import idealindustrial.util.energy.InputEnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
@@ -25,18 +25,18 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
     protected RecipeMap<R> recipeMap;
     protected MachineEnergyParams params;
     protected R recipe;
-    protected BaseMetaTile_Facing1Output<?> machine;
-    protected BaseMachineTile baseTile;
+    protected TileFacing1Output<?> machine;
+    protected HostMachineTile baseTile;
     protected InternalInventory inventoryIn, inventoryOut;
     protected FluidHandler tankIn, tankOut;
     protected EnergyHandler energyHandler;
     protected RecipedMachineStats machineStats;
 
-    public BasicRecipeModule(BaseMetaTile_Facing2Main<?> machine, RecipedMachineStats stats, RecipeMap<R> map) {
+    public BasicRecipeModule(TileFacing2Main<?> machine, RecipedMachineStats stats, RecipeMap<R> map) {
         this.recipeMap = map;
         this.machineStats = stats;
         this.machine = machine;
-        this.baseTile = machine.getBase();
+        this.baseTile = machine.getHost();
         this.params = new MachineEnergyParams(stats);
         machine.hasEnergy = true;
         energyHandler = machine.energyHandler = new InputEnergyHandler(baseTile, (long) (stats.energyCapacity * 0.1), stats.energyCapacity, stats.voltageIn, stats.amperageIn);
@@ -49,7 +49,7 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
         machine.inventorySpecial = EmptyInventory.INSTANCE;
     }
 
-    public BasicRecipeModule(BaseMetaTile_Facing2Main<?> machine, BasicRecipeModule<R> module) {
+    public BasicRecipeModule(TileFacing2Main<?> machine, BasicRecipeModule<R> module) {
         this(machine, module.machineStats, module.recipeMap);
     }
 
@@ -58,7 +58,7 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
     }
 
     @Override
-    public RecipeModule<R> reInit(BaseMetaTile_Facing2Main<?> machine) {
+    public RecipeModule<R> reInit(TileFacing2Main<?> machine) {
         return new BasicRecipeModule<R>(machine, machineStats, recipeMap);
     }
 

@@ -4,8 +4,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import idealindustrial.II_Values;
 import idealindustrial.autogen.blocks.II_Blocks;
 import idealindustrial.tile.Item_Machines;
-import idealindustrial.tile.interfaces.base.BaseTile;
-import idealindustrial.tile.interfaces.meta.MetaTile;
+import idealindustrial.tile.interfaces.host.HostTile;
+import idealindustrial.tile.interfaces.meta.Tile;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Items;
@@ -44,8 +44,8 @@ public final class MachineItemRenderer implements IItemRenderer {
 
         if (is.getItem() instanceof Item_Machines) {
             int meta = Items.feather.getDamage(is);
-            MetaTile tile = II_Values.metaTiles[meta];
-            BaseTile base = tile == null ? null : tile.getBase();
+            Tile tile = II_Values.TILES[meta];
+            HostTile base = tile == null ? null : tile.getHost();
             if (base == null) {
                 return;
             }

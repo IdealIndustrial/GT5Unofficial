@@ -6,9 +6,9 @@ import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.covers.BaseCoverBehavior;
-import idealindustrial.tile.interfaces.base.BaseTile;
+import idealindustrial.tile.interfaces.host.HostTile;
 
-public class CoverPlate implements BaseCoverBehavior<BaseTile> {
+public class CoverPlate implements BaseCoverBehavior<HostTile> {
 
     protected II_Material material;
     protected ITexture texture;
@@ -19,7 +19,7 @@ public class CoverPlate implements BaseCoverBehavior<BaseTile> {
     }
 
     @Override
-    public ITexture getTexture(long var, int side, BaseTile tile) {
+    public ITexture getTexture(long var, int side, HostTile tile) {
         return texture;
     }
 

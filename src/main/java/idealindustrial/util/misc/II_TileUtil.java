@@ -1,12 +1,12 @@
 package idealindustrial.util.misc;
 
 import idealindustrial.II_Values;
-import idealindustrial.tile.base.BasePipeTileImpl;
-import idealindustrial.tile.base.BaseMachineTileImpl;
-import idealindustrial.tile.base.BaseTileImpl;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.interfaces.base.BaseTile;
-import idealindustrial.tile.interfaces.meta.MetaTile;
+import idealindustrial.tile.host.HostMachineTileImpl;
+import idealindustrial.tile.host.HostPipeTileImpl;
+import idealindustrial.tile.host.HostTileImpl;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.interfaces.host.HostTile;
+import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.util.fluid.*;
 import idealindustrial.util.fluid.SingleFluidHandler;
 import idealindustrial.util.fluid.MultiFluidHandler;
@@ -28,7 +28,7 @@ public class II_TileUtil {
 
 
     @SuppressWarnings("unchecked")
-    private static final Class<? extends TileEntity>[] tileClasses = new Class[]{BaseTileImpl.class, BaseMachineTileImpl.class, BasePipeTileImpl.class};
+    private static final Class<? extends TileEntity>[] tileClasses = new Class[]{HostTileImpl.class, HostMachineTileImpl.class, HostPipeTileImpl.class};
     private static final Map<Class<? extends TileEntity>, Integer> classToMeta = new HashMap<>();
 
     static {
@@ -61,44 +61,44 @@ public class II_TileUtil {
         return null;
     }
 
-    public static void registerMetaTile(int id, MetaTile<?> metaTile) {
-        II_Values.metaTiles[id] = metaTile;
-        metaTile.getBase().setMetaTileID(id);
+    public static void registerMetaTile(int id, Tile<?> tile) {
+        II_Values.TILES[id] = tile;
+        tile.getHost().setMetaTileID(id);
     }
 
-    public static BaseTile makeBaseTile() {
-        return new BaseTileImpl();
+    public static HostTile makeBaseTile() {
+        return new HostTileImpl();
     }
 
-    public static BaseMachineTile makeBaseMachineTile() {
-        return new BaseMachineTileImpl();
+    public static HostMachineTile makeBaseMachineTile() {
+        return new HostMachineTileImpl();
     }
 
-    public static MetaTile<?> getMetaTile(World world, Vector3 pos) {
+    public static Tile<?> getMetaTile(World world, Vector3 pos) {
         return getMetaTile(world, pos.x, pos.y, pos.z);
     }
-    public static MetaTile<?> getMetaTile(World world, int x, int y, int z) {
+    public static Tile<?> getMetaTile(World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof BaseTile) {
-            return ((BaseTile) tile).getMetaTile();
+        if (tile instanceof HostTile) {
+            return ((HostTile) tile).getMetaTile();
         }
         return null;
     }
 
-    public static BaseMachineTile getMachineTileAtSide(BaseTile tile, int side) {
+    public static HostMachineTile getMachineTileAtSide(HostTile tile, int side) {
         TileEntity tileEntity = tile.getTileEntityAtSide(side);
-        return tileEntity instanceof BaseMachineTile ? (BaseMachineTile) tileEntity : null;
+        return tileEntity instanceof HostMachineTile ? (HostMachineTile) tileEntity : null;
     }
 
-    public static MetaTile<?> getMetaTileAtSide(BaseTile tile, int side) {
+    public static Tile<?> getMetaTileAtSide(HostTile tile, int side) {
         TileEntity tileEntity = tile.getTileEntityAtSide(side);
-        if (tileEntity instanceof BaseTile) {
-            return ((BaseTile) tileEntity).getMetaTile();
+        if (tileEntity instanceof HostTile) {
+            return ((HostTile) tileEntity).getMetaTile();
         }
         return null;
     }
 
-    public static <T extends BaseTile> T getBaseTileOfClass(World world, int x, int y, int z, Class<T> clazz) {
+    public static <T extends HostTile> T getBaseTileOfClass(World world, int x, int y, int z, Class<T> clazz) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         return checkTileForClass(tileEntity, clazz);
     }
@@ -111,9 +111,9 @@ public class II_TileUtil {
         return (T) tileEntity;
     }
 
-    public static BaseTile getBaseTile(IBlockAccess world, int x, int y, int z) {
+    public static HostTile getBaseTile(IBlockAccess world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        return tileEntity instanceof BaseTile ? (BaseTile) tileEntity : null;
+        return tileEntity instanceof HostTile ? (HostTile) tileEntity : null;
     }
 
     public static FluidHandler constructFluidHandler(int fluidCount, int capacity) {

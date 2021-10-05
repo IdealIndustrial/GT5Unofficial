@@ -1,10 +1,10 @@
 package idealindustrial.util.energy.system;
 
 import gregtech.api.util.GT_Utility;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.interfaces.base.BaseTile;
-import idealindustrial.tile.interfaces.meta.MetaTile;
-import idealindustrial.tile.meta.connected.MetaConnected_Cable;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.interfaces.host.HostTile;
+import idealindustrial.tile.interfaces.meta.Tile;
+import idealindustrial.tile.impl.connected.ConnectedCable;
 import idealindustrial.util.energy.EnergyHandler;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
@@ -18,10 +18,10 @@ public class CableSystem {
     protected List<NodeProducer> producers = new ArrayList<>();
     protected List<NodeConsumer> consumers = new ArrayList<>();
     protected List<IEnergyPassThrough> passThroughList = new ArrayList<>();
-    protected Map<MetaConnected_Cable, Cross> crossMap = new HashMap<>(); // tempMap for system construction and
-    protected Map<MetaConnected_Cable, IInfoEnergyPassThrough> cableMap = new HashMap<>(); // map from cable to system segment
+    protected Map<ConnectedCable, Cross> crossMap = new HashMap<>(); // tempMap for system construction and
+    protected Map<ConnectedCable, IInfoEnergyPassThrough> cableMap = new HashMap<>(); // map from cable to system segment
     protected EnergyPathCache cache = new EnergyPathCache(this);
-    protected List<MetaConnected_Cable> cables = new ArrayList<>();
+    protected List<ConnectedCable> cables = new ArrayList<>();
     protected List<CalculationTask> tasks = new ArrayList<>();
 
     public void invalidate() {
@@ -89,7 +89,7 @@ public class CableSystem {
      * @param tile tile of producer
      * @param side side of producer
      */
-    public CableSystem(BaseMachineTile tile, int side) {
+    public CableSystem(HostMachineTile tile, int side) {
         assert tile.getEnergyHandler().getProducer(side) != null;
         NodeProducer firstNode = new NodeProducer(tile.getProducer(side));
         firstNode.setConnection(constructConnection(tile, firstNode, new ArrayList<>(), side));
@@ -101,7 +101,7 @@ public class CableSystem {
 
     }
 
-    protected void constructCross(Cross cross, MetaConnected_Cable cable, EnergyConnection connection, int connectionSide) {
+    protected void constructCross(Cross cross, ConnectedCable cable, EnergyConnection connection, int connectionSide) {
         cross.addConnection(connection);
         fireConnectionConstructed(connection);
         for (int i = 0; i < 6; i++) {
@@ -109,7 +109,7 @@ public class CableSystem {
                 continue;
             }
             if (cable.isConnected(i)) {
-                EnergyConnection nextConnection = constructConnection(cable.getBase(), cross, new ArrayList<>(), i);
+                EnergyConnection nextConnection = constructConnection(cable.getHost(), cross, new ArrayList<>(), i);
                 if (nextConnection.isValid()) {
                     cross.addConnection(nextConnection);
                     fireConnectionConstructed(nextConnection);
@@ -123,10 +123,10 @@ public class CableSystem {
 
     //currently only II_BaseTile producer type is supported.
     // If some integration is necessary II_BaseTile should be replaced with some type of IWorldReader
-    protected EnergyConnection constructConnection(BaseTile tile, IEnergyNode node1, List<MetaConnected_Cable> cables, int sideTo) {
-        MetaTile<?> metaTile = II_TileUtil.getMetaTileAtSide(tile, sideTo);
-        if (metaTile instanceof MetaConnected_Cable) {
-            MetaConnected_Cable cable = (MetaConnected_Cable) metaTile;
+    protected EnergyConnection constructConnection(HostTile tile, IEnergyNode node1, List<ConnectedCable> cables, int sideTo) {
+        Tile<?> metaTile = II_TileUtil.getMetaTileAtSide(tile, sideTo);
+        if (metaTile instanceof ConnectedCable) {
+            ConnectedCable cable = (ConnectedCable) metaTile;
             int count = cable.connectionCount();
             if (count == 1) {
                 cables.add(cable);
@@ -139,7 +139,7 @@ public class CableSystem {
                         continue;
                     }
                     if (cable.isConnected(i)) {
-                        return constructConnection(cable.getBase(), node1, cables, i);
+                        return constructConnection(cable.getHost(), node1, cables, i);
                     }
                 }
                 throw new EnergySystemConstructionException("wrong");
@@ -169,8 +169,8 @@ public class CableSystem {
         if (tileEntity == null) {
             return null;
         }
-        if (tileEntity instanceof BaseTile) {
-            BaseMachineTile next = (BaseMachineTile) tileEntity;
+        if (tileEntity instanceof HostTile) {
+            HostMachineTile next = (HostMachineTile) tileEntity;
             EnergyHandler handler = next.getEnergyHandler();
             if (handler.getProducer(side) != null) {
                 NodeProducer producer = new NodeProducer(handler.getProducer(side), connection);
@@ -195,7 +195,7 @@ public class CableSystem {
         cableMap.put(cross.cable, cross);
     }
 
-    public IInfoEnergyPassThrough getInfo(MetaConnected_Cable cable) {
+    public IInfoEnergyPassThrough getInfo(ConnectedCable cable) {
         return cableMap.get(cable);
     }
 

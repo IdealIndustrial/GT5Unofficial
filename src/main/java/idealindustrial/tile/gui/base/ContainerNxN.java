@@ -1,13 +1,13 @@
 package idealindustrial.tile.gui.base;
 
 import idealindustrial.tile.gui.base.component.II_Slot;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerNxN extends GenericContainer {
     public int n, texture;
 
-    public ContainerNxN(BaseMachineTile tile, EntityPlayer player, int n, int slotTexture) {
+    public ContainerNxN(HostMachineTile tile, EntityPlayer player, int n, int slotTexture) {
         super(tile, player, false, false);
         this.texture = slotTexture;
         this.n = n;

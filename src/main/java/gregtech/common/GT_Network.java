@@ -11,7 +11,7 @@ import gregtech.api.enums.GT_Values;
 import gregtech.api.net.*;
 import gregtech.common.blocks.GT_Packet_Ores;
 import gregtech.common.net.MessageSetFlaskCapacity;
-import idealindustrial.tile.base.PacketCover;
+import idealindustrial.tile.host.PacketCover;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

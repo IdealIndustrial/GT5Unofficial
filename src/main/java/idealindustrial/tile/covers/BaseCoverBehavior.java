@@ -2,11 +2,11 @@ package idealindustrial.tile.covers;
 
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.tile.IOType;
-import idealindustrial.tile.interfaces.base.BaseTile;
+import idealindustrial.tile.interfaces.host.HostTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-public interface BaseCoverBehavior<BaseTileType extends BaseTile> {
+public interface BaseCoverBehavior<BaseTileType extends HostTile> {
 
     default long update(long var, int side, BaseTileType tile) {
         return var;

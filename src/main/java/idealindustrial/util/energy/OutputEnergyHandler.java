@@ -1,7 +1,7 @@
 package idealindustrial.util.energy;
 
 import idealindustrial.tile.IOType;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.world.EnergySystemHandler;
 
 public class OutputEnergyHandler extends BasicEnergyHandler {
@@ -10,7 +10,7 @@ public class OutputEnergyHandler extends BasicEnergyHandler {
     II_DefaultEUProducer universalProducer;
     int outSide = 0;
 
-    public OutputEnergyHandler(BaseMachineTile baseTile, long minEnergyAmount, long maxCapacity, long voltageOut, long amperageOut, int outSide) {
+    public OutputEnergyHandler(HostMachineTile baseTile, long minEnergyAmount, long maxCapacity, long voltageOut, long amperageOut, int outSide) {
         super(baseTile, minEnergyAmount, maxCapacity, 0, 0, voltageOut, amperageOut);
         this.universalProducer = new II_DefaultEUProducer(this);
         this.allowedSides = baseTile.getIO(IOType.ENERGY);

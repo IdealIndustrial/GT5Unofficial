@@ -4,26 +4,26 @@ import idealindustrial.net.fields.NetworkedShort;
 import idealindustrial.recipe.GuiSlotDefinition;
 import idealindustrial.recipe.IRecipeGuiParams;
 import idealindustrial.tile.gui.base.GenericContainer;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.meta.recipe.BaseMetaTileMachineReciped;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.impl.recipe.TileMachineReciped;
 import idealindustrial.util.inventory.InternalInventoryWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 
 public class RecipedContainer extends GenericContainer {
 
-    BaseMetaTileMachineReciped<?, ?> metaTile;
+    TileMachineReciped<?, ?> metaTile;
     IRecipeGuiParams params;
     @SuppressWarnings("unchecked")
     NetworkedShort progress = new NetworkedShort(1, this, crafters);
 
-    public RecipedContainer(BaseMachineTile tile, EntityPlayer player, IRecipeGuiParams params) {
+    public RecipedContainer(HostMachineTile tile, EntityPlayer player, IRecipeGuiParams params) {
         super(tile, player, false, false);
         this.params = params;
         addSlots();
         bindPlayerInventory(player.inventory, 0, 0);
         bindInventory = true;
-        this.metaTile = (BaseMetaTileMachineReciped<?, ?>) tile.getMetaTile();
+        this.metaTile = (TileMachineReciped<?, ?>) tile.getMetaTile();
 
     }
 

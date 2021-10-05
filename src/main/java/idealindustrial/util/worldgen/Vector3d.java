@@ -1,7 +1,6 @@
 package idealindustrial.util.worldgen;
 
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 

@@ -1,15 +1,15 @@
 package idealindustrial.util.energy;
 
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
 
 public abstract class BasicEnergyHandler extends EnergyHandler {
 
-    protected BaseMachineTile baseTile;
+    protected HostMachineTile baseTile;
     protected long minEnergyAmount, maxCapacity;
     protected long voltageIn, amperageIn, voltageOut, amperageOut;
     protected long currentAmperageOut = 0;
 
-    public BasicEnergyHandler(BaseMachineTile baseTile, long minEnergyAmount, long maxCapacity, long voltageIn, long amperageIn, long voltageOut, long amperageOut) {
+    public BasicEnergyHandler(HostMachineTile baseTile, long minEnergyAmount, long maxCapacity, long voltageIn, long amperageIn, long voltageOut, long amperageOut) {
         this.baseTile = baseTile;
         this.minEnergyAmount = minEnergyAmount;
         this.maxCapacity = maxCapacity;

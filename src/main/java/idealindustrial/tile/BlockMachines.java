@@ -17,9 +17,9 @@ import idealindustrial.II_Values;
 import idealindustrial.autogen.blocks.base.BaseBlock;
 import idealindustrial.textures.TextureManager;
 import idealindustrial.tile.interfaces.IClickableTileEntity;
-import idealindustrial.tile.interfaces.base.BaseMachineTile;
-import idealindustrial.tile.interfaces.base.BasePipeTile;
-import idealindustrial.tile.interfaces.base.BaseTile;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.interfaces.host.HostPipeTile;
+import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tools.ToolRegistry;
 import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.block.Block;
@@ -205,8 +205,8 @@ public class BlockMachines
 
     public int getDamageValue(World aWorld, int aX, int aY, int aZ) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof BaseTile)) {
-            return ((BaseTile) tTileEntity).getMetaTileID();
+        if ((tTileEntity instanceof HostTile)) {
+            return ((HostTile) tTileEntity).getMetaTileID();
         }
         return 0;
     }
@@ -222,8 +222,8 @@ public class BlockMachines
     public void breakBlock(World aWorld, int aX, int aY, int aZ, Block par5, int par6) {
         GregTech_API.causeMachineUpdate(aWorld, aX, aY, aZ);
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof BaseMachineTile)) {
-            BaseMachineTile tGregTechTileEntity = (BaseMachineTile) tTileEntity;
+        if ((tTileEntity instanceof HostMachineTile)) {
+            HostMachineTile tGregTechTileEntity = (HostMachineTile) tTileEntity;
             Random tRandom = new XSTR();
             for (int i = 0; i < tGregTechTileEntity.getSizeInventory(); i++) {
                 ItemStack tItem = tGregTechTileEntity.getStackInSlot(i);
@@ -247,8 +247,8 @@ public class BlockMachines
 
     public ArrayList<ItemStack> getDrops(World aWorld, int aX, int aY, int aZ, int aMeta, int aFortune) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof BaseTile)) {
-            return ((BaseTile) tTileEntity).getDrops();
+        if ((tTileEntity instanceof HostTile)) {
+            return ((HostTile) tTileEntity).getDrops();
         }
         return new ArrayList<>();
     }
@@ -365,8 +365,8 @@ public class BlockMachines
 
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
-        for (int i = 1; i < II_Values.metaTiles.length; i++) {
-            if (II_Values.metaTiles[i] != null) {
+        for (int i = 1; i < II_Values.TILES.length; i++) {
+            if (II_Values.TILES[i] != null) {
                 par3List.add(new ItemStack(par1, 1, i));
             }
         }
@@ -420,7 +420,7 @@ public class BlockMachines
 
     public boolean recolourBlock(World aWorld, int aX, int aY, int aZ, ForgeDirection aSide, int aColor) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof BaseMachineTile)) {
+        if ((tTileEntity instanceof HostMachineTile)) {
 //            if (((II_BaseMachineTile) tTileEntity).getColorization() == (byte) ((~aColor) & 0xF)) {
 //                return false;
 //            }
@@ -432,8 +432,8 @@ public class BlockMachines
 
     public void addCollisionBoxesToList(World aWorld, int aX, int aY, int aZ, AxisAlignedBB inputAABB, List outputAABB, Entity collider) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if (((tTileEntity instanceof BasePipeTile)) && (((BasePipeTile) tTileEntity).getMetaTile() != null)) {
-            ((BasePipeTile) tTileEntity).addCollisionBoxesToList(aWorld, aX, aY, aZ, inputAABB, outputAABB, collider);
+        if (((tTileEntity instanceof HostPipeTile)) && (((HostPipeTile) tTileEntity).getMetaTile() != null)) {
+            ((HostPipeTile) tTileEntity).addCollisionBoxesToList(aWorld, aX, aY, aZ, inputAABB, outputAABB, collider);
             return;
         }
         minX = minY = minZ = 0;
@@ -443,8 +443,8 @@ public class BlockMachines
 
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if (((tTileEntity instanceof BasePipeTile)) && (((BasePipeTile) tTileEntity).getMetaTile() != null)) {
-            return ((BasePipeTile) tTileEntity).getCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
+        if (((tTileEntity instanceof HostPipeTile)) && (((HostPipeTile) tTileEntity).getMetaTile() != null)) {
+            return ((HostPipeTile) tTileEntity).getCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
         }
         minX = minY = minZ = 0;
         maxX = maxY = maxZ = 1;
@@ -455,8 +455,8 @@ public class BlockMachines
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if (((tTileEntity instanceof BasePipeTile)) && (((BasePipeTile) tTileEntity).getMetaTile() != null)) {
-            return ((BasePipeTile) tTileEntity).getCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
+        if (((tTileEntity instanceof HostPipeTile)) && (((HostPipeTile) tTileEntity).getMetaTile() != null)) {
+            return ((HostPipeTile) tTileEntity).getCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
         }
         minX = minY = minZ = 0;
         maxX = maxY = maxZ = 1;
@@ -466,8 +466,8 @@ public class BlockMachines
     @Override  //THIS
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int aX, int aY, int aZ) {
         TileEntity tTileEntity = blockAccess.getTileEntity(aX, aY, aZ);
-        if (((tTileEntity instanceof BasePipeTile)) && (((BasePipeTile) tTileEntity).getMetaTile() != null)) {
-            AxisAlignedBB bbb=((BasePipeTile)tTileEntity).getCollisionBoundingBoxFromPool(((BasePipeTile)tTileEntity).getWorld(), 0, 0, 0);
+        if (((tTileEntity instanceof HostPipeTile)) && (((HostPipeTile) tTileEntity).getMetaTile() != null)) {
+            AxisAlignedBB bbb=((HostPipeTile)tTileEntity).getCollisionBoundingBoxFromPool(((HostPipeTile)tTileEntity).getWorld(), 0, 0, 0);
             minX=bbb.minX;//This essentially sets block bounds
             minY=bbb.minY;
             minZ=bbb.minZ;
@@ -483,8 +483,8 @@ public class BlockMachines
 
     public void onEntityCollidedWithBlock(World aWorld, int aX, int aY, int aZ, Entity collider) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if (((tTileEntity instanceof BasePipeTile)) && (((BasePipeTile) tTileEntity).getMetaTile() != null)) {
-            ((BasePipeTile) tTileEntity).onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
+        if (((tTileEntity instanceof HostPipeTile)) && (((HostPipeTile) tTileEntity).getMetaTile() != null)) {
+            ((HostPipeTile) tTileEntity).onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
             return;
         }
         super.onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
