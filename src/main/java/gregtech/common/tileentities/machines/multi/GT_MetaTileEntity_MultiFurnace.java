@@ -98,7 +98,7 @@ public class GT_MetaTileEntity_MultiFurnace
             }
 
             tCurrentParallel *= tOutputStack.stackSize;
-            this.mOutputItems = new ItemStack[(tCurrentParallel / 64) + 1];
+            this.mOutputItems = new ItemStack[ divisionUp( tCurrentParallel, 64 ) ];
             for (int i = 0; i < this.mOutputItems.length; i++) {
                 ItemStack tNewStack = tOutputStack.copy();
                 int size = Math.min(tCurrentParallel, 64);
@@ -120,6 +120,10 @@ public class GT_MetaTileEntity_MultiFurnace
         return false;
     }
 
+    private int divisionUp (int a, int b) {
+        return a / b + ((a % b == 0) ? 0 : 1);
+    }        
+        
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
         int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
