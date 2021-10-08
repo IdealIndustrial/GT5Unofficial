@@ -15,9 +15,11 @@ public abstract class TileBase<H extends HostTile> implements Tile<H> {
 
     protected ITexture textureActive, textureInactive;
     protected H hostTile;
+    protected String name;
 
-    public TileBase(H hostTile, ITexture textureInactive, ITexture textureActive) {
+    public TileBase(H hostTile, String name, ITexture textureInactive, ITexture textureActive) {
         this.hostTile = hostTile;
+        this.name = name;
         this.textureInactive = textureInactive;
         this.textureActive = textureActive;
     }
@@ -46,6 +48,11 @@ public abstract class TileBase<H extends HostTile> implements Tile<H> {
     @Override
     public boolean cacheCoverTexturesSeparately() {
         return false;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

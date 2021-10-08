@@ -15,12 +15,12 @@ public abstract class TileHatch<H extends HostMachineTile, M extends MultiMachin
 
     protected M multiBlock;
 
-    public TileHatch(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
-        super(baseTile, name, baseTextures, overlays);
+    public TileHatch(H hostTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
+        super(hostTile, name, baseTextures, overlays);
     }
 
-    protected TileHatch(H baseTile, TileHatch<H, M> copyFrom) {
-        super(baseTile, copyFrom);
+    protected TileHatch(H hostTile, TileHatch<H, M> copyFrom) {
+        super(hostTile, copyFrom);
         this.baseTextures = Arrays.copyOf(baseTextures, baseTextures.length);
         this.overlays = Arrays.copyOf(overlays, overlays.length);
     }

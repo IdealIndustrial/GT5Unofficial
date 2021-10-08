@@ -8,7 +8,7 @@ import idealindustrial.tile.gui.base.GenericGuiContainer;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.tile.impl.TileFacing2Main;
-import idealindustrial.util.energy.InputEnergyHandler;
+import idealindustrial.util.energy.electric.InputEnergyHandler;
 import idealindustrial.util.fluid.MultiFluidHandler;
 import idealindustrial.util.inventory.ArrayRecipedInventory;
 import idealindustrial.util.inventory.EmptyInventory;
@@ -58,18 +58,15 @@ public class TestMachine2 extends TileFacing2Main<HostMachineTile> {
 
     @Override
     public void onTick(long timer, boolean serverSide) {
-        if (hostTile.isActive() && timer % 10 == 6 && energyHandler.stored > 60) {
-            energyHandler.stored -= 60;
+        if (hostTile.isAllowedToWork() && timer % 10 == 6 && energyHandler.getStored() > 60) {
+            energyHandler.drain(60, true);
             tankIn.fill(ForgeDirection.UNKNOWN, GT_ModHandler.getWater(1L), true);
         }
     }
 
     @Override
     protected void onOutputFacingChanged() {
-        if (energyHandler != null) {
-            energyHandler.onConfigurationChanged();
-            hostTile.notifyOnIOConfigChange(IOType.ENERGY);
-        }
+        hostTile.onIOConfigurationChanged(IOType.ENERGY);
     }
 
     @Override

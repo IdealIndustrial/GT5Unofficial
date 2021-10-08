@@ -2,9 +2,10 @@ package idealindustrial.tile.impl.multi.struct;
 
 import idealindustrial.textures.INetworkedTexture;
 import idealindustrial.textures.NetworkedTexture;
-import idealindustrial.tile.interfaces.meta.Tile;
+import idealindustrial.tile.impl.multi.MultiMachineBase;
 import idealindustrial.tile.impl.multi.MultiMachineBase.HatchType;
 import idealindustrial.tile.impl.multi.parts.TileHatch;
+import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.misc.II_TileUtil;
 import idealindustrial.util.worldgen.Vector3;
@@ -52,11 +53,13 @@ public class HatchPredicate implements ICoordPredicate, BlockDependentPredicate 
                 TileHatch<?, ?> hatch = (TileHatch<?, ?>) tile;
                 if (types.contains(hatch.getType())) {
                     hatch.setTextures(II_StreamUtil.arrayOf(new NetworkedTexture(block, meta, side), new INetworkedTexture[8]));
+                    hatch.addToStructure((MultiMachineBase<?>) mode.multiTile);//todo move to face, no cast
                 } else {
                     throw new MachineStructureException("Not expected this hatch here: " + position);
                 }
+            } else {
+                MachineStructureException.notEnoughInfo();
             }
-            MachineStructureException.notEnoughInfo();
         }
     }
 }

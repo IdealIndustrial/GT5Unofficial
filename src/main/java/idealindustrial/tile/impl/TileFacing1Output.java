@@ -4,11 +4,16 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.util.GT_Utility;
+import idealindustrial.tile.IOType;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.misc.II_DirUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.IntConsumer;
 
 import static idealindustrial.tile.TileEvents.FACING_OUTPUT;
 
@@ -18,13 +23,14 @@ import static idealindustrial.tile.TileEvents.FACING_OUTPUT;
  */
 public abstract class TileFacing1Output<H extends HostMachineTile> extends TileMachineBase<H> {
     public int outputFacing;
+    List<IntConsumer> outChangeListeners = new ArrayList<>();
 
-    public TileFacing1Output(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
-        super(baseTile, name, baseTextures, overlays);
+    public TileFacing1Output(H hostTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
+        super(hostTile, name, baseTextures, overlays);
     }
 
-    protected TileFacing1Output(H baseTile, TileFacing1Output<?> copyFrom) {
-        super(baseTile, copyFrom);
+    protected TileFacing1Output(H hostTile, TileFacing1Output<?> copyFrom) {
+        super(hostTile, copyFrom);
     }
 
 
@@ -43,7 +49,7 @@ public abstract class TileFacing1Output<H extends HostMachineTile> extends TileM
             return true;
         }
         if (hostTile.isServerSide() && energyHandler != null) {
-            GT_Utility.sendChatToPlayer(player, "EU Stored: " + energyHandler.stored);
+            GT_Utility.sendChatToPlayer(player, "EU Stored: " + energyHandler.getStored());
             GT_Utility.sendChatToPlayer(player, "Face: " + outputFacing);
         }
         int sideTo = II_DirUtil.determineWrenchingSide(side, hitX, hitY, hitZ);
@@ -59,7 +65,7 @@ public abstract class TileFacing1Output<H extends HostMachineTile> extends TileM
     @Override//test stuff todo: remove
     public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
         if (hostTile.isServerSide() && energyHandler != null) {
-            GT_Utility.sendChatToPlayer(player, "EU Stored: " + energyHandler.stored);
+            GT_Utility.sendChatToPlayer(player, "EU Stored: " + energyHandler.getStored());
         }
         return super.onRightClick(player, item, side, hitX, hitY, hitZ);
     }
@@ -79,7 +85,9 @@ public abstract class TileFacing1Output<H extends HostMachineTile> extends TileM
     }
 
     protected void onOutputFacingChanged() {
-
+        for (IntConsumer listener : outChangeListeners) {
+            listener.accept(outputFacing);
+        }
     }
 
     @Override
@@ -104,5 +112,9 @@ public abstract class TileFacing1Output<H extends HostMachineTile> extends TileM
     public NBTTagCompound saveToNBT(NBTTagCompound nbt) {
         nbt.setInteger("outF", outputFacing);
         return super.saveToNBT(nbt);
+    }
+
+    public void onOutputFacingChanged(IntConsumer listener) {
+        outChangeListeners.add(listener);
     }
 }

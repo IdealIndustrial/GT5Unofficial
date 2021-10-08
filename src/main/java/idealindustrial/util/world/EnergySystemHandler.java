@@ -1,7 +1,7 @@
 package idealindustrial.util.world;
 
 import idealindustrial.tile.interfaces.host.HostMachineTile;
-import idealindustrial.util.energy.system.CableSystem;
+import idealindustrial.util.energy.electric.system.CableSystem;
 
 import java.util.ArrayList;
 import java.util.Iterator;

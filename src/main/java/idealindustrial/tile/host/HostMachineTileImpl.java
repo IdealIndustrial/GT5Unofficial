@@ -4,10 +4,10 @@ import idealindustrial.tile.IOType;
 import idealindustrial.tile.covers.BaseCoverBehavior;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.meta.Tile;
-import idealindustrial.util.energy.EUConsumer;
-import idealindustrial.util.energy.EUProducer;
-import idealindustrial.util.energy.EmptyEnergyHandler;
-import idealindustrial.util.energy.EnergyHandler;
+import idealindustrial.util.energy.electric.EUConsumer;
+import idealindustrial.util.energy.electric.EUProducer;
+import idealindustrial.util.energy.electric.EmptyEnergyHandler;
+import idealindustrial.util.energy.electric.EnergyHandler;
 import idealindustrial.util.fluid.EmptyTank;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.FluidInventoryRepresentation;
@@ -26,6 +26,9 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile {
@@ -37,7 +40,10 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
     protected FluidHandler inTank, outTank;
     protected boolean[] itemIO = II_Util.trueAr(12), fluidIO = II_Util.trueAr(12), energyIO = II_Util.trueAr(12);
 
-    protected EnergyHandler handler = new EmptyEnergyHandler();
+    protected EnergyHandler handler = EmptyEnergyHandler.INSTANCE;
+
+
+    protected List<Consumer<IOType>> ioListeners = new ArrayList<>();
 
     @Override
     public void onPreTick(long timer, boolean serverSide) {
@@ -56,7 +62,7 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
         inTank.nbtSave(tag, "in");
         outTank.nbtSave(tag, "out");
 
-        handler.nbtLoad(tag, "eu");
+        handler.nbtSave(tag, "eu");
     }
 
 
@@ -72,7 +78,7 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
 
         handler.nbtLoad(tag, "eu");
         if (tile != null) {
-            onIOConfigurationChanged();
+            onIOConfigurationChanged(IOType.ALL);
         }
     }
 
@@ -106,8 +112,10 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
         if (this.tile.hasEnergy()) {
             handler = this.tile.getEnergyHandler();
         } else {
-            handler = new EmptyEnergyHandler();//todo this
+            handler = EmptyEnergyHandler.INSTANCE;//todo this
         }
+
+        onIOConfigurationChanged(IOType.ALL);
     }
 
     @Override
@@ -342,10 +350,24 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
     }
 
     @Override
-    public void onIOConfigurationChanged() {
-        updateIOArray(itemIO, IOType.ITEM);
-        updateIOArray(fluidIO, IOType.FLUID);
-        updateIOArray(energyIO, IOType.ENERGY);
+    public void onIOConfigurationChanged(IOType type) {
+        if (type.is(IOType.ITEM)) {
+            updateIOArray(itemIO, IOType.ITEM);
+        }
+        if (type.is(IOType.FLUID)) {
+            updateIOArray(fluidIO, IOType.FLUID);
+        }
+        if (type.is(IOType.ENERGY)) {
+            updateIOArray(energyIO, IOType.ENERGY);
+        }
+        for (Consumer<IOType> listener : ioListeners) {
+            listener.accept(type);
+        }
+    }
+
+    @Override
+    public void onIOConfigurationChanged(Consumer<IOType> listener) {
+        ioListeners.add(listener);
     }
 
     protected void updateIOArray(boolean[] array, IOType type) {
@@ -370,7 +392,7 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
     @Override
     protected void setCoverAtSide(int side, int id, BaseCoverBehavior<?> cover) {
         super.setCoverAtSide(side, id, cover);
-        onIOConfigurationChanged();
+        onIOConfigurationChanged(IOType.ALL);
         notifyOnIOConfigChange(IOType.ALL);
     }
 

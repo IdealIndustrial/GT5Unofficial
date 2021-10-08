@@ -18,7 +18,7 @@ public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
 
     protected String name;
     protected boolean checkConflicts, allowNulls;
-    protected Map<HashedStack, List<R>> map = new HashMap<>();
+    protected Map<HashedStack, List<R>> map = ItemHelper.queryMap(new HashMap<>());
     protected List<R> allRecipes = new ArrayList<>();
     protected IRecipeGuiParams params;
     protected Map<HashedStack, Set<R>> outputMap = ItemHelper.queryMap(new HashMap<>()), inputMap = ItemHelper.queryMap(new HashMap<>());

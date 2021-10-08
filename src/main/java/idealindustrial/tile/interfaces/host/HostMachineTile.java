@@ -3,7 +3,7 @@ package idealindustrial.tile.interfaces.host;
 import gregtech.api.metatileentity.IEnergyContainer;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.interfaces.meta.Tile;
-import idealindustrial.util.energy.EnergyHandler;
+import idealindustrial.util.energy.electric.EnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.FluidInventoryRepresentation;
 import idealindustrial.util.inventory.interfaces.InternalInventory;
@@ -12,6 +12,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraftforge.fluids.IFluidHandler;
+
+import java.util.function.Consumer;
 
 public interface HostMachineTile extends HostTile, IFluidHandler, ISidedInventory, IEnergyContainer {
 
@@ -45,7 +47,9 @@ public interface HostMachineTile extends HostTile, IFluidHandler, ISidedInventor
 
     boolean calculateIOatSide(int side, IOType type, boolean input);
 
-    void onIOConfigurationChanged();
+    void onIOConfigurationChanged(IOType type);
+
+    void onIOConfigurationChanged(Consumer<IOType> listener);
 
     void notifyOnIOConfigChange(IOType type);
 

@@ -11,8 +11,12 @@ public class OrPredicate extends BiPredicate {
     public void apply(CheckMachineParams mode, Vector3 position, int rotation) {
         try {
             left.apply(mode, position, rotation);
-        } catch (MachineStructureException ignored) {
-            right.apply(mode, position, rotation);
+        } catch (MachineStructureException e) {
+            try {
+                right.apply(mode, position, rotation);
+            } catch (MachineStructureException.NotEnoughInfoException ignored) {
+                throw e;
+            }
         }
     }
 }

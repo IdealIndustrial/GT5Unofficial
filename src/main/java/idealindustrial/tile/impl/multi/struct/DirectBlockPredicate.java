@@ -13,6 +13,7 @@ public class DirectBlockPredicate implements ICoordPredicate {
     int amount;
 
     public DirectBlockPredicate(Block block, int meta, int minAmount) {
+        assert block != null && meta < 16;
         this.block = block;
         this.meta = meta;
         this.minAmount = minAmount;

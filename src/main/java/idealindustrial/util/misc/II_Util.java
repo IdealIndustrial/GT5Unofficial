@@ -4,8 +4,7 @@ import com.google.common.collect.HashMultimap;
 import org.omg.CORBA.Object;
 import scala.Int;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class II_Util {
@@ -20,32 +19,45 @@ public class II_Util {
 
     @SuppressWarnings("unchecked")
     public static <K, V> void rehash(Map<K, V> map) {
-        K[] keys = (K[]) new Object[map.size()];
-        V[] values = (V[]) new Object[map.size()];//not using entries to save some performance
+        List<K> keys = new ArrayList<>(map.size());
+        List<V> values  = new ArrayList<>(map.size());//not using entries to save some performance
         int i = 0;
         for (Map.Entry<K, V> entry : map.entrySet()) {
-            keys[i] = entry.getKey();
-            values[i] = entry.getValue();
+            keys.add(entry.getKey());
+            values.add(entry.getValue());
             ++i;
         }
         map.clear();
         for (int j = 0; j < i; j++) {
-            map.put(keys[j], values[j]);
+            map.put(keys.get(j), values.get(j));
+        }
+    }
+
+    public static <K> void rehash(Set<K> set) {
+        List<K> keys = new ArrayList<>(set.size());
+        int i = 0;
+        for (K k : set) {
+            keys.add(k);
+            ++i;
+        }
+        set.clear();
+        for (int j = 0; j < i; j++) {
+            set.add(keys.get(j));
         }
     }
 
     public static <K, V> void rehash(HashMultimap<K, V> map) {
-        K[] keys = (K[]) new Object[map.size()];
-        V[] values = (V[]) new Object[map.size()];//not using entries to save some performance
+        List<K> keys = new ArrayList<>(map.size());
+        List<V> values = new ArrayList<>(map.size());//not using entries to save some performance
         int i = 0;
         for (Map.Entry<K, V> entry : map.entries()) {
-            keys[i] = entry.getKey();
-            values[i] = entry.getValue();
+            keys.add(entry.getKey());
+            values.add(entry.getValue());
             ++i;
         }
         map.clear();
         for (int j = 0; j < i; j++) {
-            map.put(keys[j], values[j]);
+            map.put(keys.get(j), values.get(j));
         }
     }
 

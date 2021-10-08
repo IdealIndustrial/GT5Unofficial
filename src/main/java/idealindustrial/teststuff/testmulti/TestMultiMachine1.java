@@ -2,6 +2,7 @@ package idealindustrial.teststuff.testmulti;
 
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
+import idealindustrial.autogen.blocks.II_Blocks;
 import idealindustrial.recipe.BasicMachineRecipe;
 import idealindustrial.recipe.RecipeMaps;
 import idealindustrial.tile.impl.multi.RecipedMultiMachineBase;
@@ -53,8 +54,8 @@ public class TestMultiMachine1 extends RecipedMultiMachineBase<HostMachineTile, 
                                 "XXX"
                         }
                 })
-                .define('X', blockPredicate(Blocks.bedrock, 0).orBlock(Blocks.coal_block, 0).orHatch(HatchType.ItemIn, HatchType.ItemOut))
-                .define('B', blockPredicate(Blocks.brick_block, 0))
+                .define('X', blockPredicate(II_Blocks.INSTANCE.casing1, 0).orHatch(HatchType.ItemIn, HatchType.ItemOut))
+                .define('B', blockPredicate(Blocks.brick_block, 0).orHatch(HatchType.EnergyIn))
                 .added()
                 .create();
     }

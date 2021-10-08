@@ -38,7 +38,7 @@ public class MultiMachineShape {
         try {
             run(tile, new CheckMachineParams(CheckMode.CHECK, tile, null));
         } catch (MachineStructureException e) {
-            e.printStackTrace();//todo properly send to player
+            System.out.println(e.getMessage());//todo properly send to player
             return false;
         }
         return true;

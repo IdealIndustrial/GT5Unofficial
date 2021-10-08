@@ -6,7 +6,8 @@ import idealindustrial.tile.IOType;
 import idealindustrial.tile.gui.base.GenericGuiContainer;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.impl.TileFacing1Output;
-import idealindustrial.util.energy.OutputFacingEnergyHandler;
+import idealindustrial.util.energy.electric.OutputEnergyHandler;
+import idealindustrial.util.energy.electric.OutputFacingEnergyHandler;
 import idealindustrial.util.inventory.EmptyInventory;
 import idealindustrial.util.inventory.ArrayRecipedInventory;
 import idealindustrial.util.misc.II_Paths;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.stream.Stream;
 
@@ -36,7 +38,7 @@ public class TestMachine extends TileFacing1Output<HostMachineTile> {
         hasInventory = true;
 
         hasEnergy = true;
-        energyHandler = new OutputFacingEnergyHandler(this, 0, 10_000L, 32, 1, outputFacing);
+        energyHandler = new OutputEnergyHandler(baseTile, 0, 10_000L, 32, 1, outputFacing);
     }
 
     @Override
@@ -51,24 +53,26 @@ public class TestMachine extends TileFacing1Output<HostMachineTile> {
 
     @Override
     protected void onOutputFacingChanged() {
-        if (energyHandler != null) {
-            energyHandler.onConfigurationChanged();
-            hostTile.notifyOnIOConfigChange(IOType.ENERGY);
-        }
+        hostTile.onIOConfigurationChanged(IOType.ENERGY);
     }
 
     @Override
-    public void onRemoval() {
-        if (energyHandler != null) {
-            energyHandler.onRemoval();
-        }
+    public boolean getIOatSide(int side, IOType type, boolean input) {
+        return type == IOType.ENERGY && side == outputFacing && !input;
     }
+
+//    @Override
+//    public void onRemoval() {
+//        if (energyHandler != null) {
+//            energyHandler.onRemoval();
+//        }
+//    }
 
     @Override
     public void onPostTick(long timer, boolean serverSide) {
         super.onPostTick(timer, serverSide);
         if (serverSide && hostTile.isAllowedToWork()) {
-            energyHandler.stored += 32;
+            energyHandler.fill(32, true);
         }
 //        try {
 //            II_StackSignature stack = Test.test("{material: \"iron\", prefix: \"plate\", amount: 13}");
@@ -94,7 +98,7 @@ public class TestMachine extends TileFacing1Output<HostMachineTile> {
     @Override
     public void onBlockChange() {
         super.onBlockChange();
-        energyHandler.onConfigurationChanged();
+//        energyHandler.onConfigurationChanged();
     }
 
     @Override
@@ -113,5 +117,13 @@ public class TestMachine extends TileFacing1Output<HostMachineTile> {
         testMachine.baseTextures = baseTextures;
         testMachine.overlays = overlays;
         return testMachine;
+    }
+
+    @Override
+    public void loadFromNBT(NBTTagCompound nbt) {
+        super.loadFromNBT(nbt);
+//        if (energyHandler != null) {
+//            energyHandler.onConfigurationChanged();
+//        }
     }
 }

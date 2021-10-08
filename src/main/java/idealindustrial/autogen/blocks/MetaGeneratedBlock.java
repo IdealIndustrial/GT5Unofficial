@@ -126,16 +126,6 @@ public class MetaGeneratedBlock extends MetaBlock {
         //already registered
     }
 
-    @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void getSubBlocks(Item aItem, CreativeTabs par2CreativeTabs, List aList) {
-        for (int i = 0; i < 16; i++) {
-            if (isEnabled(i)) {
-                aList.add(new ItemStack(aItem, 1, i));
-            }
-        }
-    }
-
     public II_Material[] getMaterials() {
         return materials;
     }

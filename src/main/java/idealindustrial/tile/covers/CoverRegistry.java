@@ -50,7 +50,7 @@ public class CoverRegistry {
         for (II_Material material : II_Materials.allMaterials) {
             if (material.isEnabled(Prefixes.plate)) {
                 BaseCoverBehavior<?> coverBehavior = new CoverPlate(material);
-                for (HashedStack hashedStack : OreDict.get(Prefixes.plate, II_Materials.iron).getSubItems()) {
+                for (HashedStack hashedStack : OreDict.get(Prefixes.plate, material).getSubItems()) {
                     registerCover(hashedStack, coverBehavior);
                 }
             }

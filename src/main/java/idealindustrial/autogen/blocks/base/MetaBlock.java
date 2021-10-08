@@ -1,7 +1,14 @@
 package idealindustrial.autogen.blocks.base;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class MetaBlock extends BaseBlock {
     private int enabledBlocks;
@@ -19,4 +26,13 @@ public class MetaBlock extends BaseBlock {
         enabledBlocks |= 1 << i;
     }
 
+    @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unchecked")
+    public void getSubBlocks(Item item, CreativeTabs par2CreativeTabs, List list) {
+        for (int i = 0; i < 16; i++) {
+            if (isEnabled(i)) {
+                list.add(new ItemStack(item, 1, i));
+            }
+        }
+    }
 }

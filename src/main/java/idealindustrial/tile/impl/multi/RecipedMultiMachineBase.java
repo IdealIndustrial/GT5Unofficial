@@ -4,6 +4,7 @@ import gregtech.api.interfaces.ITexture;
 import idealindustrial.recipe.IMachineRecipe;
 import idealindustrial.recipe.RecipeMap;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.module.BasicRecipeModule;
 import idealindustrial.tile.module.MultiMachineRecipedModule;
 import idealindustrial.tile.module.RecipeModule;
 import idealindustrial.util.parameter.RecipedMachineStats;
@@ -16,7 +17,7 @@ public abstract class RecipedMultiMachineBase<H extends HostMachineTile, R exten
 
     public RecipedMultiMachineBase(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays, RecipeMap<R> recipeMap, RecipedMachineStats stats) {
         super(baseTile, name, baseTextures, overlays);
-        module = new MultiMachineRecipedModule<R>(this, stats, recipeMap);
+        module = new MultiMachineRecipedModule<R>(this, recipeMap);
     }
 
     protected RecipedMultiMachineBase(H baseTile, RecipedMultiMachineBase<H, R> copyFrom) {
@@ -26,7 +27,10 @@ public abstract class RecipedMultiMachineBase<H extends HostMachineTile, R exten
 
     @Override
     public void onPostTick(long timer, boolean serverSide) {
-        module.onPostTick(timer, serverSide);
+        super.onPostTick(timer, serverSide);
+        if (serverSide && assembled) {
+            module.onPostTick(timer, serverSide);
+        }
     }
 
     @Override
@@ -41,6 +45,13 @@ public abstract class RecipedMultiMachineBase<H extends HostMachineTile, R exten
             module.onInInventoryModified(0);
         }
         return true;
+    }
+
+    @Override
+    protected void onAssembled() {
+        super.onAssembled();
+        System.out.println("Assembled");
+        ((MultiMachineRecipedModule<R>) module).onAssembled();//todo make interface
     }
 
     /**

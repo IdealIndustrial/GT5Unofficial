@@ -39,7 +39,7 @@ public class MultipartRecipedInternalInventory extends MultipartInternalInventor
     @Override
     public int insert(II_ItemStack is, boolean doInsert) {
         if (doInsert) {
-            module.onInInventoryModified(0);
+//            module.onInInventoryModified(0);
         }
         return super.insert(is, doInsert);
     }

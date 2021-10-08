@@ -6,5 +6,6 @@ public class BlocksLoader {
 
     public void preLoad() {
         II_Blocks.INSTANCE.init();
+
     }
 }

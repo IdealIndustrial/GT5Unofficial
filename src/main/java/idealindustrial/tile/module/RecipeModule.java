@@ -20,6 +20,4 @@ public interface RecipeModule<R extends IMachineRecipe> extends MetaTileModule {
    RecipeMap<R> getRecipeMap();
 
    RecipeModule<R> reInit(TileFacing2Main<?> machine);
-
-   RecipedMachineStats getMachineStats();
 }

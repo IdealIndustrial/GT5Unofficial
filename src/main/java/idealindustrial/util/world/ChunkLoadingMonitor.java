@@ -29,13 +29,15 @@ public class ChunkLoadingMonitor {
         }
     }
 
+    public static void serverStop() {
+        monitors.clear();
+    }
+
 
     public static void chunkLoaded(World world, int chunkX, int chunkY) {
         synchronized (mutex) {
-            ChunkLoadingMonitor monitor = monitors.get(world.provider.dimensionId);
-            if (monitor != null) {
-                monitor.chunkLoaded(chunkX, chunkY);
-            }
+            ChunkLoadingMonitor monitor = monitors.computeIfAbsent(world.provider.dimensionId, d -> new ChunkLoadingMonitor());
+            monitor.chunkLoaded(chunkX, chunkY);
         }
     }
 

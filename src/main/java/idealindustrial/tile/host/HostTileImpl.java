@@ -28,6 +28,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static idealindustrial.tile.TileEvents.BASE_ACTIVE;
 import static idealindustrial.tile.host.HostTileConstants.*;
@@ -48,6 +50,8 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     protected long[] coverValues = new long[6];
     @SuppressWarnings("rawtypes")
     protected BaseCoverBehavior[] covers = new BaseCoverBehavior[6];
+
+    protected List<Consumer<WorldAction>> worldChangeListeners = new ArrayList<>();
 
 
     @Override
@@ -143,13 +147,18 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
         }
         super.updateEntity();
         boolean serverSide = isServerSide();
-        if (timer == 0) {
-            onFirstTick(timer, serverSide);
+        try {
+            if (timer == 0) {
+                onFirstTick(timer, serverSide);
+            }
+            onPreTick(timer, serverSide);
+            onTick(timer, serverSide);
+            onPostTick(timer, serverSide);
+            timer++;
         }
-        onPreTick(timer, serverSide);
-        onTick(timer, serverSide);
-        onPostTick(timer, serverSide);
-        timer++;
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -405,10 +414,16 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     }
 
     @Override
+    public void onWorldStateUpdated(Consumer<WorldAction> listener) {
+        worldChangeListeners.add(listener);
+    }
+
+    @Override
     public void onAdjacentBlockChange(int aX, int aY, int aZ) {
         super.onAdjacentBlockChange(aX, aY, aZ);
         if (tile != null) {
             tile.onBlockChange();
+            worldChangeListeners.forEach(c -> c.accept(WorldAction.OnAdjacentBlockChange));
         }
     }
 
@@ -416,6 +431,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     public void onPlaced() {
         if (tile != null) {
             tile.onPlaced();
+            worldChangeListeners.forEach(c -> c.accept(WorldAction.OnPlaced));
         }
     }
 
@@ -423,6 +439,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     public void invalidate() {
         if (tile != null) {
             tile.onRemoval();
+            worldChangeListeners.forEach(c -> c.accept(WorldAction.OnRemoval));
         }
         super.invalidate();
     }
@@ -431,6 +448,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     public void onChunkUnload() {
         if (tile != null) {
             tile.onRemoval();
+            worldChangeListeners.forEach(c -> c.accept(WorldAction.OnRemoval));
         }
         super.onChunkUnload();
     }

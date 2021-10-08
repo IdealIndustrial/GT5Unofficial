@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 /**
  * class for use in HashMap, ignores NBT and NBT when comparing
  */
-public class HashedStack {
+public class HashedStack implements ItemHelper.Rehashable {
     protected int hash;
     protected int itemID;
     protected final int damage;

@@ -32,8 +32,16 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
     protected int connections = 0;//shitty bitmask to save some space
     protected float thickness = 0.5f;
 
-    public ConnectedBase(H baseTile, ITexture textureInactive, ITexture textureActive) {
-        super(baseTile, textureInactive, textureActive);
+    public ConnectedBase(H baseTile, String name, ITexture textureInactive, ITexture textureActive) {
+        super(baseTile, name, textureInactive, textureActive);
+    }
+
+    @Override
+    public void onFirstTick(long timer, boolean serverSide) {
+        super.onFirstTick(timer, serverSide);
+        if (serverSide) {
+            updateConnections();
+        }
     }
 
     @Override
@@ -94,13 +102,13 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
 
     @Override
     public NBTTagCompound saveToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("connections", connections);
+//        nbt.setInteger("connections", connections);
         return super.saveToNBT(nbt);
     }
 
     @Override
     public void loadFromNBT(NBTTagCompound nbt) {
-        connections = nbt.getInteger("connections");
+//        connections = nbt.getInteger("connections");
         super.loadFromNBT(nbt);
     }
 

@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -37,14 +38,18 @@ public class Item_Machines
         return false;
     }
 
+    @Override
+    public String getUnlocalizedName() {
+        return super.getUnlocalizedName();
+    }
+
     public String getUnlocalizedName(ItemStack aStack) {
         int damage = getDamage(aStack);
-
-        return "ii.itemmachine." + damage;
+        return "ii.itemmachine." + damage + ".name";
     }
 
     public String getItemStackDisplayName(ItemStack aStack) {
-        return super.getItemStackDisplayName(aStack);
+        return StatCollector.translateToLocal(this.getUnlocalizedName(aStack));
     }
 
     public void onCreated(ItemStack aStack, World aWorld, EntityPlayer aPlayer) {

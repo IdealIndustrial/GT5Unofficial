@@ -1,5 +1,6 @@
 package idealindustrial.autogen.blocks;
 
+import idealindustrial.autogen.blocks.base.CasingBlock;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
@@ -11,6 +12,7 @@ import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.lang.LocalizeEvent;
 import idealindustrial.util.lang.materials.EngLocalizer;
 import idealindustrial.util.lang.materials.MaterialLocalizer;
+import net.minecraft.block.material.Material;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class II_Blocks {
     public final MetaGeneratedBlock[][] materialBlocks = new MetaGeneratedBlock[BlockType.values().length][];
     public final List<MetaGeneratedBlock> metaGeneratedBlocks = new ArrayList<>();
     public BlockMachines blockMachines;
+    public CasingBlock casing1;
 
     protected II_Blocks() {
         for (int i = 0; i < materialBlocks.length; i++) {
@@ -42,15 +45,16 @@ public class II_Blocks {
             assert blocks[subID] == null || !blocks[subID].isEnabled(id % 16) :
                     "blocks of " + (blocks[subID].getMaterials()[id % 16].name()) + " and " + material.name() +
                             " have same type and ID";
-            if (blocks[id] == null) {
-                blocks[id] = new MetaGeneratedBlock(material.getBlockInfo().getType().name().toLowerCase(), subID,
+            if (blocks[subID] == null) {
+                blocks[subID] = new MetaGeneratedBlock(material.getBlockInfo().getType().name().toLowerCase(), subID,
                         blockInfo.getType().getMaterial(), blockInfo.getType().getSoundType());
                 metaGeneratedBlocks.add(blocks[id]);
             }
-            blocks[id].addBlock(id % 16, Prefixes.block, material);//todo think about other block prefixes
+            blocks[subID].addBlock(id % 16, Prefixes.block, material);//todo think about other block prefixes
         }
 
         blockMachines = new BlockMachines();
+        casing1 = new CasingBlock("testcasing", Material.iron, 1);
     }
 
     @LocalizeEvent

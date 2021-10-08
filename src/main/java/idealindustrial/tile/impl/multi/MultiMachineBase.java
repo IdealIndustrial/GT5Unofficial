@@ -2,32 +2,40 @@ package idealindustrial.tile.impl.multi;
 
 import gnu.trove.set.TLongSet;
 import gregtech.api.interfaces.ITexture;
-import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.impl.TileFacing2Main;
-import idealindustrial.tile.impl.multi.parts.TileHatch;
+import idealindustrial.tile.impl.multi.parts.Hatch_Energy.EnergyHatch;
 import idealindustrial.tile.impl.multi.parts.Hatch_Item.InputBus;
 import idealindustrial.tile.impl.multi.parts.Hatch_Item.OutputBus;
+import idealindustrial.tile.impl.multi.parts.TileHatch;
 import idealindustrial.tile.impl.multi.struct.DirectBlockPredicate;
 import idealindustrial.tile.impl.multi.struct.HatchPredicate;
 import idealindustrial.tile.impl.multi.struct.IStructuredMachine;
 import idealindustrial.tile.impl.multi.struct.MultiMachineShape;
+import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.util.energy.electric.EmptyEnergyHandler;
+import idealindustrial.util.energy.electric.MultiEnergyHandler;
+import idealindustrial.util.fluid.EmptyTank;
+import idealindustrial.util.inventory.EmptyInventory;
+import idealindustrial.util.inventory.StupidMultipartInv;
 import idealindustrial.util.world.ChunkLoadingMonitor;
 import idealindustrial.util.worldgen.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFacing2Main<H> implements IStructuredMachine {
 
     protected MultiMachineShape shape;
     public int startUpSleep = 0;
     protected int awaitingChunks = 0;
-    protected boolean assembled = false;
+    protected boolean assembled = false, structUpdate = true;
 
-    public List<?> energyHatches, dynamoHatches, inputHatches, outputHatches;
-    public List<InputBus> inputBuses;
-    public List<OutputBus> outputBuses;
+    public List<EnergyHatch> energyHatches = new ArrayList<>();
+    public List<?> dynamoHatches = new ArrayList<>(), inputHatches = new ArrayList<>(), outputHatches = new ArrayList<>();
+    public List<InputBus> inputBuses = new ArrayList<>();
+    public List<OutputBus> outputBuses = new ArrayList<>();
 
     public MultiMachineBase(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
         super(baseTile, name, baseTextures, overlays);
@@ -36,7 +44,7 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
 
     protected MultiMachineBase(H baseTile, MultiMachineBase<?> copyFrom) {
         super(baseTile, copyFrom);
-        this.shape = copyFrom.shape;
+        this.shape = copyFrom.getShape();
     }
 
     protected abstract MultiMachineShape getStructure();
@@ -47,18 +55,28 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
 
     @Override
     public void onPostTick(long timer, boolean serverSide) {
-        if (awaitingChunks > 0) {
-            startUpSleep = 10;
-            return;
+        if (serverSide && (!assembled || structUpdate)) {
+            if (awaitingChunks > 0) {
+                startUpSleep = 10;
+                return;
+            }
+            if (startUpSleep > 0) {
+                startUpSleep--;
+                return;
+            }
+            if (structUpdate && checkMachine()) {
+                assembled = true;
+                onAssembled();
+            }
+            structUpdate = false;
         }
-        if (startUpSleep > 0) {
-            startUpSleep--;
-            return;
+    }
+
+    protected boolean checkMachine() {
+        for (List<?> list : Arrays.asList(energyHatches, dynamoHatches, inputBuses, inputHatches, outputBuses, outputHatches)) {
+            list.clear();
         }
-        if (shape.checkMachine(this)) {
-            assembled = true;
-            onAssembled();
-        }
+        return shape.checkMachine(this);
     }
 
     @Override
@@ -124,6 +142,7 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
             case FluidOut:
                 break;
             case EnergyIn:
+                energyHatches.add((EnergyHatch) hatch);
                 break;
             case EnergyOut:
                 break;
@@ -144,8 +163,25 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
 
     protected void onAssembled() {
 
+        inventoryIn = new StupidMultipartInv(inputBuses.stream().map(b -> b.getHost().getIn()).collect(Collectors.toList()));
+        inventoryOut = new StupidMultipartInv(outputBuses.stream().map(b -> b.getHost().getOut()).collect(Collectors.toList()));
+        inventorySpecial = EmptyInventory.INSTANCE;
+
+        MultiEnergyHandler handler = new MultiEnergyHandler();
+        energyHatches.forEach(h -> handler.addIn(h.energyHandler));
+        energyHandler = handler.isEmpty() ? EmptyEnergyHandler.INSTANCE : handler;
+
+        tankIn = EmptyTank.INSTANCE;
+        tankOut = EmptyTank.INSTANCE;
+
     }
 
+    @Override
+    public void receiveStructureUpdate() {
+        structUpdate = true;
+        startUpSleep = 50;
+        System.out.println("block update receiveed");
+    }
 
     //todo: make interface for each hatch type
     public enum HatchType {
@@ -154,7 +190,6 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
         EnergyIn, EnergyOut,
         DataIO, DataStorage
     }
-
 
     public static DirectBlockPredicate blockPredicate(Block block, int meta) {
         return new DirectBlockPredicate(block, meta, 0);

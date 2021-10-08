@@ -1,5 +1,7 @@
 package idealindustrial.autogen.material;
 
+import gregtech.api.enums.OrePrefixes;
+
 /*
  todo: import prefixes from TextureSet.java
  *
@@ -14,7 +16,7 @@ public enum Prefixes {
     cell("", "Cell", 30),
     gasCell("", "Cell", 30),
     plasmaCell("", "Cell", 30),
-    ;
+    cable01("1x", "Cable", 69);
 
     public final String prefix, postfix;
     public final int textureIndex;

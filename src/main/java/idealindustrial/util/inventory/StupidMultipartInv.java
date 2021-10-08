@@ -39,4 +39,16 @@ public class StupidMultipartInv extends ArrayRecipedInventory {
         }
         return is.amount;
     }
+
+    public void checkSizes() {
+        for (InternalInventory inv : inventories) {
+            if (inv instanceof ArrayRecipedInventory) {
+                for (int i = 0; i < inv.size(); i++) {
+                    if (inv.get(i) != null && inv.get(i).stackSize == 0) {
+                        inv.set(i, null);
+                    }
+                }
+            }
+        }
+    }
 }

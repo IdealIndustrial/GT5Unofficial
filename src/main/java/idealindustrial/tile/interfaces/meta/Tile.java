@@ -8,7 +8,7 @@ import idealindustrial.tile.interfaces.ISyncedTileEntity;
 import idealindustrial.tile.interfaces.IToolClickableTile;
 import idealindustrial.tile.interfaces.IUpdatableTileEntity;
 import idealindustrial.tile.interfaces.host.HostTile;
-import idealindustrial.util.energy.EnergyHandler;
+import idealindustrial.util.energy.electric.EnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.inventory.interfaces.InternalInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -53,6 +53,7 @@ public interface Tile<H extends HostTile> extends IUpdatableTileEntity, ISyncedT
 
     Class<? extends HostTile> getBaseTileClass();
 
+    String getName();
 
     default boolean hasInventory() {
         return false;
@@ -71,7 +72,7 @@ public interface Tile<H extends HostTile> extends IUpdatableTileEntity, ISyncedT
     }
 
     default String getInventoryName() {
-        return "";
+        return getName();
     }
 
     default boolean isAccessAllowed(EntityPlayer aPlayer) {
@@ -156,6 +157,15 @@ public interface Tile<H extends HostTile> extends IUpdatableTileEntity, ISyncedT
     }
 
     default void placedByPlayer(EntityPlayer player) {
+
+    }
+
+
+    default boolean transferStructureUpdate() {
+        return false;
+    }
+
+    default void receiveStructureUpdate() {
 
     }
 }

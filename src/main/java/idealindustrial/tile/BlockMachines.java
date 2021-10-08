@@ -95,7 +95,7 @@ public class BlockMachines
     }
 
     public String getUnlocalizedName() {
-        return "gt.blockmachines";
+        return "ii.blockmachines";
     }
 
     public String getLocalizedName() {

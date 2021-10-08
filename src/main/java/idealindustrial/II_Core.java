@@ -6,6 +6,10 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import gregtech.api.GregTech_API;
+import gregtech.api.util.GT_Log;
+import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GT_Utility;
 import idealindustrial.autogen.fluids.II_Fluids;
 import idealindustrial.autogen.implementation.MetaGeneratedCellItem;
 import idealindustrial.autogen.material.II_Materials;
@@ -18,15 +22,13 @@ import idealindustrial.commands.CommandFixQuests;
 import idealindustrial.commands.DimTPCommand;
 import idealindustrial.commands.ReloadRecipesCommand;
 import idealindustrial.integration.ingameinfo.InGameInfoLoader;
-import idealindustrial.loader.BlocksLoader;
-import idealindustrial.loader.ConfigsLoader;
-import idealindustrial.loader.ItemsLoader;
-import idealindustrial.loader.RenderLoader;
+import idealindustrial.loader.*;
 import idealindustrial.teststuff.RenderTest;
 import idealindustrial.teststuff.TestBlock;
 import idealindustrial.teststuff.TestTile;
 import idealindustrial.tile.gui.II_GuiHandler;
 import idealindustrial.tools.ToolRegistry;
+import idealindustrial.util.item.ItemHelper;
 import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.world.ChunkLoadingMonitor;
 import idealindustrial.util.world.WorldTickHandler;
@@ -42,6 +44,8 @@ import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
 @Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false, dependencies = "after:gregtech")
 public class II_Core {
@@ -60,6 +64,7 @@ public class II_Core {
     RenderLoader renderLoader;
     ItemsLoader itemsLoader;
     BlocksLoader blocksLoader;
+    TileLoader tileLoader;
     OredictHandler oredictLoader;
     AutogenRecipes autogen;
 
@@ -73,6 +78,7 @@ public class II_Core {
         }
         itemsLoader = new ItemsLoader();
         blocksLoader = new BlocksLoader();
+        tileLoader = new TileLoader();
         oredictLoader = new OredictHandler();
         autogen = new AutogenRecipes();
 
@@ -113,6 +119,7 @@ public class II_Core {
         GameRegistry.registerTileEntity(TestTile.class, "testTile");
         ClientRegistry.bindTileEntitySpecialRenderer(TestTile.class, new RenderTest());
         II_GuiHandler.init();
+        tileLoader.run();;
     }
 
     @Mod.EventHandler
@@ -141,15 +148,17 @@ public class II_Core {
 
     @Mod.EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
+        ChunkLoadingMonitor.serverStop();
     }
 
-    @Mod.EventHandler
+    @SubscribeEvent
     public void onChunkLoading(ChunkEvent.Load event) {
         if (!event.world.isRemote) {
             ChunkLoadingMonitor.chunkLoaded(event.world, event.getChunk().xPosition, event.getChunk().zPosition);
         }
     }
 
+    @SubscribeEvent
     public void onChunkUnloading(ChunkEvent.Unload event) {
         if (!event.world.isRemote) {
             ChunkLoadingMonitor.chunkUnloaded(event.world, event.getChunk().xPosition, event.getChunk().zPosition);
@@ -201,6 +210,11 @@ public class II_Core {
 
     public static String getVersion() {
         return version;
+    }
+
+    @Mod.EventHandler
+    public void onIDChangingEvent(FMLModIdMappingEvent event) {
+        ItemHelper.onIDsCharge();
     }
 
 

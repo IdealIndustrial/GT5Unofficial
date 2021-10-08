@@ -5,12 +5,16 @@ import gregtech.api.enums.TextureSet;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Utility;
+import idealindustrial.autogen.material.II_Material;
+import idealindustrial.autogen.material.Prefixes;
+import idealindustrial.tile.IOType;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
-import idealindustrial.util.energy.EnergyHandler;
-import idealindustrial.util.energy.system.CableSystem;
-import idealindustrial.util.energy.system.IInfoEnergyPassThrough;
+import idealindustrial.util.energy.electric.EnergyHandler;
+import idealindustrial.util.energy.electric.system.CableSystem;
+import idealindustrial.util.energy.electric.system.IInfoEnergyPassThrough;
+import idealindustrial.util.lang.materials.EngLocalizer;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,9 +25,10 @@ public class ConnectedCable extends ConnectedBase<HostTile> {
     public CableSystem system;
     protected long voltage, amperage, loss;
 
-    public ConnectedCable(HostTile hostTile, Materials material, long voltage, long amperage, long loss, float thickness) {
-        super(hostTile, new GT_RenderedTexture(material.mIconSet.mTextures[TextureSet.INDEX_wire], material.mRGBa),
-                new GT_RenderedTexture(material.mIconSet.mTextures[TextureSet.INDEX_wire]));
+    public ConnectedCable(HostTile hostTile, II_Material material, Prefixes prefix, long voltage, long amperage, long loss, float thickness) {
+        super(hostTile, EngLocalizer.getInstance().get(material, prefix),
+                new GT_RenderedTexture(Materials.Iron.mIconSet.mTextures[TextureSet.INDEX_wire], material.getSolidRenderInfo().getColorAsArray()),
+                new GT_RenderedTexture(Materials.Iron.mIconSet.mTextures[TextureSet.INDEX_wire], material.getSolidRenderInfo().getColorAsArray()));
         this.voltage = voltage;
         this.amperage = amperage;
         this.loss = loss;
@@ -31,8 +36,8 @@ public class ConnectedCable extends ConnectedBase<HostTile> {
     }
 
 
-    private ConnectedCable(HostTile hostTile, ITexture textureInactive, ITexture textureActive, long voltage, long amperage, long loss, float thickness) {
-        super(hostTile, textureInactive, textureActive);
+    private ConnectedCable(HostTile hostTile, String name, ITexture textureInactive, ITexture textureActive, long voltage, long amperage, long loss, float thickness) {
+        super(hostTile, name, textureInactive, textureActive);
         this.voltage = voltage;
         this.amperage = amperage;
         this.loss = loss;
@@ -54,8 +59,13 @@ public class ConnectedCable extends ConnectedBase<HostTile> {
         HostTile hostTile = tile.getHost();
         if (hostTile instanceof HostMachineTile && tile.hasEnergy()) {
             int opSide = II_DirUtil.getOppositeSide(side);
+            boolean[] io = ((HostMachineTile) hostTile).getIO(IOType.ENERGY);
+            boolean result =  io[opSide] || io[opSide + 6];
             EnergyHandler handler = ((HostMachineTile) hostTile).getEnergyHandler();
-            return handler.getConsumer(opSide) != null || handler.getProducer(opSide) != null;
+            if (result && handler.getProducer(opSide) != null) {
+                handler.getProducer(opSide).onConnectionAppended();
+            }
+            return true;
         }
         return false;
     }
@@ -63,7 +73,7 @@ public class ConnectedCable extends ConnectedBase<HostTile> {
 
     @Override
     public ConnectedCable newMetaTile(HostTile hostTile) {
-        return new ConnectedCable(hostTile, textureInactive, textureActive, voltage, amperage, loss, thickness);
+        return new ConnectedCable(hostTile, name, textureInactive, textureActive, voltage, amperage, loss, thickness);
     }
 
     @Override

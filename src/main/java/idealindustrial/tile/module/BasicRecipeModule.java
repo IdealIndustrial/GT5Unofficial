@@ -7,8 +7,8 @@ import idealindustrial.recipe.RecipeMap;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.impl.TileFacing1Output;
 import idealindustrial.tile.impl.TileFacing2Main;
-import idealindustrial.util.energy.EnergyHandler;
-import idealindustrial.util.energy.InputEnergyHandler;
+import idealindustrial.util.energy.electric.EnergyHandler;
+import idealindustrial.util.energy.electric.InputEnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.inventory.EmptyInventory;
 import idealindustrial.util.inventory.interfaces.InternalInventory;
@@ -63,11 +63,6 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
     }
 
     @Override
-    public RecipedMachineStats getMachineStats() {
-        return machineStats;
-    }
-
-    @Override
     public RecipeMap<R> getRecipeMap() {
         return recipeMap;
     }
@@ -87,6 +82,9 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
         if (!recipe.equals("")) {
             this.recipe = recipeFromString(recipe);
             setRecipe(this.recipe);
+        }
+        if (this.recipe == null) {
+            inputUpdated = true;
         }
     }
 

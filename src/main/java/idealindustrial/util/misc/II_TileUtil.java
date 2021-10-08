@@ -1,6 +1,7 @@
 package idealindustrial.util.misc;
 
 import idealindustrial.II_Values;
+import idealindustrial.reflection.events.II_EventListener;
 import idealindustrial.tile.host.HostMachineTileImpl;
 import idealindustrial.tile.host.HostPipeTileImpl;
 import idealindustrial.tile.host.HostTileImpl;
@@ -14,6 +15,8 @@ import idealindustrial.util.inventory.*;
 import idealindustrial.util.inventory.EmptyInventory;
 import idealindustrial.util.inventory.interfaces.InternalInventory;
 import idealindustrial.util.inventory.interfaces.RecipedInventory;
+import idealindustrial.util.lang.LangHandler;
+import idealindustrial.util.lang.LocalizeEvent;
 import idealindustrial.util.worldgen.Vector3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
@@ -24,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+@II_EventListener
 public class II_TileUtil {
 
 
@@ -61,9 +65,10 @@ public class II_TileUtil {
         return null;
     }
 
-    public static void registerMetaTile(int id, Tile<?> tile) {
+    public static Tile<?> registerMetaTile(int id, Tile<?> tile) {
         II_Values.TILES[id] = tile;
         tile.getHost().setMetaTileID(id);
+        return tile;
     }
 
     public static HostTile makeBaseTile() {
@@ -139,6 +144,18 @@ public class II_TileUtil {
             return EmptyInventory.INSTANCE;
         }
         return new ArrayRecipedInventory(slotCount, stackSize);
+    }
+
+    @LocalizeEvent
+    public static void localizeTiles() {
+        Tile<?>[] tiles = II_Values.TILES;
+        for (int i = 0, tilesLength = tiles.length; i < tilesLength; i++) {
+            Tile<?> tile = tiles[i];
+            if (tile == null) {
+                continue;
+            }
+            LangHandler.add("ii.itemmachine." + i + ".name",tile.getInventoryName());
+        }
     }
 
 }

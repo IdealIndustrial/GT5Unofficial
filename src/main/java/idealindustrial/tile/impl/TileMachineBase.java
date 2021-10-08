@@ -9,7 +9,7 @@ import idealindustrial.tile.host.HostMachineTileImpl;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
-import idealindustrial.util.energy.EnergyHandler;
+import idealindustrial.util.energy.electric.EnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.inventory.interfaces.InternalInventory;
 import idealindustrial.util.misc.II_DirUtil;
@@ -110,7 +110,7 @@ public abstract class TileMachineBase<H extends HostMachineTile> implements Tile
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return name;
     }
 
