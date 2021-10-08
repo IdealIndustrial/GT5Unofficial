@@ -241,7 +241,7 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
     /**
      * Unknown Material Components. Dead End Section.
      */
-    Adamantium = new Materials(319, TextureSet.SET_SHINY, 	10.0F, 5120, 5, 1|2|64|128, 255, 255, 255, 0, "Adamantium", "Adamantium", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeLightGray);
+    Adamantium = new Materials(-1, TextureSet.SET_SHINY, 	10.0F, 5120, 5, 1|2|64|128, 255, 255, 255, 0, "Adamantium", "Adamantium", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeLightGray);
     Adamite = new Materials(-1, TextureSet.SET_NONE, 		1.0F, 0, 3, 1, 255, 255, 255, 0, "Adamite", "Adamite", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes.dyeLightGray);
     Adluorite = new Materials(-1, TextureSet.SET_NONE, 		1.0F, 0, 2, 1 | 8, 255, 255, 255, 0, "Adluorite", "Adluorite", 0, 0, -1, 0, false, false, 1, 1, 1, Dyes._NULL);
     Agate = new Materials(-1, TextureSet.SET_NONE, 			1.0F, 0, 2, 1, 255, 255, 255, 0, "Agate", "Agate", 0, 0, -1, 0, false, false, 3, 1, 1, Dyes._NULL);
