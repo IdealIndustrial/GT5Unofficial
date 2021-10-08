@@ -203,11 +203,16 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
         return new String[]{
                 "Large Turbine",
                 tRunning,
-                "Current Output: "+mEUt+" EU/t",
-                "Optimal Flow: "+(int)realOptFlow+" L/t",
-                "Fuel Remaining: "+storedFluid+"L",
-                "Current Speed: "+(mEfficiency/100)+"%",
-                "Turbine Damage: "+tDura+"%",
+                "Current Output: ",
+                mEUt+" EU/t",
+                "Optimal Flow: ",
+                (int)realOptFlow+" L/t",
+                "Fuel Remaining: ",
+                storedFluid+"L",
+                "Current Speed: ",
+                (mEfficiency/100)+"%",
+                "Turbine Damage: ",
+                tDura+"%",
                 tMaintainance};
     }
 
