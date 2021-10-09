@@ -1,5 +1,6 @@
 package gregtech.common.items.behaviors;
 
+import appeng.block.networking.BlockCableBus;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Dyes;
 import gregtech.api.enums.ItemList;
@@ -59,7 +60,7 @@ public class Behaviour_Spray_Color
             Items.feather.setDamage(aStack, Items.feather.getDamage(this.mUsed));
             tUses = this.mUses;
         }
-        if ((GT_Utility.areStacksEqual(aStack, this.mUsed, true)) && (colorize(aWorld, aX, aY, aZ, aSide))) {
+        if ((GT_Utility.areStacksEqual(aStack, this.mUsed, true)) && (colorize(aWorld, aX, aY, aZ, aSide, aPlayer))) {
             GT_Utility.sendSoundToPlayers(aWorld, (String) GregTech_API.sSoundList.get(Integer.valueOf(102)), 1.0F, 1.0F, aX, aY, aZ);
             if (!aPlayer.capabilities.isCreativeMode) {
                 tUses -= 1L;
@@ -86,8 +87,9 @@ public class Behaviour_Spray_Color
         return rOutput;
     }
 
-    private boolean colorize(World aWorld, int aX, int aY, int aZ, int aSide) {
+    private boolean colorize(World aWorld, int aX, int aY, int aZ, int aSide, EntityPlayer p) {
         Block aBlock = aWorld.getBlock(aX, aY, aZ);
+		final ForgeDirection orientation = ForgeDirection.getOrientation(aSide);
         if ((aBlock != Blocks.air) && ((this.mAllowedVanillaBlocks.contains(aBlock)) || ((aBlock instanceof BlockColored)))) {
             if (aBlock == Blocks.hardened_clay) {
                 aWorld.setBlock(aX, aY, aZ, Blocks.stained_hardened_clay, (this.mColor ^ 0xFFFFFFFF) & 0xF, 3);
@@ -107,6 +109,10 @@ public class Behaviour_Spray_Color
             aWorld.setBlockMetadataWithNotify(aX, aY, aZ, (this.mColor ^ 0xFFFFFFFF) & 0xF, 3);
             return true;
         }
+        if (aBlock instanceof BlockCableBus) {
+            int clr = 15 - this.mColor;
+            return ((BlockCableBus) aBlock).recolourBlock(aWorld, aX, aY, aZ, orientation, clr, p);
+        }		
         return aBlock.recolourBlock(aWorld, aX, aY, aZ, ForgeDirection.getOrientation(aSide), (this.mColor ^ 0xFFFFFFFF) & 0xF);
     }
 
