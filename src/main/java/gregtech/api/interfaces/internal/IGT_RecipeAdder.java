@@ -688,6 +688,16 @@ public interface IGT_RecipeAdder {
     public boolean addReplicatorRecipe(ItemStack aInput, ItemStack aOutput, boolean aMetaGeneratedItem, int aScanDuration, int aScanEUt, int aMatterAmount, int aReplicationDuration, int aReplicationEUt);
 
     /**
+     * Adds RockBreaker Recipe
+     *
+     * @param aCircuit The circuit configuration to control
+     * @param aInput The redstone dust? Water cell?
+     * @param aOutput The stone/cobblestone/obsidian
+     * @param aDuration
+     * @param aEUt
+     */
+    public boolean addRockBreakerRecipe(ItemStack aInput, int aCircuit, ItemStack aOutput, int aDuration, int aEUt);	
+    /**
      * Adds a Sound to the Sonictron9001
      * you should NOT call this in the preInit-Phase!
      *

@@ -1123,7 +1123,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         if(getCoverIDAtSide(aSide)!=0)
             return new ITexture[]{getCoverTexture(aSide)};
         if (hasValidMetaTileEntity()) {
-            if(mWaterProof){
+            if(mWaterProof || mMetaTileEntity.isWaterProofByDefault()){
                 ITexture[] textures = mMetaTileEntity.getTexture(this, aSide, mFacing, (byte) (mColor - 1), mActive, getOutputRedstoneSignal(aSide) > 0);
                 ITexture[] out = new ITexture[textures.length+1];
                 System.arraycopy(textures,0,out,0,textures.length);

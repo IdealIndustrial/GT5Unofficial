@@ -51,7 +51,7 @@ public class II_PatchConfig {
     static {
         Class<? extends HookLoader> cl = HookLoader.class;
         Field[] ar = Stream.of("ec2Faces", "neiGui", "gtMats", "mineIcon", "ae2SpatialFix", "opis", "worldMultiThread", "euToRf",
-                "neiIde").map(s -> {
+                "neiIde", "neiAddonsStackSize").map(s -> {
             try {
                 return cl.getDeclaredField(s);
             } catch (NoSuchFieldException exception) {
@@ -68,7 +68,8 @@ public class II_PatchConfig {
                 new FieldedConfig(ar[5], false, "\t#Fix Opis GT Tile Names"),
                 new FieldedConfig(ar[6], false, "\t#Some patches to load server worlds in different threads (may not work on custom cores)"),
                 new FieldedConfig(ar[7], false, "\t#Integration between GT, IC2 chargers and RF consumers. Also energy conduits connect to GT sources"),
-                new FieldedConfig(ar[8], false, "\t#Just a fix for strange NEI behavior in IDE, useless for regular players")
+                new FieldedConfig(ar[8], false, "\t#Just a fix for strange NEI behavior in IDE, useless for regular players"),
+                new FieldedConfig(ar[9], false, "\t#Fix stacksize for NEI-AE2 integration and fake NEI stacks")
 
         };
     }

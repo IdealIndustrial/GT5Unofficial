@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import ic2.core.block.BlockWall;
-
+import appeng.block.networking.BlockCableBus;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -62,7 +62,7 @@ public class Behaviour_Spray_Solvent
             Items.feather.setDamage(aStack, Items.feather.getDamage(this.mUsed));
             tUses = this.mUses;
         }
-        if ((GT_Utility.areStacksEqual(aStack, this.mUsed, true)) && (colorize(aWorld, aX, aY, aZ, aSide))) {
+        if ((GT_Utility.areStacksEqual(aStack, this.mUsed, true)) && (colorize(aWorld, aX, aY, aZ, aSide, aPlayer))) {
             GT_Utility.sendSoundToPlayers(aWorld, (String) GregTech_API.sSoundList.get(Integer.valueOf(102)), 1.0F, 1.0F, aX, aY, aZ);
             if (!aPlayer.capabilities.isCreativeMode) {
                 tUses -= 1L;
@@ -89,7 +89,7 @@ public class Behaviour_Spray_Solvent
         return rOutput;
     }
 
-    public boolean colorize(World aWorld, int aX, int aY, int aZ, int aSide) {
+    public boolean colorize(World aWorld, int aX, int aY, int aZ, int aSide, EntityPlayer p) {
         Block aBlock = aWorld.getBlock(aX, aY, aZ);
         if ((aBlock != Blocks.air) && ((this.mAllowedVanillaBlocks.contains(aBlock)) || ((aBlock instanceof BlockColored)))) {
             if (aBlock == Blocks.stained_hardened_clay) {
@@ -124,6 +124,10 @@ public class Behaviour_Spray_Solvent
                 return true;
             } else return false;
         }
+        if (aBlock instanceof BlockCableBus) {
+            final ForgeDirection orientation = ForgeDirection.getOrientation(aSide);
+            return ((BlockCableBus) aBlock).recolourBlock(aWorld, aX, aY, aZ, orientation, 16, p);
+        }		
         return aBlock.recolourBlock(aWorld, aX, aY, aZ, ForgeDirection.getOrientation(aSide), (this.mColor ^ 0xFFFFFFFF) & 0xF);
     }
 

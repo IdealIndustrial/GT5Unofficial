@@ -34,6 +34,8 @@ import gregtech.loaders.postload.*;
 import gregtech.loaders.preload.*;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeOutput;
+import idealindustrial.hooks.HookLoader;
+import idealindustrial.hooks.II_NEIAddonsPatch;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -345,6 +347,9 @@ public class GT_Mod implements IGT_Mod {
             } else if (tPrefix.mIsUsedForBlocks) {
                 tPrefix.mDefaultStackSize = ((byte) Math.min(64, Math.max(16, tMainConfig.get("features", "MaxOtherBlockStackSize", 64).getInt())));
             }
+        }
+        if (HookLoader.neiAddonsStackSize) {
+          setMaxStackSizeForNeiPatch(tMainConfig);
         }
         
         new Enchantment_EnderDamage();
@@ -921,9 +926,6 @@ public class GT_Mod implements IGT_Mod {
                 new FluidStack[]{Materials.UUMatter.getFluid(25L)},null,6000,30,0).mHidden = true;
         if (!GT_MetaTileEntity_Massfabricator.sRequiresUUA) GT_Recipe.GT_Recipe_Map.sMassFabFakeRecipes.addFakeRecipe(false, null, null, null, null, new FluidStack[]{Materials.UUMatter.getFluid(1L)}, GT_MetaTileEntity_Massfabricator.sDurationMultiplier, 256, 0);
         GT_Recipe.GT_Recipe_Map.sMassFabFakeRecipes.addFakeRecipe(false, null, null, null, new FluidStack[]{Materials.UUAmplifier.getFluid(GT_MetaTileEntity_Massfabricator.sUUAperUUM)}, new FluidStack[]{Materials.UUMatter.getFluid(1L)}, GT_MetaTileEntity_Massfabricator.sDurationMultiplier / GT_MetaTileEntity_Massfabricator.sUUASpeedBonus, 256, 0);
-        GT_Recipe.GT_Recipe_Map.sRockBreakerFakeRecipes.addFakeRecipe(false, new ItemStack[]{ItemList.Display_ITS_FREE.getWithName(0L, "Place Lava on Side", new Object[0])}, new ItemStack[]{new ItemStack(Blocks.cobblestone, 1)}, null, null, null, 16, 32, 0);
-        GT_Recipe.GT_Recipe_Map.sRockBreakerFakeRecipes.addFakeRecipe(false, new ItemStack[]{ItemList.Display_ITS_FREE.getWithName(0L, "Place Lava on Top", new Object[0])}, new ItemStack[]{new ItemStack(Blocks.stone, 1)}, null, null, null, 16, 32, 0);
-        GT_Recipe.GT_Recipe_Map.sRockBreakerFakeRecipes.addFakeRecipe(false, new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Redstone, 1L)}, new ItemStack[]{new ItemStack(Blocks.obsidian, 1)}, null, null, null, 128, 32, 0);
 
         if(GregTech_API.mOutputRF||GregTech_API.mInputRF){
             GT_Utility.checkAvailabilities();
@@ -1267,5 +1269,9 @@ public class GT_Mod implements IGT_Mod {
 
     public static int calculateTotalGTVersion(int majorVersion, int minorVersion){
     	return majorVersion * 1000 + minorVersion;
+    }
+
+    static void setMaxStackSizeForNeiPatch(Configuration tMainConfig) {
+        II_NEIAddonsPatch.MAX_STACK_SIZE = tMainConfig.get("features", "MaxNEItoAE2StackSize", 1000_000).getInt();
     }
 }

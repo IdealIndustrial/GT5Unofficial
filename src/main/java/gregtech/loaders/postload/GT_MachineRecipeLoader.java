@@ -1979,6 +1979,18 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{Materials.WroughtIron.getPlates(6), GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.WroughtIron, 1)}, GT_Values.NF, ItemList.Casing_Pyrolyse.get(2L), 50, 16);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{ItemList.Duct_Tape.get(4), GT_OreDictUnificator.get(OrePrefixes.screw, Materials.Steel, 4), GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.SolderingAlloy, 16L)}, OrePrefixes.circuit.get(Materials.Advanced), 2, Materials.Lubricant.getFluid(2000), ItemList.AutoRepairKit.get(1L), 80, 384);
 
+        GT_Values.RA.addRockBreakerRecipe(null, 1, new ItemStack(Blocks.cobblestone,  1, 0), 16, 30);
+        GT_Values.RA.addRockBreakerRecipe(null, 2, new ItemStack(Blocks.cobblestone,  8, 0), 128, 30);
+        GT_Values.RA.addRockBreakerRecipe(null, 3, new ItemStack(Blocks.cobblestone, 64, 0), 1024, 30);
+
+        GT_Values.RA.addRockBreakerRecipe(null, 11, new ItemStack(Blocks.stone,  1, 0), 16, 30);
+        GT_Values.RA.addRockBreakerRecipe(null, 12, new ItemStack(Blocks.stone,  8, 0), 128, 30);
+        GT_Values.RA.addRockBreakerRecipe(null, 13, new ItemStack(Blocks.stone, 64, 0), 1024, 30);
+
+        GT_Values.RA.addRockBreakerRecipe(new ItemStack(Items.redstone,  1, 0), 21, new ItemStack(Blocks.obsidian,  1, 0), 128, 30);
+        GT_Values.RA.addRockBreakerRecipe(new ItemStack(Items.redstone,  8, 0), 22, new ItemStack(Blocks.obsidian,  8, 0), 1024, 30);
+        GT_Values.RA.addRockBreakerRecipe(new ItemStack(Items.redstone, 64, 0), 23, new ItemStack(Blocks.obsidian, 64, 0), 8192, 30);		
+		
         GT_Values.RA.addAssemblylineRecipe(ItemList.Hatch_AutoMaintenance.get(1),288000,new Object[]{
         		ItemList.Hull_ZPM.get(1),
         		ItemList.Robot_Arm_ZPM.get(1),

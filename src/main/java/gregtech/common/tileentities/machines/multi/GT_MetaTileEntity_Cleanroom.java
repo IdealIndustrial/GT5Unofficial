@@ -10,7 +10,6 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicHull;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine_GT_Recipe;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
-import gregtech.api.objects.ColorFormat;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Recipe;
@@ -18,7 +17,6 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 
 public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBase {
@@ -35,12 +33,12 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
     private int energyConsumptionMax = 0;
     private int mHullsAllowed = 0;
 
-    public void onConfigLoad(GT_Config aConfig){
+    public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
-        euPerVent = aConfig.get(ConfigCategories.machineconfig,"Cleanroom.euPerVent",3);
-        cleanBlockTimeByVentTicks = aConfig.get(ConfigCategories.machineconfig,"Cleanroom.cleanBlockTimeByVentTicks",1600);
-        idleEnergyReduceMultiplier = aConfig.get(ConfigCategories.machineconfig,"Cleanroom.idleEnergyReduceMultiplier",3);
-        mHullsLessInTimesThanWallsSquare = aConfig.get(ConfigCategories.machineconfig,"Cleanroom.mHullsLessInTimesThanWallsSquare",3);
+        euPerVent = aConfig.get(ConfigCategories.machineconfig, "Cleanroom.euPerVent", 3);
+        cleanBlockTimeByVentTicks = aConfig.get(ConfigCategories.machineconfig, "Cleanroom.cleanBlockTimeByVentTicks", 1600);
+        idleEnergyReduceMultiplier = aConfig.get(ConfigCategories.machineconfig, "Cleanroom.idleEnergyReduceMultiplier", 3);
+        mHullsLessInTimesThanWallsSquare = aConfig.get(ConfigCategories.machineconfig, "Cleanroom.mHullsLessInTimesThanWallsSquare", 3);
     }
 
     public GT_MetaTileEntity_Cleanroom(int aID, String aName, String aNameRegional) {
@@ -67,18 +65,18 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 "1x Maintenance Hatch",
                 "A second door is allowed if the base area is at least 7*7",
                 "Remaining Blocks Plascrete or Plascrete Window",
-                "Up to 1/"+mHullsLessInTimesThanWallsSquare+" of wall blocks can be replaced with Machine",
+                "Up to 1/" + mHullsLessInTimesThanWallsSquare + " of wall blocks can be replaced with Machine",
                 "Hulls to transfer Items & Energy through walls",
-                "Energy consumption depends on ceiling square, "+euPerVent+" eu/t per block",
-                "Cleaning time depends on ceiling height, "+(cleanBlockTimeByVentTicks / 20)+" sec per block",
-                "Energy consumption decreases after full cleaning in "+idleEnergyReduceMultiplier+" times",
+                "Energy consumption depends on ceiling square, " + euPerVent + " eu/t per block",
+                "Cleaning time depends on ceiling height, " + (cleanBlockTimeByVentTicks / 20) + " sec per block",
+                "Energy consumption decreases after full cleaning in " + idleEnergyReduceMultiplier + " times",
                 "Use Portable Scanner on Controller to get more info"
         };
     }
 
     public boolean checkRecipe(ItemStack aStack) {
         mMaxProgresstime = 100;
-        int ceilingSquare = (sizeX-2)*(sizeZ-2);
+        int ceilingSquare = (sizeX - 2) * (sizeZ - 2);
         mEUt = euPerVent * ceilingSquare;
         energyConsumptionMax = mEUt;
         energyConsumptionMin = mEUt / idleEnergyReduceMultiplier;
@@ -86,15 +84,15 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         byte currentTier = (byte) Math.max(0, GT_Utility.getTier(tVoltage));
         byte requiredTier = (byte) Math.max(0, GT_Utility.getTier(mEUt));
         int progressMultiplier = currentTier <= requiredTier ? 1 : 1 << (currentTier - requiredTier);
-        int reduceEfficiencyGrowing = cleanBlockTimeByVentTicks * (sizeY-2);
+        int reduceEfficiencyGrowing = cleanBlockTimeByVentTicks * (sizeY - 2);
         int maxEfficiencyGrowing = 1000000;
-        if(progressMultiplier > 1) {
+        if (progressMultiplier > 1) {
             mEfficiencyIncrease = (maxEfficiencyGrowing * progressMultiplier) / reduceEfficiencyGrowing;
             mEUt *= progressMultiplier * 2;
         } else {
             mEfficiencyIncrease = maxEfficiencyGrowing / reduceEfficiencyGrowing;
         }
-        if(mEfficiency >= 10000){
+        if (mEfficiency >= 10000) {
             mEUt /= idleEnergyReduceMultiplier;
         }
         if (openDoorsCount > 0) {
@@ -105,8 +103,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         return true;
     }
 
-    private int calcMachinesHullAllowed(int x, int y){
-        return ((x-2)*(y-2)*4-2)/mHullsLessInTimesThanWallsSquare;
+    private int calcMachinesHullAllowed(int x, int y) {
+        return ((x - 2) * (y - 2) * 4 - 2) / mHullsLessInTimesThanWallsSquare;
     }
 
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
@@ -124,13 +122,14 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
             Block tBlockZ = aBaseMetaTileEntity.getBlockOffset(0, 0, i);
             int tMetaX = aBaseMetaTileEntity.getMetaIDOffset(i, 0, 0);
             int tMetaZ = aBaseMetaTileEntity.getMetaIDOffset(0, 0, i);
-            if(tBlockX != GregTech_API.sBlockCasings3 || tMetaX != 11 ||
-                    tBlockZ != GregTech_API.sBlockCasings3 || tMetaZ != 11){
-                if(tBlockX != GregTech_API.sBlockReinforced || tMetaX != 2 ||
-                        tBlockZ != GregTech_API.sBlockReinforced || tMetaZ != 2){
+            if (tBlockX != GregTech_API.sBlockCasings3 || tMetaX != 11 ||
+                    tBlockZ != GregTech_API.sBlockCasings3 || tMetaZ != 11) {
+                if (tBlockX != GregTech_API.sBlockReinforced || tMetaX != 2 ||
+                        tBlockZ != GregTech_API.sBlockReinforced || tMetaZ != 2) {
                     return false; // next block is not a filter and not a plascrete block
                 } else {
-                    x = i; z = i;
+                    x = i;
+                    z = i;
                     break; // the edge was found, cycle stopped
                 }
             }
@@ -148,9 +147,9 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
             return false; // at least 4 blocks height allowed
         }
 
-        sizeX = x*2+1;
-        sizeY = -y+1;
-        sizeZ = z*2+1;
+        sizeX = x * 2 + 1;
+        sizeY = -y + 1;
+        sizeZ = z * 2 + 1;
         mHullsAllowed = calcMachinesHullAllowed(sizeX, sizeY);
 
         // if a base area is at least 49 a second door is allowed
@@ -172,7 +171,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 
                         if ((dX == -x || dX == x) && (dY == 0 || dY == y) ||
                                 (dX == -x || dX == x) && (dZ == -z || dZ == z) ||
-                                (dZ == -z || dZ == z) && (dY == 0 || dY == y)){
+                                (dZ == -z || dZ == z) && (dY == 0 || dY == y)) {
                             // For edges allowed only Plascrete Blocks / Maintenance hatch / Energy hatch
                             if (tBlock != GregTech_API.sBlockReinforced || tMeta != 2) {
                                 if ((!addMaintenanceToMachineList(tTileEntity, 82))
@@ -180,12 +179,12 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                                     return false;
                                 }
                             }
-                        } else if (dY == 0){ // for other blocks on the pot side except edges
-                            if(tBlock != GregTech_API.sBlockCasings3 || tMeta != 11) {
+                        } else if (dY == 0) { // for other blocks on the pot side except edges
+                            if (tBlock != GregTech_API.sBlockCasings3 || tMeta != 11) {
                                 //all blocks on the top side should be a filter blocks
                                 return false;
                             }
-                        } else if(tBlock == GregTech_API.sBlockReinforced && tMeta == 2) {
+                        } else if (tBlock == GregTech_API.sBlockReinforced && tMeta == 2) {
                             // do nothing if in other place we meet plascrete blocks
                         } else {
                             if ((!addMaintenanceToMachineList(tTileEntity, 82)) && (!addEnergyInputToMachineList(tTileEntity, 82))) {
@@ -238,8 +237,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 }
             }
         }
-        for(byte i = 0 ; i<6 ; i++){
-        	byte t = (byte) Math.max(1, (byte)(15/(10000f / mEfficiency)));
+        for (byte i = 0; i < 6; i++) {
+            byte t = (byte) Math.max(1, (byte) (15 / (10000f / mEfficiency)));
             aBaseMetaTileEntity.setInternalOutputRedstoneSignal(i, t);
         }
         return true;
@@ -247,24 +246,24 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 
     @Override
     public String[] getInfoData() {
-        if(!mMachine) {
+        if (!mMachine) {
             return new String[]{
-                    ColorFormat.SPECIAL.format("Cleanroom"),
-                    ColorFormat.BAD.format("Incomplete Structure"),
+                    "Cleanroom",
+                    "Incomplete Structure",
             };
         } else {
             int totalCleanTimeSec = (sizeY - 2) * (cleanBlockTimeByVentTicks / 20);
-            float currentCleanTimeSec = (float)totalCleanTimeSec * (mEfficiency / 10000f);
+            float currentCleanTimeSec = (float) totalCleanTimeSec * (mEfficiency / 10000f);
             int problemsCount = getIdealStatus() - getRepairStatus();
             return new String[]{
                     "Cleaning time" + ": ",
-					ColorFormat.NEUTRAL.format(String.format("%.0f",currentCleanTimeSec) + " / " + totalCleanTimeSec)+ " S",					
+                    currentCleanTimeSec + " / " + totalCleanTimeSec + " s",
                     "Energy consumption while idle/cleaning" + ": ",
-					ColorFormat.NEUTRAL.format(energyConsumptionMin)+ " / " + ColorFormat.NEUTRAL.format(energyConsumptionMax) +" EU/t",
+                    energyConsumptionMin + " / " + energyConsumptionMax + " EU/t",
                     ("Efficiency") + ": ",
-					(mEfficiency > 9999 ? ColorFormat.GOOD.format(mEfficiency / 100.0F) : ColorFormat.BETTER.format(mEfficiency / 100.0F)) + " %", 
+                    mEfficiency / 100.0F + " %",
                     "Problems" + ": ",
-					(problemsCount > 0 ? ColorFormat.BAD.format(problemsCount) : ColorFormat.GOOD.format(problemsCount)),					
+                    "" + problemsCount,
             };
         }
     }
@@ -273,10 +272,10 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
     public boolean isGivingInformation() {
         return true;
     }
-    
+
     @Override
-    public boolean allowGeneralRedstoneOutput(){
-    	return true;
+    public boolean allowGeneralRedstoneOutput() {
+        return true;
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
