@@ -200,9 +200,9 @@ public class GT_Cover_ItemMeter extends GT_CoverBehavior {
         @Override
         public void buttonClicked(GuiButton btn) {
             if (isInverted())
-                coverVariable = (coverVariable & ~INVERT_BIT);
-            else
                 coverVariable = (coverVariable | INVERT_BIT);
+            else
+                coverVariable = (coverVariable & ~INVERT_BIT);
 
             GT_Values.NW.sendToServer(new GT_Packet_TileEntityCover(side, coverID, coverVariable, tile));
             update();
