@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -213,7 +214,8 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 (mEfficiency/100)+"%",
                 "Turbine Damage: ",
                 tDura+"%",
-                tMaintainance};
+                StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
+                "" + (getIdealStatus() - getRepairStatus())};
     }
 
     @Override
