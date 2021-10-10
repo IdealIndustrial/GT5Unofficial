@@ -18,12 +18,18 @@ import static gregtech.api.enums.GT_Values.V;
 
 public class GT_MetaTileEntity_MonsterRepellent extends GT_MetaTileEntity_TieredMachineBlock {
 
+    public enum repellationMode {
+        HOSTILES, HOSTILES_NEUTRALS, EVERYONE
+    }
+
     public int mRange = 16;
 
-    public boolean mNeutralsAllowed = true;
+    public repellationMode repMode = repellationMode.HOSTILES;
 
     public GT_MetaTileEntity_MonsterRepellent(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier, 0, "Repels nasty Creatures. Range: " + (4 + (12 * aTier)) + " unpowered / " + (16 + (48 * aTier)) + " powered");
+        super(aID, aName, aNameRegional, aTier, 0,
+                new String[] {"Repels nasty Creatures. Range: " + (4 + (12 * aTier)) + " unpowered / " + (16 + (48 * aTier)) + " powered.",
+                        "Use a screwdriver to switch repellation mode."});
     }
 
     public GT_MetaTileEntity_MonsterRepellent(String aName, int aTier, int aInvSlotCount, String aDescription, ITexture[][][] aTextures) {
@@ -75,10 +81,50 @@ public class GT_MetaTileEntity_MonsterRepellent extends GT_MetaTileEntity_Tiered
 
     @Override
     public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-            mNeutralsAllowed = !mNeutralsAllowed;
-            GT_Utility.sendChatToPlayer(aPlayer, mNeutralsAllowed ? trans("217","Prevents spawn of hostile creatures") : trans("218","Prevents spawn of hostile creatures, pig zombies and ocelots"));
-    }
 
+            int newRepMode = repMode.ordinal();
+
+            if (aPlayer.isSneaking())
+            {
+                newRepMode = repMode.ordinal() - 1;
+
+            }
+            else {
+                newRepMode = repMode.ordinal() + 1;
+            }
+
+            if (newRepMode > repellationMode.values().length - 1)
+                newRepMode = 0;
+
+            if (newRepMode < 0)
+                newRepMode = repellationMode.values().length - 1;
+
+            repMode = repellationMode.values()[newRepMode];
+
+            String localizationIndex = "217";
+            String unlocalizedMessage = "Prevents spawn of hostile creatures";
+
+            switch (repMode){
+                case HOSTILES:
+                {
+                    break;
+                }
+                case HOSTILES_NEUTRALS:
+                {
+                    localizationIndex = "218";
+                    unlocalizedMessage = "Prevents spawn of hostile and neutral creatures(except animals and pets)";
+                    break;
+                }
+                case EVERYONE:
+                {
+                    localizationIndex = "219";
+                    unlocalizedMessage = "Prevents spawn of any living creature(except players and their pets)";
+                    break;
+                }
+            }
+
+            GT_Utility.sendChatToPlayer(aPlayer, trans(localizationIndex, unlocalizedMessage));
+    }
 
     @Override
     public boolean isAccessAllowed(EntityPlayer aPlayer) {
@@ -147,11 +193,13 @@ public class GT_MetaTileEntity_MonsterRepellent extends GT_MetaTileEntity_Tiered
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
-        aNBT.setBoolean("neutralsAllowed", mNeutralsAllowed);
+        aNBT.setInteger("repellationMode", repMode.ordinal());
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
-        mNeutralsAllowed = aNBT.getBoolean("neutralsAllowed");
+        repMode = repellationMode.values()[aNBT.getInteger("repellationMode")];
+        if (aNBT.hasKey("neutralsAllowed"))
+            aNBT.removeTag("neutralsAllowed");
     }
 }
