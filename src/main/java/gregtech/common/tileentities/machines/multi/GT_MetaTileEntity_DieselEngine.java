@@ -17,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -236,12 +237,18 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
     public String[] getInfoData() {
         return new String[]{
                 "Diesel Engine",
-                "Current Output: " + mEUt * mEfficiency / 10000 + " EU/t",
-                "Fuel Consumption: " + fuelConsumption + "L/t",
-                "Fuel Value: " + fuelValue + " EU/L",
-                "Fuel Remaining: " + fuelRemaining + " Litres",
-                "Current Efficiency: " + (mEfficiency / 100) + "%",
-                getIdealStatus() == getRepairStatus() ? "No Maintainance issues" : "Needs Maintainance"};
+                "Current Output: ",
+                mEUt * mEfficiency / 10000 + " EU/t",
+                "Fuel Consumption: ",
+                fuelConsumption + "L/t",
+                "Fuel Value: ",
+                fuelValue + " EU/L",
+                "Fuel Remaining: ",
+                fuelRemaining + " Litres",
+                "Current Efficiency: ",
+                (mEfficiency / 100) + "%",
+                StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
+                "" + (getIdealStatus() - getRepairStatus())};
     }
 
     @Override
