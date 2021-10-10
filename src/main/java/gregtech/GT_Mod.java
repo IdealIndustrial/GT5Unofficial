@@ -34,6 +34,8 @@ import gregtech.loaders.postload.*;
 import gregtech.loaders.preload.*;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeOutput;
+import idealindustrial.hooks.HookLoader;
+import idealindustrial.hooks.II_NEIAddonsPatch;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -345,6 +347,9 @@ public class GT_Mod implements IGT_Mod {
             } else if (tPrefix.mIsUsedForBlocks) {
                 tPrefix.mDefaultStackSize = ((byte) Math.min(64, Math.max(16, tMainConfig.get("features", "MaxOtherBlockStackSize", 64).getInt())));
             }
+        }
+        if (HookLoader.neiAddonsStackSize) {
+          setMaxStackSizeForNeiPatch(tMainConfig);
         }
         
         new Enchantment_EnderDamage();
@@ -1264,5 +1269,9 @@ public class GT_Mod implements IGT_Mod {
 
     public static int calculateTotalGTVersion(int majorVersion, int minorVersion){
     	return majorVersion * 1000 + minorVersion;
+    }
+
+    static void setMaxStackSizeForNeiPatch(Configuration tMainConfig) {
+        II_NEIAddonsPatch.MAX_STACK_SIZE = tMainConfig.get("features", "MaxNEItoAE2StackSize", 1000_000).getInt();
     }
 }

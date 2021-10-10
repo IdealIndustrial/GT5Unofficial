@@ -11,7 +11,7 @@ public class HookLoader extends gloomyfolken.hooklib.minecraft.HookLoader {
         return new String[]{PrimaryClassTransformer.class.getName()};
     }
 
-    public static boolean neiGui, ec2Faces, gtMats, mineIcon, ae2SpatialFix, opis, worldMultiThread, euToRf, neiIde;
+    public static boolean neiGui, ec2Faces, gtMats, mineIcon, ae2SpatialFix, opis, worldMultiThread, euToRf, neiIde, neiAddonsStackSize;
 
     @Override
     protected void registerHooks() {
@@ -34,5 +34,7 @@ public class HookLoader extends gloomyfolken.hooklib.minecraft.HookLoader {
             registerHookContainer("idealindustrial.hooks.II_NeiIdePatch");
         if (euToRf)
             registerHookContainer("idealindustrial.hooks.II_EUtoRFPatch");
+        if (neiAddonsStackSize)
+            registerHookContainer("idealindustrial.hooks.II_NEIAddonsPatch");
     }
 }
