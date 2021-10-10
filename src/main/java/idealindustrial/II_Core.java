@@ -45,7 +45,7 @@ public class II_Core {
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
-        if (Loader.isModLoaded("InGameInfoXML")) {
+        if (Loader.isModLoaded("InGameInfoXML") && FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             new InGameInfoLoader().load();
         }
     }
