@@ -12,6 +12,7 @@ import net.minecraft.util.IIcon;
 public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
     private final IIconContainer mIconContainer;
     private final boolean mAllowAlpha;
+    private boolean maxBrightness;
     /**
      * DO NOT MANIPULATE THE VALUES INSIDE THIS ARRAY!!!
      * <p/>
@@ -34,10 +35,19 @@ public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
     public GT_RenderedTexture(IIconContainer aIcon) {
         this(aIcon, Dyes._NULL.mRGBa);
     }
+    public GT_RenderedTexture maxBrightness() {
+        maxBrightness = true;
+        return this;
+    }
 
     @Override
     public void renderXPos(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ) {
-        Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.6F), (int) (mRGBa[1] * 0.6F), (int) (mRGBa[2] * 0.6F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        if (maxBrightness) {
+            Tessellator.instance.setColorRGBA(mRGBa[0],mRGBa[1], mRGBa[2] , mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
+        else {
+            Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.6F), (int) (mRGBa[1] * 0.6F), (int) (mRGBa[2] * 0.6F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
         aRenderer.renderFaceXPos(aBlock, aX, aY, aZ, mIconContainer.getIcon());
         if (mIconContainer.getOverlayIcon() != null) {
             Tessellator.instance.setColorRGBA(153, 153, 153, 255);
@@ -47,7 +57,12 @@ public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
 
     @Override
     public void renderXNeg(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ) {
-        Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.6F), (int) (mRGBa[1] * 0.6F), (int) (mRGBa[2] * 0.6F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        if (maxBrightness) {
+            Tessellator.instance.setColorRGBA(mRGBa[0],mRGBa[1], mRGBa[2] , mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
+        else {
+            Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.6F), (int) (mRGBa[1] * 0.6F), (int) (mRGBa[2] * 0.6F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
         aRenderer.renderFaceXNeg(aBlock, aX, aY, aZ, mIconContainer.getIcon());
         if (mIconContainer.getOverlayIcon() != null) {
             Tessellator.instance.setColorRGBA(153, 153, 153, 255);
@@ -57,7 +72,12 @@ public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
 
     @Override
     public void renderYPos(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ) {
-        Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 1.0F), (int) (mRGBa[1] * 1.0F), (int) (mRGBa[2] * 1.0F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        if (maxBrightness) {
+            Tessellator.instance.setColorRGBA(mRGBa[0],mRGBa[1], mRGBa[2] , mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
+        else {
+            Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 1.0F), (int) (mRGBa[1] * 1.0F), (int) (mRGBa[2] * 1.0F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
         aRenderer.renderFaceYPos(aBlock, aX, aY, aZ, mIconContainer.getIcon());
         if (mIconContainer.getOverlayIcon() != null) {
             Tessellator.instance.setColorRGBA(255, 255, 255, 255);
@@ -67,7 +87,12 @@ public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
 
     @Override
     public void renderYNeg(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ) {
-        Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.5F), (int) (mRGBa[1] * 0.5F), (int) (mRGBa[2] * 0.5F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        if (maxBrightness) {
+            Tessellator.instance.setColorRGBA(mRGBa[0],mRGBa[1], mRGBa[2] , mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
+        else {
+            Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.5F), (int) (mRGBa[1] * 0.5F), (int) (mRGBa[2] * 0.5F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
         IIcon aIcon = mIconContainer.getIcon();
 
         float d_16 = 16.0F;
@@ -109,7 +134,12 @@ public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
 
     @Override
     public void renderZPos(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ) {
-        Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.8F), (int) (mRGBa[1] * 0.8F), (int) (mRGBa[2] * 0.8F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        if (maxBrightness) {
+            Tessellator.instance.setColorRGBA(mRGBa[0],mRGBa[1], mRGBa[2] , mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
+        else {
+            Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.8F), (int) (mRGBa[1] * 0.8F), (int) (mRGBa[2] * 0.8F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
         aRenderer.renderFaceZPos(aBlock, aX, aY, aZ, mIconContainer.getIcon());
         if (mIconContainer.getOverlayIcon() != null) {
             Tessellator.instance.setColorRGBA(204, 204, 204, 255);
@@ -119,7 +149,12 @@ public class GT_RenderedTexture implements ITexture, IColorModulationContainer {
 
     @Override
     public void renderZNeg(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ) {
-        Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.8F), (int) (mRGBa[1] * 0.8F), (int) (mRGBa[2] * 0.8F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        if (maxBrightness) {
+            Tessellator.instance.setColorRGBA(mRGBa[0],mRGBa[1], mRGBa[2] , mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
+        else {
+            Tessellator.instance.setColorRGBA((int) (mRGBa[0] * 0.8F), (int) (mRGBa[1] * 0.8F), (int) (mRGBa[2] * 0.8F), mAllowAlpha ? 255 - mRGBa[3] : 255);
+        }
         aRenderer.renderFaceZNeg(aBlock, aX, aY, aZ, mIconContainer.getIcon());
         if (mIconContainer.getOverlayIcon() != null) {
             Tessellator.instance.setColorRGBA(204, 204, 204, 255);

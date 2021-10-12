@@ -1,6 +1,7 @@
 package idealindustrial.render;
 
 import gregtech.api.interfaces.IFastRenderedTileEntity;
+import idealindustrial.tile.host.HostPipeTileRotatingImpl;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
@@ -12,4 +13,8 @@ public interface CustomRenderer {
     boolean renderWorldBlock(IBlockAccess world, IFastRenderedTileEntity tileEntity, int x, int y, int z, Block block, RenderBlocks renderBlocks);
 
     public void renderItem(IItemRenderer.ItemRenderType type, ItemStack item, Block block, RenderBlocks renderBlocks, int meta);
+
+    default boolean shouldRender(IFastRenderedTileEntity tileEntity) {
+        return !(tileEntity instanceof HostPipeTileRotatingImpl);
+    }
 }

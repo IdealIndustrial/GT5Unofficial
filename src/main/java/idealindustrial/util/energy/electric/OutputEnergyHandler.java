@@ -3,7 +3,7 @@ package idealindustrial.util.energy.electric;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.host.WorldAction;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
-import idealindustrial.util.world.EnergySystemHandler;
+import idealindustrial.util.energy.electric.system.EnergySystemHandler;
 
 import java.util.stream.IntStream;
 

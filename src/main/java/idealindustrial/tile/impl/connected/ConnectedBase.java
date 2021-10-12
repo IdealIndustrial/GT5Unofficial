@@ -153,6 +153,7 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
 
     public void updateConnections() {
         int oldConnections = connections;
+        connections = 0;
         for (int i = 0; i < 6; i++) {
             if (canConnect(i)) {
                 setConnected(i);

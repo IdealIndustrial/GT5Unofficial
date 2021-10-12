@@ -46,7 +46,7 @@ public class II_DefaultEUProducer implements EUProducer {
     }
 
     @Override
-    public void onConnectionAppended() {
+    public void onConnectionAppended() { //todo remove
         if (system != null) {
             system.invalidate();
         }

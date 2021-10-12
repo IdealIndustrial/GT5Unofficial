@@ -4,6 +4,7 @@ import idealindustrial.II_Values;
 import idealindustrial.reflection.events.II_EventListener;
 import idealindustrial.tile.host.HostMachineTileImpl;
 import idealindustrial.tile.host.HostPipeTileImpl;
+import idealindustrial.tile.host.HostPipeTileRotatingImpl;
 import idealindustrial.tile.host.HostTileImpl;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.host.HostTile;
@@ -32,7 +33,9 @@ public class II_TileUtil {
 
 
     @SuppressWarnings("unchecked")
-    private static final Class<? extends TileEntity>[] tileClasses = new Class[]{HostTileImpl.class, HostMachineTileImpl.class, HostPipeTileImpl.class};
+    private static final Class<? extends TileEntity>[] tileClasses = new Class[]{
+            HostTileImpl.class, HostMachineTileImpl.class, HostPipeTileImpl.class, HostPipeTileRotatingImpl.class
+    };
     private static final Map<Class<? extends TileEntity>, Integer> classToMeta = new HashMap<>();
 
     static {

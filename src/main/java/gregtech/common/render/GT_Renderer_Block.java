@@ -125,6 +125,9 @@ public class GT_Renderer_Block
         if (tTileEntity instanceof IFastRenderedTileEntity){
             IFastRenderedTileEntity fastRenderedTileEntity = ((IFastRenderedTileEntity) tTileEntity);
             if (fastRenderedTileEntity.getCustomRenderer() != null) {
+                if (!fastRenderedTileEntity.getCustomRenderer().shouldRender(fastRenderedTileEntity)) {
+                    return true;
+                }
                 return fastRenderedTileEntity.getCustomRenderer().renderWorldBlock(aWorld, fastRenderedTileEntity, aX, aY, aZ, aBlock, aRenderer);
             }
             return renderStandardBlock(aWorld, aX, aY, aZ, aBlock, aRenderer, ((IFastRenderedTileEntity)tTileEntity).getTextures());

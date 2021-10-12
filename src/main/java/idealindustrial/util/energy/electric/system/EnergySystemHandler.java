@@ -1,4 +1,4 @@
-package idealindustrial.util.world;
+package idealindustrial.util.energy.electric.system;
 
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.energy.electric.system.CableSystem;

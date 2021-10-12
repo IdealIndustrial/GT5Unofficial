@@ -4,6 +4,7 @@ import gregtech.api.metatileentity.IEnergyContainer;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.util.energy.electric.EnergyHandler;
+import idealindustrial.util.energy.kinetic.KineticEnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.FluidInventoryRepresentation;
 import idealindustrial.util.inventory.interfaces.InternalInventory;
@@ -38,6 +39,8 @@ public interface HostMachineTile extends HostTile, IFluidHandler, ISidedInventor
     FluidInventoryRepresentation getFluidRepresentation();
 
     EnergyHandler getEnergyHandler();
+
+    KineticEnergyHandler getKineticEnergyHandler();
 
     void reloadIOContainers(Tile<?> tile);
 

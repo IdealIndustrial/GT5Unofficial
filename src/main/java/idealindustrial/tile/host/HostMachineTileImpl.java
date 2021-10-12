@@ -8,6 +8,7 @@ import idealindustrial.util.energy.electric.EUConsumer;
 import idealindustrial.util.energy.electric.EUProducer;
 import idealindustrial.util.energy.electric.EmptyEnergyHandler;
 import idealindustrial.util.energy.electric.EnergyHandler;
+import idealindustrial.util.energy.kinetic.KineticEnergyHandler;
 import idealindustrial.util.fluid.EmptyTank;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.FluidInventoryRepresentation;
@@ -38,9 +39,10 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
     protected int inSize, outSize;
     protected boolean hasTank = false;
     protected FluidHandler inTank, outTank;
-    protected boolean[] itemIO = II_Util.trueAr(12), fluidIO = II_Util.trueAr(12), energyIO = II_Util.trueAr(12);
+    protected boolean[] itemIO = II_Util.trueAr(12), fluidIO = II_Util.trueAr(12), energyIO = II_Util.trueAr(12), kineticIO = II_Util.trueAr(12);
 
     protected EnergyHandler handler = EmptyEnergyHandler.INSTANCE;
+    protected KineticEnergyHandler kineticHandler;
 
 
     protected List<Consumer<IOType>> ioListeners = new ArrayList<>();
@@ -112,7 +114,13 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
         if (this.tile.hasEnergy()) {
             handler = this.tile.getEnergyHandler();
         } else {
-            handler = EmptyEnergyHandler.INSTANCE;//todo this
+            handler = EmptyEnergyHandler.INSTANCE;
+        }
+
+        if (this.tile.hasKineticEnergy()) {
+            kineticHandler = this.tile.getKineticHandler();
+        } else {
+            kineticHandler = null; //todo: this -default
         }
 
         onIOConfigurationChanged(IOType.ALL);
@@ -321,6 +329,11 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
         return handler;
     }
 
+    @Override
+    public KineticEnergyHandler getKineticEnergyHandler() {
+        return kineticHandler;
+    }
+
     public void onBufferFull() {
         tile.onBufferFull();
     }
@@ -340,6 +353,8 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
                 return fluidIO;
             case ENERGY:
                 return energyIO;
+            case Kinetic:
+                return kineticIO;
         }
         return new boolean[12];
     }
@@ -359,6 +374,9 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
         }
         if (type.is(IOType.ENERGY)) {
             updateIOArray(energyIO, IOType.ENERGY);
+        }
+        if (type.is(IOType.Kinetic)) {
+            updateIOArray(kineticIO, IOType.Kinetic);
         }
         for (Consumer<IOType> listener : ioListeners) {
             listener.accept(type);
