@@ -3,6 +3,7 @@ package gregtech.common;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
@@ -1263,7 +1264,7 @@ public class GT_RecipeAdder
         if (aInput == null) {
             return false;
         }
-        if (aOutputs == null || aOutputs.length == 0|| aOutputs[0] == null) {
+        if (aOutputs == null || aOutputs.length == 0|| !Arrays.stream(aOutputs).anyMatch(Objects::nonNull)) {
             return false;
         }
         aOutputs = Arrays.stream(aOutputs).filter(is -> is != null && !(is.getItem() instanceof GT_IntegratedCircuit_Item) && !(is.getItem() instanceof GT_MetaGenerated_Tool))
