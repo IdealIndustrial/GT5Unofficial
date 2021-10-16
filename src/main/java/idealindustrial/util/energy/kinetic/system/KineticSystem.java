@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Set;
 
 public class KineticSystem {
-    KUProducer producer;
-    List<KUConsumer> consumers = new ArrayList<>();
-    List<ConnectedRotor> rotors = new ArrayList<>();
-    boolean isValid;
-    boolean shouldUpdate = false;
-    int lastSpeed = 0;
+    protected KUProducer producer;
+    protected List<KUConsumer> consumers = new ArrayList<>();
+    protected List<ConnectedRotor> rotors = new ArrayList<>();
+    protected boolean isValid;
+    protected boolean shouldUpdate = false;
+    protected int lastSpeed = 0;
 
     public void update() {
         int requestPower = 0;
@@ -31,10 +31,10 @@ public class KineticSystem {
             requests[i] = consumer.getPowerUsage();
             requestPower += requests[i];
         }
-        lastSpeed = producer.getSpeed(0);
-        if (requestPower == 0) {
-            return;
-        }
+//        lastSpeed = producer.getSpeed(0);
+//        if (requestPower == 0) {
+//            return;
+//        }
         float powerModification = ((float) producer.getTotalPower()) / requestPower;
         powerModification = Math.min(powerModification, 1f);
         int calculatedSpeed = producer.getSpeed(requestPower);
@@ -46,6 +46,7 @@ public class KineticSystem {
     }
 
     public void invalidate() {
+        isValid = false;
         if (rotors.size() > 0) {
             rotors.get(0).sendRotationSpeed(0);
         }
@@ -54,7 +55,6 @@ public class KineticSystem {
         }
         producer.setSystem(null);
         rotors.clear();
-        isValid = false;
     }
 
     public boolean isValid() {
@@ -75,7 +75,6 @@ public class KineticSystem {
         }
     }
 
-
     public KineticSystem(HostMachineTile tile, int side) {
         assert tile.getKineticEnergyHandler().getProducer(side) != null;
         producer = tile.getKineticEnergyHandler().getProducer(side);
@@ -87,6 +86,7 @@ public class KineticSystem {
         if (!isValid()) {
             invalidate();
         }
+        shouldUpdate = true;
     }
 
     private boolean constructConnection(HostTile host, Set<ConnectedRotor> rotors, int sideTo) {

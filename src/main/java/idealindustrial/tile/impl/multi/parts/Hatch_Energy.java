@@ -66,8 +66,8 @@ public abstract class Hatch_Energy extends TileHatch<HostMachineTile, MultiMachi
         }
 
         @Override
-        protected void onOutputFacingChanged() {
-            hostTile.onIOConfigurationChanged(IOType.ENERGY);
+        protected IOType getOutputIOType() {
+            return IOType.ENERGY;
         }
     }
 

@@ -1355,10 +1355,24 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                     	this.setInventorySlotContents(i, null); }
                 }
             }
-            if (mRecipeStuff != null) {
-                for (int i = 0; i < 9; i++) {
-                    if (this.getRandomNumber(100) < 50) {
-                        dropItems(GT_Utility.loadItem(mRecipeStuff, "Ingredient." + i));
+            if (GT_Mod.gregtechproxy.disassemblerRecipeMapOn) {
+                if (mMetaTileEntity != null) {
+                    GT_Recipe recipe = GT_Recipe.GT_Recipe_Map.sDisassemblerRecipes.findRecipe(this, null, false, Integer.MAX_VALUE, new FluidStack[0], null, new ItemStack[]{mMetaTileEntity.getStackForm(1)});
+                    if (recipe != null && recipe.mOutputs != null) {
+                        for (int i = 0; i < 9; i++) {
+                            if (this.getRandomNumber(100) < 50) {
+                                dropItems(recipe.mOutputs[i].copy());
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if (mRecipeStuff != null) {
+                    for (int i = 0; i < 9; i++) {
+                        if (this.getRandomNumber(100) < 50) {
+                            dropItems(GT_Utility.loadItem(mRecipeStuff, "Ingredient." + i));
+                        }
                     }
                 }
             }

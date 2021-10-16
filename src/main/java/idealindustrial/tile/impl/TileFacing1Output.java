@@ -85,9 +85,17 @@ public abstract class TileFacing1Output<H extends HostMachineTile> extends TileM
     }
 
     protected void onOutputFacingChanged() {
+        if (getOutputIOType() != null) {
+            hostTile.onIOConfigurationChanged(getOutputIOType());
+            hostTile.notifyOnIOConfigChange(getOutputIOType());
+        }
         for (IntConsumer listener : outChangeListeners) {
             listener.accept(outputFacing);
         }
+    }
+
+    protected IOType getOutputIOType() {
+        return null;
     }
 
     @Override

@@ -144,12 +144,7 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
         updateConnections();
     }
 
-    @Override
-    public void receiveNeighbourIOConfigChange(IOType type) {
-        if (type.is(IOType.ENERGY)) {
-            updateConnections();
-        }
-    }
+
 
     public void updateConnections() {
         int oldConnections = connections;

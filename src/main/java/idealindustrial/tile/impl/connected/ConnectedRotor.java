@@ -79,9 +79,12 @@ public class ConnectedRotor extends ConnectedBase<HostTile> {
         if (hostTile instanceof HostMachineTile && tile.hasKineticEnergy()) {
             boolean[] io = ((HostMachineTile) hostTile).getIO(IOType.Kinetic);
             boolean result = io[oppositeSide] || io[oppositeSide + 6];
+            if (!result) {
+                return false;
+            }
             if (connections == 0 || connections == 1 && isConnected(oppositeSide)) {
                 KineticEnergyHandler handler = ((HostMachineTile) hostTile).getKineticEnergyHandler();
-                if (result && handler.getProducer(oppositeSide) != null) {
+                if (handler.getProducer(oppositeSide) != null) {
                     handler.getProducer(oppositeSide).onConnectionAppended();
                 }
                 return true;
@@ -182,5 +185,12 @@ public class ConnectedRotor extends ConnectedBase<HostTile> {
             }
         }
         return 0;
+    }
+
+    @Override
+    public void receiveNeighbourIOConfigChange(IOType type) {
+        if (type.is(IOType.Kinetic)) {
+            updateConnections();
+        }
     }
 }

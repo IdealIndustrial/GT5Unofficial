@@ -18,14 +18,16 @@ public class KineticSystemHandler {
         for (Iterator<KineticSystem> iterator = systems.iterator(); iterator.hasNext(); ) {
             KineticSystem system = iterator.next();
             if (system.isValid()) {
-                system.update();
+                if (system.shouldUpdate()) {
+                    system.update();
+                }
             }
             else {
                 iterator.remove();
             }
         }
         if (timer++ % 4 == 0) {
-            systems.forEach(s ->s.sendSpeed());
+            systems.forEach(KineticSystem::sendSpeed);
         }
         int a = 0;
     }
@@ -43,4 +45,10 @@ public class KineticSystemHandler {
             e.printStackTrace();//same as top one
         }
     }
+
+    public static void addSystem(KineticSystem system) {
+        systems.add(system);
+    }
+
+
 }

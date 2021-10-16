@@ -52,8 +52,8 @@ public class TestMachine extends TileFacing1Output<HostMachineTile> {
     }
 
     @Override
-    protected void onOutputFacingChanged() {
-        hostTile.onIOConfigurationChanged(IOType.ENERGY);
+    protected IOType getOutputIOType() {
+        return IOType.ENERGY;
     }
 
     @Override

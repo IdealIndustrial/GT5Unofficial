@@ -8,6 +8,7 @@ import idealindustrial.util.energy.electric.EUConsumer;
 import idealindustrial.util.energy.electric.EUProducer;
 import idealindustrial.util.energy.electric.EmptyEnergyHandler;
 import idealindustrial.util.energy.electric.EnergyHandler;
+import idealindustrial.util.energy.kinetic.EmptyKineticHandler;
 import idealindustrial.util.energy.kinetic.KineticEnergyHandler;
 import idealindustrial.util.fluid.EmptyTank;
 import idealindustrial.util.fluid.FluidHandler;
@@ -120,7 +121,7 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
         if (this.tile.hasKineticEnergy()) {
             kineticHandler = this.tile.getKineticHandler();
         } else {
-            kineticHandler = null; //todo: this -default
+            kineticHandler = EmptyKineticHandler.INSTANCE;
         }
 
         onIOConfigurationChanged(IOType.ALL);

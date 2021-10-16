@@ -98,4 +98,28 @@ public class II_Util {
     public static void main(String[] args) {
         System.out.println("   ");
     }
+
+    public static long randomBetween(long minQuantity, long maxQuantity, Random random) {
+        long spread = Math.max(0, maxQuantity - minQuantity);
+        if (spread == 0) {
+            return minQuantity;
+        }
+        return minQuantity + (Math.abs(random.nextLong()) % spread);
+    }
+
+    public static int randomBetween(int minQuantity, int maxQuantity, Random random) {
+        int spread = Math.max(0, maxQuantity - minQuantity);
+        if (spread == 0) {
+            return minQuantity;
+        }
+        return minQuantity + random.nextInt(spread);
+    }
+
+    public static double randomBetween(double minQuantity, double maxQuantity, Random random) {
+        double spread = Math.max(0, maxQuantity - minQuantity);
+        if (Math.abs(spread) < 0.000000001) {
+            return minQuantity;
+        }
+        return minQuantity +  (Math.abs(random.nextDouble()) % spread);
+    }
 }

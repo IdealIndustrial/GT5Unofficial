@@ -155,4 +155,11 @@ public class ConnectedCable extends ConnectedBase<HostTile> {
         return system.getInfo(this);
     }
 
+    @Override
+    public void receiveNeighbourIOConfigChange(IOType type) {
+        if (type.is(IOType.ENERGY)) {
+            updateConnections();
+        }
+    }
+
 }

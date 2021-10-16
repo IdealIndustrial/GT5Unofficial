@@ -23,6 +23,7 @@ import idealindustrial.tile.impl.connected.ConnectedCable;
 import idealindustrial.tile.impl.connected.ConnectedRotor;
 import idealindustrial.tile.impl.kinetic.KUGeneratorBase;
 import idealindustrial.tile.impl.kinetic.KUMachineBase;
+import idealindustrial.tile.impl.kinetic.KUSplitter;
 import idealindustrial.tile.impl.multi.parts.Hatch_Energy;
 import idealindustrial.tile.impl.multi.parts.Hatch_Item;
 import idealindustrial.tile.impl.recipe.TileMachineRecipe;
@@ -54,6 +55,7 @@ public class TileLoader implements Runnable {
         II_TileUtil.registerMetaTile(11, KUMachineBase.testMachine());
         II_TileUtil.registerMetaTile(12, KUGeneratorBase.testMachine());
         II_TileUtil.registerMetaTile(13, new ConnectedRotor(makeBaseTile(), II_Materials.tin, Prefixes.cable01, 0.3f));
+        II_TileUtil.registerMetaTile(14, KUSplitter.testMachine());
 
         GameRegistry.registerTileEntity(HostTileImpl.class, "ii.tile");
         GameRegistry.registerTileEntity(HostMachineTileImpl.class, "ii.machine_tile");

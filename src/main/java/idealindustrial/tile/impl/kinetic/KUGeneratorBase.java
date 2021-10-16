@@ -42,6 +42,12 @@ public class KUGeneratorBase extends TileFacing1Output<HostMachineTile> implemen
     }
 
     @Override
+    protected IOType getOutputIOType() {
+        return IOType.Kinetic;
+    }
+
+
+    @Override
     public boolean hasKineticEnergy() {
         return true;
     }

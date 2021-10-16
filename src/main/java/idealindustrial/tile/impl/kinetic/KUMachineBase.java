@@ -40,6 +40,10 @@ public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements K
         return type == IOType.Kinetic && side == outputFacing && input;
     }
 
+    @Override
+    protected IOType getOutputIOType() {
+        return IOType.Kinetic;
+    }
 
     @Override
     public Tile<HostMachineTile> newMetaTile(HostMachineTile baseTile) {
@@ -48,11 +52,6 @@ public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements K
 
     @Override
     public int getPowerUsage() {
-        return 10;
-    }
-
-    @Override
-    public int getOptimalSpeed() {
         return 10;
     }
 
