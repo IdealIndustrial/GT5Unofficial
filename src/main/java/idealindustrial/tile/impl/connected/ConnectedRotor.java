@@ -12,6 +12,8 @@ import idealindustrial.tile.host.HostPipeTileRotatingImpl;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
+import idealindustrial.util.energy.kinetic.KUPassThrough;
+import idealindustrial.util.energy.kinetic.KUSplitter;
 import idealindustrial.util.energy.kinetic.KineticEnergyHandler;
 import idealindustrial.util.energy.kinetic.system.KineticSystem;
 import idealindustrial.util.lang.materials.EngLocalizer;
@@ -24,8 +26,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static idealindustrial.tile.TileEvents.ROTATION_SPEED;
+import static idealindustrial.tile.TileEvents.ROTATION_SPEED_DIRECT;
 
-public class ConnectedRotor extends ConnectedBase<HostTile> {
+public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThrough {
     public KineticSystem system;
     int rotationSpeed;
 
@@ -125,6 +128,7 @@ public class ConnectedRotor extends ConnectedBase<HostTile> {
 
     public void onSystemInvalidate() {
         system = null;
+        hostTile.sendEvent(ROTATION_SPEED_DIRECT, 0);
     }
 
     @Override
@@ -152,25 +156,19 @@ public class ConnectedRotor extends ConnectedBase<HostTile> {
     @Override
     public boolean receiveClientEvent(int id, int value) {
         if (id == ROTATION_SPEED) {
-            setSpeed(new HashSet<>(), value);
+            setSpeed(new HashSet<>(), value, hostTile);
+            return true;
+        }
+        if (id == ROTATION_SPEED_DIRECT) {
+            rotationSpeed = 0;
             return true;
         }
         return super.receiveClientEvent(id, value);
     }
 
-    private void setSpeed(Set<ConnectedRotor> alreadyPassedSet, int speed) {
-        if (!alreadyPassedSet.add(this)) {
-            return;
-        }
+    public void setSpeed(Set<KUPassThrough> alreadyPassedSet, int speed, HostTile hostTile) {
         rotationSpeed = speed;
-        for (int i = 0; i < 6; i++) {
-            if (isConnected(i)) {
-                Tile<?> tile = II_TileUtil.getMetaTileAtSide(hostTile, i);
-                if (tile instanceof ConnectedRotor) {
-                    ((ConnectedRotor) tile).setSpeed(alreadyPassedSet, speed);
-                }
-            }
-        }
+        KUPassThrough.super.setSpeed(alreadyPassedSet, speed, hostTile);
     }
 
     @Override
@@ -192,5 +190,10 @@ public class ConnectedRotor extends ConnectedBase<HostTile> {
         if (type.is(IOType.Kinetic)) {
             updateConnections();
         }
+    }
+
+    @Override
+    public void setSystem(KineticSystem system) {
+        this.system = system;
     }
 }

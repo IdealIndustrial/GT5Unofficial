@@ -2,14 +2,11 @@ package idealindustrial.loader;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.ITexture;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.recipe.RecipeMaps;
 import idealindustrial.render.RotatingTileRenderer;
-import idealindustrial.teststuff.RenderTest;
-import idealindustrial.teststuff.TestTile;
 import idealindustrial.teststuff.testTile.TestMachine;
 import idealindustrial.teststuff.testTile2.TestMachine2;
 import idealindustrial.teststuff.testmulti.TestMultiMachine1;
@@ -23,7 +20,7 @@ import idealindustrial.tile.impl.connected.ConnectedCable;
 import idealindustrial.tile.impl.connected.ConnectedRotor;
 import idealindustrial.tile.impl.kinetic.KUGeneratorBase;
 import idealindustrial.tile.impl.kinetic.KUMachineBase;
-import idealindustrial.tile.impl.kinetic.KUSplitter;
+import idealindustrial.tile.impl.kinetic.TileKUSplitter;
 import idealindustrial.tile.impl.multi.parts.Hatch_Energy;
 import idealindustrial.tile.impl.multi.parts.Hatch_Item;
 import idealindustrial.tile.impl.recipe.TileMachineRecipe;
@@ -55,7 +52,7 @@ public class TileLoader implements Runnable {
         II_TileUtil.registerMetaTile(11, KUMachineBase.testMachine());
         II_TileUtil.registerMetaTile(12, KUGeneratorBase.testMachine());
         II_TileUtil.registerMetaTile(13, new ConnectedRotor(makeBaseTile(), II_Materials.tin, Prefixes.cable01, 0.3f));
-        II_TileUtil.registerMetaTile(14, KUSplitter.testMachine());
+        II_TileUtil.registerMetaTile(14, TileKUSplitter.testMachine());
 
         GameRegistry.registerTileEntity(HostTileImpl.class, "ii.tile");
         GameRegistry.registerTileEntity(HostMachineTileImpl.class, "ii.machine_tile");

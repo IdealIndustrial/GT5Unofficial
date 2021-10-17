@@ -46,9 +46,6 @@ public class KineticSystemHandler {
         }
     }
 
-    public static void addSystem(KineticSystem system) {
-        systems.add(system);
-    }
 
 
 }

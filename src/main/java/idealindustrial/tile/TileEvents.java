@@ -7,5 +7,5 @@ public class TileEvents {
 
     public static final int CONNECTIONS = 200;
 
-    public static final int ROTATION_SPEED = 250;
+    public static final int ROTATION_SPEED = 250, ROTATION_SPEED_DIRECT = 251;
 }

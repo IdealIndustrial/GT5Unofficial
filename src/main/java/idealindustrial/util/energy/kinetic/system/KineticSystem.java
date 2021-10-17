@@ -5,7 +5,9 @@ import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.util.energy.kinetic.KUConsumer;
+import idealindustrial.util.energy.kinetic.KUPassThrough;
 import idealindustrial.util.energy.kinetic.KUProducer;
+import idealindustrial.util.energy.kinetic.KUSplitter;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.tileentity.TileEntity;
@@ -19,8 +21,8 @@ public class KineticSystem {
     protected KUProducer producer;
     protected List<KUConsumer> consumers = new ArrayList<>();
     protected List<ConnectedRotor> rotors = new ArrayList<>();
+    protected List<KUSplitter> splitters = new ArrayList<>();
     protected boolean isValid;
-    protected boolean shouldUpdate = false;
     protected int lastSpeed = 0;
 
     public void update() {
@@ -31,10 +33,10 @@ public class KineticSystem {
             requests[i] = consumer.getPowerUsage();
             requestPower += requests[i];
         }
-//        lastSpeed = producer.getSpeed(0);
-//        if (requestPower == 0) {
-//            return;
-//        }
+        lastSpeed = producer.getSpeed(0);
+        if (requestPower == 0) {
+            return;
+        }
         float powerModification = ((float) producer.getTotalPower()) / requestPower;
         powerModification = Math.min(powerModification, 1f);
         int calculatedSpeed = producer.getSpeed(requestPower);
@@ -47,12 +49,13 @@ public class KineticSystem {
 
     public void invalidate() {
         isValid = false;
-        if (rotors.size() > 0) {
-            rotors.get(0).sendRotationSpeed(0);
-        }
+//        if (rotors.size() > 0) {
+//            rotors.get(0).sendRotationSpeed(0);
+//        }
         for (ConnectedRotor rotor : rotors) {
             rotor.onSystemInvalidate();
         }
+        splitters.forEach(c -> c.setSystem(null));
         producer.setSystem(null);
         rotors.clear();
     }
@@ -62,11 +65,7 @@ public class KineticSystem {
     }
 
     public boolean shouldUpdate() {
-        return shouldUpdate;
-    }
-
-    public void setShouldUpdate(boolean shouldUpdate) {
-        this.shouldUpdate = shouldUpdate;
+        return true;
     }
 
     public void sendSpeed() {
@@ -81,15 +80,15 @@ public class KineticSystem {
         constructConnection(tile, new HashSet<>(), side);
         producer.setSystem(this);
         rotors.forEach(c -> c.system =  this);
+        splitters.forEach(c -> c.setSystem(this));
         isValid = !rotors.isEmpty();
         producer.setSystem(this);
         if (!isValid()) {
             invalidate();
         }
-        shouldUpdate = true;
     }
 
-    private boolean constructConnection(HostTile host, Set<ConnectedRotor> rotors, int sideTo) {
+    private boolean constructConnection(HostTile host, Set<KUPassThrough> rotors, int sideTo) {
         TileEntity tTile = host.getTileEntityAtSide(sideTo);
         HostTile tile = tTile instanceof HostTile ? (HostTile) tTile : null;
         if (tile == null) {
@@ -97,6 +96,20 @@ public class KineticSystem {
         }
         int opSize = II_DirUtil.getOppositeSide(sideTo);
         if (tile instanceof HostMachineTile) {
+            if (tile.getMetaTile() instanceof KUSplitter) {
+                KUSplitter splitter = (KUSplitter) tile.getMetaTile();
+                if (opSize != splitter.getInputSide() || !rotors.add(splitter)) {
+                    return false;
+                }
+                for (int i = 0; i < 6; i++) {
+                    if (i == splitter.getInputSide()) {
+                        continue;
+                    }
+                    constructConnection(tile, rotors, II_DirUtil.getOppositeSide(i));
+                }
+                splitters.add(splitter);
+                return true;
+            }
             HostMachineTile machineTile = (HostMachineTile) tile;
             KUConsumer kuConsumer = machineTile.getKineticEnergyHandler().getConsumer(opSize);
             if (kuConsumer != null && !consumers.contains(kuConsumer)) {
@@ -120,6 +133,8 @@ public class KineticSystem {
         }
         return false;
     }
+
+
 
 
 }
