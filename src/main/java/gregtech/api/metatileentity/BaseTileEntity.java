@@ -1,11 +1,9 @@
 package gregtech.api.metatileentity;
 
 import com.google.common.io.ByteArrayDataInput;
-import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
 import gregtech.api.net.GT_Packet_Block_Event;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_Utility;
+import gregtech.common.GT_Network;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -17,8 +15,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import static gregtech.api.enums.GT_Values.GT;
-import static gregtech.api.enums.GT_Values.NW;
+import java.util.Arrays;
+
 
 /**
  * The Functions my old TileEntities and my BaseMetaTileEntities have in common.
@@ -43,7 +41,7 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
      */
     public boolean isDead = false;
 
-    private final void clearNullMarkersFromTileEntityBuffer() {
+    private void clearNullMarkersFromTileEntityBuffer() {
         for (int i = 0; i < mBufferedTileEntities.length; i++)
             if (mBufferedTileEntities[i] == this) mBufferedTileEntities[i] = null;
     }
@@ -52,7 +50,7 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
      * Called automatically when the Coordinates of this TileEntity have been changed
      */
     protected final void clearTileEntityBuffer() {
-        for (int i = 0; i < mBufferedTileEntities.length; i++) mBufferedTileEntities[i] = null;
+        Arrays.fill(mBufferedTileEntities, null);
     }
 
     @Override
@@ -105,12 +103,6 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
         return openGUI(aPlayer, 0);
     }
 
-    @Override
-    public boolean openGUI(EntityPlayer aPlayer, int aID) {
-        if (aPlayer == null) return false;
-        aPlayer.openGui(GT, aID, worldObj, xCoord, yCoord, zCoord);
-        return true;
-    }
 
     @Override
     public final int getRandomNumber(int aRange) {
@@ -285,34 +277,6 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
     }
 
     @Override
-    public final IGregTechTileEntity getIGregTechTileEntity(int aX, int aY, int aZ) {
-        TileEntity tTileEntity = getTileEntity(aX, aY, aZ);
-        if (tTileEntity instanceof IGregTechTileEntity) return (IGregTechTileEntity) tTileEntity;
-        return null;
-    }
-
-    @Override
-    public final IGregTechTileEntity getIGregTechTileEntityOffset(int aX, int aY, int aZ) {
-        TileEntity tTileEntity = getTileEntityOffset(aX, aY, aZ);
-        if (tTileEntity instanceof IGregTechTileEntity) return (IGregTechTileEntity) tTileEntity;
-        return null;
-    }
-
-    @Override
-    public final IGregTechTileEntity getIGregTechTileEntityAtSide(byte aSide) {
-        TileEntity tTileEntity = getTileEntityAtSide(aSide);
-        if (tTileEntity instanceof IGregTechTileEntity) return (IGregTechTileEntity) tTileEntity;
-        return null;
-    }
-
-    @Override
-    public final IGregTechTileEntity getIGregTechTileEntityAtSideAndDistance(byte aSide, int aDistance) {
-        TileEntity tTileEntity = getTileEntityAtSideAndDistance(aSide, aDistance);
-        if (tTileEntity instanceof IGregTechTileEntity) return (IGregTechTileEntity) tTileEntity;
-        return null;
-    }
-
-    @Override
     public final Block getBlock(int aX, int aY, int aZ) {
         if (ignoreUnloadedChunks && crossedChunkBorder(aX, aZ) && !worldObj.blockExists(aX, aY, aZ)) return Blocks.air;
         return worldObj.getBlock(aX, aY, aZ);
@@ -339,13 +303,14 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
     @Override
     public final boolean getOpacity(int aX, int aY, int aZ) {
         if (ignoreUnloadedChunks && crossedChunkBorder(aX, aZ) && !worldObj.blockExists(aX, aY, aZ)) return false;
-        return GT_Utility.isOpaqueBlock(worldObj, aX, aY, aZ);
+        Block block = getBlock(aX, aY, aZ);
+        return block.isOpaqueCube();
     }
 
     @Override
     public final boolean getAir(int aX, int aY, int aZ) {
         if (ignoreUnloadedChunks && crossedChunkBorder(aX, aZ) && !worldObj.blockExists(aX, aY, aZ)) return true;
-        return GT_Utility.isBlockAir(worldObj, aX, aY, aZ);
+        return getBlock(aX, aY, aZ).isAir(worldObj, aX, aY, aZ);
     }
 
     @Override
@@ -445,15 +410,11 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
 
     @Override
     public final void sendBlockEvent(byte aID, byte aValue) {
-        NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_Block_Event(xCoord, (short) yCoord, zCoord, aID, aValue), xCoord, zCoord);
+        GT_Network.NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_Block_Event(xCoord, (short) yCoord, zCoord, aID, aValue), xCoord, zCoord);
     }
 
     private boolean crossedChunkBorder(int aX, int aZ) {
         return aX >> 4 != xCoord >> 4 || aZ >> 4 != zCoord >> 4;
-    }
-
-    public final void setOnFire() {
-        GT_Utility.setCoordsOnFire(worldObj, xCoord, yCoord, zCoord, false);
     }
 
     public final void setToFire() {
@@ -462,10 +423,7 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
     
     @Override 
     public void markDirty() {/* Do not do the super Function */} 
-    
-    public String trans(String aKey, String aEnglish){
-    	return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_"+aKey, aEnglish, false);
-    }
+
 
     public void receiveStream(ByteArrayDataInput stream) {
 

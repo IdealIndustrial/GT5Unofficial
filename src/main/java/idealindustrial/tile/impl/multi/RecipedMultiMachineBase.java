@@ -1,10 +1,9 @@
 package idealindustrial.tile.impl.multi;
 
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.recipe.IMachineRecipe;
 import idealindustrial.recipe.RecipeMap;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
-import idealindustrial.tile.module.BasicRecipeModule;
 import idealindustrial.tile.module.MultiMachineRecipedModule;
 import idealindustrial.tile.module.RecipeModule;
 import idealindustrial.util.parameter.RecipedMachineStats;

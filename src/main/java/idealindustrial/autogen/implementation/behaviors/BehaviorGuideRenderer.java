@@ -6,6 +6,7 @@ import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.tile.impl.multi.struct.IGuideRenderer;
 import idealindustrial.tile.impl.multi.struct.MultiMachineShape;
 import idealindustrial.util.misc.II_TileUtil;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,7 +16,7 @@ public class BehaviorGuideRenderer implements IItemBehavior, IGuideRenderer {
 
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-
+        II_Util.sendChatToPlayer(player, "Meta: " + world.getBlockMetadata(x,  y + 1, z));
         Tile<?> tile = II_TileUtil.getMetaTile(world, x, y, z);
         if (tile instanceof MultiMachineBase) {
             MultiMachineBase<?> multiMachine = (MultiMachineBase<?>) tile;

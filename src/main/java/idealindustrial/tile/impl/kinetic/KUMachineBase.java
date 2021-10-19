@@ -1,8 +1,8 @@
 package idealindustrial.tile.impl.kinetic;
 
-import gregtech.api.enums.Textures;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
+import idealindustrial.textures.TextureManager;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.impl.TileFacing2Main;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
@@ -17,7 +17,7 @@ public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements K
 
     public static KUMachineBase testMachine() {
         return new KUMachineBase(II_TileUtil.makeBaseMachineTile(), "TestConsumerKinetic",
-                II_StreamUtil.repeated(Textures.BlockIcons.CONCRETE_DARK_COBBLE_MOSSY, 10).map(GT_RenderedTexture::new).toArray(ITexture[]::new),
+                II_StreamUtil.repeated("test/cob1", 10).map(TextureManager.INSTANCE::blockTexture).map(RenderedTexture::new).toArray(ITexture[]::new),
                 II_StreamUtil.setInNullAr(idealindustrial.textures.Textures.input, new ITexture[10], 3, 8)
                 );
     }

@@ -2,8 +2,7 @@ package idealindustrial.tile.impl;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.util.GT_Utility;
+import idealindustrial.textures.ITexture;
 import idealindustrial.render.CustomRenderer;
 import idealindustrial.tile.host.HostMachineTileImpl;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
@@ -13,6 +12,7 @@ import idealindustrial.util.energy.electric.EnergyHandler;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.inventory.interfaces.InternalInventory;
 import idealindustrial.util.misc.II_DirUtil;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -164,7 +164,7 @@ public abstract class TileMachineBase<H extends HostMachineTile> implements Tile
     public boolean onSoftHammerClick(EntityPlayer player, ItemStack item, int side) {
         if (hostTile.isServerSide()) {
             getHost().setAllowedToWork(!getHost().isAllowedToWork());
-            GT_Utility.sendChatToPlayer(player, "Processing " + (hostTile.isAllowedToWork() ? "Enabled" : "Disabled"));
+            II_Util.sendChatToPlayer(player, "Processing " + (hostTile.isAllowedToWork() ? "Enabled" : "Disabled"));
         }
         return true;
     }

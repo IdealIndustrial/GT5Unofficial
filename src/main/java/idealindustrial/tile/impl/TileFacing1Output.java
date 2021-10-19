@@ -2,11 +2,11 @@ package idealindustrial.tile.impl;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.util.GT_Utility;
+import idealindustrial.textures.ITexture;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.misc.II_DirUtil;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,8 +49,8 @@ public abstract class TileFacing1Output<H extends HostMachineTile> extends TileM
             return true;
         }
         if (hostTile.isServerSide() && energyHandler != null) {
-            GT_Utility.sendChatToPlayer(player, "EU Stored: " + energyHandler.getStored());
-            GT_Utility.sendChatToPlayer(player, "Face: " + outputFacing);
+            II_Util.sendChatToPlayer(player, "EU Stored: " + energyHandler.getStored());
+            II_Util.sendChatToPlayer(player, "Face: " + outputFacing);
         }
         int sideTo = II_DirUtil.determineWrenchingSide(side, hitX, hitY, hitZ);
         if (isValidFacing(sideTo)) {
@@ -65,7 +65,7 @@ public abstract class TileFacing1Output<H extends HostMachineTile> extends TileM
     @Override//test stuff todo: remove
     public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
         if (hostTile.isServerSide() && energyHandler != null) {
-            GT_Utility.sendChatToPlayer(player, "EU Stored: " + energyHandler.getStored());
+            II_Util.sendChatToPlayer(player, "EU Stored: " + energyHandler.getStored());
         }
         return super.onRightClick(player, item, side, hitX, hitY, hitZ);
     }

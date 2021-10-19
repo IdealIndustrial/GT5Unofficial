@@ -1,33 +1,39 @@
 package idealindustrial.autogen.material.submaterial.render;
 
-import gregtech.api.enums.TextureSet;
-import gregtech.api.interfaces.IIconContainer;
+import idealindustrial.autogen.material.submaterial.MatterState;
+import net.minecraft.util.IIcon;
 
 import java.awt.*;
 
-public abstract class RenderInfo {
+public class RenderInfo {
 
-    protected Color color;
+    protected Color[] colors = new Color[4];
+    protected TextureSet textureSet;
 
-    public RenderInfo(Color color) {
-        this.color = color;
+    public RenderInfo(TextureSet set) {
+        this.textureSet = set;
     }
 
-    public Color getColor() {
-        return color;
+    public Color getColor(MatterState state) {
+        return colors[state.ordinal()];
     }
 
-    public int getColorAsInt() {
+    public int getColorAsInt(MatterState state) {
+        Color color = getColor(state);
         return (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
     }
 
-    public short[] getColorAsArray() {
-        return new short[]{(short) color.getRed(), (short) color.getGreen(), (short) color.getBlue(), 0};
+    public int[] getColorAsArray(MatterState state) {
+        Color color = getColor(state);
+        return new int[]{color.getRed(), color.getGreen(), color.getBlue(), 0};
     }
 
-    //for solid
-    public abstract TextureSet getTextureSet();
-    //forFluidForms
-    public abstract IIconContainer getTexture();
+    public TextureSet getTextureSet() {
+        return textureSet;
+    }
+
+    public void setColor(MatterState state, Color color) {
+        colors[state.ordinal()] = color;
+    }
 
 }

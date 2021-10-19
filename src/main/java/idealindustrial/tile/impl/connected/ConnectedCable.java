@@ -1,10 +1,8 @@
 package idealindustrial.tile.impl.connected;
 
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.TextureSet;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.GT_Utility;
+import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.tile.IOType;
@@ -17,6 +15,7 @@ import idealindustrial.util.energy.electric.system.IInfoEnergyPassThrough;
 import idealindustrial.util.lang.materials.EngLocalizer;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -27,8 +26,8 @@ public class ConnectedCable extends ConnectedBase<HostTile> {
 
     public ConnectedCable(HostTile hostTile, II_Material material, Prefixes prefix, long voltage, long amperage, long loss, float thickness) {
         super(hostTile, EngLocalizer.getInstance().get(material, prefix),
-                new GT_RenderedTexture(Materials.Iron.mIconSet.mTextures[TextureSet.INDEX_wire], material.getSolidRenderInfo().getColorAsArray()),
-                new GT_RenderedTexture(Materials.Iron.mIconSet.mTextures[TextureSet.INDEX_wire], material.getSolidRenderInfo().getColorAsArray()));
+                new RenderedTexture(material.getRenderInfo().getTextureSet().forPrefix(prefix), material.getRenderInfo().getColorAsArray(MatterState.Solid)),
+                new RenderedTexture(material.getRenderInfo().getTextureSet().forPrefix(prefix), material.getRenderInfo().getColorAsArray(MatterState.Solid)));
         this.voltage = voltage;
         this.amperage = amperage;
         this.loss = loss;
@@ -137,11 +136,11 @@ public class ConnectedCable extends ConnectedBase<HostTile> {
         if (hostTile.isClientSide()) {
             return true;
         }
-        GT_Utility.sendChatToPlayer(player, "system: " + system);
+        II_Util.sendChatToPlayer(player, "system: " + system);
         if (system != null) {
             IInfoEnergyPassThrough info = system.getInfo(this);
             if (info != null) {//debug check, should always be true
-                GT_Utility.sendChatToPlayer(player, "Calculating Voltage and Amperage");
+                II_Util.sendChatToPlayer(player, "Calculating Voltage and Amperage");
                 system.submitTask(20, player, info);
             }
         }

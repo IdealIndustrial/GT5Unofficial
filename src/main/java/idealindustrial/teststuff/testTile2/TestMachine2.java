@@ -1,8 +1,8 @@
 package idealindustrial.teststuff.testTile2;
 
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.GT_ModHandler;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
+import idealindustrial.textures.TextureManager;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.gui.base.GenericGuiContainer;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
@@ -20,18 +20,19 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.stream.Stream;
 
-import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class TestMachine2 extends TileFacing2Main<HostMachineTile> {
 
     public TestMachine2(HostMachineTile baseTile) {
         super(baseTile, "test2",
-                Stream.of(MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION,
-                        MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION, MACHINE_CASING_FUSION)
-                        .map(GT_RenderedTexture::new).toArray(ITexture[]::new),
-                Stream.of(null, null, null, MACHINE_CASING_FUSION_GLASS, OVERLAY_FUSION1,
-                        null, null, null, MACHINE_CASING_FUSION_GLASS_YELLOW, OVERLAY_FUSION2)
-                        .map(i -> i == null ? null : new GT_RenderedTexture(i)).toArray(ITexture[]::new)
+                Stream.of("test/fus", "test/fus", "test/fus", "test/fus", "test/fus",
+                        "test/fus", "test/fus", "test/fus", "test/fus", "test/fus")
+                        .map(s -> s == null ? null : TextureManager.INSTANCE.blockTexture(s))
+                        .map(RenderedTexture::new).toArray(ITexture[]::new),
+                Stream.of(null, null, null, "test/fusg", null,
+                        null, null, null, "test/fusgy", null)
+                        .map(s -> s == null ? null : TextureManager.INSTANCE.blockTexture(s))
+                        .map(i -> i == null ? null : new RenderedTexture(i)).toArray(ITexture[]::new)
         );
         inventoryIn = new ArrayRecipedInventory(2, 64);
         inventoryOut = new ArrayRecipedInventory(2, 64);
@@ -60,7 +61,7 @@ public class TestMachine2 extends TileFacing2Main<HostMachineTile> {
     public void onTick(long timer, boolean serverSide) {
         if (hostTile.isAllowedToWork() && timer % 10 == 6 && energyHandler.getStored() > 60) {
             energyHandler.drain(60, true);
-            tankIn.fill(ForgeDirection.UNKNOWN, GT_ModHandler.getWater(1L), true);
+//            tankIn.fill(ForgeDirection.UNKNOWN, GT_ModHandler.getWater(1L), true);
         }
     }
 

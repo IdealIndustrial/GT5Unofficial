@@ -2,8 +2,6 @@ package idealindustrial.hooks;
 
 import gloomyfolken.hooklib.asm.Hook;
 import gloomyfolken.hooklib.asm.ReturnCondition;
-import gregtech.api.items.GT_MetaGenerated_Item;
-import gregtech.common.config.GT_DebugConfig;
 import idealindustrial.commands.CommandFixMaterials;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,9 +14,6 @@ public class II_RemapGTMaterialsPatch {
 
     @Hook(injectOnExit = true, returnCondition = ReturnCondition.ALWAYS)
     public static ItemStack loadItemStackFromNBT(ItemStack defined, NBTTagCompound nbt, @Hook.ReturnValue ItemStack stack) {
-        if (GT_DebugConfig.mapIDsEnabled && stack != null && stack.getItem() instanceof GT_MetaGenerated_Item && subIDsMap.containsKey(stack.getItemDamage() % 1000)) {
-            fixMeta(stack, nbt);
-        }
         return stack;
     }
 
@@ -33,9 +28,6 @@ public class II_RemapGTMaterialsPatch {
 
     @Hook(injectOnExit = true, returnCondition = ReturnCondition.ALWAYS)
     public static NBTTagCompound writeToNBT(ItemStack stack, NBTTagCompound p_77955_1_, @Hook.ReturnValue NBTTagCompound nbt) {
-        if (GT_DebugConfig.mapIDsEnabled && stack != null && stack.getItem() instanceof GT_MetaGenerated_Item && subIDsMap.containsKey(stack.getItemDamage() % 1000)) {
-            fixMeta(stack, nbt);
-        }
         if (CommandFixMaterials.isExecuting()) {
             return CommandFixMaterials.processStack(stack, nbt);
         }

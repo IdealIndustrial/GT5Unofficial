@@ -2,15 +2,12 @@ package idealindustrial.util.misc;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-import com.sun.prism.Texture;
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.textures.INetworkedTexture;
 import idealindustrial.textures.TextureManager;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 import java.util.Arrays;
-import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
 public class II_StreamUtil {
@@ -106,6 +103,15 @@ public class II_StreamUtil {
 
     public static <T> Stream<T> repeated(T t, int times) {
         return Stream.generate(() -> t).limit(times);
+    }
+
+    public static <T> T getAny(T... ar) {
+        for (T t : ar) {
+            if (t != null) {
+                return t;
+            }
+        }
+        return null;
     }
 
 }

@@ -3,16 +3,17 @@ package idealindustrial.tile.gui.nei;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import gregtech.api.util.GT_Utility;
 import idealindustrial.autogen.oredict.OreDict;
 import idealindustrial.autogen.oredict.OreInfo;
 import idealindustrial.recipe.*;
+import idealindustrial.util.fluid.II_FluidHelper;
 import idealindustrial.util.item.CheckType;
 import idealindustrial.util.item.HashedStack;
 import idealindustrial.util.item.II_ItemStack;
 import idealindustrial.util.item.II_StackSignature;
 import idealindustrial.util.misc.Function2;
 import idealindustrial.util.misc.II_Paths;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -163,7 +164,7 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
         }
 
         public II_PositionedStack(FluidStack signature, GuiSlotDefinition definition) {
-            this(GT_Utility.getFluidDisplayStack(signature, true), definition.x, definition.y);
+            this(II_FluidHelper.getFluidDisplayStack(signature), definition.x, definition.y);
         }
 
 

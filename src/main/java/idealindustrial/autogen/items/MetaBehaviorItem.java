@@ -2,8 +2,8 @@ package idealindustrial.autogen.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.interfaces.IIconContainer;
 import idealindustrial.reflection.events.II_EventListener;
+import idealindustrial.textures.IconContainer;
 import idealindustrial.textures.TextureManager;
 import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.lang.LocalizeEvent;
@@ -26,17 +26,22 @@ public class MetaBehaviorItem extends MetaItem {
     protected static List<MetaBehaviorItem> instances = new ArrayList<>();
     protected IItemBehavior[] behaviors = new IItemBehavior[Short.MAX_VALUE];
     protected String[] engNames = new String[Short.MAX_VALUE];
-    protected IIconContainer[] icons = new IIconContainer[Short.MAX_VALUE];
+    protected IconContainer[] icons = new IconContainer[Short.MAX_VALUE];
 
     public MetaBehaviorItem(String unlocalized) {
         super(unlocalized);
         instances.add(this);
     }
 
-    public void registerItem(int damage, String localName, IItemBehavior behavior) {
+    public ItemStack registerItem(int damage, String localName, IItemBehavior behavior) {
         engNames[damage] = localName;
         behaviors[damage] = behavior;
         icons[damage] = TextureManager.INSTANCE.itemTexture("meta/" + getUnlocalizedName().substring(3) + "/" + damage);
+        return new ItemStack(this, 1, damage);
+    }
+
+    public ItemStack registerItem(int id, String localName) {
+        return registerItem(id, localName, null);
     }
 
     @Override

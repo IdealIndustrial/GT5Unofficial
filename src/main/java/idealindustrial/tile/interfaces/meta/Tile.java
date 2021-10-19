@@ -1,6 +1,6 @@
 package idealindustrial.tile.interfaces.meta;
 
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.render.CustomRenderer;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.covers.BaseCoverBehavior;

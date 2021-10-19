@@ -1,10 +1,6 @@
 package idealindustrial.textures;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.enums.Dyes;
-import gregtech.api.interfaces.IIconContainer;
-import gregtech.api.objects.GT_RenderedTexture;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -111,23 +107,8 @@ public class NetworkedTexture implements INetworkedTexture {
     }
 
     @Override
-    public IIconContainer getContainer() {
-        return new IIconContainer() {
-            @Override
-            public IIcon getIcon() {
-                return icon;
-            }
-
-            @Override
-            public IIcon getOverlayIcon() {
-                return null;
-            }
-
-            @Override
-            public ResourceLocation getTextureFile() {
-                return null;
-            }
-        };
+    public IIcon getIcon() {
+        return icon;
     }
 
     @Override

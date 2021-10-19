@@ -1,8 +1,5 @@
 package idealindustrial.textures;
 
-import gregtech.api.interfaces.IIconContainer;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
 import idealindustrial.util.misc.II_StreamUtil;
 
 import java.util.Arrays;
@@ -24,8 +21,8 @@ public class TextureUtil {
         }
 
         @Override
-        public IIconContainer[] loadAll(String prefixPath) {
-            IIconContainer[] loaded = new IIconContainer[textureNames.length];
+        public IconContainer[] loadAll(String prefixPath) {
+            IconContainer[] loaded = new IconContainer[textureNames.length];
             for (int i = 0; i < loaded.length; i++) {
                 loaded[i] = TextureManager.INSTANCE.blockTexture(prefixPath + textureNames[i]);
             }
@@ -41,8 +38,8 @@ public class TextureUtil {
         }
 
         @Override
-        public IIconContainer[] loadAll(String prefixPath) {
-            IIconContainer[] loaded = new IIconContainer[toLoad];
+        public IconContainer[] loadAll(String prefixPath) {
+            IconContainer[] loaded = new IconContainer[toLoad];
             for (int i = 0; i < loaded.length; i++) {
                 loaded[i] = TextureManager.INSTANCE.blockTexture(prefixPath + i);
             }
@@ -50,12 +47,12 @@ public class TextureUtil {
         }
     }
 
-    public static ITexture[] asGtRendered(IIconContainer... containers) {
-        return asGtRendered(containers, new short[]{255, 255, 255, 0});
+    public static ITexture[] asGtRendered(IconContainer... containers) {
+        return asGtRendered(containers, new int[]{255, 255, 255, 0});
     }
 
-    public static ITexture[] asGtRendered(IIconContainer[] containers, short[] rgba) {
-        return Arrays.stream(containers).map(c -> new GT_RenderedTexture(c, rgba)).toArray(ITexture[]::new);
+    public static ITexture[] asGtRendered(IconContainer[] containers, int[] rgba) {
+        return Arrays.stream(containers).map(c -> new RenderedTexture(c, rgba)).toArray(ITexture[]::new);
     }
 
     public static ITexture[] loadTextures(TextureConfiguration configuration, String path) {

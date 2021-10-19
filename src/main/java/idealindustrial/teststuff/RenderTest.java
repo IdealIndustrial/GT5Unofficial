@@ -1,30 +1,23 @@
 package idealindustrial.teststuff;
 
-import gregtech.api.interfaces.IIconContainer;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.common.render.GT_Renderer_Block;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.IconContainer;
+import idealindustrial.textures.RenderedTexture;
+import idealindustrial.render.GT_Renderer_Block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import opisapache.math3.analysis.function.Min;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-
-import java.lang.reflect.Field;
-import java.util.List;
 
 public class RenderTest extends TileEntitySpecialRenderer {
 
@@ -53,9 +46,9 @@ public class RenderTest extends TileEntitySpecialRenderer {
                 GL11.glDisable(GL11.GL_DEPTH_TEST);
 
             Tessellator.instance.startDrawingQuads();
-            IIconContainer icon = ((TestTile) tileEntity).getTexture();
-            Minecraft.getMinecraft().renderEngine.bindTexture(icon.getTextureFile());
-            GT_RenderedTexture texture = new GT_RenderedTexture(icon);
+            IconContainer icon = ((TestTile) tileEntity).getTexture();
+            Minecraft.getMinecraft().renderEngine.bindTexture(icon.getFile());
+            RenderedTexture texture = new RenderedTexture(icon);
             GT_Renderer_Block r = GT_Renderer_Block.INSTANCE;
             World aWorld = null;
             RenderBlocks aRenderer = RenderBlocks.getInstance();

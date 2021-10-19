@@ -11,7 +11,7 @@ class BlockIconContainer extends BaseIconContainer {
     }
 
     @Override
-    public ResourceLocation getTextureFile() {
+    public ResourceLocation getFile() {
         return TextureMap.locationBlocksTexture;
     }
 }

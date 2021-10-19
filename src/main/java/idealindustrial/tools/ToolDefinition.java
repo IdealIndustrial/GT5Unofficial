@@ -1,13 +1,13 @@
 package idealindustrial.tools;
 
-import gregtech.api.objects.GT_ItemStack;
+import idealindustrial.util.item.HashedStack;
 
 import java.lang.reflect.Method;
 
 //not interface cause we have one impl, idk if we need more
 public interface ToolDefinition {
 
-    boolean isTool(GT_ItemStack is);
+    boolean isTool(HashedStack is);
 
     Method toInvoke();
 

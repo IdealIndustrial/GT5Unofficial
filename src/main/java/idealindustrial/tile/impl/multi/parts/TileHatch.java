@@ -2,7 +2,7 @@ package idealindustrial.tile.impl.multi.parts;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.textures.INetworkedTexture;
 import idealindustrial.tile.impl.multi.MultiMachineBase;
 import idealindustrial.tile.interfaces.host.HostMachineTile;

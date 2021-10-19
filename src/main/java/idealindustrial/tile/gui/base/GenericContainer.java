@@ -1,15 +1,12 @@
 package idealindustrial.tile.gui.base;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import gregtech.api.gui.GT_Slot_Holo;
-import gregtech.api.gui.GT_Slot_Output;
-import gregtech.api.util.GT_Log;
-import gregtech.api.util.GT_Utility;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.EmptyFluidRepresentation;
 import idealindustrial.util.fluid.II_FluidHelper;
 import idealindustrial.util.fluid.FluidInventoryRepresentation;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -85,7 +82,6 @@ public class GenericContainer extends Container {
             }
 
         } catch (Throwable e) {
-            e.printStackTrace(GT_Log.err);
             e.printStackTrace();
         }
         return null;
@@ -389,9 +385,9 @@ public class GenericContainer extends Container {
 
         tile.markDirty();
 
-        if (getSlotCount() > 0 && !(slotObject instanceof GT_Slot_Holo) && slotObject.getHasStack()) {
+        if (getSlotCount() > 0 && slotObject.getHasStack()) {
             ItemStack stackInSlot = slotObject.getStack();
-            stack = GT_Utility.copy(stackInSlot);
+            stack = null;
 
             //TileEntity -> Player
             if (slot < getAllSlotCount()) {
@@ -431,7 +427,7 @@ public class GenericContainer extends Container {
             while (aStack.stackSize > 0 && (!par4 && var6 < aSlotCount || par4 && var6 >= aStartIndex)) {
                 var7 = (Slot) this.inventorySlots.get(var6);
                 var8 = var7.getStack();
-                if (!(var7 instanceof GT_Slot_Holo) && !(var7 instanceof GT_Slot_Output) && var8 != null && var8.getItem() == aStack.getItem() && (!aStack.getHasSubtypes() || aStack.getItemDamage() == var8.getItemDamage()) && ItemStack.areItemStackTagsEqual(aStack, var8)) {
+                if (var8 != null && var8.getItem() == aStack.getItem() && (!aStack.getHasSubtypes() || aStack.getItemDamage() == var8.getItemDamage()) && ItemStack.areItemStackTagsEqual(aStack, var8)) {
                     int var9 = var8.stackSize + aStack.stackSize;
                     if (var8.stackSize < tile.getInventoryStackLimit()) {
                         if (var9 <= aStack.getMaxStackSize()) {
@@ -470,7 +466,7 @@ public class GenericContainer extends Container {
 
                 if (var8 == null) {
                     int var10 = Math.min(aStack.stackSize, tile.getInventoryStackLimit());
-                    var7.putStack(GT_Utility.copyAmount(var10, aStack));
+                    var7.putStack(II_Util.copyAmount(var10, aStack));
                     var7.onSlotChanged();
                     aStack.stackSize -= var10;
                     var5 = true;

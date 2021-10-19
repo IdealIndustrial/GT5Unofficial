@@ -14,7 +14,7 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 
-import static gregtech.common.render.GT_Renderer_Block.renderInventory;
+import static idealindustrial.render.GT_Renderer_Block.renderInventory;
 
 @SideOnly(cpw.mods.fml.relauncher.Side.CLIENT)
 public final class MachineItemRenderer implements IItemRenderer {

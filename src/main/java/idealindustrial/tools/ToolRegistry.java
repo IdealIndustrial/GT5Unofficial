@@ -1,23 +1,26 @@
 package idealindustrial.tools;
 
-import gregtech.api.GregTech_API;
-import gregtech.api.objects.GT_HashSet;
-import gregtech.api.objects.GT_ItemStack;
+import idealindustrial.loader.ItemsLoader;
 import idealindustrial.tile.interfaces.IToolClickableTile;
+import idealindustrial.util.item.HashedStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ToolRegistry {
     public static List<ToolDefinition> definitionList = new ArrayList<>();
-    public static final GT_HashSet<GT_ItemStack> shiftClickSet = new GT_HashSet<>();
+    public static final Set<HashedStack> shiftClickSet = new HashSet<>();
 
-    public static void registerTool(GT_HashSet<GT_ItemStack> set, Method toInvoke, boolean fullArgs, boolean allowShiftClocking) {
-        definitionList.add(new II_GT_ToolDef(set, toInvoke, fullArgs));
+    public static void registerTool(HashedStack stack, Method toInvoke, boolean fullArgs, boolean allowShiftClocking) {
+        Set<HashedStack> set = new HashSet<>();
+        set.add(stack);
+        definitionList.add(new ToolDefImpl(toInvoke, set, fullArgs));
         if (allowShiftClocking) {
             shiftClickSet.addAll(set);
         }
@@ -27,7 +30,7 @@ public class ToolRegistry {
         if (stack == null) {
             return false;
         }
-        GT_ItemStack gtItemStack = new GT_ItemStack(stack);
+        HashedStack gtItemStack = new HashedStack(stack);
         for (ToolDefinition definition : definitionList) {
             if (definition.isTool(gtItemStack)) {
                 Object[] args = definition.provideFullArgs() ? new Object[]{player, stack, side, hitX, hitY, hitZ} : new Object[]{player, stack, side};
@@ -42,13 +45,13 @@ public class ToolRegistry {
     }
 
     public static boolean allowShiftClickTile(ItemStack tool) {
-        return shiftClickSet.contains(new GT_ItemStack(tool));
+        return shiftClickSet.contains(new HashedStack(tool));
     }
 
     public static void initTools() throws NoSuchMethodException {
         Class<? extends IToolClickableTile> clazz = IToolClickableTile.class;
-        registerTool(GregTech_API.sSoftHammerList, clazz.getDeclaredMethod("onSoftHammerClick", EntityPlayer.class, ItemStack.class, int.class), false, false);
-        registerTool(GregTech_API.sWrenchList, clazz.getDeclaredMethod("onWrenchClick", EntityPlayer.class, ItemStack.class, int.class, float.class, float.class, float.class), true, true);
+        registerTool(new HashedStack(ItemsLoader.mallet), clazz.getDeclaredMethod("onSoftHammerClick", EntityPlayer.class, ItemStack.class, int.class), false, false);
+        registerTool(new HashedStack(ItemsLoader.wrench), clazz.getDeclaredMethod("onWrenchClick", EntityPlayer.class, ItemStack.class, int.class, float.class, float.class, float.class), true, true);
     }
 }
 

@@ -1,6 +1,5 @@
 package idealindustrial.tile.interfaces.host;
 
-import gregtech.api.metatileentity.IEnergyContainer;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.util.energy.electric.EnergyHandler;
@@ -16,7 +15,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.function.Consumer;
 
-public interface HostMachineTile extends HostTile, IFluidHandler, ISidedInventory, IEnergyContainer {
+public interface HostMachineTile extends HostTile, IFluidHandler, ISidedInventory{
 
     Container getServerGUI(EntityPlayer player, int internalID);
 

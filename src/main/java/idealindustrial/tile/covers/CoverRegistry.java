@@ -1,6 +1,5 @@
 package idealindustrial.tile.covers;
 
-import gregtech.api.enums.ItemList;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
@@ -56,7 +55,7 @@ public class CoverRegistry {
             }
         }
 
-        registerCover(new HashedStack(ItemList.FluidFilterItem.get(1)), new CoverChameleon());
+//        registerCover(new HashedStack(ItemList.FluidFilterItem.get(1)), new CoverChameleon());
         int a = 0;
     }
 

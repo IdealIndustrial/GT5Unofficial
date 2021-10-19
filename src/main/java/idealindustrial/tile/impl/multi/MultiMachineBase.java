@@ -1,7 +1,7 @@
 package idealindustrial.tile.impl.multi;
 
 import gnu.trove.set.TLongSet;
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.tile.impl.TileFacing2Main;
 import idealindustrial.tile.impl.multi.parts.Hatch_Energy.EnergyHatch;
 import idealindustrial.tile.impl.multi.parts.Hatch_Item.InputBus;

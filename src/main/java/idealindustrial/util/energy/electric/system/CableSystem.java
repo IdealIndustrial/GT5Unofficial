@@ -1,6 +1,5 @@
 package idealindustrial.util.energy.electric.system;
 
-import gregtech.api.util.GT_Utility;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
@@ -8,6 +7,7 @@ import idealindustrial.tile.impl.connected.ConnectedCable;
 import idealindustrial.util.energy.electric.EnergyHandler;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -91,7 +91,7 @@ public class CableSystem {
      */
     public CableSystem(HostMachineTile tile, int side) {
         assert tile.getEnergyHandler().getProducer(side) != null;
-        NodeProducer firstNode = new NodeProducer(tile.getProducer(side));
+        NodeProducer firstNode = new NodeProducer(tile.getEnergyHandler().getProducer(side));
         firstNode.setConnection(constructConnection(tile, firstNode, new ArrayList<>(), side));
         fireConnectionConstructed(firstNode.connection);
         producers.add(firstNode);
@@ -226,8 +226,8 @@ public class CableSystem {
             }
             durationLeft--;
             if (durationLeft <= 0) {
-                GT_Utility.sendChatToPlayer(player, "Max Voltage/Amperage last second: " + maxV + "/" + maxA);
-                GT_Utility.sendChatToPlayer(player, "Average Voltage/Amperage last second: " + (totalV / duration) + "/" + (((double) maxA) / duration));
+                II_Util.sendChatToPlayer(player, "Max Voltage/Amperage last second: " + maxV + "/" + maxA);
+                II_Util.sendChatToPlayer(player, "Average Voltage/Amperage last second: " + (totalV / duration) + "/" + (((double) maxA) / duration));
             }
         }
 

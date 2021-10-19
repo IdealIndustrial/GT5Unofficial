@@ -1,10 +1,11 @@
 package idealindustrial.teststuff.testmulti;
 
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
 import idealindustrial.autogen.blocks.II_Blocks;
 import idealindustrial.recipe.BasicMachineRecipe;
 import idealindustrial.recipe.RecipeMaps;
+import idealindustrial.textures.TextureManager;
 import idealindustrial.tile.impl.multi.RecipedMultiMachineBase;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.meta.Tile;
@@ -16,17 +17,17 @@ import net.minecraft.init.Blocks;
 
 import java.util.stream.Stream;
 
-import static gregtech.api.enums.Textures.BlockIcons.*;
-
 public class TestMultiMachine1 extends RecipedMultiMachineBase<HostMachineTile, BasicMachineRecipe> {
 
     public TestMultiMachine1(HostMachineTile baseTile) {
         super(baseTile, "Test MultiMachine",
-                II_StreamUtil.repeated(MACHINE_CASING_CLEAN_STAINLESSSTEEL, 10)
-                        .map(GT_RenderedTexture::new).toArray(ITexture[]::new),
-                Stream.of(null, null, null, MACHINE_CASING_FUSION_GLASS, OVERLAY_FUSION1,
-                        null, null, null, MACHINE_CASING_FUSION_GLASS_YELLOW, OVERLAY_FUSION2)
-                        .map(i -> i == null ? null : new GT_RenderedTexture(i)).toArray(ITexture[]::new),
+                II_StreamUtil.repeated("test/fus", 10)
+                        .map(s -> s == null ? null : TextureManager.INSTANCE.blockTexture(s))
+                        .map(RenderedTexture::new).toArray(ITexture[]::new),
+                Stream.of(null, null, null, "test/fusg", null,
+                        null, null, null, "test/fusgy", null)
+                        .map(s -> s == null ? null : TextureManager.INSTANCE.blockTexture(s))
+                        .map(i -> i == null ? null : new RenderedTexture(i)).toArray(ITexture[]::new),
                 RecipeMaps.benderRecipes, new RecipedMachineStats(1, 0, 0, 64, 0, 0, 0, 0, 0));
     }
 

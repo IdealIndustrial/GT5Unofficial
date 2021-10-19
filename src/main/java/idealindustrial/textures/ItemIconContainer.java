@@ -10,7 +10,7 @@ class ItemIconContainer extends BaseIconContainer {
     }
 
     @Override
-    public ResourceLocation getTextureFile() {
+    public ResourceLocation getFile() {
         return TextureMap.locationItemsTexture;
     }
 }

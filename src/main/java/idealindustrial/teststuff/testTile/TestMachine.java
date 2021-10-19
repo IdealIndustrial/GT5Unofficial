@@ -1,16 +1,17 @@
 package idealindustrial.teststuff.testTile;
 
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
+import idealindustrial.textures.TextureUtil;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.gui.base.GenericGuiContainer;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.impl.TileFacing1Output;
 import idealindustrial.util.energy.electric.OutputEnergyHandler;
-import idealindustrial.util.energy.electric.OutputFacingEnergyHandler;
 import idealindustrial.util.inventory.EmptyInventory;
 import idealindustrial.util.inventory.ArrayRecipedInventory;
 import idealindustrial.util.misc.II_Paths;
+import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -19,18 +20,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.stream.Stream;
 
-import static gregtech.api.enums.Textures.BlockIcons.*;
 
 public class TestMachine extends TileFacing1Output<HostMachineTile> {
 
     public TestMachine(HostMachineTile baseTile) {
         super(baseTile, "test",
-                Stream.of(MACHINE_BRONZE_BOTTOM, MACHINE_BRONZE_TOP, MACHINE_BRONZE_SIDE, TURBINE[4],
-                        MACHINE_8V_BOTTOM, MACHINE_8V_TOP, MACHINE_8V_SIDE, TURBINE_ACTIVE[4])
-                        .map(GT_RenderedTexture::new).toArray(ITexture[]::new),
-                Stream.of(MACHINE_BRONZE_BOTTOM, MACHINE_BRONZE_TOP, MACHINE_BRONZE_SIDE, TURBINE[4],
-                        MACHINE_8V_BOTTOM, MACHINE_8V_TOP, MACHINE_8V_SIDE, TURBINE_ACTIVE[4])
-                        .map(GT_RenderedTexture::new).toArray(ITexture[]::new)
+                TextureUtil.loadTextures(TextureUtil.facing1Configuration, "machines/test/m1/"),
+                II_StreamUtil.arrayOf(null, new ITexture[8])
         );
         inventoryIn = new ArrayRecipedInventory(1, 64);
         inventoryOut = new ArrayRecipedInventory(1, 64);

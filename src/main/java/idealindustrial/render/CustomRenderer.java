@@ -1,6 +1,5 @@
 package idealindustrial.render;
 
-import gregtech.api.interfaces.IFastRenderedTileEntity;
 import idealindustrial.tile.host.HostPipeTileRotatingImpl;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;

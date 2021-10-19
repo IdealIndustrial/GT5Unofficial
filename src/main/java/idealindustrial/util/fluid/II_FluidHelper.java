@@ -1,9 +1,20 @@
 package idealindustrial.util.fluid;
 
-import gregtech.api.util.GT_Utility;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import idealindustrial.autogen.items.GT_FluidDisplayItem;
+import idealindustrial.util.item.HashedStack;
+import idealindustrial.util.item.ItemHelper;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class II_FluidHelper {
 
@@ -39,11 +50,11 @@ public class II_FluidHelper {
             if (containerItem != null) {
                 return containerItem.fill(stack, source, doFill);
             }
-            ItemStack filled = GT_Utility.fillFluidContainer(source, stack, false, false);
+            ItemStack filled = fillContainer(stack, source);
             if (filled == null) {
                 return  0;
             }
-            FluidStack fluidStack =  GT_Utility.getFluidForFilledItem(filled, true);
+            FluidStack fluidStack = getFluidForContainer(filled);
             if (doFill && fluidStack != null) {
                 stack = filled;
             }
@@ -55,9 +66,12 @@ public class II_FluidHelper {
             if (containerItem != null) {
                 return containerItem.drain(stack, maxDrain, doDrain);
             }
-            FluidStack drained = GT_Utility.getFluidForFilledItem(stack, false);
+            FluidStack drained = getFluidForContainer(stack);
+            if (drained != null && drained.amount > maxDrain) {
+                return null;
+            }
             if (doDrain && drained != null) {
-                stack = GT_Utility.getContainerForFilledItem(stack, false);
+                stack = getEmptyContainer(stack);
             }
             return drained;
         }
@@ -72,11 +86,69 @@ public class II_FluidHelper {
             if (containerItem != null) {
                 return containerItem.getFluid(stack);
             }
-            return GT_Utility.getFluidForFilledItem(stack, false);
+            return getFluidForContainer(stack);
         }
+    }
+
+    static Map<Fluid, FluidContainerData> fluid2data = ItemHelper.queryNonRehashable(new HashMap<>());
+    static Map<HashedStack, FluidContainerData> filled2data = ItemHelper.queryMap(new HashMap<>());
+    static Map<HashedStack, Map<Fluid, FluidContainerData>> empty2fluid2data = ItemHelper.queryMap(new HashMap<>());
+
+    @SubscribeEvent
+    public void onFluidContainerRegistration(FluidContainerRegistry.FluidContainerRegisterEvent event) {
+        fluid2data.put(event.data.fluid.getFluid(), event.data);
+        filled2data.put(new HashedStack(event.data.filledContainer), event.data);
+        empty2fluid2data.computeIfAbsent(new HashedStack(event.data.filledContainer), hs -> ItemHelper.queryNonRehashable(new HashMap<>()))
+                .put(event.data.fluid.getFluid(), event.data);
     }
 
     public static II_FluidContainerItem getContainerWrapper(ItemStack stack) {
         return new II_FluidContainerItemImpl(stack);
+    }
+
+    public static ItemStack fillContainer(ItemStack container, FluidStack fs) {
+        Map<Fluid, FluidContainerData> fluid2data = container == null ? null : empty2fluid2data.get(new HashedStack(container));
+        if (fluid2data == null) {
+            return null;
+        }
+        FluidContainerData data = fs == null ? null : fluid2data.get(fs.getFluid());
+        if (data != null) {
+            return data.filledContainer.copy();
+        }
+        return null;
+    }
+
+    public static FluidStack getFluidForContainer(ItemStack filled) {
+        FluidContainerData data = filled == null ? null : filled2data.get(new HashedStack(filled));
+        if (data  != null) {
+            return data.fluid.copy();
+        }
+        return null;
+    }
+
+    public static ItemStack getEmptyContainer(ItemStack filled) {
+        FluidContainerData data =  filled == null ? null : filled2data.get(new HashedStack(filled));
+        if (data  != null) {
+            return data.emptyContainer.copy();
+        }
+        return null;
+    }
+
+    public static ItemStack getFluidDisplayStack(FluidStack aFluid) {
+        if (aFluid == null || aFluid.getFluid() == null) return null;
+        int tmp = 0;
+        try {
+            tmp = aFluid.getFluid().getID();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        ItemStack rStack;
+        rStack = new ItemStack(GT_FluidDisplayItem.INSTANCE);
+        NBTTagCompound tNBT = new NBTTagCompound();
+        tNBT.setLong("mFluidDisplayAmount", aFluid.amount);
+        tNBT.setLong("mFluidDisplayHeat", aFluid.getFluid().getTemperature(aFluid));
+        tNBT.setBoolean("mFluidState", aFluid.getFluid().isGaseous(aFluid));
+        rStack.setTagCompound(tNBT);
+        return rStack;
     }
 }

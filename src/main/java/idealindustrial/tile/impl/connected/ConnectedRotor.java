@@ -1,10 +1,9 @@
 package idealindustrial.tile.impl.connected;
 
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.TextureSet;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.GT_Utility;
+import cpw.mods.fml.common.FMLCommonHandler;
+import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.tile.IOType;
@@ -13,12 +12,12 @@ import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.util.energy.kinetic.KUPassThrough;
-import idealindustrial.util.energy.kinetic.KUSplitter;
 import idealindustrial.util.energy.kinetic.KineticEnergyHandler;
 import idealindustrial.util.energy.kinetic.system.KineticSystem;
 import idealindustrial.util.lang.materials.EngLocalizer;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -34,8 +33,8 @@ public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThr
 
     public ConnectedRotor(HostTile hostTile, II_Material material, Prefixes prefix, float thickness) {
         super(hostTile, EngLocalizer.getInstance().get(material, prefix),
-                new GT_RenderedTexture(Materials.Iron.mIconSet.mTextures[TextureSet.INDEX_wire], material.getSolidRenderInfo().getColorAsArray()).maxBrightness(),
-                new GT_RenderedTexture(Materials.Iron.mIconSet.mTextures[TextureSet.INDEX_wire], material.getSolidRenderInfo().getColorAsArray()).maxBrightness());
+                new RenderedTexture(material.getRenderInfo().getTextureSet().forPrefix(prefix), material.getRenderInfo().getColorAsArray(MatterState.Solid)).maxBrightness(),
+                new RenderedTexture(material.getRenderInfo().getTextureSet().forPrefix(prefix), material.getRenderInfo().getColorAsArray(MatterState.Solid)).maxBrightness());
         this.thickness = thickness;
     }
 
@@ -141,7 +140,9 @@ public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThr
 
     @Override
     public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
-//        GT_Utility.sendChatToPlayer(player, "   "+ system);
+        if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+            II_Util.sendChatToPlayer(player, "   " + system);
+        }
         return super.onRightClick(player, item, side, hitX, hitY, hitZ);
     }
 
@@ -156,7 +157,7 @@ public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThr
     @Override
     public boolean receiveClientEvent(int id, int value) {
         if (id == ROTATION_SPEED) {
-            setSpeed(new HashSet<>(), value, hostTile);
+            spreadSetSpeed(new HashSet<>(), value, hostTile);
             return true;
         }
         if (id == ROTATION_SPEED_DIRECT) {
@@ -166,9 +167,9 @@ public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThr
         return super.receiveClientEvent(id, value);
     }
 
-    public void setSpeed(Set<KUPassThrough> alreadyPassedSet, int speed, HostTile hostTile) {
+    public void spreadSetSpeed(Set<KUPassThrough> alreadyPassedSet, int speed, HostTile hostTile) {
         rotationSpeed = speed;
-        KUPassThrough.super.setSpeed(alreadyPassedSet, speed, hostTile);
+        KUPassThrough.super.spreadSetSpeed(alreadyPassedSet, speed, hostTile);
     }
 
     @Override

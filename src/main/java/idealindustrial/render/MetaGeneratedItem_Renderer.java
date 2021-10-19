@@ -1,11 +1,11 @@
 package idealindustrial.render;
 
-import gregtech.api.interfaces.IIconContainer;
-import gregtech.api.util.GT_Utility;
-import gregtech.common.render.GT_RenderUtil;
 import idealindustrial.autogen.implementation.MetaGeneratedCellItem;
 import idealindustrial.autogen.items.MetaGeneratedItem;
+import idealindustrial.autogen.material.submaterial.MatterState;
 import idealindustrial.autogen.material.submaterial.render.RenderInfo;
+import idealindustrial.textures.IconContainer;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,14 +30,14 @@ public class MetaGeneratedItem_Renderer
     }
 
     public boolean handleRenderType(ItemStack aStack, ItemRenderType aType) {
-        if ((GT_Utility.isStackInvalid(aStack)) || (aStack.getItemDamage() < 0)) {
+        if (aStack == null || aStack.getItem() == null || (aStack.getItemDamage() < 0)) {
             return false;
         }
         return (aType == ItemRenderType.EQUIPPED_FIRST_PERSON) || (aType == ItemRenderType.INVENTORY) || (aType == ItemRenderType.EQUIPPED) || (aType == ItemRenderType.ENTITY);
     }
 
     public boolean shouldUseRenderHelper(ItemRenderType aType, ItemStack aStack, ItemRendererHelper aHelper) {
-        if (GT_Utility.isStackInvalid(aStack)) {
+        if (aStack == null || aStack.getItem() == null) {
             return false;
         }
         return aType == ItemRenderType.ENTITY;
@@ -47,7 +47,7 @@ public class MetaGeneratedItem_Renderer
         MetaGeneratedItem item = (MetaGeneratedItem) stack.getItem();
         int damage = Items.feather.getDamage(stack); // as AlgorithmX2 said "hackery!!"
         RenderInfo renderInfo = item.getRenderInfo(damage);
-        IIconContainer container = renderInfo.getTextureSet().mTextures[item.prefix(damage).textureIndex];
+        IconContainer container = renderInfo.getTextureSet().forPrefix(item.prefix(damage));
         GL11.glEnable(3042);
         if (type == ItemRenderType.ENTITY) {
             if (RenderItem.renderInFrame) {
@@ -63,23 +63,23 @@ public class MetaGeneratedItem_Renderer
             return;
         }
 
-        renderBackSide(type, renderInfo, container);
+        renderBackSide(type, renderInfo, container, MatterState.Solid);
         renderOverlay(type, container);
         GL11.glDisable(3042);
     }
 
-    private void renderOverlay(ItemRenderType type, IIconContainer container) {
+    private void renderOverlay(ItemRenderType type, IconContainer container) {
         IIcon overlay;
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
-        overlay = container.getOverlayIcon();
+        overlay = null;
         if (overlay != null) {
             doRender(type, overlay);
         }
     }
 
-    private void renderBackSide(ItemRenderType type, RenderInfo renderInfo, IIconContainer container) {
+    private void renderBackSide(ItemRenderType type, RenderInfo renderInfo, IconContainer container, MatterState state) {
         IIcon icon = container.getIcon();
-        setColor(renderInfo);
+        setColor(renderInfo, state);
         doRender(type, icon);
     }
 
@@ -87,15 +87,18 @@ public class MetaGeneratedItem_Renderer
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         if (type.equals(ItemRenderType.INVENTORY)) {
-            GT_RenderUtil.renderItemIcon(icon, 16.0D, 0.001D, 0.0F, 0.0F, -1.0F);
+            renderItemIcon(icon, 16.0D, 0.001D, 0.0F, 0.0F, -1.0F);
         } else {
             ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
         }
     }
 
-    private void renderFluid(ItemRenderType type, ItemStack stack, IIconContainer cellIcon, RenderInfo cellRenderInfo) {
-        FluidStack fluid = GT_Utility.getFluidForFilledItem(stack, true);
-        if (cellIcon.getOverlayIcon() == null) {
+    private void renderFluid(ItemRenderType type, ItemStack stack, IconContainer cellIcon, RenderInfo cellRenderInfo) {
+        if (true) {
+            return;
+        }
+        FluidStack fluid = II_Util.getFluidForFilledItem(stack, true);
+        if (cellIcon == null) {
             return;
         }
         IIcon fluidIcon = null;
@@ -109,7 +112,7 @@ public class MetaGeneratedItem_Renderer
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 
-        renderBackSide(type, cellRenderInfo, cellIcon);
+        renderBackSide(type, cellRenderInfo, cellIcon, MatterState.Liquid);
         int tColor = fluid.getFluid().getColor(fluid);
         GL11.glColor3f((tColor >> 16 & 0xFF) / 255.0F, (tColor >> 8 & 0xFF) / 255.0F, (tColor & 0xFF) / 255.0F);
 
@@ -117,7 +120,7 @@ public class MetaGeneratedItem_Renderer
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDepthFunc(GL11.GL_EQUAL);
         if (type.equals(ItemRenderType.INVENTORY)) {
-            GT_RenderUtil.renderItemIcon(fluidIcon, 16.0D, 0.001D, 0.0F, 0.0F, -1.0F);
+           renderItemIcon(fluidIcon, 16.0D, 0.001D, 0.0F, 0.0F, -1.0F);
         } else {
             ItemRenderer.renderItemIn2D(Tessellator.instance, fluidIcon.getMaxU(), fluidIcon.getMinV(), fluidIcon.getMinU(), fluidIcon.getMaxV(), fluidIcon.getIconWidth(), fluidIcon.getIconHeight(), 0.0625F);
         }
@@ -125,8 +128,32 @@ public class MetaGeneratedItem_Renderer
         renderOverlay(type, cellIcon);
     }
 
-    private void setColor(RenderInfo renderInfo) {
-        Color color = renderInfo.getColor();
+    private void setColor(RenderInfo renderInfo, MatterState state) {
+        Color color = renderInfo.getColor(state);
         GL11.glColor3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);
+    }
+
+    public static void renderItemIcon(IIcon icon, double size, double z, float nx, float ny, float nz) {
+        renderItemIcon(icon, 0.0D, 0.0D, size, size, z, nx, ny, nz);
+    }
+
+    public static void renderItemIcon(IIcon icon, double xStart, double yStart, double xEnd, double yEnd, double z, float nx, float ny, float nz) {
+        if (icon == null) {
+            return;
+        }
+        Tessellator.instance.startDrawingQuads();
+        Tessellator.instance.setNormal(nx, ny, nz);
+        if (nz > 0.0F) {
+            Tessellator.instance.addVertexWithUV(xStart, yStart, z, icon.getMinU(), icon.getMinV());
+            Tessellator.instance.addVertexWithUV(xEnd, yStart, z, icon.getMaxU(), icon.getMinV());
+            Tessellator.instance.addVertexWithUV(xEnd, yEnd, z, icon.getMaxU(), icon.getMaxV());
+            Tessellator.instance.addVertexWithUV(xStart, yEnd, z, icon.getMinU(), icon.getMaxV());
+        } else {
+            Tessellator.instance.addVertexWithUV(xStart, yEnd, z, icon.getMinU(), icon.getMaxV());
+            Tessellator.instance.addVertexWithUV(xEnd, yEnd, z, icon.getMaxU(), icon.getMaxV());
+            Tessellator.instance.addVertexWithUV(xEnd, yStart, z, icon.getMaxU(), icon.getMinV());
+            Tessellator.instance.addVertexWithUV(xStart, yStart, z, icon.getMinU(), icon.getMinV());
+        }
+        Tessellator.instance.draw();
     }
 }

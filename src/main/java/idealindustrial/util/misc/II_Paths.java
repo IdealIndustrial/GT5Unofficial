@@ -13,5 +13,6 @@ public class II_Paths {
     public static final String MACHINE_TEXTURES =  "machines/";
     public static final String RECIPE_MACHINE_TEXTURES = MACHINE_TEXTURES + "reciped/";
     public static final String CASINGS_TEXTURES = "casings/";
+    public static final String TEXTURE_SET = "textureset/";
 
 }

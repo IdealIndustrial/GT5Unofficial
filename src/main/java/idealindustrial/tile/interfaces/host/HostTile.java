@@ -1,6 +1,6 @@
 package idealindustrial.tile.interfaces.host;
 
-import gregtech.api.interfaces.IFastRenderedTileEntity;
+import idealindustrial.render.IFastRenderedTileEntity;
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.covers.BaseCoverBehavior;

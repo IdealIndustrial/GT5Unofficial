@@ -2,11 +2,11 @@ package idealindustrial.hooks;
 
 import gloomyfolken.hooklib.asm.Hook;
 import gloomyfolken.hooklib.asm.ReturnCondition;
-import gregtech.GT_Mod;
 import ic2.api.recipe.IRecipeInput;
 import ic2.core.AdvRecipe;
 import ic2.core.item.ItemIC2FluidContainer;
 import ic2.core.util.StackUtil;
+import idealindustrial.II_Core;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -36,11 +36,14 @@ public class II_GameTitlePatch {
 
     @Hook
     public static void createDisplay(ForgeHooksClient mc) {
+        if (true) {
+            return;
+        }
         Display.setTitle(new String(new byte[]{-48, -104, -48, -104, -48, -95}, StandardCharsets.UTF_8)); // just "ИИС" encoded in utf-8, Im to lazy to fix gradle build encodings
         ResourceLocation icon = new ResourceLocation("gregtech", "textures/title.png");
 
         try {
-            InputStream inputstream = GT_Mod.class.getResourceAsStream("/assets/" + icon.getResourceDomain() + "/" + icon.getResourcePath());
+            InputStream inputstream = II_Core.class.getResourceAsStream("/assets/" + icon.getResourceDomain() + "/" + icon.getResourcePath());
             Display.setIcon(new ByteBuffer[]{call(inputstream)});
         } catch (IOException ignore) {
 

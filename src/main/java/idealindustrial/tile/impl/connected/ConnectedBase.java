@@ -2,15 +2,13 @@ package idealindustrial.tile.impl.connected;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-import gregtech.GT_Mod;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.util.GT_Utility;
-import gregtech.common.GT_Client;
+import cpw.mods.fml.common.FMLCommonHandler;
+import idealindustrial.textures.ITexture;
 import idealindustrial.render.CustomRenderer;
-import idealindustrial.tile.IOType;
 import idealindustrial.tile.host.HostPipeTileImpl;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.util.misc.II_DirUtil;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -84,7 +82,7 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
             return true;
         }
         int sideTo = II_DirUtil.determineWrenchingSide(side, hitX, hitY, hitZ);
-        GT_Utility.sendChatToPlayer(player, "side: " + side);
+        II_Util.sendChatToPlayer(player, "side: " + side);
         set(sideTo, !isConnected(sideTo));
         syncClient();
         return true;
@@ -183,7 +181,7 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld, int aX, int aY, int aZ) {
-        if (GT_Mod.instance.isClientSide() && (GT_Client.hideValue & 0x2) != 0)
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient() && false)
             return AxisAlignedBB.getBoundingBox(aX, aY, aZ, aX + 1, aY + 1, aZ + 1);
         else
             return getActualCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
@@ -237,7 +235,7 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
     @Override
     public void addCollisionBoxesToList(World aWorld, int aX, int aY, int aZ, AxisAlignedBB inputAABB, List<AxisAlignedBB> outputAABB, Entity collider) {
         super.addCollisionBoxesToList(aWorld, aX, aY, aZ, inputAABB, outputAABB, collider);
-        if (GT_Mod.instance.isClientSide() && (GT_Client.hideValue & 0x2) != 0) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient() && false) {
             AxisAlignedBB aabb = getActualCollisionBoundingBoxFromPool(aWorld, aX, aY, aZ);
             if (inputAABB.intersectsWith(aabb)) outputAABB.add(aabb);
         }

@@ -1,7 +1,7 @@
 package idealindustrial.util.fluid;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import gregtech.api.util.GT_Utility;
+import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -33,11 +33,11 @@ public class FluidInventoryReprepresentationImpl implements FluidInventoryRepres
             return stacks[i];
         }
         if (i < getInSize()) {
-            return GT_Utility.getFluidDisplayStack(in[i], true);
+            return II_FluidHelper.getFluidDisplayStack(in[i]);
         }
         i -= getInSize();
         if (i < out.length) {
-            return GT_Utility.getFluidDisplayStack(out[i], true);
+            return II_FluidHelper.getFluidDisplayStack(out[i]);
         }
         return null;
     }

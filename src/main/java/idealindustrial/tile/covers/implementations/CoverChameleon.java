@@ -1,10 +1,8 @@
 package idealindustrial.tile.covers.implementations;
 
-import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.Textures;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_CopiedBlockTexture;
-import gregtech.api.objects.GT_RenderedTexture;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
+import idealindustrial.textures.Textures;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.host.PacketCover;
 import idealindustrial.tile.covers.BaseCoverBehavior;
@@ -16,9 +14,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
+import static gregtech.common.GT_Network.NW;
+
 public class CoverChameleon implements BaseCoverBehavior<HostTile> {
 
-    protected static final ITexture defaultTexture = new GT_RenderedTexture(Textures.BlockIcons.DIESEL_GENERATOR_FRONT_ACTIVE);
+    protected static final ITexture defaultTexture = Textures.input;
     @Override
     public ITexture getTexture(long var, int side, HostTile tile) {
         if (var == 0) {
@@ -27,7 +27,7 @@ public class CoverChameleon implements BaseCoverBehavior<HostTile> {
         int id = II_Util.intAFromLong(var);
         int meta = II_Util.intBFromLong(var);
         Block block = Block.getBlockById(id);
-        return new GT_CopiedBlockTexture(block, side, meta);
+        return defaultTexture;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CoverChameleon implements BaseCoverBehavior<HostTile> {
             int meta = II_Math.clamp(is.getItemDamage(), 0, 15);
             long newVar =  II_Util.intsToLong(id, meta);
             tile.setCoverVarAtSide(side, newVar);
-            GT_Values.NW.sendPacketToAllPlayersInRange(tile.getWorld(),
+            NW.sendPacketToAllPlayersInRange(tile.getWorld(),
                     new PacketCover(tile, side, tile.getCoverIDAtSide(side), newVar),
                     tile.getXCoord(), tile.getZCoord());
             return true;

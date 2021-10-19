@@ -1,7 +1,7 @@
 package idealindustrial.tile.impl.connected;
 
-import gregtech.api.interfaces.IFastRenderedTileEntity;
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.render.IFastRenderedTileEntity;
+import idealindustrial.textures.ITexture;
 import idealindustrial.II_Values;
 import idealindustrial.render.CustomRenderer;
 import idealindustrial.tile.interfaces.host.HostTile;
@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.IItemRenderer;
 
-import static gregtech.common.render.GT_Renderer_Block.*;
+import static idealindustrial.render.GT_Renderer_Block.*;
 
 public class MetaConnectedRenderer implements CustomRenderer {
     public static final MetaConnectedRenderer INSTANCE = new MetaConnectedRenderer();

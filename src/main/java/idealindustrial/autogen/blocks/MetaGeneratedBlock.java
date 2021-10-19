@@ -2,35 +2,33 @@ package idealindustrial.autogen.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.interfaces.IIconContainer;
 import idealindustrial.autogen.blocks.base.MetaBlock;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.Prefixes;
+import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.textures.IconContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Random;
 
 public class MetaGeneratedBlock extends MetaBlock {
 
-    private final IIconContainer[] icons;
+    private final IconContainer[] icons;
     protected final II_Material[] materials;
     protected final int[] colors;
     protected int subID;
     public MetaGeneratedBlock(String type, int subID, Material material, SoundType soundType) {
         super(MetaBlock_Item.class, "metagenerated." + type + "." + subID, material);
-        this.icons = new IIconContainer[16];
+        this.icons = new IconContainer[16];
         this.materials = new II_Material[16];
         this.colors = new int[16];
         this.subID = subID;
@@ -41,8 +39,8 @@ public class MetaGeneratedBlock extends MetaBlock {
         assert !isEnabled(i);
         enable(i);
         materials[i] = material;
-        icons[i] = material.getSolidRenderInfo().getTextureSet().mTextures[prefix.textureIndex];
-        colors[i] = material.getSolidRenderInfo().getColorAsInt();
+        icons[i] = material.getRenderInfo().getTextureSet().forPrefix(prefix);
+        colors[i] = material.getRenderInfo().getColorAsInt(MatterState.Solid);
     }
 
     @Override

@@ -4,8 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.FMLCommonHandler;
-import gregtech.api.enums.GT_Values;
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import gregtech.api.metatileentity.BaseTileEntity;
 import gregtech.api.net.GT_Packet_ByteStream;
 import gregtech.api.net.GT_Packet_ExtendedBlockEvent;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static gregtech.common.GT_Network.NW;
 import static idealindustrial.tile.TileEvents.BASE_ACTIVE;
 import static idealindustrial.tile.host.HostTileConstants.*;
 
@@ -259,7 +259,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     public void syncTileEntity() {
         ByteArrayDataOutput stream = ByteStreams.newDataOutput(10);
         writeTile(stream);
-        GT_Values.NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_ByteStream(xCoord, yCoord, zCoord, stream), xCoord, zCoord);
+        NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_ByteStream(xCoord, yCoord, zCoord, stream), xCoord, zCoord);
     }
 
     @Override
@@ -298,32 +298,38 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     @Override
     @SuppressWarnings("unchecked")
     public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
-        if (tile == null) {
-            return false;
-        }
-        if (covers[side] != null && covers[side].onRightClick(coverValues[side], side, this, player, item, hitX, hitY, hitZ)) {
-            return true;
-        }
-        if (isServerSide() && ToolRegistry.applyTool(tile, player, item, side, hitX, hitY, hitZ)) {
-            return true;
-        }
-        if (isServerSide() && covers[side] == null && player.getHeldItem() != null) {//todo ctrl alt m
-            HashedStack hashHand = new HashedStack(player.getHeldItem());
-            if (CoverRegistry.isCover(hashHand)) {
-                BaseCoverBehavior<?> coverBehavior = CoverRegistry.behaviorFromStack(hashHand);
-                if (tile.allowCoverAtSide(coverBehavior, side)) {
-                    if (!player.capabilities.isCreativeMode) {
-                        player.getHeldItem().stackSize--;
+        try {
+            if (tile == null) {
+                return false;
+            }
+            if (covers[side] != null && covers[side].onRightClick(coverValues[side], side, this, player, item, hitX, hitY, hitZ)) {
+                return true;
+            }
+            if (isServerSide() && ToolRegistry.applyTool(tile, player, item, side, hitX, hitY, hitZ)) {
+                return true;
+            }
+            if (isServerSide() && covers[side] == null && player.getHeldItem() != null) {//todo ctrl alt m
+                HashedStack hashHand = new HashedStack(player.getHeldItem());
+                if (CoverRegistry.isCover(hashHand)) {
+                    BaseCoverBehavior<?> coverBehavior = CoverRegistry.behaviorFromStack(hashHand);
+                    if (tile.allowCoverAtSide(coverBehavior, side)) {
+                        if (!player.capabilities.isCreativeMode) {
+                            player.getHeldItem().stackSize--;
+                        }
+                        if (player.getHeldItem().stackSize == 0) {
+                            player.inventory.setItemStack(null);
+                        }
+                        setCoverAtSide(side, hashHand.hashCode(), coverBehavior);
+                        return true;
                     }
-                    if (player.getHeldItem().stackSize == 0) {
-                        player.inventory.setItemStack(null);
-                    }
-                    setCoverAtSide(side, hashHand.hashCode(), coverBehavior);
-                    return true;
                 }
             }
+            return tile.onRightClick(player, item, side, hitX, hitY, hitZ);
         }
-        return tile.onRightClick(player, item, side, hitX, hitY, hitZ);
+        catch (Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     protected void setCoverAtSide(int side, int id, BaseCoverBehavior<?> cover) {
@@ -347,7 +353,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     }
 
     public void sendEvent(int id, int value) {
-        GT_Values.NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_ExtendedBlockEvent(xCoord, (short) yCoord, zCoord, id, value), xCoord, zCoord);
+        NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_ExtendedBlockEvent(xCoord, (short) yCoord, zCoord, id, value), xCoord, zCoord);
     }
 
     @Override

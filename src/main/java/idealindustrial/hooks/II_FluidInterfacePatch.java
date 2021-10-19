@@ -2,7 +2,6 @@ package idealindustrial.hooks;
 
 import extracells.tileentity.TileEntityFluidInterface;
 import gloomyfolken.hooklib.asm.Hook;
-import gregtech.common.config.GT_DebugConfig;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;

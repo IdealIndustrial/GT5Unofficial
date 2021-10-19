@@ -1,6 +1,6 @@
 package idealindustrial.tile.impl.recipe;
 
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.recipe.IMachineRecipe;
 import idealindustrial.recipe.RecipeMap;
 import idealindustrial.tile.gui.RecipedContainer;

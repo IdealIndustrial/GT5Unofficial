@@ -2,20 +2,13 @@ package idealindustrial.tile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Textures;
-import gregtech.api.interfaces.IDebugableBlock;
-import gregtech.api.interfaces.tileentity.ICoverable;
-import gregtech.api.metatileentity.BaseMetaPipeEntity;
-import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.metatileentity.BaseTileEntity;
-import gregtech.api.objects.XSTR;
-import gregtech.common.blocks.GT_Material_Machines;
-import gregtech.common.render.GT_Renderer_Block;
+import idealindustrial.render.GT_Renderer_Block;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.autogen.blocks.base.BaseBlock;
 import idealindustrial.textures.TextureManager;
+import idealindustrial.textures.Textures;
 import idealindustrial.tile.interfaces.IClickableTileEntity;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.host.HostPipeTile;
@@ -24,6 +17,7 @@ import idealindustrial.tools.ToolRegistry;
 import idealindustrial.util.misc.II_TileUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -49,11 +43,10 @@ import java.util.Random;
 
 public class BlockMachines
         extends BaseBlock
-        implements IDebugableBlock, ITileEntityProvider {
+        implements ITileEntityProvider {
 
     public BlockMachines() {
-        super(Item_Machines.class, "ii.blockmachines", new GT_Material_Machines());
-        GregTech_API.registerMachineBlock(this, -1);
+        super(Item_Machines.class, "ii.blockmachines", Material.iron);
         setHardness(1.0F);
         setResistance(10.0F);
         setStepSound(soundTypeMetal);
@@ -82,16 +75,10 @@ public class BlockMachines
 
     public void onNeighborBlockChange(World aWorld, int aX, int aY, int aZ, Block aBlock) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof BaseMetaPipeEntity)) {
-            ((BaseMetaPipeEntity) tTileEntity).onNeighborBlockChange(aX, aY, aZ);
-        }
     }
 
     public void onBlockAdded(World aWorld, int aX, int aY, int aZ) {
         super.onBlockAdded(aWorld, aX, aY, aZ);
-        if (GregTech_API.isMachineBlock(this, aWorld.getBlockMetadata(aX, aY, aZ))) {
-            GregTech_API.causeMachineUpdate(aWorld, aX, aY, aZ);
-        }
     }
 
     public String getUnlocalizedName() {
@@ -107,7 +94,7 @@ public class BlockMachines
     }
 
     public int getFireSpreadSpeed(IBlockAccess aWorld, int aX, int aY, int aZ, ForgeDirection face) {
-        return (GregTech_API.sMachineFlammable) && (aWorld.getBlockMetadata(aX, aY, aZ) == 0) ? 100 : 0;
+        return  (aWorld.getBlockMetadata(aX, aY, aZ) == 0) ? 100 : 0;
     }
 
     public int getRenderType() {
@@ -118,11 +105,11 @@ public class BlockMachines
     }
 
     public boolean isFireSource(World aWorld, int aX, int aY, int aZ, ForgeDirection side) {
-        return (GregTech_API.sMachineFlammable) && (aWorld.getBlockMetadata(aX, aY, aZ) == 0);
+        return (aWorld.getBlockMetadata(aX, aY, aZ) == 0);
     }
 
     public boolean isFlammable(IBlockAccess aWorld, int aX, int aY, int aZ, ForgeDirection face) {
-        return (GregTech_API.sMachineFlammable) && (aWorld.getBlockMetadata(aX, aY, aZ) == 0);
+        return (aWorld.getBlockMetadata(aX, aY, aZ) == 0);
     }
 
     public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess aWorld, int aX, int aY, int aZ) {
@@ -166,11 +153,11 @@ public class BlockMachines
     }
 
     public IIcon getIcon(IBlockAccess aIBlockAccess, int aX, int aY, int aZ, int aSide) {
-        return Textures.BlockIcons.MACHINE_LV_SIDE.getIcon();
+        return Textures.baseTiredTextures[0].getIcon();
     }
 
     public IIcon getIcon(int aSide, int aMeta) {
-        return Textures.BlockIcons.MACHINE_LV_SIDE.getIcon();
+        return Textures.baseTiredTextures[0].getIcon();
     }
 
 
@@ -213,18 +200,14 @@ public class BlockMachines
 
     public void onBlockExploded(World aWorld, int aX, int aY, int aZ, Explosion aExplosion) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof BaseMetaTileEntity)) {
-            ((BaseMetaTileEntity) tTileEntity).doEnergyExplosion();
-        }
         super.onBlockExploded(aWorld, aX, aY, aZ, aExplosion);
     }
 
     public void breakBlock(World aWorld, int aX, int aY, int aZ, Block par5, int par6) {
-        GregTech_API.causeMachineUpdate(aWorld, aX, aY, aZ);
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof HostMachineTile)) {
             HostMachineTile tGregTechTileEntity = (HostMachineTile) tTileEntity;
-            Random tRandom = new XSTR();
+            Random tRandom = new Random();
             for (int i = 0; i < tGregTechTileEntity.getSizeInventory(); i++) {
                 ItemStack tItem = tGregTechTileEntity.getStackInSlot(i);
                 if ((tItem != null) && (tItem.stackSize > 0)) {
@@ -304,9 +287,7 @@ public class BlockMachines
         if (!aWorld.isRemote) {
             TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
             if ((tTileEntity != null) && (chance < 1.0F)) {
-                if (((tTileEntity instanceof BaseMetaTileEntity)) && (GregTech_API.sMachineNonWrenchExplosions)) {
-                    ((BaseMetaTileEntity) tTileEntity).doEnergyExplosion();
-                }
+
             } else {
                 super.dropBlockAsItemWithChance(aWorld, aX, aY, aZ, par5, chance, par7);
             }
@@ -319,15 +300,7 @@ public class BlockMachines
         }
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if (tTileEntity != null) {
-            if ((tTileEntity instanceof BaseMetaTileEntity)) {
-                return true;
-            }
-            if (((tTileEntity instanceof BaseMetaPipeEntity)) && ((((BaseMetaPipeEntity) tTileEntity).mConnections & 0xFFFFFFC0) != 0)) {
-                return true;
-            }
-            if (((tTileEntity instanceof ICoverable)) && (((ICoverable) tTileEntity).getCoverIDAtSide((byte) aSide.ordinal()) != 0)) {
-                return true;
-            }
+
         }
         return false;
     }
@@ -409,12 +382,6 @@ public class BlockMachines
 
     public ArrayList<String> getDebugInfo(EntityPlayer aPlayer, int aX, int aY, int aZ, int aLogLevel) {
         TileEntity tTileEntity = aPlayer.worldObj.getTileEntity(aX, aY, aZ);
-        if ((tTileEntity instanceof BaseMetaTileEntity)) {
-            return ((BaseMetaTileEntity) tTileEntity).getDebugInfo(aPlayer, aLogLevel);
-        }
-        if ((tTileEntity instanceof BaseMetaPipeEntity)) {
-            return ((BaseMetaPipeEntity) tTileEntity).getDebugInfo(aPlayer, aLogLevel);
-        }
         return null;
     }
 

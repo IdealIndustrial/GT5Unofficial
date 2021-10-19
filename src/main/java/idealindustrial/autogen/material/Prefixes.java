@@ -1,32 +1,27 @@
 package idealindustrial.autogen.material;
-
-import gregtech.api.enums.OrePrefixes;
-
 /*
  todo: import prefixes from TextureSet.java
  *
  */
 public enum Prefixes {
-    ingot( "", "Ingot", 1),
-    plate("", "Plate", 17),
-    dust("", "Dust",2),
-    dustSmall("Small Pile of", "Dust",1),
-    dustTiny("Tiny Pile of", "Dust",0),
-    block("Block of", "", 71),
-    cell("", "Cell", 30),
-    gasCell("", "Cell", 30),
-    plasmaCell("", "Cell", 30),
-    cable01("1x", "Cable", 69);
+    ingot( "", "Ingot"),
+    plate("", "Plate"),
+    dust("", "Dust"),
+    dustSmall("Small Pile of", "Dust"),
+    dustTiny("Tiny Pile of", "Dust"),
+    block("Block of", ""),
+    cell("", "Cell"),
+    gasCell("", "Cell"),
+    plasmaCell("", "Cell"),
+    cable01("1x", "Cable");
 
     public final String prefix, postfix;
-    public final int textureIndex;
     protected boolean unifiable = false;
     protected boolean isOreDicted = true;
 
-    Prefixes(String prefix, String postfix, int textureIndex) {
+    Prefixes(String prefix, String postfix) {
         this.prefix = prefix;
         this.postfix = postfix;
-        this.textureIndex = textureIndex;
     }
 
     public boolean isUnifiable() {

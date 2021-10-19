@@ -1,7 +1,10 @@
 package idealindustrial.util.item;
 
 import com.google.common.collect.HashMultimap;
+import ic2.core.IC2;
+import ic2.core.Ic2Items;
 import idealindustrial.util.misc.II_Util;
+import net.minecraft.item.ItemStack;
 
 import java.util.*;
 
@@ -12,6 +15,7 @@ public class ItemHelper {
     private static final List<HashMap<? extends Rehashable, ?>> hashMaps = new ArrayList<>();
     private static final List<HashSet<? extends Rehashable>> hashSets = new ArrayList<>();
     private static final List<HashMultimap<? extends Rehashable, ?>> hashMultiMaps = new ArrayList<>();
+    private static final List<HashMap<?, ?>> nonRehashableMas = new ArrayList<>();
     /**
      * Minecraft Item IDs can change during server start up
      * so we need to fix hash of stack if this happens
@@ -31,12 +35,17 @@ public class ItemHelper {
         return map;
     }
 
+    public static <K, V> HashMap<K, V> queryNonRehashable(HashMap<K, V> map) {
+        nonRehashableMas.add(map);
+        return map;
+    }
+
     public static <K extends Rehashable> HashSet<K> querySet(HashSet<K> set) {
         hashSets.add(set);
         return set;
     }
 
-    public static void onIDsCharge() { //todo : link
+    public static void onIDsCharge() {
         for (Rehashable stack : hashedStacks) {
             stack.fixHash();
         }
@@ -60,10 +69,14 @@ public class ItemHelper {
             }
             II_Util.rehash(set);
         }
+        for (HashMap<?, ?> map : nonRehashableMas) {
+            II_Util.rehash(map);
+        }
     }
 
     public interface Rehashable {
         void fixHash();
     }
+
 
 }

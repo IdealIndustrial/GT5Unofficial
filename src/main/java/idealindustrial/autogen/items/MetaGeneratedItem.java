@@ -60,7 +60,7 @@ public abstract class MetaGeneratedItem extends MetaItem {
     }
 
     public RenderInfo getRenderInfo(int damage) {
-        return material(damage).getSolidRenderInfo();
+        return material(damage).getRenderInfo();
     }
 
     @Override

@@ -1,8 +1,6 @@
 package idealindustrial.loader;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import gregtech.api.interfaces.internal.IGT_Config;
-import gregtech.common.config.GT_DebugConfig;
 import idealindustrial.util.config.IConfig;
 import idealindustrial.util.config.II_MainConfig;
 import net.minecraftforge.common.config.Configuration;

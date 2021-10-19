@@ -1,10 +1,22 @@
 package idealindustrial.util.misc;
 
 import com.google.common.collect.HashMultimap;
+import idealindustrial.autogen.items.GT_FluidDisplayItem;
+import idealindustrial.autogen.material.submaterial.MatterState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import org.omg.CORBA.Object;
 import scala.Int;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class II_Util {
@@ -122,4 +134,22 @@ public class II_Util {
         }
         return minQuantity +  (Math.abs(random.nextDouble()) % spread);
     }
+
+    public static void sendChatToPlayer(EntityPlayer player, String s) {
+        player.addChatComponentMessage(new ChatComponentText(s));
+    }
+
+    public static ItemStack copyAmount(int amount, ItemStack stack) {
+        if (stack == null) {
+            return null;
+        }
+        ItemStack out = stack.copy();
+        out.stackSize = amount;
+        return out;
+    }
+
+    public static int getColorAsInt(Color color) {
+        return (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
+    }
+
 }

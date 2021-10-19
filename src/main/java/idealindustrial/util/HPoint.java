@@ -14,6 +14,27 @@ import java.util.Set;
 public class HPoint {
     public int x, y, z;
 
+    public HPoint(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public HPoint() {
+    }
+
+    public long toLongOff(int x, int y, int z) {
+        x += this.x;
+        y += this.y;
+        z += this.z;
+        long compressedX = Math.abs(x) & 0x3FFFFFF | (x >= 0 ? 0 : (1L << 26));
+        long compressedY = y & 0x3FF;
+        long compressedZ = Math.abs(z) & 0x3FFFFFF | (z >= 0 ? 0 : (1L << 26));
+//        System.out.println("Bin " + Long.toBinaryString(compressedX)
+//                + " " + Long.toBinaryString(compressedY) + " " + Long.toBinaryString(compressedZ));
+        return compressedX | compressedY << 27L | compressedZ << 37L;
+    }
+
     public long toLong() {
         long compressedX = Math.abs(x) & 0x3FFFFFF | (x >= 0 ? 0 : (1L << 26));
         long compressedY = y & 0x3FF;

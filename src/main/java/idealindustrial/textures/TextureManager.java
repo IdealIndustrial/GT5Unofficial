@@ -2,8 +2,6 @@ package idealindustrial.textures;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState;
-import gregtech.api.interfaces.IIconContainer;
-import gregtech.api.interfaces.ITexture;
 import net.minecraft.client.renderer.texture.IIconRegister;
 
 import java.util.ArrayList;
@@ -23,25 +21,25 @@ public class TextureManager {
     List<Runnable> postIconLoad = new ArrayList<>();
     Map<Integer, INetworkedTexture> networkedTextureMap = new HashMap<>();
 
-    public IIconContainer blockTexture(String name) {
+    public IconContainer blockTexture(String name) {
         BlockIconContainer container = new BlockIconContainer(name, false);
         blocks.add(container);
         return container;
     }
 
-    public IIconContainer blockTexture(String name, Consumer<IIconContainer> callback){
+    public IconContainer blockTexture(String name, Consumer<IconContainer> callback){
         BlockIconContainer icon = new BlockIconWithCallback(name, false, callback);
         blocks.add(icon);
         return icon;
     }
 
-    public IIconContainer itemTexture(String name) {
+    public IconContainer itemTexture(String name) {
         ItemIconContainer container = new ItemIconContainer(name, false);
         items.add(container);
         return container;
     }
 
-    public IIconContainer materialBlockTexture(String materialName) {
+    public IconContainer materialBlockTexture(String materialName) {
         return blockTexture("materialblocks/" + materialName);
     }
 

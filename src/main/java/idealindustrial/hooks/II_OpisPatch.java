@@ -6,8 +6,6 @@ import com.google.common.collect.HashBasedTable;
 import extracells.gui.GuiFluidTerminal;
 import gloomyfolken.hooklib.asm.Hook;
 import gloomyfolken.hooklib.asm.ReturnCondition;
-import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.common.blocks.GT_Block_Machines;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntityPerClass;
@@ -37,11 +35,7 @@ public class II_OpisPatch {
             coord = iterator.next();
             World world = DimensionManager.getWorld(coord.dim);
             id = Block.getIdFromBlock(block = world.getBlock(coord.x, coord.y, coord.z));
-            if (block instanceof GT_Block_Machines && (tileEntity = world.getTileEntity(coord.x, coord.y, coord.z)) instanceof IGregTechTileEntity) {
-                meta = ((IGregTechTileEntity) tileEntity).getMetaTileID();
-            } else {
-                meta = world.getBlockMetadata(coord.x, coord.y, coord.z);
-            }
+            meta = world.getBlockMetadata(coord.x, coord.y, coord.z);
             if (!data.contains(id, meta)) {
                 data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
             }

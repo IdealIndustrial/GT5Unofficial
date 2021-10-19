@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import idealindustrial.textures.TextureManager;
+import idealindustrial.util.misc.II_Paths;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -14,7 +15,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
-import static gregtech.api.enums.GT_Values.RES_PATH_ITEM;
 import static idealindustrial.II_Core.MOD_ID;
 
 public abstract class BaseItem extends Item {
@@ -52,7 +52,7 @@ public abstract class BaseItem extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
-        icon = iconRegister.registerIcon(RES_PATH_ITEM + unlocalizeName);
+        icon = iconRegister.registerIcon(II_Paths.PATH_ITEM_ICONS + unlocalizeName);
     }
 
 

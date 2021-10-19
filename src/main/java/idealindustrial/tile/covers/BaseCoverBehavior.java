@@ -1,6 +1,6 @@
 package idealindustrial.tile.covers;
 
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.interfaces.host.HostTile;
 import net.minecraft.entity.player.EntityPlayer;

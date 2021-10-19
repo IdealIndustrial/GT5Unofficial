@@ -1,8 +1,7 @@
 package idealindustrial.render;
 
-import gregtech.api.interfaces.IFastRenderedTileEntity;
-import gregtech.api.interfaces.IIconContainer;
 import idealindustrial.autogen.blocks.II_Blocks;
+import idealindustrial.textures.IconContainer;
 import idealindustrial.tile.host.HostPipeTileRotatingImpl;
 import idealindustrial.tile.impl.connected.ConnectedRotor;
 import idealindustrial.tile.impl.connected.MetaConnectedRenderer;
@@ -10,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -51,8 +51,7 @@ public class RotatingTileRenderer extends TileEntitySpecialRenderer {
             GL11.glPushMatrix();
             GL11.glDisable(GL11.GL_LIGHTING);
             Tessellator.instance.startDrawingQuads();
-            IIconContainer icon = ((HostPipeTileRotatingImpl) tile).getTextures()[0][0].getContainer();
-            Minecraft.getMinecraft().renderEngine.bindTexture(icon.getTextureFile());
+            Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
             World aWorld = null;
             RenderBlocks aRenderer = RenderBlocks.getInstance();
             aRenderer.setRenderBounds(0, 0, 0, 1, 1, 1);

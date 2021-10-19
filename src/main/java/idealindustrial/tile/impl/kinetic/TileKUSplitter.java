@@ -1,34 +1,34 @@
 package idealindustrial.tile.impl.kinetic;
 
-import gregtech.api.enums.Textures;
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
+import idealindustrial.textures.TextureManager;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.impl.TileFacing1Output;
-import idealindustrial.tile.impl.connected.ConnectedRotor;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.util.energy.kinetic.*;
 import idealindustrial.util.energy.kinetic.system.KineticSystem;
-import idealindustrial.util.energy.kinetic.system.KineticSystemHandler;
-import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.misc.II_TileUtil;
-
-import java.util.Set;
 
 public class TileKUSplitter extends TileFacing1Output<HostMachineTile> implements KUSplitter {
 
     KineticSystem system;
     public static TileKUSplitter testMachine() {
         return new TileKUSplitter(II_TileUtil.makeBaseMachineTile(), "KU Splitter",
-                II_StreamUtil.repeated(Textures.BlockIcons.CONCRETE_DARK_COBBLE, 8).map(GT_RenderedTexture::new).toArray(ITexture[]::new),
+                II_StreamUtil.repeated("test/cob3", 8).map(TextureManager.INSTANCE::blockTexture).map(RenderedTexture::new).toArray(ITexture[]::new),
                 II_StreamUtil.setInNullAr(idealindustrial.textures.Textures.input, new ITexture[8], 3, 7)
         );
     }
 
     public TileKUSplitter(HostMachineTile hostTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
         super(hostTile, name, baseTextures, overlays);
+        hostTile.onWorldStateUpdated(wa -> {
+            if (system != null) {
+                system.invalidate();
+            }
+        });
     }
 
     protected TileKUSplitter(HostMachineTile hostTile, TileFacing1Output<?> copyFrom) {

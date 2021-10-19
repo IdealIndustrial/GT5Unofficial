@@ -1,6 +1,6 @@
 package idealindustrial.tile.host;
 
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.tile.interfaces.host.HostPipeTile;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;

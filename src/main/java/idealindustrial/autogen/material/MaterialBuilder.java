@@ -1,12 +1,10 @@
 package idealindustrial.autogen.material;
 
-import gregtech.api.enums.TextureSet;
-import gregtech.api.interfaces.IIconContainer;
 import idealindustrial.autogen.fluids.II_Fluids;
 import idealindustrial.autogen.material.submaterial.*;
-import idealindustrial.autogen.material.submaterial.render.FluidRenderInfo;
 import idealindustrial.autogen.material.submaterial.render.RenderInfo;
 import idealindustrial.autogen.material.submaterial.render.SolidRenderInfo;
+import idealindustrial.autogen.material.submaterial.render.TextureSet;
 import idealindustrial.autogen.recipes.RecipeAction;
 import idealindustrial.util.misc.MiscValues;
 
@@ -22,7 +20,7 @@ public class MaterialBuilder {
     private final int id;
     private final String name;
     private MatterState normalForm = MatterState.Solid; // helps to determine default temperatures
-    private final RenderInfo[] renders = new RenderInfo[4];
+    private RenderInfo render = null;//todo deafult
     private final FluidInfo fluidInfo = new FluidInfo();
     private final Set<Prefixes> prefixes = new HashSet<>();
     private final Set<Prefixes> expectedPrefixes = new HashSet<>();
@@ -30,13 +28,14 @@ public class MaterialBuilder {
     private BlockInfo blockInfo;
     private MaterialAutogenInfo autogenInfo;
 
-    public static MaterialBuilder make(int id, String name) {
-        return new MaterialBuilder(id, name);
+    public static MaterialBuilder make(int id, String name, TextureSet textureSet) {
+        return new MaterialBuilder(id, name, textureSet);
     }
 
-    public MaterialBuilder(int id, String name) {
+    public MaterialBuilder(int id, String name, TextureSet textureSet) {
         this.id = id;
         this.name = name;
+        this.render = new RenderInfo(textureSet);
     }
 
 
@@ -83,7 +82,7 @@ public class MaterialBuilder {
 
     public II_Material construct() {
         II_Material material = new II_Material(id, name);
-        material.renderInfo = renders;
+        material.renderInfo = render;
         material.enabledPrefixes = prefixes;
         material.blockInfo = blockInfo;
         material.fluidInfo = fluidInfo;
@@ -111,20 +110,20 @@ public class MaterialBuilder {
             return this;
         }
 
-        public MaterialBuilder setRender(Color color, TextureSet textureSet) {
-            renders[MatterState.Solid.ordinal()] = new SolidRenderInfo(color, textureSet);
+        public MaterialBuilder setRender(Color color) {
+            render.setColor(MatterState.Solid, color);
             return MaterialBuilder.this;
         }
+
     }
 
     public class LiquidFormBuilder {
         private final MatterState form;
         private int temperature;
-        private IIconContainer texture;
 
         public LiquidFormBuilder(MatterState form) {
             this.form = form;
-            texture = II_Fluids.defaultTexture; //todo: set better default texture
+//            texture = II_Fluids.defaultTexture; //todo: set better default texture
             temperature = 0; // todo: set default temperature
         }
 
@@ -139,13 +138,8 @@ public class MaterialBuilder {
             return this;
         }
 
-        public LiquidFormBuilder setTexture(IIconContainer texture) {
-            this.texture = texture;
-            return this;
-        }
-
         public MaterialBuilder setRender(Color color) {
-            renders[form.ordinal()] = new FluidRenderInfo(color, texture);
+            render.setColor(form, color);
             fluidInfo.set(form, new FluidDef(form, temperature));
             return MaterialBuilder.this;
         }

@@ -55,14 +55,6 @@ public interface IHasWorldObjectAndCoords {
 
     public IFluidHandler getITankContainerAtSideAndDistance(byte aSide, int aDistance);
 
-    public IGregTechTileEntity getIGregTechTileEntity(int aX, int aY, int aZ);
-
-    public IGregTechTileEntity getIGregTechTileEntityOffset(int aX, int aY, int aZ);
-
-    public IGregTechTileEntity getIGregTechTileEntityAtSide(byte aSide);
-
-    public IGregTechTileEntity getIGregTechTileEntityAtSideAndDistance(byte aSide, int aDistance);
-
     public Block getBlock(int aX, int aY, int aZ);
 
     public Block getBlockOffset(int aX, int aY, int aZ);

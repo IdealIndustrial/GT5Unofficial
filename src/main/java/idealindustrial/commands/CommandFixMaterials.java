@@ -1,7 +1,6 @@
 package idealindustrial.commands;
 
 import gloomyfolken.hooklib.minecraft.HookLibPlugin;
-import gregtech.api.items.GT_MetaGenerated_Item;
 import idealindustrial.hooks.HookLoader;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -105,21 +104,6 @@ public class CommandFixMaterials extends CommandBase {
     }
 
     public static NBTTagCompound processStack(ItemStack stack, NBTTagCompound nbt) {
-        if (executeState == 1) {
-            if (stack != null && stack.getItem() instanceof GT_MetaGenerated_Item && subIDsMap.containsKey(stack.getItemDamage() % 1000) && (nbt == null || !nbt.getBoolean("Passed"))) {
-                int meta = stack.getItemDamage();
-                int rightSubID = subIDsMap.get(meta % 1000);
-                meta -= meta % 1000;
-                meta += rightSubID;
-                stack.setItemDamage(meta);
-                nbt.setShort("Damage", (short) meta);
-                nbt.setBoolean("Passed", true);
-            }
-            return nbt;
-        } else if (executeState == 2) {
-            if (nbt != null && nbt.getBoolean("Passed"))
-                nbt.removeTag("Passed");
-        }
         return nbt;
     }
 

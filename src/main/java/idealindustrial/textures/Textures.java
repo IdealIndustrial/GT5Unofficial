@@ -1,18 +1,19 @@
 package idealindustrial.textures;
 
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
 import idealindustrial.II_Values;
+import idealindustrial.autogen.material.submaterial.render.TextureSet;
 
 public class Textures {
     public static final ITexture[] baseTiredTextures = new ITexture[II_Values.maxTier + 1];
-    public static ITexture output = new GT_RenderedTexture(gregtech.api.enums.Textures.BlockIcons.OVERLAY_PIPE_OUT);
-    public static ITexture input = new GT_RenderedTexture(gregtech.api.enums.Textures.BlockIcons.OVERLAY_PIPE_IN);
-    public static ITexture input_energy = new GT_RenderedTexture(gregtech.api.enums.Textures.BlockIcons.OVERLAY_ENERGY_IN);
-    public static ITexture output_energy = new GT_RenderedTexture(gregtech.api.enums.Textures.BlockIcons.OVERLAY_ENERGY_OUT);
+    public static ITexture output = new RenderedTexture(TextureManager.INSTANCE.blockTexture("test/in"));
+    public static ITexture input = new RenderedTexture(TextureManager.INSTANCE.blockTexture("test/out"));
+    public static ITexture input_energy = input;
+    public static ITexture output_energy = output;
     static void init() {
         for (int tier = 0; tier < baseTiredTextures.length; tier++) {
-            baseTiredTextures[tier] = new GT_RenderedTexture(TextureManager.INSTANCE.blockTexture("tired/base/" + tier));
+            baseTiredTextures[tier] = new RenderedTexture(TextureManager.INSTANCE.blockTexture("tired/base/" + tier));
         }
     }
+
+    public static final TextureSet testSet = new TextureSet("test");
 }

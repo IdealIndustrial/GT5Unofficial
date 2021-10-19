@@ -1,7 +1,8 @@
 package idealindustrial.tile.covers.implementations;
 
-import gregtech.api.interfaces.ITexture;
-import gregtech.api.objects.GT_RenderedTexture;
+import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.textures.ITexture;
+import idealindustrial.textures.RenderedTexture;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.tile.IOType;
@@ -15,7 +16,7 @@ public class CoverPlate implements BaseCoverBehavior<HostTile> {
 
     public CoverPlate(II_Material material) {
         this.material = material;
-        this.texture = new GT_RenderedTexture(material.getSolidRenderInfo().getTextureSet().mTextures[Prefixes.block.textureIndex], material.getSolidRenderInfo().getColorAsArray());
+        this.texture = new RenderedTexture(material.getRenderInfo().getTextureSet().plate, material.getRenderInfo().getColorAsArray(MatterState.Solid));
     }
 
     @Override

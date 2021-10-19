@@ -1,6 +1,5 @@
 package idealindustrial.tile;
 
-import gregtech.api.util.GT_ItsNotMyFaultException;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.tile.host.HostTileImpl;
@@ -70,12 +69,6 @@ public class Item_Machines
             int tMetaData = II_TileUtil.classToMeta(II_Values.TILES[tDamage].getBaseTileClass());
             if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, tMetaData, 3)) {
                 return false;
-            }
-            if (aWorld.getBlock(aX, aY, aZ) != this.field_150939_a) {
-                throw new GT_ItsNotMyFaultException("Failed to place Block even though World.setBlock returned true. It COULD be MCPC/Bukkit causing that. In case you really have that installed, don't report this Bug to me, I don't know how to fix it.");
-            }
-            if (aWorld.getBlockMetadata(aX, aY, aZ) != tMetaData) {
-                throw new GT_ItsNotMyFaultException("Failed to set the MetaValue of the Block even though World.setBlock returned true. It COULD be MCPC/Bukkit causing that. In case you really have that installed, don't report this Bug to me, I don't know how to fix it.");
             }
             HostTileImpl tTileEntity = (HostTileImpl) aWorld.getTileEntity(aX, aY, aZ);
             if (tTileEntity != null) {

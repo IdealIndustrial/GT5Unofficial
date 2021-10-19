@@ -2,7 +2,7 @@ package idealindustrial.entity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.tile.impl.multi.struct.IGuideRenderer;
 import idealindustrial.util.worldgen.Vector3;
 import net.minecraft.block.Block;
@@ -61,7 +61,7 @@ public class CubeRenderedParticle extends EntityFX {
         for (int i = 0; i < 6; i++) {
             icons[i] = new IIcon[textures[i].length];
             for (int j = 0; j < textures[i].length; j++) {
-                icons[i][j] = textures[i][j].getContainer().getIcon();
+                icons[i][j] = textures[i][j].getIcon();
             }
         }
         texturesAreSet = true;

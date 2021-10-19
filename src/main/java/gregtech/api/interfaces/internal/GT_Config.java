@@ -2,8 +2,6 @@ package gregtech.api.interfaces.internal;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

@@ -7,16 +7,14 @@ import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
-import gregtech.api.enums.GT_Values;
 import gregtech.api.net.*;
-import gregtech.common.blocks.GT_Packet_Ores;
-import gregtech.common.net.MessageSetFlaskCapacity;
 import idealindustrial.tile.host.PacketCover;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.MessageToMessageCodec;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -31,10 +29,11 @@ public class GT_Network
         implements IGT_NetworkHandler {
     private final EnumMap<Side, FMLEmbeddedChannel> mChannel;
     private final GT_Packet[] mSubChannels;
+    public static GT_Network NW = new GT_Network();
 
     public GT_Network() {
-        this.mChannel = NetworkRegistry.INSTANCE.newChannel("GregTech", new ChannelHandler[]{this, new HandlerShared()});
-        this.mSubChannels = new GT_Packet[]{new GT_Packet_TileEntity(), new GT_Packet_Sound(), new GT_Packet_Block_Event(), new GT_Packet_Ores(), new GT_Packet_Pollution(), new MessageSetFlaskCapacity(), new GT_Packet_ExtendedBlockEvent(), new GT_Packet_ByteStream(), new PacketCover()};
+        this.mChannel = NetworkRegistry.INSTANCE.newChannel("II_Core", this, new HandlerShared());
+        this.mSubChannels = new GT_Packet[]{null, null, new GT_Packet_Block_Event(),null,null,null, new GT_Packet_ExtendedBlockEvent(), new GT_Packet_ByteStream(), new PacketCover()};
     }
 
     protected void encode(ChannelHandlerContext aContext, GT_Packet aPacket, List<Object> aOutput)
@@ -91,8 +90,12 @@ public class GT_Network
             extends SimpleChannelInboundHandler<GT_Packet> {
         protected void channelRead0(ChannelHandlerContext ctx, GT_Packet aPacket)
                 throws Exception {
-            EntityPlayer aPlayer = GT_Values.GT.getThePlayer();
-            aPacket.process(aPlayer == null ? null : GT_Values.GT.getThePlayer().worldObj);
+            EntityPlayer aPlayer = Minecraft.getMinecraft().thePlayer;
+            try {
+                aPacket.process(aPlayer == null ? null : aPlayer.worldObj);
+            }catch ( Exception e) {
+                e.printStackTrace();;
+            }
         }
     }
 }

@@ -2,9 +2,6 @@ package idealindustrial.commands;
 
 import codechicken.nei.api.GT_NEIItemStack;
 import codechicken.nei.recipe.ShapedRecipeHandler;
-import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_Recipe;
-import gregtech.nei.GT_NEI_DefaultHandler;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.init.Blocks;
@@ -31,7 +28,6 @@ public class ReloadRecipesCommand extends CommandBase {
     private static final Map<String, Class> classMap = new HashMap<>();
 
     static {
-        GT_ModHandler.sRecipeLoaderClasses.stream().filter(Runnable.class::isAssignableFrom).forEach(runnableLoaders::add);
         runnableLoaders.forEach(l -> classMap.put(l.getSimpleName(), l));
     }
 
@@ -102,9 +98,6 @@ public class ReloadRecipesCommand extends CommandBase {
     }
 
     private void clearRecipeMaps() {
-        for (GT_Recipe.GT_Recipe_Map tMap : GT_Recipe.GT_Recipe_Map.sMappings) {
-            tMap.clear();
-        }
         ArrayList<IRecipe> tList = (ArrayList<IRecipe>) CraftingManager.getInstance().getRecipeList();
         tList.clear();
     }
@@ -132,8 +125,6 @@ public class ReloadRecipesCommand extends CommandBase {
         } catch (Exception ignored) {
 
         }
-        GT_NEI_DefaultHandler.inputMaps.clear();
-        GT_NEI_DefaultHandler.outputMaps.clear();
     }
 
 }

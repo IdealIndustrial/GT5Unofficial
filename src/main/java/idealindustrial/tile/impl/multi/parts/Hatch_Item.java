@@ -1,6 +1,6 @@
 package idealindustrial.tile.impl.multi.parts;
 
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.textures.Textures;
 import idealindustrial.tile.gui.base.ContainerNxN;
 import idealindustrial.tile.gui.base.GuiContainerNxN;

@@ -6,10 +6,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.GregTech_API;
-import gregtech.api.util.GT_Log;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
+import gregtech.common.GT_Network;
 import idealindustrial.autogen.fluids.II_Fluids;
 import idealindustrial.autogen.implementation.MetaGeneratedCellItem;
 import idealindustrial.autogen.material.II_Materials;
@@ -47,7 +44,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-@Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false, dependencies = "after:gregtech")
+@Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false)
 public class II_Core {
     public static final String MOD_ID = "iicore";
     @Mod.Instance(MOD_ID)
@@ -81,7 +78,7 @@ public class II_Core {
         tileLoader = new TileLoader();
         oredictLoader = new OredictHandler();
         autogen = new AutogenRecipes();
-
+        new GT_Network();
         MinecraftForge.EVENT_BUS.register(oredictLoader);
         oredictLoader.loadAlreadyNicelyLoadedByForgeOreDictsWithoutFuckingEvents();
         //INSTANCE = this;
@@ -110,8 +107,8 @@ public class II_Core {
             throw new ReportedException(tCrashReport);
         }
         itemsLoader.preLoad();
-        blocksLoader.preLoad();
         II_Fluids.INSTANCE.init();
+        blocksLoader.preLoad();
         new MetaGeneratedCellItem();
         new ConfigsLoader(aEvent).run();
 

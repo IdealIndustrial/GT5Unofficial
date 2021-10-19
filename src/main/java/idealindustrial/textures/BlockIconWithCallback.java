@@ -1,14 +1,13 @@
 package idealindustrial.textures;
 
-import gregtech.api.interfaces.IIconContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 
 import java.util.function.Consumer;
 
 public class BlockIconWithCallback extends BlockIconContainer {
-    Consumer<IIconContainer> callback;
+    Consumer<IconContainer> callback;
 
-    public BlockIconWithCallback(String name, boolean hasOverlay, Consumer<IIconContainer> callback) {
+    public BlockIconWithCallback(String name, boolean hasOverlay, Consumer<IconContainer> callback) {
         super(name, hasOverlay);
         this.callback = callback;
     }

@@ -13,7 +13,7 @@ public interface KUPassThrough {
 
     void setSystem(KineticSystem system);
 
-    default void setSpeed(Set<KUPassThrough> alreadyPassedSet, int speed, HostTile hostTile) {
+    default void spreadSetSpeed(Set<KUPassThrough> alreadyPassedSet, int speed, HostTile hostTile) {
         if (!alreadyPassedSet.add(this)) {
             return;
         }
@@ -21,11 +21,11 @@ public interface KUPassThrough {
             Tile<?> tile = II_TileUtil.getMetaTileAtSide(hostTile, i);
             if (tile instanceof ConnectedRotor) {
                 if (((ConnectedRotor) tile).isConnected(II_DirUtil.getOppositeSide(i))) {
-                    ((ConnectedRotor) tile).setSpeed(alreadyPassedSet, speed, hostTile);
+                    ((ConnectedRotor) tile).spreadSetSpeed(alreadyPassedSet, speed, tile.getHost());
                 }
             }
             if (tile instanceof KUSplitter) {
-                ((KUSplitter) tile).setSpeed(alreadyPassedSet, speed, hostTile);
+                ((KUSplitter) tile).spreadSetSpeed(alreadyPassedSet, speed, tile.getHost());
             }
         }
     }

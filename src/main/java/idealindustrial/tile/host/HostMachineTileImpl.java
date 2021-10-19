@@ -280,16 +280,6 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
     }
 
     @Override
-    public EUProducer getProducer(int side) {
-        return handler.getProducer(side);
-    }
-
-    @Override
-    public EUConsumer getConsumer(int side) {
-        return handler.getConsumer(side);
-    }
-
-    @Override
     public Container getServerGUI(EntityPlayer player, int internalID) {
         return tile.getServerGUI(player, internalID);
     }

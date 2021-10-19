@@ -17,7 +17,7 @@ public class II_Material {
     protected MatterState normalForm;
     protected BlockInfo blockInfo;
     protected FluidInfo fluidInfo; // fluid, gas, plasma...
-    protected RenderInfo[] renderInfo; // 0 - solid, 1 - fluid, 2 - gas, 3 - plasma
+    protected RenderInfo renderInfo;
     protected MaterialAutogenInfo autogenInfo;
     protected FuelInfo fuelInfo;
     protected ResearchInfo researchInfo;
@@ -37,12 +37,8 @@ public class II_Material {
         return enabledPrefixes.contains(prefix);
     }
 
-    public RenderInfo getRenderInfo(MatterState state) {
-        return renderInfo[state.ordinal()];
-    }
-
-    public RenderInfo getSolidRenderInfo() {
-        return renderInfo[0];
+    public RenderInfo getRenderInfo() {
+        return renderInfo;
     }
 
     public FluidInfo getLiquidInfo() {

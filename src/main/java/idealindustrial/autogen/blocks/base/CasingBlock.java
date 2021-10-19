@@ -1,14 +1,12 @@
 package idealindustrial.autogen.blocks.base;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import gregtech.api.GregTech_API;
-import gregtech.api.interfaces.ITexture;
+import idealindustrial.textures.ITexture;
 import idealindustrial.textures.TextureUtil;
 import idealindustrial.tile.impl.multi.struct.StructBlockRegistry;
 import idealindustrial.util.misc.II_Paths;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
@@ -29,7 +27,7 @@ public class CasingBlock extends MetaBlock {
         if (meta > textures.length) {
             meta = 0;
         }
-        return textures[meta].getContainer().getIcon();
+        return textures[meta].getIcon();
     }
 
     @Override

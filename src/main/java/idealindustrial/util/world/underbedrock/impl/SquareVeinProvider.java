@@ -1,6 +1,5 @@
 package idealindustrial.util.world.underbedrock.impl;
 
-import gregtech.api.util.GT_Utility;
 import idealindustrial.util.misc.II_Util;
 import idealindustrial.util.world.underbedrock.GridGenerationRules;
 import idealindustrial.util.world.underbedrock.Vein;
