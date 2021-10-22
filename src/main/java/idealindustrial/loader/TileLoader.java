@@ -24,7 +24,7 @@ import idealindustrial.tile.impl.kinetic.TileKUSplitter;
 import idealindustrial.tile.impl.multi.parts.Hatch_Energy;
 import idealindustrial.tile.impl.multi.parts.Hatch_Item;
 import idealindustrial.tile.impl.recipe.TileMachineRecipe;
-import idealindustrial.tile.ores.TileOres;
+import idealindustrial.blocks.ores.TileOres;
 import idealindustrial.util.misc.II_Paths;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.misc.II_TileUtil;

@@ -15,7 +15,6 @@ import idealindustrial.autogen.oredict.OredictHandler;
 import idealindustrial.autogen.recipes.RecipeManager;
 import idealindustrial.autogen.recipes.materialprocessing.AutogenRecipes;
 import idealindustrial.commands.*;
-import idealindustrial.integration.ingameinfo.InGameInfoLoader;
 import idealindustrial.loader.*;
 import idealindustrial.teststuff.RenderTest;
 import idealindustrial.teststuff.TestBlock;
@@ -98,7 +97,7 @@ public class II_Core {
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
-        new InGameInfoLoader().load();
+
     }
 
     @SubscribeEvent

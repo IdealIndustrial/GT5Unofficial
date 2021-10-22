@@ -1,33 +1,23 @@
-package idealindustrial.tile.ores;
+package idealindustrial.blocks.base;
 
-import idealindustrial.II_Core;
-import idealindustrial.II_Values;
-import idealindustrial.autogen.material.II_Material;
-import idealindustrial.autogen.material.II_Materials;
-import idealindustrial.autogen.material.Prefixes;
-import idealindustrial.tile.host.HostTileImpl;
-import idealindustrial.tile.interfaces.host.HostMachineTile;
-import idealindustrial.util.misc.II_TileUtil;
+import idealindustrial.blocks.ores.TileOres;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ItemOres extends ItemBlock {
-    public static ItemOres INSTANCE;
-
-    public ItemOres(Block p_i45328_1_) {
+public class BlockTile32kItem extends ItemBlock {
+    public static List<BlockTile32kItem> instances = new ArrayList<>();
+    public BlockTile32kItem(Block p_i45328_1_) {
         super(p_i45328_1_);
         setMaxDamage(0);
         setHasSubtypes(true);
-        setCreativeTab(II_Core.II_MATERIAL_TAB);
-        INSTANCE = this;
+        instances.add(this);
     }
 
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
@@ -43,7 +33,7 @@ public class ItemOres extends ItemBlock {
             }
             TileOres tTileEntity = (TileOres) aWorld.getTileEntity(aX, aY, aZ);
             if (tTileEntity != null) {
-                tTileEntity.setValuesFromDamage(tDamage);
+                tTileEntity.setValuesFromMeta(tDamage);
             }
         } else if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, tDamage, 3)) {
             return false;

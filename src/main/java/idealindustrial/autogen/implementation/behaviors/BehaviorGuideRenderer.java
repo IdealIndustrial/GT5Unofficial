@@ -8,7 +8,7 @@ import idealindustrial.tile.impl.multi.MultiMachineBase;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.tile.impl.multi.struct.IGuideRenderer;
 import idealindustrial.tile.impl.multi.struct.MultiMachineShape;
-import idealindustrial.tile.ores.TileOres;
+import idealindustrial.blocks.ores.TileOres;
 import idealindustrial.util.misc.II_TileUtil;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.particle.EntityFX;

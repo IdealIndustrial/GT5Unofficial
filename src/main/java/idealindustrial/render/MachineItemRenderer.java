@@ -3,11 +3,10 @@ package idealindustrial.render;
 import cpw.mods.fml.relauncher.SideOnly;
 import idealindustrial.II_Values;
 import idealindustrial.blocks.II_Blocks;
+import idealindustrial.blocks.base.BlockTile32kItem;
+import idealindustrial.blocks.base.Tile32kBlock;
 import idealindustrial.tile.Item_Machines;
-import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
-import idealindustrial.tile.ores.ItemOres;
-import idealindustrial.tile.ores.TileOres;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Items;
@@ -23,7 +22,7 @@ import static idealindustrial.render.GT_Renderer_Block.renderInventory;
 public final class MachineItemRenderer implements IItemRenderer {
     public MachineItemRenderer() {
         MinecraftForgeClient.registerItemRenderer(Item_Machines.INSTANCE, this);
-        MinecraftForgeClient.registerItemRenderer(ItemOres.INSTANCE, this);
+        BlockTile32kItem.instances.forEach(i -> MinecraftForgeClient.registerItemRenderer(i, this));
     }
 
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -46,28 +45,31 @@ public final class MachineItemRenderer implements IItemRenderer {
         }
         GL11.glEnable(GL11.GL_ALPHA_TEST);
 
+        IFastRenderedTileEntity tileEntity;
+        Block block;
         if (is.getItem() instanceof Item_Machines) {
             int meta = Items.feather.getDamage(is);
-            Tile tile = II_Values.TILES[meta];
-            HostTile base = tile == null ? null : tile.getHost();
-            if (base == null) {
-                return;
-            }
-            Block block = II_Blocks.INSTANCE.blockMachines;
-            block.setBlockBoundsForItemRender();
-            RenderBlocks renderer = RenderBlocks.getInstance();
-            renderer.setRenderBoundsFromBlock(block);
-            if (base.getCustomRenderer() != null) {
-                base.getCustomRenderer().renderItem(type, is, II_Blocks.INSTANCE.blockMachines, RenderBlocks.getInstance(), meta);
-            } else {
-                renderInventory(block, renderer, base.getTextures(is, (byte) 4, true, false, true));
-            }
-        } else if (is.getItem() instanceof ItemOres) {
-            Block block = II_Blocks.INSTANCE.blockOres;
-            block.setBlockBoundsForItemRender();
-            RenderBlocks renderer = RenderBlocks.getInstance();
-            renderer.setRenderBoundsFromBlock(block);
-            renderInventory(block, renderer, TileOres.tempTile.getTextures(is, (byte) 4, true, false, true));
+            Tile<?> tile = II_Values.TILES[meta];
+            tileEntity = tile == null ? null : tile.getHost();
+            block = II_Blocks.INSTANCE.blockMachines;
+
+        } else if (is.getItem() instanceof BlockTile32kItem) {
+            Tile32kBlock<?> block32k = (Tile32kBlock<?>) ((BlockTile32kItem) is.getItem()).field_150939_a;
+            tileEntity = block32k.getCachedTile();
+            block = block32k;
+        } else {
+            return;
+        }
+        if (block == null || tileEntity == null) {
+            return;
+        }
+        block.setBlockBoundsForItemRender();
+        RenderBlocks renderer = RenderBlocks.getInstance();
+        renderer.setRenderBoundsFromBlock(block);
+        if (tileEntity.getCustomRenderer() != null) {
+            tileEntity.getCustomRenderer().renderItem(type, is, II_Blocks.INSTANCE.blockMachines, RenderBlocks.getInstance(), Items.feather.getDamage(is));
+        } else {
+            renderInventory(block, renderer, tileEntity.getTextures(is, (byte) 4, true, false, true));
         }
 
     }

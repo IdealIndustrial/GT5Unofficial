@@ -1,4 +1,4 @@
-package idealindustrial.tile.ores;
+package idealindustrial.blocks.ores;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -9,6 +9,7 @@ import idealindustrial.blocks.II_Blocks;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
+import idealindustrial.blocks.base.Tile32k;
 import idealindustrial.render.IFastRenderedTileEntity;
 import idealindustrial.textures.ITexture;
 import idealindustrial.textures.RenderedTexture;
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
 
 import static gregtech.common.GT_Network.NW;
 
-public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISyncedTileEntity {
+public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISyncedTileEntity, Tile32k {
     final static Prefixes[] prefixOrder = new Prefixes[]{Prefixes.ore, Prefixes.oreSmall};
     public static final TileOres tempTile = new TileOres();
 
@@ -145,12 +146,13 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
         }
     }
 
-    public void setValuesFromDamage(int damage) {
-        material = II_Materials.materialForID(damage % 1000);
+    @Override
+    public void setValuesFromMeta(int meta) {
+        material = II_Materials.materialForID(meta % 1000);
         if (material == null) {
             material = II_Materials.iron;
         }
-        prefix = damage / 1000 < prefixOrder.length ? prefixOrder[damage / 1000] : Prefixes.ore;
+        prefix = meta / 1000 < prefixOrder.length ? prefixOrder[meta / 1000] : Prefixes.ore;
         syncTileEntity();
     }
 
@@ -164,7 +166,7 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
         world.setBlock(x, y, z, II_Blocks.INSTANCE.blockOres, 0, 3);
         TileOres tile = (TileOres) world.getTileEntity(x, y, z);
         if (tile != null) {
-            tile.setValuesFromDamage(meta);
+            tile.setValuesFromMeta(meta);
             tile.block = block;
             tile.meta = blockMeta;
             tile.syncTileEntity();
