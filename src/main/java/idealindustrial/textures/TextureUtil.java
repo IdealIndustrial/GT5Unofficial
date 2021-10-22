@@ -2,6 +2,9 @@ package idealindustrial.textures;
 
 import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
 
@@ -61,6 +64,16 @@ public class TextureUtil {
     }
 
     public static ITexture copyTexture(Block block, int meta, int side) {
-        return new RenderedTexture(new IconContainerImpl(block.getIcon(side, meta)));
+        return new RenderedTexture(new IconContainer() {
+            @Override
+            public IIcon getIcon() {
+                return block.getIcon(side, meta);
+            }
+
+            @Override
+            public ResourceLocation getFile() {
+                return TextureMap.locationBlocksTexture;
+            }
+        });
     }
 }

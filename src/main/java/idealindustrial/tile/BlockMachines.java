@@ -66,6 +66,14 @@ public class BlockMachines
         return false;
     }
 
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random random) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile != null) {
+            tile.updateEntity();
+        }
+    }
+
     public void onNeighborChange(IBlockAccess aWorld, int aX, int aY, int aZ, int aTileX, int aTileY, int aTileZ) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof BaseTileEntity)) {

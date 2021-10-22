@@ -1,5 +1,6 @@
 package idealindustrial.tile.host;
 
+import idealindustrial.blocks.II_Blocks;
 import idealindustrial.textures.ITexture;
 import idealindustrial.tile.interfaces.host.HostPipeTile;
 import net.minecraft.entity.Entity;
@@ -55,5 +56,16 @@ public class HostPipeTileImpl extends HostTileImpl implements HostPipeTile {
         tile.onEntityCollidedWithBlock(aWorld, aX, aY, aZ, collider);
     }
 
+    @Override
+    public void onPlaced() {
+        super.onPlaced();
+        if (isServerSide()) {
+            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, II_Blocks.INSTANCE.blockMachines, 1);
+        }
+    }
 
+    @Override
+    public boolean canUpdate() {
+        return false;
+    }
 }
