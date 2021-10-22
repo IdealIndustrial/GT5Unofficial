@@ -1,6 +1,6 @@
 package idealindustrial.loader;
 
-import idealindustrial.autogen.blocks.II_Blocks;
+import idealindustrial.blocks.II_Blocks;
 import idealindustrial.teststuff.FluidTest;
 
 public class BlocksLoader {

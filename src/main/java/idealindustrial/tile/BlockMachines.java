@@ -6,7 +6,7 @@ import gregtech.api.metatileentity.BaseTileEntity;
 import idealindustrial.render.GT_Renderer_Block;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
-import idealindustrial.autogen.blocks.base.BaseBlock;
+import idealindustrial.blocks.base.BaseBlock;
 import idealindustrial.textures.TextureManager;
 import idealindustrial.textures.Textures;
 import idealindustrial.tile.interfaces.IClickableTileEntity;
