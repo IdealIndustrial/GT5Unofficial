@@ -24,6 +24,7 @@ import idealindustrial.tile.impl.kinetic.TileKUSplitter;
 import idealindustrial.tile.impl.multi.parts.Hatch_Energy;
 import idealindustrial.tile.impl.multi.parts.Hatch_Item;
 import idealindustrial.tile.impl.recipe.TileMachineRecipe;
+import idealindustrial.tile.ores.TileOres;
 import idealindustrial.util.misc.II_Paths;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.misc.II_TileUtil;
@@ -58,6 +59,7 @@ public class TileLoader implements Runnable {
         GameRegistry.registerTileEntity(HostMachineTileImpl.class, "ii.machine_tile");
         GameRegistry.registerTileEntity(HostPipeTileImpl.class, "ii.pipe_tile");
         GameRegistry.registerTileEntity(HostPipeTileRotatingImpl.class, "ii.pipe_rotation_tile");
+        GameRegistry.registerTileEntity(TileOres.class, "ii.tile_ores");
 
         ClientRegistry.bindTileEntitySpecialRenderer(HostPipeTileRotatingImpl.class, new RotatingTileRenderer());
     }

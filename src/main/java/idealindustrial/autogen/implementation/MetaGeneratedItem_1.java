@@ -1,6 +1,6 @@
 package idealindustrial.autogen.implementation;
 
-import idealindustrial.autogen.items.MetaGeneratedItem;
+import idealindustrial.items.MetaGeneratedItem;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
 

@@ -1,6 +1,7 @@
 package idealindustrial.textures;
 
 import idealindustrial.util.misc.II_StreamUtil;
+import net.minecraft.block.Block;
 
 import java.util.Arrays;
 
@@ -57,5 +58,9 @@ public class TextureUtil {
 
     public static ITexture[] loadTextures(TextureConfiguration configuration, String path) {
         return asGtRendered(configuration.loadAll(path));
+    }
+
+    public static ITexture copyTexture(Block block, int meta, int side) {
+        return new RenderedTexture(new IconContainerImpl(block.getIcon(side, meta)));
     }
 }

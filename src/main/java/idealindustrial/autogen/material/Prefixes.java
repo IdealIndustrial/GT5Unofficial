@@ -13,7 +13,9 @@ public enum Prefixes {
     cell("", "Cell"),
     gasCell("", "Cell"),
     plasmaCell("", "Cell"),
-    cable01("1x", "Cable");
+    cable01("1x", "Cable"),
+    ore("", "Ore"),
+    oreSmall("Small", "Ore");
 
     public final String prefix, postfix;
     protected boolean unifiable = false;

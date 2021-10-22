@@ -4,8 +4,8 @@ import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 import idealindustrial.tile.impl.multi.struct.CheckMachineParams.CheckMode;
 import idealindustrial.util.misc.II_Util;
-import idealindustrial.util.worldgen.BoundingBox;
-import idealindustrial.util.worldgen.ICoordManipulator;
+import idealindustrial.util.worldgen.util.BoundingBox;
+import idealindustrial.util.worldgen.util.ICoordManipulator;
 
 import java.util.List;
 import java.util.function.Consumer;

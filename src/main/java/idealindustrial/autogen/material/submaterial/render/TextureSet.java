@@ -21,11 +21,11 @@ public class TextureSet {
             .map(Enum::toString).collect(Collectors.toSet());
 
     static {
-        blockIcons.addAll(Arrays.asList("liquid", "gas", "plasma"));
+        blockIcons.addAll(Arrays.asList("liquid", "gas", "plasma", "ore", "oreSmall"));
     }
 
 
-    public IconContainer ingot, plate, dust, dustTiny, dustSmall, liquid, gas, plasma, block, cable01;
+    public IconContainer ingot, plate, dust, dustTiny, dustSmall, liquid, gas, plasma, block, cable01, ore, oreSmall;
 
     private final IconContainer[] icons = new IconContainer[Prefixes.values().length];
     private String name;

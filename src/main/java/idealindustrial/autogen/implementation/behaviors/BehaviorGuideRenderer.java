@@ -1,10 +1,14 @@
 package idealindustrial.autogen.implementation.behaviors;
 
-import idealindustrial.autogen.items.IItemBehavior;
+import cpw.mods.fml.common.FMLCommonHandler;
+import idealindustrial.items.IItemBehavior;
+import idealindustrial.autogen.material.II_Materials;
+import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.tile.impl.multi.MultiMachineBase;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.tile.impl.multi.struct.IGuideRenderer;
 import idealindustrial.tile.impl.multi.struct.MultiMachineShape;
+import idealindustrial.tile.ores.TileOres;
 import idealindustrial.util.misc.II_TileUtil;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.client.particle.EntityFX;
@@ -33,6 +37,13 @@ public class BehaviorGuideRenderer implements IItemBehavior, IGuideRenderer {
                     return true;
                 }
             }
+        }
+        else {
+            if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+                int meta = TileOres.getMeta(II_Materials.iron, Prefixes.ore);
+                TileOres.replaceBlock(world, x, y, z, meta);
+            }
+            return false;
         }
         return true;
     }

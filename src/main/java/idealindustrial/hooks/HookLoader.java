@@ -32,6 +32,7 @@ public class HookLoader extends gloomyfolken.hooklib.minecraft.HookLoader {
             registerHookContainer("idealindustrial.hooks.II_WorldMultithreadingPatch");
         if (true)
             registerHookContainer("idealindustrial.hooks.II_NeiIdePatch");
+        registerHookContainer("idealindustrial.hooks.II_GUI_Chat_Patch");
 
     }
 }

@@ -1,11 +1,11 @@
 package idealindustrial.render;
 
 import idealindustrial.autogen.implementation.MetaGeneratedCellItem;
-import idealindustrial.autogen.items.MetaGeneratedItem;
+import idealindustrial.items.MetaGeneratedItem;
 import idealindustrial.autogen.material.submaterial.MatterState;
 import idealindustrial.autogen.material.submaterial.render.RenderInfo;
 import idealindustrial.textures.IconContainer;
-import idealindustrial.util.misc.II_Util;
+import idealindustrial.util.fluid.II_FluidHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -97,7 +97,7 @@ public class MetaGeneratedItem_Renderer
         if (true) {
             return;
         }
-        FluidStack fluid = II_Util.getFluidForFilledItem(stack, true);
+        FluidStack fluid = II_FluidHelper.getFluidForContainer(stack);
         if (cellIcon == null) {
             return;
         }

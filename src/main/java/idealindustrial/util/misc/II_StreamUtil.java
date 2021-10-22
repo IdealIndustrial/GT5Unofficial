@@ -114,4 +114,13 @@ public class II_StreamUtil {
         return null;
     }
 
+    public static <T> int indexOf(T[] ar, T elem) {
+        for (int i = 0; i < ar.length; i++) {
+            if (ar[i] != null && ar[i].equals(elem)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }

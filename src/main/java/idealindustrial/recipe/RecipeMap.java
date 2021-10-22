@@ -27,6 +27,8 @@ public interface RecipeMap<R extends IMachineRecipe> {
 
     RecipeMapStorage<R> getJsonReflection();
 
+    RecipeMap<R> newEmpty();
+
 //    boolean isInputEqualStacks(R recipe, II_RecipedInventory inventory, II_FluidHandler fluidInputs, boolean doConsume);
 
     //todo reinit call on IDs reFuck

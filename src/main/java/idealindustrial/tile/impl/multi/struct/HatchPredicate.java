@@ -8,14 +8,14 @@ import idealindustrial.tile.impl.multi.parts.TileHatch;
 import idealindustrial.tile.interfaces.meta.Tile;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.misc.II_TileUtil;
-import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.util.Vector3;
 import net.minecraft.block.Block;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HatchPredicate implements ICoordPredicate, BlockDependentPredicate {
+public class HatchPredicate implements MatrixCoordPredicate, BlockDependentPredicate {
 
     protected Set<HatchType> types = new HashSet<>();
     Block block;

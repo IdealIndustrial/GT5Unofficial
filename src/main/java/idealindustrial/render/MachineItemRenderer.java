@@ -2,10 +2,12 @@ package idealindustrial.render;
 
 import cpw.mods.fml.relauncher.SideOnly;
 import idealindustrial.II_Values;
-import idealindustrial.autogen.blocks.II_Blocks;
+import idealindustrial.blocks.II_Blocks;
 import idealindustrial.tile.Item_Machines;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
+import idealindustrial.tile.ores.ItemOres;
+import idealindustrial.tile.ores.TileOres;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Items;
@@ -14,12 +16,14 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 
+import static cpw.mods.fml.relauncher.Side.CLIENT;
 import static idealindustrial.render.GT_Renderer_Block.renderInventory;
 
-@SideOnly(cpw.mods.fml.relauncher.Side.CLIENT)
+@SideOnly(CLIENT)
 public final class MachineItemRenderer implements IItemRenderer {
     public MachineItemRenderer() {
         MinecraftForgeClient.registerItemRenderer(Item_Machines.INSTANCE, this);
+        MinecraftForgeClient.registerItemRenderer(ItemOres.INSTANCE, this);
     }
 
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -58,6 +62,12 @@ public final class MachineItemRenderer implements IItemRenderer {
             } else {
                 renderInventory(block, renderer, base.getTextures(is, (byte) 4, true, false, true));
             }
+        } else if (is.getItem() instanceof ItemOres) {
+            Block block = II_Blocks.INSTANCE.blockOres;
+            block.setBlockBoundsForItemRender();
+            RenderBlocks renderer = RenderBlocks.getInstance();
+            renderer.setRenderBoundsFromBlock(block);
+            renderInventory(block, renderer, TileOres.tempTile.getTextures(is, (byte) 4, true, false, true));
         }
 
     }

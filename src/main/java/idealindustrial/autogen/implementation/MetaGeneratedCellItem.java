@@ -1,13 +1,11 @@
 package idealindustrial.autogen.implementation;
 
-import ic2.core.Ic2Items;
-import idealindustrial.autogen.items.MetaGeneratedItem;
+import idealindustrial.items.MetaGeneratedItem;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.autogen.material.submaterial.MatterState;
 import idealindustrial.loader.ItemsLoader;
-import idealindustrial.util.misc.MiscValues;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;

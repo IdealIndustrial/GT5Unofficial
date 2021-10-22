@@ -23,6 +23,7 @@ public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
     protected IRecipeGuiParams params;
     protected Map<HashedStack, Set<R>> outputMap = ItemHelper.queryMap(new HashMap<>()), inputMap = ItemHelper.queryMap(new HashMap<>());
     protected RecipeMapStorage<R> storage;
+    protected Class<R> recipeType;
 
     public BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls, IRecipeGuiParams guiParams, Class<R> recipeType) {
         this.name = name;
@@ -30,7 +31,8 @@ public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
         this.allowNulls = allowNulls;
         this.params = guiParams;
         RecipeMaps.allRecipeMaps.add(this);
-        this.storage = new RecipeMapStorage<>(name.replace(' ', '.').toLowerCase() + ".json", recipeType);
+        this.storage = new RecipeMapStorage<>(name.replace(' ', '.').toLowerCase() + ".json", recipeType, this);
+        this.recipeType = recipeType;
     }
 
     @Override
@@ -126,6 +128,11 @@ public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
     @Override
     public RecipeMapStorage<R> getJsonReflection() {
         return storage;
+    }
+
+    @Override
+    public RecipeMap<R> newEmpty() {
+        return new BasicRecipeMap<R>(name, checkConflicts, allowNulls, params, recipeType);
     }
 
     protected Set<R> loadRecipes(II_StackSignature signature, Map<HashedStack, Set<R>> inputMap) {

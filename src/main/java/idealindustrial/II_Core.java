@@ -14,10 +14,7 @@ import idealindustrial.autogen.oredict.OreDict;
 import idealindustrial.autogen.oredict.OredictHandler;
 import idealindustrial.autogen.recipes.RecipeManager;
 import idealindustrial.autogen.recipes.materialprocessing.AutogenRecipes;
-import idealindustrial.commands.CommandFixMaterials;
-import idealindustrial.commands.CommandFixQuests;
-import idealindustrial.commands.DimTPCommand;
-import idealindustrial.commands.ReloadRecipesCommand;
+import idealindustrial.commands.*;
 import idealindustrial.integration.ingameinfo.InGameInfoLoader;
 import idealindustrial.loader.*;
 import idealindustrial.teststuff.RenderTest;
@@ -29,11 +26,13 @@ import idealindustrial.util.item.ItemHelper;
 import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.world.ChunkLoadingMonitor;
 import idealindustrial.util.world.WorldTickHandler;
+import idealindustrial.util.worldgen.oregen.OreGenerator;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ReportedException;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -53,6 +52,13 @@ public class II_Core {
         @Override
         public Item getTabIconItem() {
             return Items.apple;
+        }
+    };
+
+    public static final CreativeTabs II_MATERIAL_TAB = new CreativeTabs("Materials") {
+        @Override
+        public Item getTabIconItem() {
+            return Items.redstone;
         }
     };
 
@@ -130,6 +136,7 @@ public class II_Core {
 
     @Mod.EventHandler
     public void onPostLoad(FMLPostInitializationEvent aEvent) {
+        GameRegistry.registerWorldGenerator(new OreGenerator(), 100);
         try {
             ToolRegistry.initTools();
         } catch (NoSuchMethodException e) {
@@ -141,6 +148,7 @@ public class II_Core {
         II_Materials.initMaterialLoops();
         RecipeManager.load();
         OreDict.printAll(System.out);
+
     }
 
     @Mod.EventHandler
@@ -187,6 +195,7 @@ public class II_Core {
         aEvent.registerServerCommand(new CommandFixQuests());
         aEvent.registerServerCommand(new DimTPCommand());
         aEvent.registerServerCommand(new ReloadRecipesCommand());
+        aEvent.registerServerCommand(new CommandOpenEditor());
 
         //  aEvent.registerServerCommand(new CommandFixMaterials());
 

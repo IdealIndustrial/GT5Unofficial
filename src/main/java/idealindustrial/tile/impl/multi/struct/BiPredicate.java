@@ -1,10 +1,10 @@
 package idealindustrial.tile.impl.multi.struct;
 
-public abstract class BiPredicate implements ICoordPredicate {
+public abstract class BiPredicate implements MatrixCoordPredicate {
     
-    protected ICoordPredicate left, right;
+    protected MatrixCoordPredicate left, right;
 
-    public BiPredicate(ICoordPredicate left, ICoordPredicate right) {
+    public BiPredicate(MatrixCoordPredicate left, MatrixCoordPredicate right) {
         this.left = left;
         this.right = right;
     }

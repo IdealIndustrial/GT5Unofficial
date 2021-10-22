@@ -1,17 +1,13 @@
 package idealindustrial.util.fluid;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import idealindustrial.autogen.items.GT_FluidDisplayItem;
+import idealindustrial.items.GT_FluidDisplayItem;
 import idealindustrial.util.item.HashedStack;
 import idealindustrial.util.item.ItemHelper;
-import idealindustrial.util.misc.II_Util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -135,20 +131,25 @@ public class II_FluidHelper {
     }
 
     public static ItemStack getFluidDisplayStack(FluidStack aFluid) {
-        if (aFluid == null || aFluid.getFluid() == null) return null;
-        int tmp = 0;
-        try {
-            tmp = aFluid.getFluid().getID();
-        } catch (Exception e) {
-            System.err.println(e);
+        if (aFluid == null) {
+            return null;
         }
         ItemStack rStack;
-        rStack = new ItemStack(GT_FluidDisplayItem.INSTANCE);
+        rStack = new ItemStack(GT_FluidDisplayItem.INSTANCE, 1, aFluid.getFluidID());
         NBTTagCompound tNBT = new NBTTagCompound();
-        tNBT.setLong("mFluidDisplayAmount", aFluid.amount);
-        tNBT.setLong("mFluidDisplayHeat", aFluid.getFluid().getTemperature(aFluid));
+        tNBT.setString("fname", aFluid.getFluid().getName());
+        tNBT.setInteger("mFluidDisplayAmount", aFluid.amount);
+        tNBT.setInteger("mFluidDisplayHeat", aFluid.getFluid().getTemperature(aFluid));
         tNBT.setBoolean("mFluidState", aFluid.getFluid().isGaseous(aFluid));
         rStack.setTagCompound(tNBT);
         return rStack;
+    }
+
+    public static FluidStack getFluidFromDisplayStack(ItemStack is) {
+        if (is == null) {
+            return null;
+        }
+        NBTTagCompound nbt = is.getTagCompound();
+        return FluidRegistry.getFluidStack(nbt.getString("fname"), nbt.getInteger("mFluidDisplayAmount"));
     }
 }

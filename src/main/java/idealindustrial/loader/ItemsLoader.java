@@ -3,8 +3,8 @@ package idealindustrial.loader;
 import idealindustrial.II_Core;
 import idealindustrial.autogen.implementation.MetaGeneratedItem_1;
 import idealindustrial.autogen.implementation.behaviors.BehaviorGuideRenderer;
-import idealindustrial.autogen.items.GT_FluidDisplayItem;
-import idealindustrial.autogen.items.MetaBehaviorItem;
+import idealindustrial.items.GT_FluidDisplayItem;
+import idealindustrial.items.MetaBehaviorItem;
 import idealindustrial.render.GT_FluidDisplayStackRenderer;
 import net.minecraft.item.ItemStack;
 

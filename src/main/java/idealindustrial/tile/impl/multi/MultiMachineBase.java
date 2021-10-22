@@ -18,7 +18,7 @@ import idealindustrial.util.fluid.EmptyTank;
 import idealindustrial.util.inventory.EmptyInventory;
 import idealindustrial.util.inventory.StupidMultipartInv;
 import idealindustrial.util.world.ChunkLoadingMonitor;
-import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.util.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 

@@ -1,13 +1,14 @@
 package idealindustrial.autogen.material.submaterial.render;
 
 import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.util.IIcon;
 
 import java.awt.*;
 
 public class RenderInfo {
 
-    protected Color[] colors = new Color[4];
+    protected Color[] colors = II_StreamUtil.arrayOf(Color.WHITE, new Color[4]);
     protected TextureSet textureSet;
 
     public RenderInfo(TextureSet set) {
@@ -25,6 +26,7 @@ public class RenderInfo {
 
     public int[] getColorAsArray(MatterState state) {
         Color color = getColor(state);
+        assert color != null;
         return new int[]{color.getRed(), color.getGreen(), color.getBlue(), 0};
     }
 

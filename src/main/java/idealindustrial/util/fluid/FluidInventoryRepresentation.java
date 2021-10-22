@@ -1,6 +1,7 @@
 package idealindustrial.util.fluid;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.fluids.FluidStack;
 
 public interface FluidInventoryRepresentation extends IInventory {
 
@@ -9,4 +10,9 @@ public interface FluidInventoryRepresentation extends IInventory {
    default int getOutSize() {
       return getSizeInventory() - getInSize();
    }
+
+   FluidStack[] parseInputsClient();
+   FluidStack[] parseOutputsClient();
+
+
 }

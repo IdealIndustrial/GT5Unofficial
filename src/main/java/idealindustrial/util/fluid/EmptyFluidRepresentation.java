@@ -2,6 +2,7 @@ package idealindustrial.util.fluid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class EmptyFluidRepresentation implements FluidInventoryRepresentation {
     public static final FluidInventoryRepresentation INSTANCE = new EmptyFluidRepresentation();
@@ -18,6 +19,16 @@ public class EmptyFluidRepresentation implements FluidInventoryRepresentation {
     @Override
     public int getOutSize() {
         return 0;
+    }
+
+    @Override
+    public FluidStack[] parseInputsClient() {
+        return new FluidStack[0];
+    }
+
+    @Override
+    public FluidStack[] parseOutputsClient() {
+        return new FluidStack[0];
     }
 
     @Override

@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import idealindustrial.textures.ITexture;
 import idealindustrial.tile.impl.multi.struct.IGuideRenderer;
-import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.util.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;

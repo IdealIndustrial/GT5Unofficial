@@ -1,6 +1,7 @@
 package idealindustrial.util.item;
 
 import appeng.util.item.II_Hackery;
+import idealindustrial.autogen.oredict.OreDict;
 import idealindustrial.autogen.oredict.OreInfo;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,6 +36,12 @@ public class II_StackSignature extends II_ItemStack {
         this.type = type;
         if (stack.getTagCompound() != null) {
             this.def.setTagCompound(II_Hackery.getNBTHackery(stack.getTagCompound(), stack));
+        }
+        if (type == CheckType.OREDICT) {
+            oreInfo = OreDict.getUnified(new HashedStack(stack));
+            if (oreInfo == null) {
+                oreInfo = OreDict.getInfo(new HashedStack(stack)).iterator().next();
+            }
         }
     }
 

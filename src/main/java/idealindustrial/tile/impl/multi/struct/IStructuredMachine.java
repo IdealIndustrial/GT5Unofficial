@@ -1,6 +1,6 @@
 package idealindustrial.tile.impl.multi.struct;
 
-import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.util.Vector3;
 import net.minecraft.world.World;
 
 public interface IStructuredMachine {

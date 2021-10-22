@@ -76,11 +76,19 @@ public class OreDict {
     }
 
     public static Collection<OreInfo> getInfo(HashedStack stack) {
-        return anyStack2info.get(stack);
+        Collection<OreInfo> collection =  anyStack2info.get(stack);
+        if (collection.isEmpty()) {
+            return anyStack2info.get(stack.asWildcard());
+        }
+        return collection;
     }
 
     public static OreInfo getUnified(HashedStack stack) {
-        return stack2info.get(stack);
+        OreInfo out = stack2info.get(stack);
+        if (out == null) {
+            return stack2info.get(stack.asWildcard());
+        }
+        return out;
     }
 
 

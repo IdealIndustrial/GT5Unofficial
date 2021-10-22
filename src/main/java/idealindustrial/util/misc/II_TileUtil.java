@@ -18,7 +18,7 @@ import idealindustrial.util.inventory.interfaces.InternalInventory;
 import idealindustrial.util.inventory.interfaces.RecipedInventory;
 import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.lang.LocalizeEvent;
-import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.util.Vector3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;

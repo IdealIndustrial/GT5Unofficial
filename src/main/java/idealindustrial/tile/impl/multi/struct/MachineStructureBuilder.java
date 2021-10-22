@@ -1,6 +1,6 @@
 package idealindustrial.tile.impl.multi.struct;
 
-import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.util.Vector3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +27,13 @@ public class MachineStructureBuilder {
 
     public class ShapeAdder {
         String[][] shape;
-        Map<Character, ICoordPredicate> signatureMap = new HashMap<>();
+        Map<Character, MatrixCoordPredicate> signatureMap = new HashMap<>();
 
         public ShapeAdder(String[][] shape) {
             this.shape = shape;
         }
 
-        public ShapeAdder define(char ch, ICoordPredicate predicate) {
+        public ShapeAdder define(char ch, MatrixCoordPredicate predicate) {
             signatureMap.put(ch, predicate);
             return this;
         }
@@ -48,12 +48,12 @@ public class MachineStructureBuilder {
             int xSize = shape[0][0].length();
             int zSize = shape[0].length;
             int ySize = shape.length;
-            ICoordPredicate[][][] predicates = new ICoordPredicate[xSize][ySize][zSize];
+            MatrixCoordPredicate[][][] predicates = new MatrixCoordPredicate[xSize][ySize][zSize];
             for (int y = 0; y < ySize; y++) {
                 for (int z = 0; z < zSize; z++) {
                     for (int x = 0; x < xSize; x++) {
                         char ch = shape[y][z].charAt(x);
-                        ICoordPredicate predicate = signatureMap.get(ch);
+                        MatrixCoordPredicate predicate = signatureMap.get(ch);
                         if (predicate == null) {
                             if (ch == 'c') {
                                 predicate = new TruePredicate();
@@ -72,7 +72,7 @@ public class MachineStructureBuilder {
         }
     }
 
-    protected static ICoordPredicate getSpecialPredicate(char ch) {
+    protected static MatrixCoordPredicate getSpecialPredicate(char ch) {
         return null;//todo impl
     }
 

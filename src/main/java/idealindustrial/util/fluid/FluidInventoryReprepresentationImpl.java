@@ -103,4 +103,28 @@ public class FluidInventoryReprepresentationImpl implements FluidInventoryRepres
     public int getInSize() {
         return in.length;
     }
+
+    @Override
+    public FluidStack[] parseInputsClient() {
+        if (isClient) {
+            FluidStack[] fs = new FluidStack[in.length];
+            for (int i = 0; i < fs.length; i++) {
+                fs[i] = II_FluidHelper.getFluidFromDisplayStack(stacks[i]);
+            }
+            return fs;
+        }
+        return new FluidStack[0];
+    }
+
+    @Override
+    public FluidStack[] parseOutputsClient() {
+        if (isClient) {
+            FluidStack[] fs = new FluidStack[out.length];
+            for (int i = 0; i < fs.length; i++) {
+                fs[i] = II_FluidHelper.getFluidFromDisplayStack(stacks[i + in.length]);
+            }
+            return fs;
+        }
+        return new FluidStack[0];
+    }
 }

@@ -3,6 +3,7 @@ package idealindustrial.util.item;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 
 /**
@@ -87,5 +88,9 @@ public class HashedStack implements ItemHelper.Rehashable {
     public void fixHash() {
         itemID = Item.getIdFromItem(item);
         this.hash = itemID| (item.isDamageable() ? 0 : (damage << 16));
+    }
+
+    public HashedStack asWildcard() {
+        return new HashedStack(item, itemID, OreDictionary.WILDCARD_VALUE);
     }
 }

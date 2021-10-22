@@ -1,7 +1,7 @@
 package idealindustrial.teststuff;
 
-import idealindustrial.autogen.blocks.MetaBlock_Item;
-import idealindustrial.autogen.blocks.base.BaseBlock;
+import idealindustrial.blocks.MetaBlock_Item;
+import idealindustrial.blocks.base.BaseBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;

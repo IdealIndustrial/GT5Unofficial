@@ -1,12 +1,12 @@
 package idealindustrial.tile.impl.multi.struct;
 
 import idealindustrial.entity.CubeRenderedParticle;
-import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.util.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 
-public class DirectBlockPredicate implements ICoordPredicate {
+public class DirectBlockPredicate implements MatrixCoordPredicate {
 
     final Block block;
     final int meta, rotation, minAmount;
@@ -60,10 +60,10 @@ public class DirectBlockPredicate implements ICoordPredicate {
     }
 
     @Override
-    public ICoordPredicate or(ICoordPredicate predicate) {
+    public MatrixCoordPredicate or(MatrixCoordPredicate predicate) {
         if (predicate instanceof BlockDependentPredicate) {
             ((BlockDependentPredicate) predicate).addBlockInfo(this);
         }
-        return ICoordPredicate.super.or(predicate);
+        return MatrixCoordPredicate.super.or(predicate);
     }
 }

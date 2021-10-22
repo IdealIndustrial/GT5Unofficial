@@ -2,6 +2,7 @@ package idealindustrial.tile.gui.base;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
+import idealindustrial.tile.interfaces.host.NetworkedInventory;
 import idealindustrial.util.fluid.FluidHandler;
 import idealindustrial.util.fluid.EmptyFluidRepresentation;
 import idealindustrial.util.fluid.II_FluidHelper;
@@ -17,17 +18,18 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class GenericContainer extends Container {
 
-    public HostMachineTile tile;
+    public NetworkedInventory tile;
     public EntityPlayer player;
     public boolean bindInventory;
     public FluidInventoryRepresentation representation;
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return player.getDistance(tile.getXCoord(), tile.getYCoord(), tile.getZCoord()) < 5d;
+        return tile.canInteractWith(player);
+//        return player.getDistance(tile.getXCoord(), tile.getYCoord(), tile.getZCoord()) < 5d;
     }
 
-    public GenericContainer(HostMachineTile tile, EntityPlayer player, boolean addSlots, boolean bindInventory) {
+    public GenericContainer(NetworkedInventory tile, EntityPlayer player, boolean addSlots, boolean bindInventory) {
         this.tile = tile;
         if (tile.hasFluidTank()) {
             representation = tile.getFluidRepresentation();

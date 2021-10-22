@@ -1,6 +1,7 @@
 package idealindustrial.autogen.material;
 
 import idealindustrial.autogen.material.submaterial.*;
+import idealindustrial.autogen.material.submaterial.chem.ChemicalInfo;
 import idealindustrial.autogen.material.submaterial.render.RenderInfo;
 
 import java.util.Set;
@@ -19,6 +20,7 @@ public class II_Material {
     protected FluidInfo fluidInfo; // fluid, gas, plasma...
     protected RenderInfo renderInfo;
     protected MaterialAutogenInfo autogenInfo;
+    protected ChemicalInfo chemicalInfo;
     protected FuelInfo fuelInfo;
     protected ResearchInfo researchInfo;
 
@@ -72,5 +74,9 @@ public class II_Material {
     @Override
     public String toString() {
         return name.toLowerCase();
+    }
+
+    public int getID() {
+        return id;
     }
 }

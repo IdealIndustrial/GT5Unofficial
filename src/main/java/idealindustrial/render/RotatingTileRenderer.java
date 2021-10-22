@@ -1,7 +1,6 @@
 package idealindustrial.render;
 
-import idealindustrial.autogen.blocks.II_Blocks;
-import idealindustrial.textures.IconContainer;
+import idealindustrial.blocks.II_Blocks;
 import idealindustrial.tile.host.HostPipeTileRotatingImpl;
 import idealindustrial.tile.impl.connected.ConnectedRotor;
 import idealindustrial.tile.impl.connected.MetaConnectedRenderer;

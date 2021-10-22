@@ -2,7 +2,7 @@ package idealindustrial.teststuff.testmulti;
 
 import idealindustrial.textures.ITexture;
 import idealindustrial.textures.RenderedTexture;
-import idealindustrial.autogen.blocks.II_Blocks;
+import idealindustrial.blocks.II_Blocks;
 import idealindustrial.recipe.BasicMachineRecipe;
 import idealindustrial.recipe.RecipeMaps;
 import idealindustrial.textures.TextureManager;

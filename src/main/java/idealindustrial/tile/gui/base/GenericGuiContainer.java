@@ -2,14 +2,21 @@ package idealindustrial.tile.gui.base;
 
 import idealindustrial.tile.gui.base.component.II_Slot;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static idealindustrial.tile.gui.base.component.GuiTextures.SLOTS;
 
 public class GenericGuiContainer<ContainerType extends GenericContainer> extends GuiContainer {
     protected ContainerType container;
     protected ResourceLocation background;
+    protected List<Gui> elements = new ArrayList<>();
 
     public GenericGuiContainer(ContainerType container, String background) {
         super(container);
@@ -36,10 +43,25 @@ public class GenericGuiContainer<ContainerType extends GenericContainer> extends
                 continue;
             }
             II_Slot slot = (II_Slot) o;
-            int id = slot.texture;
-            int textureX = SLOTS.idToTextureX(id), textureY = SLOTS.idToTextureY(id);
-            drawTexturedModalRect(slot.xDisplayPosition + x - 1, slot.yDisplayPosition + y - 1, textureX, textureY, 18, 18);
+            slot.draw(slot.xDisplayPosition + x - 1, slot.yDisplayPosition + y - 1, this);
         }
 
+    }
+
+    public void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, Color color) {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.setColorRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
+        tessellator.addVertexWithUV(x, y + height, this.zLevel, (float) (u) * f, (float) (v + height) * f1);
+        tessellator.addVertexWithUV(x + width, y + height, this.zLevel, (float) (u + width) * f, (float) (v + height) * f1);
+        tessellator.addVertexWithUV(x + width, y, this.zLevel, (float) (u + width) * f, (float) (v) * f1);
+        tessellator.addVertexWithUV(x, y, this.zLevel, (float) (u) * f, (float) (v) * f1);
+        tessellator.draw();
+    }
+
+    public float getZLevel() {
+        return zLevel;
     }
 }

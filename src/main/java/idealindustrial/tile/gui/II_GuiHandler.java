@@ -3,6 +3,7 @@ package idealindustrial.tile.gui;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import idealindustrial.II_Core;
+import idealindustrial.commands.CommandOpenEditor;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -11,6 +12,9 @@ import net.minecraft.world.World;
 public class II_GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if (ID > 1000) {
+            return CommandOpenEditor.getServerGuiElement(ID, player, world, x, y, z);
+        }
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof HostMachineTile) {
             return ((HostMachineTile) tile).getServerGUI(player, ID);
@@ -20,6 +24,9 @@ public class II_GuiHandler implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if (ID > 1000) {
+            return CommandOpenEditor.getClientGuiElement(ID, player, world, x, y, z);
+        }
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof HostMachineTile) {
             return ((HostMachineTile) tile).getClientGUI(player, ID);

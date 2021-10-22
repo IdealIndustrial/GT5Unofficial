@@ -1,18 +1,11 @@
 package idealindustrial.util.misc;
 
 import com.google.common.collect.HashMultimap;
-import idealindustrial.autogen.items.GT_FluidDisplayItem;
-import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.items.GT_FluidDisplayItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import org.omg.CORBA.Object;
-import scala.Int;
 
 import java.awt.*;
 import java.util.*;

@@ -1,8 +1,8 @@
 package idealindustrial.tile.impl.multi.struct;
 
-import idealindustrial.util.worldgen.Vector3;
+import idealindustrial.util.worldgen.util.Vector3;
 
-public class TruePredicate implements ICoordPredicate {
+public class TruePredicate implements MatrixCoordPredicate {
 
     @Override
     public void resetCounters() {

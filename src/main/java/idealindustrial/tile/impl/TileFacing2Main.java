@@ -5,7 +5,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import idealindustrial.textures.ITexture;
 import idealindustrial.tile.interfaces.host.HostMachineTile;
 import idealindustrial.util.misc.II_DirUtil;
-import idealindustrial.util.worldgen.Vector3d;
+import idealindustrial.util.worldgen.util.Vector3d;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
