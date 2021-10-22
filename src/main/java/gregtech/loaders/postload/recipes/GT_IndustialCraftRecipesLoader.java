@@ -296,6 +296,8 @@ public class GT_IndustialCraftRecipesLoader implements Runnable {
 		GT_ModHandler.getModItem("IC2", "reactorHeatSwitchDiamond", 1L, 1),
 		GT_Utility.getIntegratedCircuit(3)},
 		Materials.SolderingAlloy.getMolten(1440L), 
-		GT_ModHandler.getModItem("IC2", "itemBatChargeLamaCrystal", 1L, 0), 200, 1920);	        
+		GT_ModHandler.getModItem("IC2", "itemBatChargeLamaCrystal", 1L, 0), 200, 1920);
+
+        GT_ModHandler.addCraftingRecipe(Ic2Items.toolbox.copy(), new Object[]{"SPS", "PdP", "SPS", 'S', OrePrefixes.screw.get(Materials.Bronze), 'P', GT_ModHandler.getIC2Item("casingbronze", 1L)});
     }
 }
