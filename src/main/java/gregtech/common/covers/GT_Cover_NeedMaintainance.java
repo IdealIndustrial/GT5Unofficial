@@ -169,10 +169,10 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
         return new GUI(aSide, aCoverID, coverData, aTileEntity);
     }
 
-    private class GUI extends GT_GUICover {
-        private final byte side;
-        private final int coverID;
-        private int coverVariable;
+    protected class GUI extends GT_GUICover {
+        protected final byte side;
+        protected final int coverID;
+        protected int coverVariable;
 
         private final String[] tooltiptext = {
                 trans("056", "Emit if 1 Maintenance Needed"),
@@ -200,12 +200,12 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
                 trans("NORMAL","Normal"),
         };
 
-        private final static int startX = 10;
-        private final static int startY = 22;
-        private final static int spaceX = 18;
-        private final static int spaceY = 16;
+        protected final static int startX = 10;
+        protected final static int startY = 22;
+        protected final static int spaceX = 18;
+        protected final static int spaceY = 16;
 
-        private final static int invertButton = 8;
+        protected final static int invertButton = 8;
 
         public GUI(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
             super(aTileEntity, 176, 107, GT_Utility.intToStack(aCoverID));
@@ -258,12 +258,12 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
             updateButtons();
         }
 
-        private void updateButtons(){
+        protected void updateButtons(){
             for (Object o : buttonList)
                 ((GT_GuiIconCheckButton) o).setChecked(isEnabled(((GT_GuiIconCheckButton) o).id));
         }
 
-        private int getNewCoverVariable(int id, boolean checked) {
+        protected int getNewCoverVariable(int id, boolean checked) {
             if (id == invertButton) {
                 if (checked)
                     return coverVariable & ~0x1;
@@ -273,7 +273,7 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
             return (coverVariable & 0x1) | (id << 1) ;
         }
 
-        private boolean isEnabled(int id) {
+        protected boolean isEnabled(int id) {
             if (id == invertButton)
                 return (coverVariable & 0x1) > 0;
             return (coverVariable >>> 1) == id;
