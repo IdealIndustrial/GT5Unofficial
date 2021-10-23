@@ -169,7 +169,7 @@ public class CableSystem {
         if (tileEntity == null) {
             return null;
         }
-        if (tileEntity instanceof HostTile) {
+        if (tileEntity instanceof HostMachineTile) {
             HostMachineTile next = (HostMachineTile) tileEntity;
             EnergyHandler handler = next.getEnergyHandler();
             if (handler.getProducer(side) != null) {

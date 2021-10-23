@@ -2,6 +2,7 @@ package idealindustrial.loader;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import idealindustrial.blocks.plants.TilePlants;
 import idealindustrial.textures.ITexture;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
@@ -60,6 +61,7 @@ public class TileLoader implements Runnable {
         GameRegistry.registerTileEntity(HostPipeTileImpl.class, "ii.pipe_tile");
         GameRegistry.registerTileEntity(HostPipeTileRotatingImpl.class, "ii.pipe_rotation_tile");
         GameRegistry.registerTileEntity(TileOres.class, "ii.tile_ores");
+        GameRegistry.registerTileEntity(TilePlants.class, "ii.tile_plants");
 
         ClientRegistry.bindTileEntitySpecialRenderer(HostPipeTileRotatingImpl.class, new RotatingTileRenderer());
     }

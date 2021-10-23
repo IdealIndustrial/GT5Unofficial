@@ -2,13 +2,14 @@ package idealindustrial.util.world.underbedrock.impl;
 
 import idealindustrial.util.misc.II_Util;
 import idealindustrial.util.misc.NBTSerializer;
-import idealindustrial.util.world.underbedrock.*;
+import idealindustrial.util.world.underbedrock.ChunkProvider;
+import idealindustrial.util.world.underbedrock.GridChunk;
+import idealindustrial.util.world.underbedrock.GridGenerationRules;
+import idealindustrial.util.world.underbedrock.UnderbedrockLayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.chunk.Chunk;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import static idealindustrial.util.world.underbedrock.impl.UnderbedrockUtil.blockToBlockCoordinateInChunk;
 import static idealindustrial.util.world.underbedrock.impl.UnderbedrockUtil.blockToChunkCoordinate;
@@ -22,12 +23,12 @@ public class BasicUnderbedrockLayer<T> implements UnderbedrockLayer<T> {
     private final NBTSerializer<T> serializationWrapper;
 
     public BasicUnderbedrockLayer(GridGenerationRules<T> rules) {
-        this(rules, new UnderbedrockChunkProvider<>(rules), "noNBT", null);
+        this(rules.getGridSize(), new UnderbedrockOreProvider<>(rules), "noNBT", null);
     }
 
-    public BasicUnderbedrockLayer(GridGenerationRules<T> rules, ChunkProvider<T> provider, String nbtName, NBTSerializer<T> serializationWrapper) {
+    public BasicUnderbedrockLayer(int gridSize, ChunkProvider<T> provider, String nbtName, NBTSerializer<T> serializationWrapper) {
         this.provider = provider;
-        this.gridSize = rules.getGridSize();
+        this.gridSize = gridSize;
         this.nbtName = nbtName;
         this.serializationWrapper = serializationWrapper;
     }

@@ -23,6 +23,10 @@ public class HPoint {
     public HPoint() {
     }
 
+    public HPoint(long l) {
+        fromLong(l);
+    }
+
     public long toLongOff(int x, int y, int z) {
         x += this.x;
         y += this.y;

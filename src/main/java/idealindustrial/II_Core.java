@@ -24,6 +24,7 @@ import idealindustrial.tools.ToolRegistry;
 import idealindustrial.util.item.ItemHelper;
 import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.world.ChunkLoadingMonitor;
+import idealindustrial.util.world.DimensionChunkData;
 import idealindustrial.util.world.WorldTickHandler;
 import idealindustrial.util.worldgen.oregen.OreGenerator;
 import net.minecraft.crash.CrashReport;
@@ -34,6 +35,7 @@ import net.minecraft.util.ReportedException;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -169,6 +171,20 @@ public class II_Core {
         }
     }
 
+
+    @SubscribeEvent
+    public void onChunkSave(ChunkDataEvent.Save event) {
+        if (!event.world.isRemote) {
+            DimensionChunkData.chunkSave(event.world, event.getChunk().xPosition, event.getChunk().zPosition, event.getData());
+        }
+    }
+
+    @SubscribeEvent
+    public void onChunkLoad(ChunkDataEvent.Load event) {
+        if (!event.world.isRemote) {
+            DimensionChunkData.chunkLoad(event.world, event.getChunk().xPosition, event.getChunk().zPosition, event.getData());
+        }
+    }
 
     private static boolean checkEnvironment() {
         try {

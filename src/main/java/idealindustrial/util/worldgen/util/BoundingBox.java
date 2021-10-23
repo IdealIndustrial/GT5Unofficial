@@ -72,6 +72,10 @@ public class BoundingBox {
         return new BoundingBox(getMin().add(vec), getMax().add(vec));
     }
 
+    public int volume() {
+        return (maxX - minX) * (maxY - minY) * (maxZ - minZ);
+    }
+
     public static class BoxBuilder {
         BoundingBox box = new BoundingBox(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
 

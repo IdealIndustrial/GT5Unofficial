@@ -6,6 +6,8 @@ import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.autogen.material.submaterial.BlockInfo;
 import idealindustrial.autogen.material.submaterial.BlockType;
+import idealindustrial.blocks.plants.BlockPlants;
+import idealindustrial.blocks.plants.Plants;
 import idealindustrial.reflection.events.II_EventListener;
 import idealindustrial.tile.BlockMachines;
 import idealindustrial.blocks.ores.BlockOres;
@@ -29,6 +31,7 @@ public class II_Blocks {
     public BlockMachines blockMachines;
     public CasingBlock casing1;
     public BlockOres blockOres;
+    public BlockPlants blockPlants;
 
     protected II_Blocks() {
         for (int i = 0; i < materialBlocks.length; i++) {
@@ -59,6 +62,8 @@ public class II_Blocks {
         blockMachines = new BlockMachines();
         casing1 = new CasingBlock("testcasing", Material.iron, 1);
         blockOres = new BlockOres();
+        blockPlants = new BlockPlants();
+        Plants.init();
     }
 
     @LocalizeEvent

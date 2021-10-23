@@ -8,12 +8,12 @@ import java.util.Random;
 
 import static idealindustrial.util.world.underbedrock.impl.UnderbedrockUtil.blockToChunkCoordinate;
 
-public class UnderbedrockChunkProvider<T> implements ChunkProvider<T> {
+public class UnderbedrockOreProvider<T> implements ChunkProvider<T> {
 
     private final GridGenerationRules<T> rules;
     private final int clusterSize, gridSize;
 
-    public UnderbedrockChunkProvider(GridGenerationRules<T> rules) {
+    public UnderbedrockOreProvider(GridGenerationRules<T> rules) {
         this.rules = rules;
         this.clusterSize = rules.getClusterSize();
         this.gridSize = rules.getGridSize();

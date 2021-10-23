@@ -11,4 +11,6 @@ public interface WeightedRandom<T> {
     T next(Random random);
 
     WeightedRandom<T> add(double weight, T result);
+
+    int size();
 }

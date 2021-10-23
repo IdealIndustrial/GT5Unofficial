@@ -2,6 +2,7 @@ package idealindustrial.loader;
 
 import idealindustrial.II_Core;
 import idealindustrial.autogen.implementation.MetaGeneratedItem_1;
+import idealindustrial.autogen.implementation.behaviors.BehaviorClock;
 import idealindustrial.autogen.implementation.behaviors.BehaviorGuideRenderer;
 import idealindustrial.items.GT_FluidDisplayItem;
 import idealindustrial.items.MetaBehaviorItem;
@@ -11,7 +12,7 @@ import net.minecraft.item.ItemStack;
 public class ItemsLoader {
 
     static MetaBehaviorItem behaviorItem1;
-    public static ItemStack wrench, mallet, cell;
+    public static ItemStack wrench, mallet, cell, clock;
 
     public void preLoad() {
         new MetaGeneratedItem_1();
@@ -30,6 +31,7 @@ public class ItemsLoader {
         wrench = behaviorItem1.registerItem(3, "Wrench");
         mallet = behaviorItem1.registerItem(4, "Soft Mallet");
         cell = behaviorItem1.registerItem(5, "Empty Cell");
+        clock = behaviorItem1.registerItem(6, "Clock", new BehaviorClock());
     }
 
 }

@@ -4,7 +4,9 @@ import idealindustrial.render.GT_Renderer_Block;
 import idealindustrial.render.IFastRenderedTileEntity;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -72,6 +74,10 @@ public abstract class Tile32kBlock<T extends TileEntity & Tile32k & IFastRendere
 
     public T getCachedTile() {
         return cachedTile;
+    }
+
+    public boolean canPlayerPlace(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int side, float hitX, float hitY, float hitZ, int aMeta ) {
+        return true;
     }
 
 }

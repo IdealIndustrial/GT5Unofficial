@@ -1,11 +1,13 @@
 package idealindustrial.blocks.base;
 
 import idealindustrial.blocks.ores.TileOres;
+import idealindustrial.tile.interfaces.meta.Tile;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -27,11 +29,11 @@ public class BlockTile32kItem extends ItemBlock {
 
     public boolean placeBlockAt(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int side, float hitX, float hitY, float hitZ, int aMeta) {
         short tDamage = (short) getDamage(aStack);
-        if (tDamage >= 0) {
+        if (tDamage >= 0 && ((Tile32kBlock<?>) field_150939_a).canPlayerPlace(aStack, aPlayer, aWorld, aX, aY, aZ, side, hitX, hitY, hitZ, tDamage)) {
             if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, 0, 3)) {
                 return false;
             }
-            TileOres tTileEntity = (TileOres) aWorld.getTileEntity(aX, aY, aZ);
+            Tile32k tTileEntity = (Tile32k) aWorld.getTileEntity(aX, aY, aZ);
             if (tTileEntity != null) {
                 tTileEntity.setValuesFromMeta(tDamage);
             }

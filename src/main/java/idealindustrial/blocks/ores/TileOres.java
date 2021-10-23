@@ -112,7 +112,7 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         if (Stream.of("mat, pref", "block", "bmeta").anyMatch(s -> !nbt.hasKey(s))) {
-            worldObj.setBlock(xCoord, yCoord, zCoord, Blocks.air);
+//            worldObj.setBlock(xCoord, yCoord, zCoord, Blocks.air);
             material = II_Materials.iron;
             prefix = Prefixes.ore;
             block = Blocks.stone;
@@ -170,6 +170,9 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
             tile.block = block;
             tile.meta = blockMeta;
             tile.syncTileEntity();
+        }
+        else {
+            int a = 0;
         }
     }
 
