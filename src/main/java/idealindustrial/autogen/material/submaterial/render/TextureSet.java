@@ -19,13 +19,15 @@ public class TextureSet {
     private static final Set<String> blockIcons = Stream.of(Prefixes.block, Prefixes.cable01).map(Enum::toString).collect(Collectors.toSet());
     private static final Set<String> itemIcons = Stream.of(Prefixes.ingot, Prefixes.plate, Prefixes.dust, Prefixes.dustSmall, Prefixes.dustTiny)
             .map(Enum::toString).collect(Collectors.toSet());
+    private static final Set<String> itemWithOverlays = Stream.of(Prefixes.cell, Prefixes.gasCell, Prefixes.plasmaCell, Prefixes.toolHeadDrill)
+            .map(Enum::toString).collect(Collectors.toSet());
 
     static {
         blockIcons.addAll(Arrays.asList("liquid", "gas", "plasma", "ore", "oreSmall"));
     }
 
 
-    public IconContainer ingot, plate, dust, dustTiny, dustSmall, liquid, gas, plasma, block, cable01, ore, oreSmall;
+    public IconContainer ingot, plate, dust, dustTiny, dustSmall, liquid, gas, plasma, block, cable01, ore, oreSmall, cell, gasCell, plasmaCell, toolHeadDrill;
 
     private final IconContainer[] icons = new IconContainer[Prefixes.values().length];
     private String name;
@@ -49,6 +51,9 @@ public class TextureSet {
             }
             if (itemIcons.contains(field.getName())) {
                 field.set(this, TextureManager.INSTANCE.itemTexture(TEXTURE_SET + name + "/" + field.getName()));
+            }
+            if (itemWithOverlays.contains(field.getName())) {
+                field.set(this, TextureManager.INSTANCE.itemTextureWithOverlay(TEXTURE_SET + name + "/" + field.getName()));
             }
             try {
                 Prefixes p = Prefixes.valueOf(field.getName());

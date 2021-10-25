@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 public class BlockIconWithCallback extends BlockIconContainer {
     Consumer<IconContainer> callback;
 
-    public BlockIconWithCallback(String name, boolean hasOverlay, Consumer<IconContainer> callback) {
-        super(name, hasOverlay);
+    public BlockIconWithCallback(String name, Consumer<IconContainer> callback) {
+        super(name);
         this.callback = callback;
     }
 

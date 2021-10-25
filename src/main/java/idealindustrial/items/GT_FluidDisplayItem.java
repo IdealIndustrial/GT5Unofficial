@@ -2,6 +2,7 @@ package idealindustrial.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import idealindustrial.textures.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,6 +41,7 @@ public class GT_FluidDisplayItem
 
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister aIconRegister) {
+
     }
 
     public IIcon getIconFromDamage(int aMeta) {

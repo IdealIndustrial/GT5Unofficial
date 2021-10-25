@@ -6,8 +6,8 @@ import net.minecraft.util.ResourceLocation;
 class BlockIconContainer extends BaseIconContainer {
 
 
-    public BlockIconContainer(String name, boolean hasOverlay) {
-        super(name, hasOverlay);
+    public BlockIconContainer(String name) {
+        super(name);
     }
 
     @Override

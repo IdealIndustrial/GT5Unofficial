@@ -5,6 +5,7 @@ import idealindustrial.items.MetaGeneratedItem;
 import idealindustrial.autogen.material.submaterial.MatterState;
 import idealindustrial.autogen.material.submaterial.render.RenderInfo;
 import idealindustrial.textures.IconContainer;
+import idealindustrial.textures.OverlayIconContainer;
 import idealindustrial.util.fluid.II_FluidHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -69,18 +70,18 @@ public class MetaGeneratedItem_Renderer
     }
 
     private void renderOverlay(ItemRenderType type, IconContainer container) {
-        IIcon overlay;
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
-        overlay = null;
-        if (overlay != null) {
-            doRender(type, overlay);
+        if (container instanceof OverlayIconContainer) {
+            doRender(type, ((OverlayIconContainer) container).getOverlay());
         }
     }
 
     private void renderBackSide(ItemRenderType type, RenderInfo renderInfo, IconContainer container, MatterState state) {
-        IIcon icon = container.getIcon();
-        setColor(renderInfo, state);
-        doRender(type, icon);
+        if (container != null) {
+            IIcon icon = container.getIcon();
+            setColor(renderInfo, state);
+            doRender(type, icon);
+        }
     }
 
     private void doRender(ItemRenderType type, IIcon icon) {
@@ -94,9 +95,6 @@ public class MetaGeneratedItem_Renderer
     }
 
     private void renderFluid(ItemRenderType type, ItemStack stack, IconContainer cellIcon, RenderInfo cellRenderInfo) {
-        if (true) {
-            return;
-        }
         FluidStack fluid = II_FluidHelper.getFluidForContainer(stack);
         if (cellIcon == null) {
             return;
@@ -110,7 +108,7 @@ public class MetaGeneratedItem_Renderer
         }
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
 
         renderBackSide(type, cellRenderInfo, cellIcon, MatterState.Liquid);
         int tColor = fluid.getFluid().getColor(fluid);

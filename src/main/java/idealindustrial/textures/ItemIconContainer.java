@@ -5,8 +5,8 @@ import net.minecraft.util.ResourceLocation;
 
 class ItemIconContainer extends BaseIconContainer {
 
-    public ItemIconContainer(String name, boolean hasOverlay) {
-        super(name, hasOverlay);
+    public ItemIconContainer(String name) {
+        super(name);
     }
 
     @Override

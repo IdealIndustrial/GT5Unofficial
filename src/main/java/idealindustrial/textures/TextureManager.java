@@ -22,19 +22,25 @@ public class TextureManager {
     Map<Integer, INetworkedTexture> networkedTextureMap = new HashMap<>();
 
     public IconContainer blockTexture(String name) {
-        BlockIconContainer container = new BlockIconContainer(name, false);
+        BlockIconContainer container = new BlockIconContainer(name);
         blocks.add(container);
         return container;
     }
 
     public IconContainer blockTexture(String name, Consumer<IconContainer> callback){
-        BlockIconContainer icon = new BlockIconWithCallback(name, false, callback);
+        BlockIconContainer icon = new BlockIconWithCallback(name,  callback);
         blocks.add(icon);
         return icon;
     }
 
     public IconContainer itemTexture(String name) {
-        ItemIconContainer container = new ItemIconContainer(name, false);
+        ItemIconContainer container = new ItemIconContainer(name);
+        items.add(container);
+        return container;
+    }
+
+    public IconContainer itemTextureWithOverlay(String name) {
+        OverlayIconContainer container = new OverlayIconContainer(name);
         items.add(container);
         return container;
     }

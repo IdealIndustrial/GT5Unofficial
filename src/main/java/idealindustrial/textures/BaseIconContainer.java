@@ -9,7 +9,7 @@ public abstract class BaseIconContainer implements IconContainer, IRegistrableIc
     protected IIcon icon;
     protected final String name;
 
-    public BaseIconContainer(String name, boolean hasOverlay) {
+    public BaseIconContainer(String name) {
         this.name = name;
     }
 

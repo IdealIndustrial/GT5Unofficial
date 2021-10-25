@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.function.IntConsumer;
 
 @II_EventListener
-public abstract class MetaGeneratedItem extends MetaItem {
+public class MetaGeneratedItem extends MetaItem {
 
     Prefixes[] prefixes;
     II_Material[] materials;

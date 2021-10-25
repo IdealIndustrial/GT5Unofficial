@@ -21,6 +21,7 @@ import idealindustrial.teststuff.TestBlock;
 import idealindustrial.teststuff.TestTile;
 import idealindustrial.tile.gui.II_GuiHandler;
 import idealindustrial.tools.ToolRegistry;
+import idealindustrial.util.fluid.II_FluidHelper;
 import idealindustrial.util.item.ItemHelper;
 import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.world.ChunkLoadingMonitor;
@@ -38,6 +39,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.oredict.RecipeSorter;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,6 +89,7 @@ public class II_Core {
         autogen = new AutogenRecipes();
         new GT_Network();
         MinecraftForge.EVENT_BUS.register(oredictLoader);
+        MinecraftForge.EVENT_BUS.register(new II_FluidHelper());
         oredictLoader.loadAlreadyNicelyLoadedByForgeOreDictsWithoutFuckingEvents();
         //INSTANCE = this;
     }
