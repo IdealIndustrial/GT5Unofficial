@@ -63,6 +63,10 @@ public abstract class MetaItem32k extends MetaItem {
         return engNames[i] != null;
     }
 
+    public boolean isEnabled(ItemStack is) {
+        return isEnabled(is.getItemDamage());
+    }
+
     public void forEachEnabled(IntConsumer function) {
         for (int i = 0; i < engNames.length; i++) {
             if (isEnabled(i)) {

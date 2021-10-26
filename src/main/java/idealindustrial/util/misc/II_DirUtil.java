@@ -114,4 +114,30 @@ public class II_DirUtil {
         }
         return 2;
     }
+
+    /**
+     * Возвращает вращение по направлениею, такое, что если его применить к этому направлению,
+     * то оно стает равным -Z
+     * проще говоря, эта функция нужна, чтобы узнать на сколько нужно крутить
+     * ICoordManipulator, чтобы для нового направления side,
+     * все повернулось, как повернуто в изначальной матрице относительно -Z
+     *
+     *
+     * @param side новое направление
+     * @return нужное вращение
+     */
+    public static int getRotationForDirectionFromNormal(int side) {
+        switch (side) {
+            case 2:
+                return 2;
+            case 3:
+                return 0;
+            case 4:
+                return 1;
+            case 5:
+                return -1;
+            default:
+                return 0;
+        }
+    }
 }

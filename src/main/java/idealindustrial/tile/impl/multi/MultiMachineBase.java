@@ -17,12 +17,15 @@ import idealindustrial.util.energy.electric.MultiEnergyHandler;
 import idealindustrial.util.fluid.EmptyTank;
 import idealindustrial.util.inventory.EmptyInventory;
 import idealindustrial.util.inventory.StupidMultipartInv;
+import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.world.ChunkLoadingMonitor;
 import idealindustrial.util.worldgen.util.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFacing2Main<H> implements IStructuredMachine {
@@ -99,18 +102,7 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
 
     @Override
     public int getRotation() {
-        switch (mainFacing) {
-            case 2:
-                return 2;
-            case 3:
-                return 0;
-            case 4:
-                return 1;
-            case 5:
-                return -1;
-            default:
-                return 0;
-        }
+        return II_DirUtil.getRotationForDirectionFromNormal(mainFacing);
     }
 
     @Override
