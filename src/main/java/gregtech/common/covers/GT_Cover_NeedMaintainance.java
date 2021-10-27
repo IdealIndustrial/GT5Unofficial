@@ -24,7 +24,8 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
     }
 
     public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity, long aTimer) {
-        boolean needsRepair = false;
+        int needsRepair = 0;
+
         if (aTileEntity instanceof IGregTechTileEntity) {
             IGregTechTileEntity tTileEntity = (IGregTechTileEntity) aTileEntity;
             IMetaTileEntity mTileEntity = tTileEntity.getMetaTileEntity();
@@ -36,36 +37,39 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
                 int coverVar = aCoverVariable >>> 1;
                 if (coverVar < 5) {
                     if (ideal - real > coverVar)
-                        needsRepair = true;
-                } else if (coverVar == 5 || coverVar == 6) {
+                        needsRepair = 15;
+                } else if (coverVar == 5 || coverVar == 6 || coverVar == 7) {
                     if (isRotor(tRotor)) {
                         long tMax = GT_MetaGenerated_Tool.getToolMaxDamage(tRotor);
                         long tCur = GT_MetaGenerated_Tool.getToolDamage(tRotor);
-                        if (coverVar == 5) {
-                            needsRepair = (tCur >= tMax * 8 / 10);
+
+                        if (coverVar == 7) {
+                            needsRepair = (int) (15 * tCur / tMax);
+                        } else if (coverVar == 5) {
+                            needsRepair = (tCur >= tMax * 8 / 10) ? 15 : 0;
                         } else {
                             long mExpectedDamage = Math.round(Math.min(multi.mEUt / multi.damageFactorLow, Math.pow(multi.mEUt, multi.damageFactorHigh)));
-                            needsRepair = tCur + mExpectedDamage * 2 >= tMax;
+                            needsRepair = (tCur + mExpectedDamage * 2 >= tMax)  ? 15 : 0;
                         }
                     } else {
-                        needsRepair = true;
+                        needsRepair = 15;
                     }
                 }
             }
         }
-        if (aCoverVariable % 2 == 0) {
-            needsRepair = !needsRepair;
+        if (aCoverVariable % 2 == 1) {
+            needsRepair = 15 - needsRepair;
         }
 
-        aTileEntity.setOutputRedstoneSignal(aSide, (byte) (needsRepair ? 0 : 15));
-        aTileEntity.setOutputRedstoneSignal(GT_Utility.getOppositeSide(aSide), (byte) (needsRepair ? 0 : 15));
+        aTileEntity.setOutputRedstoneSignal(aSide, (byte) needsRepair);
+        aTileEntity.setOutputRedstoneSignal(GT_Utility.getOppositeSide(aSide), (byte) needsRepair);
         return aCoverVariable;
     }
 
     public int onCoverScrewdriverclick(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-        aCoverVariable = (aCoverVariable + (aPlayer.isSneaking() ? -1 : 1)) % 14;
+        aCoverVariable = (aCoverVariable + (aPlayer.isSneaking() ? -1 : 1)) % 16;
         if (aCoverVariable < 0) {
-            aCoverVariable = 13;
+            aCoverVariable = 15;
         }
         switch (aCoverVariable) {
             case 0:
@@ -109,6 +113,12 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
                 break;
             case 13:
                 GT_Utility.sendChatToPlayer(aPlayer, trans("069", "Emit if rotor needs maintenance high accuracy mod(inverted)"));
+                break;
+            case 14:
+                GT_Utility.sendChatToPlayer(aPlayer, trans("070", "Emit rotor damage"));
+                break;
+            case 15:
+                GT_Utility.sendChatToPlayer(aPlayer, trans("071", "Emit rotor toughness"));
                 break;
         }
         return aCoverVariable;
@@ -159,10 +169,10 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
         return new GUI(aSide, aCoverID, coverData, aTileEntity);
     }
 
-    private class GUI extends GT_GUICover {
-        private final byte side;
-        private final int coverID;
-        private int coverVariable;
+    protected class GUI extends GT_GUICover {
+        protected final byte side;
+        protected final int coverID;
+        protected int coverVariable;
 
         private final String[] tooltiptext = {
                 trans("056", "Emit if 1 Maintenance Needed"),
@@ -172,6 +182,7 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
                 trans("064", "Emit if 5 Maintenance Needed"),
                 trans("066", "Emit if rotor needs maintenance low accuracy mod"),
                 trans("068", "Emit if rotor needs maintenance high accuracy mod"),
+                trans("070", "Emit rotor damage"),
         };
 
         private final String[] buttontext = {
@@ -182,15 +193,19 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
                 trans("251", "5 Issues"),
                 trans("252", "Rotor < 80%"),
                 trans("253", "Rotor < 100%"),
+                trans("254", "Rotor damage"),
+                trans("255", "Rotor tough"),
 
                 trans("INVERTED","Inverted"),
                 trans("NORMAL","Normal"),
         };
 
-        private final static int startX = 10;
-        private final static int startY = 25;
-        private final static int spaceX = 18;
-        private final static int spaceY = 18;
+        protected final static int startX = 10;
+        protected final static int startY = 22;
+        protected final static int spaceX = 18;
+        protected final static int spaceY = 16;
+
+        protected final static int invertButton = 8;
 
         public GUI(byte aSide, int aCoverID, int aCoverVariable, ICoverable aTileEntity) {
             super(aTileEntity, 176, 107, GT_Utility.intToStack(aCoverID));
@@ -203,10 +218,12 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
             b = new GT_GuiIconCheckButton(this, 1, startX + spaceX*0, startY+spaceY*1, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[1]);
             b = new GT_GuiIconCheckButton(this, 2, startX + spaceX*0, startY+spaceY*2, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[2]);
             b = new GT_GuiIconCheckButton(this, 3, startX + spaceX*0, startY+spaceY*3, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[3]);
-            b = new GT_GuiIconCheckButton(this, 4, startX + spaceX*4 + 4, startY+spaceY*0, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[4]);
-            b = new GT_GuiIconCheckButton(this, 5, startX + spaceX*4 + 4, startY+spaceY*1, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[5]);
-            b = new GT_GuiIconCheckButton(this, 6, startX + spaceX*4 + 4, startY+spaceY*2, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[6]);
-            b = new GT_GuiIconCheckButton(this, 7, startX + spaceX*4 + 4, startY+spaceY*3, GT_GuiIcon.REDSTONE_ON, GT_GuiIcon.REDSTONE_OFF);
+            b = new GT_GuiIconCheckButton(this, 4, startX + spaceX*0, startY+spaceY*4, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[4]);
+
+            b = new GT_GuiIconCheckButton(this, 5, startX + spaceX*4 + 4, startY+spaceY*0, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[5]);
+            b = new GT_GuiIconCheckButton(this, 6, startX + spaceX*4 + 4, startY+spaceY*1, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[6]);
+            b = new GT_GuiIconCheckButton(this, 7, startX + spaceX*4 + 4, startY+spaceY*2, GT_GuiIcon.CHECKMARK, null).setTooltipText(tooltiptext[7]);
+            b = new GT_GuiIconCheckButton(this, invertButton, startX + spaceX*4 + 4, startY+spaceY*4, GT_GuiIcon.REDSTONE_ON, GT_GuiIcon.REDSTONE_OFF);
         }
 
 
@@ -218,12 +235,14 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
             this.fontRendererObj.drawString(buttontext[1],startX + spaceX*1, 4+startY+spaceY*1, 0xFF555555);
             this.fontRendererObj.drawString(buttontext[2],startX + spaceX*1, 4+startY+spaceY*2, 0xFF555555);
             this.fontRendererObj.drawString(buttontext[3],startX + spaceX*1, 4+startY+spaceY*3, 0xFF555555);
-            this.fontRendererObj.drawString(buttontext[4],startX + spaceX*5 + 4, 4+startY+spaceY*0, 0xFF555555);
-            this.fontRendererObj.drawString(buttontext[5],startX + spaceX*5 + 4, 4+startY+spaceY*1, 0xFF555555);
-            this.fontRendererObj.drawString(buttontext[6],startX + spaceX*5 + 4, 4+startY+spaceY*2, 0xFF555555);
+            this.fontRendererObj.drawString(buttontext[4],startX + spaceX*1, 4+startY+spaceY*4, 0xFF555555);
+            this.fontRendererObj.drawString(buttontext[5],startX + spaceX*5 + 4, 4+startY+spaceY*0, 0xFF555555);
+            this.fontRendererObj.drawString(buttontext[6],startX + spaceX*5 + 4, 4+startY+spaceY*1, 0xFF555555);
             //                                          inverted        normal
-            String s2 = ((coverVariable & 0x1) > 0) ? buttontext[7] : buttontext[8];
-            this.fontRendererObj.drawString(s2,  startX + spaceX*5 + 4, 4+startY+spaceY*3, 0xFF555555);
+            String rotorText = ((coverVariable & 0x1) > 0) ? buttontext[8] : buttontext[7];
+            String invertText = ((coverVariable & 0x1) > 0) ? buttontext[9] : buttontext[10];
+            this.fontRendererObj.drawString(rotorText,  startX + spaceX*5 + 4, 4+startY+spaceY*2, 0xFF555555);
+            this.fontRendererObj.drawString(invertText,  startX + spaceX*5 + 4, 4+startY+spaceY*4, 0xFF555555);
         }
 
         @Override
@@ -232,20 +251,20 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
         }
 
         public void buttonClicked(GuiButton btn){
-            if (btn.id == 7 || !isEnabled(btn.id)){
+            if (btn.id == invertButton || !isEnabled(btn.id)){
                 coverVariable = getNewCoverVariable(btn.id, ((GT_GuiIconCheckButton) btn).isChecked());
                 GT_Values.NW.sendToServer(new GT_Packet_TileEntityCover(side, coverID, coverVariable, tile));
             }
             updateButtons();
         }
 
-        private void updateButtons(){
+        protected void updateButtons(){
             for (Object o : buttonList)
                 ((GT_GuiIconCheckButton) o).setChecked(isEnabled(((GT_GuiIconCheckButton) o).id));
         }
 
-        private int getNewCoverVariable(int id, boolean checked) {
-            if (id == 7) {
+        protected int getNewCoverVariable(int id, boolean checked) {
+            if (id == invertButton) {
                 if (checked)
                     return coverVariable & ~0x1;
                 else
@@ -254,8 +273,8 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
             return (coverVariable & 0x1) | (id << 1) ;
         }
 
-        private boolean isEnabled(int id) {
-            if (id == 7)
+        protected boolean isEnabled(int id) {
+            if (id == invertButton)
                 return (coverVariable & 0x1) > 0;
             return (coverVariable >>> 1) == id;
         }
