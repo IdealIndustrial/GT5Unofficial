@@ -8,7 +8,6 @@ jobs:
   build:
     name: IdealIndustrial
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == 'true'
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
