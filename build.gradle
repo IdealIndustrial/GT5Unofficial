@@ -140,6 +140,13 @@ processResources
 	exclude '**/Thumbs.db'
 }
 
+jar {
+		manifest {
+		attributes 'FMLCorePlugin': 'idealindustrial.hooks.HookLoader'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'sources'
