@@ -1,11 +1,15 @@
 name: Java CI with Gradle
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - dev
+    types: [closed]
 jobs:
   build:
     name: IdealIndustrial
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '-b')"
+    if: github.event.pull_request.merged == 'true'
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
