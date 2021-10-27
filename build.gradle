@@ -33,8 +33,8 @@ file "build.properties" withReader {
 
 
 version = "${config.gt.version}"
-group = "gregtech"
-archivesBaseName = "gregtech"
+group = "GT_II-edition"
+archivesBaseName = "GT_II-edition"
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
