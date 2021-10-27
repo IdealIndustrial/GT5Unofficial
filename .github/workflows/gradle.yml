@@ -3,7 +3,7 @@ name: Java CI with Gradle
 on:
   push:
     branches:
-      - dev
+      - IIA-dev
 jobs:
   build:
     name: IdealIndustrial
