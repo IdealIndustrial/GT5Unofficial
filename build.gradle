@@ -53,7 +53,19 @@ configurations {
     compile.extendsFrom provided, embedded
 }
 
-idea.module.inheritOutputDirs = true
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+}
+
+task prepareAssets(type: Copy) {
+    group = 'build'
+    from project.file('src/main/resources')
+    into project.file('build/classes/java/main')
+}
+
+classes.dependsOn(prepareAssets)
 
 repositories {
     maven {
