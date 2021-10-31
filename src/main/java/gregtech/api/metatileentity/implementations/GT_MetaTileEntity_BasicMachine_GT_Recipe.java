@@ -9,6 +9,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_ModHandler.RecipeBits;
+import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -644,14 +645,60 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
             case 0:
                 return false;
             case 1:
-                return getFillableStack() == null ? !mRequiresFluidForFiltering && getRecipeList().containsInput(aStack) : null != getRecipeList().findRecipe(getBaseMetaTileEntity(), mLastRecipe, true, V[mTier], new FluidStack[]{getFillableStack()}, getSpecialSlot(), new ItemStack[]{aStack});
+                if (getFillableStack() == null)
+                    return !mRequiresFluidForFiltering && getRecipeList().containsInput(aStack);
+
+                GT_Recipe recipe1 = getRecipeList().findRecipe(
+                        getBaseMetaTileEntity(),
+                        mLastRecipe,
+                        true,
+                        V[mTier],
+                        new FluidStack[]{getFillableStack()},
+                        getSpecialSlot(),
+                        new ItemStack[]{aStack});
+
+                return recipe1 != null;
             case 2:
-                return (!mRequiresFluidForFiltering || getFillableStack() != null) && (((getInputAt(0) != null && getInputAt(1) != null) || (getInputAt(0) == null && getInputAt(1) == null ? getRecipeList().containsInput(aStack) : (getRecipeList().containsInput(aStack) && null != getRecipeList().findRecipe(getBaseMetaTileEntity(), mLastRecipe, true, V[mTier], new FluidStack[]{getFillableStack()}, getSpecialSlot(), aIndex == getInputSlot() ? new ItemStack[]{aStack, getInputAt(1)} : new ItemStack[]{getInputAt(0), aStack})))));
+                if (!mRequiresFluidForFiltering || getFillableStack() != null) {
+                    ItemStack firstInput = getInputAt(0);
+                    ItemStack secondInput = getInputAt(1);
+
+                    if (firstInput != null && secondInput != null)
+                        return true;
+
+                    if (firstInput == null && secondInput == null)
+                        return getRecipeList().containsInput(aStack);
+
+                    ItemStack[] aInputs = aIndex == getInputSlot()
+                            ? new ItemStack[]{aStack, secondInput}
+                            : new ItemStack[]{firstInput, aStack};
+
+                    for (ItemStack input : aInputs)
+                        if (ItemList.Shape_Mold_Name.isStackEqual(input, false, true))
+                            return true;
+
+                    if (getRecipeList().containsInput(aStack)) {
+                        GT_Recipe recipe2 = getRecipeList().findRecipe(
+                                getBaseMetaTileEntity(),
+                                mLastRecipe,
+                                true,
+                                V[mTier],
+                                new FluidStack[]{getFillableStack()},
+                                getSpecialSlot(),
+                                aInputs);
+
+                        return recipe2 != null;
+                    }
+                    return false;
+                }
+                return false;
             default:
                 int tID = getBaseMetaTileEntity().getMetaTileID();
                 if (tID >= 211 && tID <= 218) {// assemblers IDs
-                    if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "circuitBasic")) return true; // allow input all LV-circuits for assemblers
-                    if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "circuitAdvanced")) return true; // allow input all HV-circuits for assemblers
+                    if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "circuitBasic"))
+                        return true; // allow input all LV-circuits for assemblers
+                    if (GT_OreDictUnificator.isItemStackInstanceOf(aStack, "circuitAdvanced"))
+                        return true; // allow input all HV-circuits for assemblers
                 }
                 return getRecipeList().containsInput(aStack);
 
