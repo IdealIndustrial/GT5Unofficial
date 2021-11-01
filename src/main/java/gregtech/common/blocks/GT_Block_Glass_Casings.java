@@ -90,7 +90,7 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
     public boolean shouldSideBeRendered(IBlockAccess aWorld, int aX, int aY, int aZ, int aSide)
     {
         Block block = aWorld.getBlock(aX, aY, aZ);
-        return !block.isBlockSolid(aWorld, aX, aY, aZ, aSide);
+        return !(block instanceof GT_Block_Glass_Casings);
     }
 
 }
