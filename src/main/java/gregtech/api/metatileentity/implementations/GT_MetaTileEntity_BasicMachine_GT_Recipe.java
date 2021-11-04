@@ -692,6 +692,34 @@ public class GT_MetaTileEntity_BasicMachine_GT_Recipe extends GT_MetaTileEntity_
                     return false;
                 }
                 return false;
+            case 3:
+                if (mRequiresFluidForFiltering && getFillableStack() == null) return false;
+
+                ItemStack
+                    i0 = getInputAt(0),
+                    i1 = getInputAt(1),
+                    i2 = getInputAt(2);
+
+                ItemStack first, second;
+
+                if (i0 != null & i1 != null && i2 != null) {
+                    return true;
+                } else if (i0 == null && i1 != null && i2 != null) { // empty only slot #0
+                    first  = i1;
+                    second = i2;
+                } else if (i1 == null && i0 != null && i2 != null) { // empty only slot #1
+                    first  = i0;
+                    second = i2;
+                } else if (i2 == null && i0 != null && i1 != null) { // empty only slot #2
+                    first  = i0;
+                    second = i1;
+                } else {
+                    return true;
+                }
+
+                return null != getRecipeList().findRecipe(
+                    getBaseMetaTileEntity(), mLastRecipe, true, V[mTier], new FluidStack[]{getFillableStack()}, getSpecialSlot(), new ItemStack[]{aStack, first, second}
+                );                
             default:
                 int tID = getBaseMetaTileEntity().getMetaTileID();
                 if (tID >= 211 && tID <= 218) {// assemblers IDs
