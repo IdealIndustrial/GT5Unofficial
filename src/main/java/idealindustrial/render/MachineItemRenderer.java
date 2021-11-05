@@ -43,7 +43,6 @@ public final class MachineItemRenderer implements IItemRenderer {
             GL11.glTranslatef(-.5f, -.5f, -.5f);
             //  GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
         }
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
 
         IFastRenderedTileEntity tileEntity;
         Block block;
@@ -69,7 +68,10 @@ public final class MachineItemRenderer implements IItemRenderer {
         if (tileEntity.getCustomRenderer() != null) {
             tileEntity.getCustomRenderer().renderItem(type, is, II_Blocks.INSTANCE.blockMachines, RenderBlocks.getInstance(), Items.feather.getDamage(is));
         } else {
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
             renderInventory(block, renderer, tileEntity.getTextures(is, (byte) 4, true, false, true));
+            GL11.glEnable(GL11.GL_LIGHTING);
         }
 
     }

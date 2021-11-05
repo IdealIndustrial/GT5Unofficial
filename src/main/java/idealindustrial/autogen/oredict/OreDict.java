@@ -67,6 +67,12 @@ public class OreDict {
         return new II_ItemStack(hashedStack.getItem(), hashedStack.getDamage(), amount);
     }
 
+    public static ItemStack getMainAsIS(Prefixes prefixes, II_Material material, int amount) {
+        II_ItemStack is = getMain(prefixes, material, amount);
+        assert is.isValid();
+        return is.toMCStack();
+    }
+
     public static OreInfo get(String name) {
         OreInfo info = name2info.get(name);
         if (info == null) {

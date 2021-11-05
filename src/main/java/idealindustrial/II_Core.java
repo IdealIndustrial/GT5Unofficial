@@ -12,7 +12,7 @@ import idealindustrial.autogen.implementation.MetaGeneratedCellItem;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.oredict.OreDict;
 import idealindustrial.autogen.oredict.OredictHandler;
-import idealindustrial.autogen.recipes.RecipeManager;
+import idealindustrial.autogen.recipes.JsonManager;
 import idealindustrial.autogen.recipes.materialprocessing.AutogenRecipes;
 import idealindustrial.commands.*;
 import idealindustrial.loader.*;
@@ -33,18 +33,14 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ReportedException;
-import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.oredict.RecipeSorter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 
 @Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false)
 public class II_Core {
@@ -127,6 +123,7 @@ public class II_Core {
         ClientRegistry.bindTileEntitySpecialRenderer(TestTile.class, new RenderTest());
         II_GuiHandler.init();
         tileLoader.run();;
+        JsonManager.loadMachineConfigs(aEvent);
     }
 
     @Mod.EventHandler
@@ -150,7 +147,7 @@ public class II_Core {
         LangHandler.pushLocalToMinecraft();
         oredictLoader.init();
         II_Materials.initMaterialLoops();
-        RecipeManager.load();
+        JsonManager.loadRecipes();
         OreDict.printAll(System.out);
 
     }

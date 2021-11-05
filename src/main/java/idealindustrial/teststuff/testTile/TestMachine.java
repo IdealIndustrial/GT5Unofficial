@@ -1,7 +1,7 @@
 package idealindustrial.teststuff.testTile;
 
+import idealindustrial.reflection.config.Config;
 import idealindustrial.textures.ITexture;
-import idealindustrial.textures.RenderedTexture;
 import idealindustrial.textures.TextureUtil;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.gui.base.GenericGuiContainer;
@@ -18,10 +18,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.stream.Stream;
-
 
 public class TestMachine extends TileFacing1Output<HostMachineTile> {
+
+    @Config(category = "*name*", configComment = "just test value")
+    static String superValue = "gg";
 
     public TestMachine(HostMachineTile baseTile) {
         super(baseTile, "test",

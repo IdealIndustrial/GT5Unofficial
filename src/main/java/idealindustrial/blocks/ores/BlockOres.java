@@ -7,6 +7,7 @@ import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.blocks.base.Tile32kBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlockOres extends Tile32kBlock<TileOres> {
@@ -42,6 +44,30 @@ public class BlockOres extends Tile32kBlock<TileOres> {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean removedByPlayer(World aWorld, EntityPlayer aPlayer, int aX, int aY, int aZ, boolean aWillHarvest) {
+        if (aWillHarvest) {
+            return true; // This delays deletion of the block until after getDrops
+        } else {
+            return super.removedByPlayer(aWorld, aPlayer, aX, aY, aZ, false);
+        }
+    }
+
+    @Override
+    public void harvestBlock(World aWorld, EntityPlayer aPlayer, int aX, int aY, int aZ, int aMeta) {
+        super.harvestBlock(aWorld, aPlayer, aX, aY, aZ, aMeta);
+        aWorld.setBlockToAir(aX, aY, aZ);
+    }
+
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TileOres) {
+            return ((TileOres) tileEntity).getDrops();
+        }
+        return super.getDrops(world, x, y, z, metadata, fortune);
     }
 
     //todo remove, x-ray fix for debug

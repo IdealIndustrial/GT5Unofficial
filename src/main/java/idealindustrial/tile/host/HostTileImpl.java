@@ -4,19 +4,19 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.FMLCommonHandler;
-import idealindustrial.textures.ITexture;
 import gregtech.api.metatileentity.BaseTileEntity;
 import gregtech.api.net.GT_Packet_ByteStream;
 import gregtech.api.net.GT_Packet_ExtendedBlockEvent;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.render.CustomRenderer;
+import idealindustrial.textures.ITexture;
 import idealindustrial.tile.IOType;
 import idealindustrial.tile.covers.BaseCoverBehavior;
 import idealindustrial.tile.covers.CoverRegistry;
+import idealindustrial.tile.impl.TileFacing2Main;
 import idealindustrial.tile.interfaces.host.HostTile;
 import idealindustrial.tile.interfaces.meta.Tile;
-import idealindustrial.tile.impl.TileFacing2Main;
 import idealindustrial.tools.ToolRegistry;
 import idealindustrial.util.item.HashedStack;
 import idealindustrial.util.misc.II_StreamUtil;
@@ -155,8 +155,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
             onTick(timer, serverSide);
             onPostTick(timer, serverSide);
             timer++;
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -252,7 +251,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
 
     @Override
     public ArrayList<ItemStack> getDrops() {
-        return null;//todo implement
+        return new ArrayList<>();//todo implement
     }
 
     @Override
@@ -325,8 +324,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
                 }
             }
             return tile.onRightClick(player, item, side, hitX, hitY, hitZ);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             return false;
         }

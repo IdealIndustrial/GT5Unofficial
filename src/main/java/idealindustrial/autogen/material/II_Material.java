@@ -23,6 +23,7 @@ public class II_Material {
     protected ChemicalInfo chemicalInfo;
     protected FuelInfo fuelInfo;
     protected ResearchInfo researchInfo;
+    protected WorldOreInfo oreInfo;
 
     public II_Material(int id,  String name) {
         this.id = id;
@@ -78,5 +79,13 @@ public class II_Material {
 
     public int getID() {
         return id;
+    }
+
+    public ChemicalInfo getChemicalInfo() {
+        return chemicalInfo;
+    }
+
+    public WorldOreInfo getOreInfo() {
+        return oreInfo;
     }
 }

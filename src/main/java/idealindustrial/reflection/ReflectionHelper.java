@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,4 +50,18 @@ public class ReflectionHelper {
             }
         }
     }
+
+    public static Field getField(Class<?> cl, String str, Type type) {
+        try {
+            Field f = cl.getDeclaredField(str);
+            if (type == null || !type.equals(f.getAnnotatedType().getType())) {
+                return null;
+            }
+            return f;
+        } catch (NoSuchFieldException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
 }

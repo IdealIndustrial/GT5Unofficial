@@ -1,17 +1,20 @@
 package idealindustrial.autogen.material;
 
-import idealindustrial.autogen.fluids.II_Fluids;
 import idealindustrial.autogen.material.submaterial.*;
+import idealindustrial.autogen.material.submaterial.chem.ChemicalInfo;
+import idealindustrial.autogen.material.submaterial.chem.ChemicalStack;
+import idealindustrial.autogen.material.submaterial.chem.parser.FormulaParser;
 import idealindustrial.autogen.material.submaterial.render.RenderInfo;
-import idealindustrial.autogen.material.submaterial.render.SolidRenderInfo;
 import idealindustrial.autogen.material.submaterial.render.TextureSet;
 import idealindustrial.autogen.recipes.RecipeAction;
+import idealindustrial.blocks.II_Blocks;
+import idealindustrial.blocks.ores.TileOres;
 import idealindustrial.util.misc.MiscValues;
+import net.minecraft.item.ItemStack;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author Andrey Solodovnikov (github.com/AndreySolodovnikov)
@@ -27,6 +30,8 @@ public class MaterialBuilder {
     private FuelInfo fuelInfo;
     private BlockInfo blockInfo;
     private MaterialAutogenInfo autogenInfo;
+    private ChemicalInfo chemicalInfo;
+    private WorldOreInfo oreInfo;
 
     public static MaterialBuilder make(int id, String name, TextureSet textureSet) {
         return new MaterialBuilder(id, name, textureSet);
@@ -79,6 +84,15 @@ public class MaterialBuilder {
         return new AutogenBuilder();
     }
 
+    public MaterialBuilder setChemicalFormula(String str) {
+        chemicalInfo = new ChemicalInfo(FormulaParser.parse(str));
+        return this;
+    }
+
+    public OreBuilder addOres() {
+        return new OreBuilder();
+    }
+
 
     public II_Material construct() {
         II_Material material = new II_Material(id, name);
@@ -89,7 +103,8 @@ public class MaterialBuilder {
         material.normalForm = normalForm;
         material.expectedPrefixes = expectedPrefixes;
         material.autogenInfo = autogenInfo == null ? new MaterialAutogenInfo(new HashSet<>()) : autogenInfo;
-        
+        material.chemicalInfo = chemicalInfo == null ? new ChemicalInfo(new ChemicalStack(null, 1)) : chemicalInfo;
+        material.oreInfo = oreInfo;
         if (id >= 0 && id < 1000) {
             II_Materials.materialsK1[id] = material;
         }
@@ -98,10 +113,14 @@ public class MaterialBuilder {
     }
 
 
-
     public class SolidFormBuilder {
         public SolidFormBuilder enableBaseComponents() {
             prefixes.add(Prefixes.ingot);
+            prefixes.add(Prefixes.plate);
+            prefixes.add(Prefixes.dust);
+            prefixes.add(Prefixes.dustSmall);
+            prefixes.add(Prefixes.dustTiny);
+            prefixes.add(Prefixes.nugget);
             return this;
         }
 
@@ -162,6 +181,34 @@ public class MaterialBuilder {
             return MaterialBuilder.this;
         }
 
+    }
+
+    public class OreBuilder {
+        private ArrayList<ItemStack> makeList(Prefixes prefix) {
+            ArrayList<ItemStack> list = new ArrayList<>();
+            list.add(new ItemStack(II_Blocks.INSTANCE.blockOres, 1, TileOres.getMeta(id, prefix)));
+            return list;
+        }
+
+        Function<Random, ArrayList<ItemStack>> drops = random -> makeList(Prefixes.ore),
+                dropsSmall = random -> makeList(Prefixes.oreSmall);
+
+        public OreBuilder setSmallOreDrops(Function<Random, ArrayList<ItemStack>> function) {
+            dropsSmall = function;
+            return this;
+        }
+
+        public OreBuilder setOreDrops(Function<Random, ArrayList<ItemStack>> function) {
+            drops = function;
+            return this;
+        }
+
+        public MaterialBuilder add() {
+            prefixes.add(Prefixes.oreSmall);
+            prefixes.add(Prefixes.ore);
+            oreInfo = new WorldOreInfo(drops, dropsSmall);
+            return MaterialBuilder.this;
+        }
     }
 
 

@@ -1,6 +1,5 @@
 package idealindustrial.reflection.config;
 
-import gregtech.api.interfaces.internal.GT_Config;
 import idealindustrial.util.config.IConfig;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -8,6 +7,7 @@ import net.minecraftforge.common.config.Property;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+
 public class ReflectionConfig implements IConfig {
     @Override
     public void load(Configuration configuration){
@@ -19,15 +19,18 @@ public class ReflectionConfig implements IConfig {
         return null;
     }
 
-    protected void loadAll(Class<? extends ReflectionConfig> clazz, Configuration configuration) {
+    public static void loadAll(Class<?> clazz, Configuration configuration) {
         for (Field field : clazz.getDeclaredFields()) {
             if (!Modifier.isStatic(field.getModifiers()))
                 continue;
-            if (!field.isAnnotationPresent(GT_Config.class))
+            if (!field.isAnnotationPresent(Config.class))
                 continue;
             field.setAccessible(true);
-            GT_Config config = field.getAnnotation(GT_Config.class);
+            Config config = field.getAnnotation(Config.class);
             String category = config.category();
+            if (category.equals("*class*")) {
+                category = clazz.getSimpleName();
+            }
             String name = config.configName().equals("") ? field.getName() : config.configName();
             String comment = config.configComment();
             try {

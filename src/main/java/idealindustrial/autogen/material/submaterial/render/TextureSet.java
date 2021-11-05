@@ -2,9 +2,9 @@ package idealindustrial.autogen.material.submaterial.render;
 
 import idealindustrial.autogen.material.Prefixes;
 import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.reflection.ReflectionHelper;
 import idealindustrial.textures.IconContainer;
 import idealindustrial.textures.TextureManager;
-import net.minecraft.util.IIcon;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import static idealindustrial.util.misc.II_Paths.TEXTURE_SET;
 
 public class TextureSet {
     private static final Set<String> blockIcons = Stream.of(Prefixes.block, Prefixes.cable01).map(Enum::toString).collect(Collectors.toSet());
-    private static final Set<String> itemIcons = Stream.of(Prefixes.ingot, Prefixes.plate, Prefixes.dust, Prefixes.dustSmall, Prefixes.dustTiny)
+    private static final Set<String> itemIcons = Stream.of(Prefixes.ingot, Prefixes.plate, Prefixes.dust, Prefixes.dustSmall, Prefixes.dustTiny, Prefixes.nugget, Prefixes.nuggetBig)
             .map(Enum::toString).collect(Collectors.toSet());
     private static final Set<String> itemWithOverlays = Stream.of(Prefixes.cell, Prefixes.gasCell, Prefixes.plasmaCell, Prefixes.toolHeadDrill)
             .map(Enum::toString).collect(Collectors.toSet());
@@ -30,10 +30,10 @@ public class TextureSet {
     public IconContainer ingot, plate, dust, dustTiny, dustSmall, liquid, gas, plasma, block, cable01, ore, oreSmall, cell, gasCell, plasmaCell, toolHeadDrill;
 
     private final IconContainer[] icons = new IconContainer[Prefixes.values().length];
-    private String name;
+    private final String name;
 
     public TextureSet(String name) {
-      this.name = name;
+        this.name = name;
         try {
             init();
         } catch (IllegalAccessException exception) {
@@ -42,24 +42,31 @@ public class TextureSet {
     }
 
     private void init() throws IllegalAccessException {
-        for (Field field : getClass().getDeclaredFields()) {
-            if (!field.getAnnotatedType().getType().equals(IconContainer.class)) {
+        Set<String> textureNames = new HashSet<>();
+        Stream.of(blockIcons, itemIcons, itemWithOverlays).forEach(textureNames::addAll);
+        for (String texture : textureNames) {
+
+            IconContainer container = null;
+            if (blockIcons.contains(texture)) {
+                container = TextureManager.INSTANCE.blockTexture(TEXTURE_SET + name + "/" + texture);
+            }
+            else if (itemIcons.contains(texture)) {
+                container = TextureManager.INSTANCE.itemTexture(TEXTURE_SET + name + "/" + texture);
+            }
+            else if (itemWithOverlays.contains(texture)) {
+                container = TextureManager.INSTANCE.itemTextureWithOverlay(TEXTURE_SET + name + "/" + texture);
+            }
+            if (container == null) {
                 continue;
             }
-            if (blockIcons.contains(field.getName())) {
-                field.set(this, TextureManager.INSTANCE.blockTexture(TEXTURE_SET + name + "/" + field.getName()));
-            }
-            if (itemIcons.contains(field.getName())) {
-                field.set(this, TextureManager.INSTANCE.itemTexture(TEXTURE_SET + name + "/" + field.getName()));
-            }
-            if (itemWithOverlays.contains(field.getName())) {
-                field.set(this, TextureManager.INSTANCE.itemTextureWithOverlay(TEXTURE_SET + name + "/" + field.getName()));
+            Field field = ReflectionHelper.getField(getClass(), texture, IconContainer.class);
+            if (field != null) {
+                field.set(this, container);
             }
             try {
-                Prefixes p = Prefixes.valueOf(field.getName());
-                icons[p.ordinal()] = (IconContainer) field.get(this);
-            }
-            catch (Exception e) {
+                Prefixes p = Prefixes.valueOf(texture);
+                icons[p.ordinal()] = container;
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -77,7 +84,7 @@ public class TextureSet {
             case Gas:
                 return gas;
             case Plasma:
-               return plasma;
+                return plasma;
             default:
                 return ingot;
         }

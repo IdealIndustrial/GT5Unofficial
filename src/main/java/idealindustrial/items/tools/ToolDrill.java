@@ -92,7 +92,7 @@ public class ToolDrill implements ToolBehavior {
     }
 
     private void breakAdjacentBlock(EntityPlayer player, ItemStack is, int x, int y, int z, World world) {
-        if (!II_EventUtil.canBreak(player, x, y, z)) {
+        if (world.isRemote || !II_EventUtil.canBreak(player, x, y, z)) {
             return;
         }
         Block block = world.getBlock(x, y, z);

@@ -22,6 +22,9 @@ public class ChemicalStack {
     }
 
     public String asArgumentString() {
+        if (element == null) {
+            return "";
+        }
         if (amount == 1) {
             return element.toString();
         }

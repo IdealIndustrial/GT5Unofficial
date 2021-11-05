@@ -11,6 +11,10 @@ import java.util.List;
 public class FormulaParser {
     public static FormulaParser INSTANCE = new FormulaParser();
 
+    public static ChemicalStack parse(String str) {
+        return INSTANCE.parse(new StringSource(str), true);
+    }
+
     public ChemicalStack parse(CharSource source, boolean prefixed) {
         source.skipWs();
         int amount = 1;

@@ -1,5 +1,6 @@
 package idealindustrial.textures;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -8,19 +9,20 @@ import java.util.function.Supplier;
 
 public class CopiedIconContainer implements IconContainer {
 
-    protected Supplier<IIcon> supplier;
-    protected IIcon icon = null;
+    Block block;
+    int side, meta;
 
-    public CopiedIconContainer(Supplier<IIcon> supplier) {
-        this.supplier = supplier;
+    public CopiedIconContainer(Block block, int side, int meta) {
+        this.block = block;
+        this.side = side;
+        this.meta = meta;
     }
+
+
 
     @Override
     public IIcon getIcon() {
-        if (icon == null) {
-            icon = supplier.get();
-        }
-        return icon;
+        return block.getIcon(side, meta);
     }
 
 

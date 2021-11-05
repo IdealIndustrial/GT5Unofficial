@@ -9,6 +9,8 @@ public enum Prefixes {
     dust("", "Dust"),
     dustSmall("Small Pile of", "Dust"),
     dustTiny("Tiny Pile of", "Dust"),
+    nugget("", "Nugget"),
+    nuggetBig("Big", "Nugget"),
     block("Block of", ""),
     cell("", "Cell"),
     gasCell("", "Cell"),

@@ -5,10 +5,11 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.FMLCommonHandler;
 import gregtech.api.net.GT_Packet_ByteStream;
-import idealindustrial.blocks.II_Blocks;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.II_Materials;
 import idealindustrial.autogen.material.Prefixes;
+import idealindustrial.autogen.material.submaterial.WorldOreInfo;
+import idealindustrial.blocks.II_Blocks;
 import idealindustrial.blocks.base.Tile32k;
 import idealindustrial.render.IFastRenderedTileEntity;
 import idealindustrial.textures.ITexture;
@@ -24,6 +25,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import static gregtech.common.GT_Network.NW;
@@ -112,7 +114,6 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         if (Stream.of("mat, pref", "block", "bmeta").anyMatch(s -> !nbt.hasKey(s))) {
-//            worldObj.setBlock(xCoord, yCoord, zCoord, Blocks.air);
             material = II_Materials.iron;
             prefix = Prefixes.ore;
             block = Blocks.stone;
@@ -170,8 +171,7 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
             tile.block = block;
             tile.meta = blockMeta;
             tile.syncTileEntity();
-        }
-        else {
+        } else {
             int a = 0;
         }
     }
@@ -182,7 +182,24 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
         return m * 1000 + material.getID();
     }
 
+    public static int getMeta(int materialID, Prefixes prefix) {
+        int m = II_StreamUtil.indexOf(prefixOrder, prefix);
+        assert m != -1;
+        return m * 1000 + materialID;
+    }
+
     public int getMeta() {
         return getMeta(material, prefix);
     }
+
+    public ArrayList<ItemStack> getDrops() {
+        WorldOreInfo info = material.getOreInfo();
+        if (info == null) {
+            return new ArrayList<ItemStack>() {{
+                add(new ItemStack(II_Blocks.INSTANCE.blockOres, 1, 0));
+            }};
+        }
+        return info.apply(prefix, worldObj.rand);
+    }
+    
 }

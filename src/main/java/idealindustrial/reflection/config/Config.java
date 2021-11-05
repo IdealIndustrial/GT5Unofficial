@@ -15,6 +15,7 @@ public @interface Config {
     /**
      *
      * determines the config category of config property
+     * use *class* to define a class name here
      */
 
     String category() default "main";

@@ -139,4 +139,8 @@ public class II_ItemStack {
     public II_ItemStack copy() {
         return new II_ItemStack(this);
     }
+
+    public boolean isValid() {
+        return def != null && def.getItem() != null;
+    }
 }

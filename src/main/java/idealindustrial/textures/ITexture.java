@@ -5,12 +5,12 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.util.IIcon;
 
 public interface ITexture {
-    void renderXPos(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ);
-    void renderXNeg(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ);
-    void renderYPos(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ);
-    void renderYNeg(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ);
-    void renderZPos(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ);
-    void renderZNeg(RenderBlocks aRenderer, Block aBlock, int aX, int aY, int aZ);
+    void renderXPos(RenderBlocks renderer, Block block, int x, int y, int z);
+    void renderXNeg(RenderBlocks renderer, Block block, int x, int y, int z);
+    void renderYPos(RenderBlocks renderer, Block block, int x, int y, int z);
+    void renderYNeg(RenderBlocks renderer, Block block, int x, int y, int z);
+    void renderZPos(RenderBlocks renderer, Block block, int x, int y, int z);
+    void renderZNeg(RenderBlocks renderer, Block block, int x, int y, int z);
     boolean isValidTexture();
 
     IIcon getIcon();

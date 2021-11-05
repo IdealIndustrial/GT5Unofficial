@@ -5,9 +5,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import idealindustrial.II_Core;
 import idealindustrial.autogen.material.II_Material;
 import idealindustrial.autogen.material.Prefixes;
+import idealindustrial.autogen.material.submaterial.chem.ChemicalInfo;
 import idealindustrial.autogen.material.submaterial.render.RenderInfo;
-import idealindustrial.autogen.oredict.RegisterOresEvent;
 import idealindustrial.autogen.oredict.OredictHandler;
+import idealindustrial.autogen.oredict.RegisterOresEvent;
 import idealindustrial.reflection.events.II_EventListener;
 import idealindustrial.util.lang.LangHandler;
 import idealindustrial.util.lang.LocalizeEvent;
@@ -15,6 +16,7 @@ import idealindustrial.util.lang.materials.EngLocalizer;
 import idealindustrial.util.lang.materials.MaterialLocalizer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -39,7 +41,7 @@ public class MetaGeneratedItem extends MetaItem {
         assert prefixes != null && prefixes.length <= 32;
         this.materials = materials;
         this.prefixes = prefixes;
-        this.generatedItems = new BitSet(materials.length * prefixes.length);
+        this.generatedItems = new BitSet(Short.MAX_VALUE);
         for (int i = 0; i < materials.length * prefixes.length; i++) {
             if (material(i) != null && prefix(i) != null && material(i).isEnabled(prefix(i))) {
                 generatedItems.set(i);
@@ -70,7 +72,7 @@ public class MetaGeneratedItem extends MetaItem {
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unchecked")
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-        foreachEnabled(i -> list.add(new ItemStack(item, 1 ,i)));
+        foreachEnabled(i -> list.add(new ItemStack(item, 1, i)));
     }
 
     @Override
@@ -80,6 +82,7 @@ public class MetaGeneratedItem extends MetaItem {
 
     /**
      * applies function for all damage values according enabled items
+     *
      * @param consumer - function to apply
      */
     protected void foreachEnabled(IntConsumer consumer) {
@@ -108,7 +111,7 @@ public class MetaGeneratedItem extends MetaItem {
     @RegisterOresEvent
     public static void registerOres(OredictHandler handler) {
         for (MetaGeneratedItem item : instances) {
-            item.foreachEnabled( i -> {
+            item.foreachEnabled(i -> {
                 Prefixes prefix = item.prefix(i);
                 if (!prefix.isOreDicted()) {
                     return;
@@ -122,5 +125,24 @@ public class MetaGeneratedItem extends MetaItem {
 
     public static List<MetaGeneratedItem> getInstances() {
         return instances;
+    }
+
+    public boolean isEnabled(int damage) {
+        return generatedItems.get(damage);
+    }
+
+    public boolean isEnabled(ItemStack is) {
+        return generatedItems.get(is.getItemDamage());
+    }
+
+    @Override
+    protected void addAdditionalToolTips(List<String> list, ItemStack stack, EntityPlayer player, boolean f3_H) {
+        if (isEnabled(stack)) {
+            II_Material material = material(stack.getItemDamage());
+            ChemicalInfo info = material.getChemicalInfo();
+            if (info != null) {
+                list.add(info.getFormula());
+            }
+        }
     }
 }
