@@ -234,6 +234,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
         return tile.provideTexture(active, side);
     }
 
+    @SuppressWarnings("unchecked")
     public ITexture getCoverTexture(int side) {
         return covers[side] != null ? covers[side].getTexture(coverValues[side], side, this) : null;
     }

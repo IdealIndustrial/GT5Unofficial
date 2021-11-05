@@ -93,6 +93,7 @@ public class II_GameTitlePatch {
 
 
     //remove assert
+    @SuppressWarnings("unchecked")
     @Hook(returnCondition = ReturnCondition.ALWAYS)
     public static List<ItemStack> expand(AdvRecipe recipe, Object o) {
         List<ItemStack> ret = new ArrayList();

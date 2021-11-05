@@ -105,6 +105,7 @@ public class II_StreamUtil {
         return Stream.generate(() -> t).limit(times);
     }
 
+    @SafeVarargs
     public static <T> T getAny(T... ar) {
         for (T t : ar) {
             if (t != null) {

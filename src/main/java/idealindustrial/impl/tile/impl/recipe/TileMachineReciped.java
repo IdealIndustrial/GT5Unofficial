@@ -21,7 +21,7 @@ public abstract class TileMachineReciped<H extends HostMachineTile, R extends IM
 
     public TileMachineReciped(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays, RecipeMap<R> recipeMap, RecipedMachineStats stats) {
         super(baseTile, name, baseTextures, overlays);
-        module = new BasicRecipeModule<R>(this, stats, recipeMap);
+        module = new BasicRecipeModule<>(this, stats, recipeMap);
     }
 
     public TileMachineReciped(H baseTile, TileMachineReciped<H, R> copyFrom) {

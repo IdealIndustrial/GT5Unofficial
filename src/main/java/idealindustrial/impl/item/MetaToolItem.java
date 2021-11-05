@@ -72,7 +72,7 @@ public class MetaToolItem extends MetaItem32k {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void addSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         forEachEnabled(id -> list.add(getTool(id, II_Materials.iron)));
     }
 

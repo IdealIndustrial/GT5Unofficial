@@ -63,12 +63,12 @@ public class RenderTest extends TileEntitySpecialRenderer {
 
             int aX = 0, aY = 0, aZ = 0;
             ITexture[] aTextures = new ITexture[]{texture};
-            r.renderNegativeYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
-            r.renderPositiveYFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
-            r.renderNegativeZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
-            r.renderPositiveZFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
-            r.renderNegativeXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
-            r.renderPositiveXFacing(aWorld, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
+            GT_Renderer_Block.renderNegativeYFacing(null, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
+            GT_Renderer_Block.renderPositiveYFacing(null, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
+            GT_Renderer_Block.renderNegativeZFacing(null, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
+            GT_Renderer_Block.renderPositiveZFacing(null, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
+            GT_Renderer_Block.renderNegativeXFacing(null, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
+            GT_Renderer_Block.renderPositiveXFacing(null, aRenderer, aBlock, aX, aY, aZ, aTextures, true);
             Tessellator.instance.draw();
 
             GL11.glPopMatrix();

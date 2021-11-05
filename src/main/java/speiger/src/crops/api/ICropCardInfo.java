@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface ICropCardInfo
 {
-	public List<String> getCropInformation();
+	List<String> getCropInformation();
 	
-	public ItemStack getDisplayItem();
+	ItemStack getDisplayItem();
 }

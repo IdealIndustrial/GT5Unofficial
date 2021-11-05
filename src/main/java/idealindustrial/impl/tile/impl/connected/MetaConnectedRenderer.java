@@ -18,6 +18,7 @@ public class MetaConnectedRenderer implements CustomRenderer {
     public static final MetaConnectedRenderer INSTANCE = new MetaConnectedRenderer();
 
 
+    @SuppressWarnings("rawtypes")
     @Override
     public boolean renderWorldBlock(IBlockAccess world, IFastRenderedTileEntity tileEntity, int x, int y, int z, Block block, RenderBlocks renderBlocks) {
         ConnectedBase tileConnected = (ConnectedBase) ((HostTile) tileEntity).getMetaTile();

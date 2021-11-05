@@ -68,6 +68,7 @@ public class StringTypeAdapterFactory<B> implements JsonSerializer<B>, JsonDeser
         return deserializerMap.get(key);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends B> JsonSerializer<T> serializer(Class<? extends T> aClass)
     {
         return (JsonSerializer<T>) serializerMap.get(aClass);
@@ -109,18 +110,20 @@ public class StringTypeAdapterFactory<B> implements JsonSerializer<B>, JsonDeser
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public JsonElement serialize(B src, Type typeOfSrc, JsonSerializationContext context)
     {
-        Class<? extends B> objectClass = (Class<? extends B>) src.getClass();
+        @SuppressWarnings("unchecked") Class<? extends B> objectClass = (Class<? extends B>) src.getClass();
 
         String id = type(objectClass);
-        JsonSerializer serializer = serializer(objectClass);
+        @SuppressWarnings("rawtypes") JsonSerializer serializer = serializer(objectClass);
 
         if (id != null && serializer != null)
         {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(typeKey, id);
+            //noinspection unchecked
             jsonObject.add(objectKey, serializer.serialize(src, typeOfSrc, context));
             return jsonObject;
         }

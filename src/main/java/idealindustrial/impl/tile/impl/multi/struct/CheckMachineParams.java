@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 
 public class CheckMachineParams {
     public enum CheckMode {
-        BUILD, CHECK, RENDER;
+        BUILD, CHECK, RENDER
     }
 
     CheckMode mode;

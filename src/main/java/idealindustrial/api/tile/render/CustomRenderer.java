@@ -11,7 +11,7 @@ public interface CustomRenderer {
 
     boolean renderWorldBlock(IBlockAccess world, IFastRenderedTileEntity tileEntity, int x, int y, int z, Block block, RenderBlocks renderBlocks);
 
-    public void renderItem(IItemRenderer.ItemRenderType type, ItemStack item, Block block, RenderBlocks renderBlocks, int meta);
+    void renderItem(IItemRenderer.ItemRenderType type, ItemStack item, Block block, RenderBlocks renderBlocks, int meta);
 
     default boolean shouldRender(IFastRenderedTileEntity tileEntity) {
         return !(tileEntity instanceof HostPipeTileRotatingImpl);

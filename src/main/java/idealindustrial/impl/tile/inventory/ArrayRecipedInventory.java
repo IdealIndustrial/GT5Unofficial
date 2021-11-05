@@ -121,6 +121,7 @@ public class ArrayRecipedInventory implements RecipedInventory {
         return is.amount - toInsert;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Iterator<II_ItemStack> iterator() {
         return new II_ArrayInventoryIterator();

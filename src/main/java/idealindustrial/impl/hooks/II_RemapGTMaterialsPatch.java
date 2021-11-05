@@ -2,7 +2,6 @@ package idealindustrial.impl.hooks;
 
 import gloomyfolken.hooklib.asm.Hook;
 import gloomyfolken.hooklib.asm.ReturnCondition;
-import idealindustrial.impl.commands.CommandFixMaterials;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 

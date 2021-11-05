@@ -21,7 +21,6 @@ public class II_Util {
         return () -> value;
     }
 
-    @SuppressWarnings("unchecked")
     public static <K, V> void rehash(Map<K, V> map) {
         List<K> keys = new ArrayList<>(map.size());
         List<V> values  = new ArrayList<>(map.size());//not using entries to save some performance

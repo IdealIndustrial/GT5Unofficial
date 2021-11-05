@@ -73,7 +73,7 @@ public class PlantDef {
 
     public enum RenderType {
         Cross, //like X from top
-        Sharp; // like # from top
+        Sharp // like # from top
     }
 
 

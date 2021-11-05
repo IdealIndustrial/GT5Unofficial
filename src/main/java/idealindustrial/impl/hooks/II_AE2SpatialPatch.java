@@ -5,6 +5,7 @@ import gloomyfolken.hooklib.asm.Hook;
 import gloomyfolken.hooklib.asm.ReturnCondition;
 import net.minecraft.tileentity.TileEntity;
 
+@SuppressWarnings("deprecation")
 public class II_AE2SpatialPatch {
 
     @Hook(returnCondition = ReturnCondition.ALWAYS, injectOnLine = 83)

@@ -57,6 +57,6 @@ public class MultiMachineRecipedModule<R extends IMachineRecipe> extends BasicRe
     @Override
     @SuppressWarnings("unchecked")
     public RecipeModule<R> reInit(TileFacing2Main<?> machine) {
-        return new MultiMachineRecipedModule<R>((RecipedMultiMachineBase<?, R>) machine, recipeMap);
+        return new MultiMachineRecipedModule<>((RecipedMultiMachineBase<?, R>) machine, recipeMap);
     }
 }

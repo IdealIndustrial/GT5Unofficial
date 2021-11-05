@@ -66,9 +66,7 @@ public class JsonManager {
         File tFile = new File(new File(aEvent.getModConfigurationDirectory(), "StalinTech"), "Machines.cfg");
         Configuration config = new Configuration(tFile);
         config.load();
-        II_Values.tileStream().forEach(tile -> {
-            ReflectionConfig.loadAll(tile.getClass(), config);
-        });
+        II_Values.tileStream().forEach(tile -> ReflectionConfig.loadAll(tile.getClass(), config));
         config.save();
     }
 

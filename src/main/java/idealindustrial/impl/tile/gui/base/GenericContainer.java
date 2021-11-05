@@ -176,7 +176,7 @@ public class GenericContainer extends Container {
 
             if ((p_75144_3_ == 0 || p_75144_3_ == 1) && (p_75144_2_ == 0 || p_75144_2_ == 1)) {
                 if (p_75144_1_ == -999) {
-                    if (inventoryplayer.getItemStack() != null && p_75144_1_ == -999) {
+                    if (inventoryplayer.getItemStack() != null) {
                         if (p_75144_2_ == 0) {
                             p_75144_4_.dropPlayerItemWithRandomChoice(inventoryplayer.getItemStack(), true);
                             inventoryplayer.setItemStack((ItemStack) null);
@@ -407,7 +407,7 @@ public class GenericContainer extends Container {
                 slotObject.onSlotChanged();
             }
         }
-        return stack;
+        return null;
     }
 
     @Override

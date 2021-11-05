@@ -94,7 +94,7 @@ public abstract class RandomStructureProvider implements IRandomStructure<Random
     }
 
     public enum Mode {
-        BUILD, RENDER;
+        BUILD, RENDER
     }
 
     public static class Parameters {

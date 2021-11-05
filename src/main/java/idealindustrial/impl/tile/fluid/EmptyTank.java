@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 
 import java.util.Iterator;
 
+@SuppressWarnings("NullableProblems")
 public class EmptyTank implements FluidHandler {
 
     public static final EmptyTank INSTANCE = new EmptyTank();

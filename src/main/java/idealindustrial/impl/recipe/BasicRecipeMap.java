@@ -135,7 +135,7 @@ public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
 
     @Override
     public RecipeMap<R> newEmpty() {
-        return new BasicRecipeMap<R>(name, checkConflicts, allowNulls, params, recipeType);
+        return new BasicRecipeMap<>(name, checkConflicts, allowNulls, params, recipeType);
     }
 
     protected Set<R> loadRecipes(II_StackSignature signature, Map<HashedStack, Set<R>> inputMap) {

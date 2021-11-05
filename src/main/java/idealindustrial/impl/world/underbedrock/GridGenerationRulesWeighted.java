@@ -15,6 +15,7 @@ public class GridGenerationRulesWeighted<T> implements GridGenerationRules<T> {
     private final int gridSize, clusterSize;
     private final boolean straitOrder;
 
+    @SuppressWarnings("unchecked")
     public GridGenerationRulesWeighted(int gridSize, int clusterSize, int passCount, boolean straitOrder) {
         this.collection = new RandomCollection[passCount];
         this.gridSize = gridSize;

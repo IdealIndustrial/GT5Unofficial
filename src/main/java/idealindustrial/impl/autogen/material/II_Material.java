@@ -60,6 +60,10 @@ public class II_Material {
         return name;
     }
 
+    public String oreDictName() {
+        return name.replace(" ", "");
+    }
+
     public MatterState getNormalForm() {
         return normalForm;
     }

@@ -26,6 +26,7 @@ public class GT_FluidDisplayItem
         setHasSubtypes(true);
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void addAdditionalToolTips(List aList, ItemStack aStack, EntityPlayer aPlayer) {
         NBTTagCompound aNBT = aStack.getTagCompound();
         if (aNBT != null) {
@@ -84,7 +85,7 @@ public class GT_FluidDisplayItem
     }
 
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item aItem, CreativeTabs aTab, List aList) {
+    public void getSubItems(Item item, CreativeTabs tab, List list) {
 
     }
 }

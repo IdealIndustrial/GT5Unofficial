@@ -41,8 +41,7 @@ public class II_Materials {
                 .addFluid().setTemperature(1000).addCell().setRender(new Color(156, 2, 2))
                 .addGas().setTemperature(5000).addCell().setRender(new Color(243, 95, 83))
                 .addPlasma().addCell().setRender(new Color(116, 239, 116))
-                .addPrefixes(dust, dustSmall, dustTiny, plate, ore, oreSmall)
-                .addExpectedPrefixes(ingot)
+                .addPrefixes(ingot, dust, dustSmall, dustTiny, plate, ore, oreSmall)
                 .recipeAutogen().addMetallicActions().add()
                 .setChemicalFormula("Fe")
                 .construct();
@@ -51,7 +50,7 @@ public class II_Materials {
                 .addSolid().addBlock(1, BlockType.METALLIC).setRender(new Color(205, 116, 0))
                 .addFluid().setTemperature(1000).addCell().setRender(new Color(83, 46, 2))
                 .addPlasma().addCell().setRender(new Color(116, 239, 186))
-                .addPrefixes(dust, dustSmall, dustTiny, plate, ore, oreSmall)
+                .addPrefixes(ingot, dust, dustSmall, dustTiny, plate, ore, oreSmall)
                 .recipeAutogen().addMetallicActions().add()
                 .setChemicalFormula("Cu")
                 .construct();
@@ -59,7 +58,7 @@ public class II_Materials {
                 .addSolid().addBlock(2, BlockType.METALLIC).setRender(new Color(144, 151, 151))
                 .addFluid().setTemperature(1000).addCell().setRender(new Color(189, 186, 186))
                 .addPlasma().addCell().setRender(new Color(2, 139, 83))
-                .addPrefixes(dust, dustSmall, dustTiny, plate, ore, oreSmall)
+                .addPrefixes(ingot, dust, dustSmall, dustTiny, plate, ore, oreSmall)
                 .recipeAutogen().addMetallicActions().add()
                 .setChemicalFormula("Sn")
                 .construct();
@@ -79,7 +78,7 @@ public class II_Materials {
 
     private static void initAlloys() {
         arsenicBronze = make(150, "Arsenic Bronze", Textures.testSet)
-                .addSolid().enableBaseComponents().setRender(new Color(252, 151, 53))
+                .addSolid().enableBaseComponents().enableTools().setRender(new Color(252, 151, 53))
                 .addFluid().addCell().setRender(new Color(255, 132, 0))
                 .setChemicalFormula("Cu20As")
                 .addPrefixes(nugget, nuggetBig)

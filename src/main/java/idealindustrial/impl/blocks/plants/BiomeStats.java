@@ -1,7 +1,7 @@
 package idealindustrial.impl.blocks.plants;
 
-import forestry.api.core.BiomeHelper;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenHell;
 
 public class BiomeStats {
 
@@ -64,7 +64,7 @@ public class BiomeStats {
         }
 
         public static Temperature getFromBiome(BiomeGenBase biomeGenBase) {
-            if (BiomeHelper.isBiomeHellish(biomeGenBase)) {
+            if (biomeGenBase instanceof BiomeGenHell) {
                 return HELLISH;
             }
             return getFromValue(biomeGenBase.temperature);

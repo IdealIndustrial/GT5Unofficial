@@ -1,12 +1,12 @@
 package idealindustrial.impl.loader;
 
 import idealindustrial.II_Core;
-import idealindustrial.impl.item.MetaGeneratedItem_1;
+import idealindustrial.impl.autogen.material.II_Material;
+import idealindustrial.impl.autogen.material.II_Materials;
+import idealindustrial.impl.autogen.material.Prefixes;
+import idealindustrial.impl.item.*;
 import idealindustrial.impl.item.behaviors.BehaviorClock;
 import idealindustrial.impl.item.behaviors.BehaviorGuideRenderer;
-import idealindustrial.impl.item.GT_FluidDisplayItem;
-import idealindustrial.impl.item.MetaBehaviorItem;
-import idealindustrial.impl.item.MetaToolItem;
 import idealindustrial.impl.render.GT_FluidDisplayStackRenderer;
 import net.minecraft.item.ItemStack;
 
@@ -16,11 +16,26 @@ public class ItemsLoader {
     public static ItemStack wrench, mallet, cell, clock;
 
     public void preLoad() {
-        new MetaGeneratedItem_1();
         registerMetaItems();
+        initMetaGeneratedItems();
         new GT_FluidDisplayItem();
         new GT_FluidDisplayStackRenderer();
         new MetaToolItem();
+
+    }
+
+    protected void initMetaGeneratedItems() {
+        II_Material[][] materials = new II_Material[][]{II_Materials.materialsK1};
+        String[] namePostfixes = new String[]{".01"};
+        for (int i = 0; i < materials.length; i++) {
+            II_Material[] mat = materials[i];
+            String postfix = namePostfixes[i];
+
+            new MetaGeneratedItem("metagenerated.heads" + postfix, mat,
+                    Prefixes.toolHeadDrill);
+            new MetaGeneratedItem("metagenerated1" + postfix, mat,
+                    Prefixes.ingot, Prefixes.dust, Prefixes.dustSmall, Prefixes.dustTiny, Prefixes.plate, Prefixes.nugget, Prefixes.nuggetBig);
+        }
 
     }
 

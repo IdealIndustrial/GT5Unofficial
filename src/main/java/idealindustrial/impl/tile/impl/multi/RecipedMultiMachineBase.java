@@ -16,7 +16,7 @@ public abstract class RecipedMultiMachineBase<H extends HostMachineTile, R exten
 
     public RecipedMultiMachineBase(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays, RecipeMap<R> recipeMap, RecipedMachineStats stats) {
         super(baseTile, name, baseTextures, overlays);
-        module = new MultiMachineRecipedModule<R>(this, recipeMap);
+        module = new MultiMachineRecipedModule<>(this, recipeMap);
     }
 
     protected RecipedMultiMachineBase(H baseTile, RecipedMultiMachineBase<H, R> copyFrom) {
@@ -28,7 +28,7 @@ public abstract class RecipedMultiMachineBase<H extends HostMachineTile, R exten
     public void onPostTick(long timer, boolean serverSide) {
         super.onPostTick(timer, serverSide);
         if (serverSide && assembled) {
-            module.onPostTick(timer, serverSide);
+            module.onPostTick(timer, true);
         }
     }
 

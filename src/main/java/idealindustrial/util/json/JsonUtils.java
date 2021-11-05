@@ -37,10 +37,6 @@ public class JsonUtils
     {
         if (p_151217_0_.has(p_151217_1_))
         {
-            /**
-             * Gets the float value of the given JsonElement.  Expects the second parameter to be the name of the
-             * element's field if an error message needs to be thrown.
-             */
             return getJsonElementDoubleValue(p_151217_0_.get(p_151217_1_), p_151217_1_);
         }
         else
@@ -67,7 +63,7 @@ public class JsonUtils
      */
     public static boolean jsonObjectFieldTypeIsString(JsonObject p_151205_0_, String p_151205_1_)
     {
-        return !jsonObjectFieldTypeIsPrimitive(p_151205_0_, p_151205_1_) ? false : p_151205_0_.getAsJsonPrimitive(p_151205_1_).isString();
+        return jsonObjectFieldTypeIsPrimitive(p_151205_0_, p_151205_1_) && p_151205_0_.getAsJsonPrimitive(p_151205_1_).isString();
     }
 
     /**
@@ -75,7 +71,7 @@ public class JsonUtils
      */
     public static boolean jsonElementTypeIsString(JsonElement p_151211_0_)
     {
-        return !p_151211_0_.isJsonPrimitive() ? false : p_151211_0_.getAsJsonPrimitive().isString();
+        return p_151211_0_.isJsonPrimitive() && p_151211_0_.getAsJsonPrimitive().isString();
     }
 
     /**
@@ -83,7 +79,7 @@ public class JsonUtils
      */
     public static boolean jsonObjectFieldTypeIsArray(JsonObject p_151202_0_, String p_151202_1_)
     {
-        return !jsonObjectHasNamedField(p_151202_0_, p_151202_1_) ? false : p_151202_0_.get(p_151202_1_).isJsonArray();
+        return jsonObjectHasNamedField(p_151202_0_, p_151202_1_) && p_151202_0_.get(p_151202_1_).isJsonArray();
     }
 
     /**
@@ -92,7 +88,7 @@ public class JsonUtils
      */
     public static boolean jsonObjectFieldTypeIsPrimitive(JsonObject p_151201_0_, String p_151201_1_)
     {
-        return !jsonObjectHasNamedField(p_151201_0_, p_151201_1_) ? false : p_151201_0_.get(p_151201_1_).isJsonPrimitive();
+        return jsonObjectHasNamedField(p_151201_0_, p_151201_1_) && p_151201_0_.get(p_151201_1_).isJsonPrimitive();
     }
 
     /**
@@ -100,7 +96,7 @@ public class JsonUtils
      */
     public static boolean jsonObjectHasNamedField(JsonObject p_151204_0_, String p_151204_1_)
     {
-        return p_151204_0_ == null ? false : p_151204_0_.get(p_151204_1_) != null;
+        return p_151204_0_ != null && p_151204_0_.get(p_151204_1_) != null;
     }
 
     /**
@@ -126,10 +122,6 @@ public class JsonUtils
     {
         if (p_151200_0_.has(p_151200_1_))
         {
-            /**
-             * Gets the string value of the given JsonElement.  Expects the second parameter to be the name of the
-             * element's field if an error message needs to be thrown.
-             */
             return getJsonElementStringValue(p_151200_0_.get(p_151200_1_), p_151200_1_);
         }
         else
@@ -170,10 +162,6 @@ public class JsonUtils
     {
         if (p_151212_0_.has(p_151212_1_))
         {
-            /**
-             * Gets the boolean value of the given JsonElement.  Expects the second parameter to be the name of the
-             * element's field if an error message needs to be thrown.
-             */
             return getJsonElementBooleanValue(p_151212_0_.get(p_151212_1_), p_151212_1_);
         }
         else
@@ -217,10 +205,6 @@ public class JsonUtils
     {
         if (p_151217_0_.has(p_151217_1_))
         {
-            /**
-             * Gets the float value of the given JsonElement.  Expects the second parameter to be the name of the
-             * element's field if an error message needs to be thrown.
-             */
             return getJsonElementFloatValue(p_151217_0_.get(p_151217_1_), p_151217_1_);
         }
         else
@@ -262,10 +246,6 @@ public class JsonUtils
     {
         if (p_151203_0_.has(p_151203_1_))
         {
-            /**
-             * Gets the integer value of the given JsonElement.  Expects the second parameter to be the name of the
-             * element's field if an error message needs to be thrown.
-             */
             return getJsonElementIntegerValue(p_151203_0_.get(p_151203_1_), p_151203_1_);
         }
         else
@@ -304,10 +284,6 @@ public class JsonUtils
     {
         if (p_152754_0_.has(p_152754_1_))
         {
-            /**
-             * Gets the given JsonElement as a JsonObject.  Expects the second parameter to be the name of the element's
-             * field if an error message needs to be thrown.
-             */
             return getJsonElementAsJsonObject(p_152754_0_.get(p_152754_1_), p_152754_1_);
         }
         else
@@ -348,10 +324,6 @@ public class JsonUtils
     {
         if (p_151214_0_.has(p_151214_1_))
         {
-            /**
-             * Gets the given JsonElement as a JsonArray.  Expects the second parameter to be the name of the element's
-             * field if an error message needs to be thrown.
-             */
             return getJsonElementAsJsonArray(p_151214_0_.get(p_151214_1_), p_151214_1_);
         }
         else

@@ -26,7 +26,7 @@ public class TestMachine2 extends TileFacing2Main<HostMachineTile> {
         super(baseTile, "test2",
                 Stream.of("test/fus", "test/fus", "test/fus", "test/fus", "test/fus",
                         "test/fus", "test/fus", "test/fus", "test/fus", "test/fus")
-                        .map(s -> s == null ? null : TextureManager.INSTANCE.blockTexture(s))
+                        .map(s -> TextureManager.INSTANCE.blockTexture(s))
                         .map(RenderedTexture::new).toArray(ITexture[]::new),
                 Stream.of(null, null, null, "test/fusg", null,
                         null, null, null, "test/fusgy", null)
@@ -48,7 +48,7 @@ public class TestMachine2 extends TileFacing2Main<HostMachineTile> {
 
     @Override
     public GuiContainer getClientGUI(EntityPlayer player, int internalID) {
-        return new GenericGuiContainer(new Test2ZVontainer(getHost(), player), II_Paths.PATH_GUI + "BasicGui.png");
+        return new GenericGuiContainer<>(new Test2ZVontainer(getHost(), player), II_Paths.PATH_GUI + "BasicGui.png");
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class EmptyInventory implements RecipedInventory {
 
     public static final EmptyInventory INSTANCE = new EmptyInventory();

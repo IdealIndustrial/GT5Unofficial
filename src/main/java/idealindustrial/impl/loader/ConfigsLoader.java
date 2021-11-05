@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ConfigsLoader implements Runnable {
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     static List<Class<? extends IConfig>> configList = Arrays.asList(II_MainConfig.class);
 
     FMLPreInitializationEvent event;

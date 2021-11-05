@@ -84,9 +84,7 @@ public class ToolDrill implements ToolBehavior {
             return false;
         }
         getManipulator(player, radius, x, y, z)
-                .start(pos -> {
-                    breakAdjacentBlock(player, itemstack, pos.x, pos.y, pos.z, player.worldObj);
-                });
+                .start(pos -> breakAdjacentBlock(player, itemstack, pos.x, pos.y, pos.z, player.worldObj));
         return false;
     }
 

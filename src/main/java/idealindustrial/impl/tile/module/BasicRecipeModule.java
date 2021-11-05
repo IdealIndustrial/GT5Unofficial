@@ -60,7 +60,7 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
 
     @Override
     public RecipeModule<R> reInit(TileFacing2Main<?> machine) {
-        return new BasicRecipeModule<R>(machine, machineStats, recipeMap);
+        return new BasicRecipeModule<>(machine, machineStats, recipeMap);
     }
 
     @Override
@@ -200,11 +200,11 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
 
 
     protected String recipeToString(R recipe) {
-        String str = JsonUtil.recipeDefaultGson.toJson(recipe);
-//        System.out.println(str);
-        return str;
+        //        System.out.println(str);
+        return JsonUtil.recipeDefaultGson.toJson(recipe);
     }
 
+    @SuppressWarnings("unchecked")
     protected R recipeFromString(String recipe) {
         return (R) JsonUtil.recipeDefaultGson.fromJson(recipe, BasicMachineRecipe.class);
     }

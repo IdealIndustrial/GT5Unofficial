@@ -1,10 +1,7 @@
 package idealindustrial.util.misc;
 
 import com.google.common.collect.HashMultimap;
-import ic2.core.IC2;
-import ic2.core.Ic2Items;
 import idealindustrial.util.misc.II_Util;
-import net.minecraft.item.ItemStack;
 
 import java.util.*;
 
@@ -65,7 +62,7 @@ public class ItemHelper {
 
         for (HashSet<? extends Rehashable> set : hashSets) {
             for (Rehashable item : set) {
-                item.fixHash();;
+                item.fixHash();
             }
             II_Util.rehash(set);
         }

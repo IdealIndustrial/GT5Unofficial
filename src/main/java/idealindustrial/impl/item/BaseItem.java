@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import idealindustrial.util.misc.II_Paths;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -78,6 +79,16 @@ public abstract class BaseItem extends Item {
             list.add("gg");
         }
         //todo: add more info on I
+    }
+
+    protected void addSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void getSubItems(Item item, CreativeTabs tab, List list) {
+        addSubItems(item, tab, list);
     }
 
     public boolean isItemStackUsable(ItemStack stack) {

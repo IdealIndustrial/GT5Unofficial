@@ -14,7 +14,6 @@ import idealindustrial.api.tile.meta.Tile;
 import idealindustrial.impl.tile.fluid.SingleFluidHandler;
 import idealindustrial.impl.tile.fluid.MultiFluidHandler;
 import idealindustrial.impl.tile.inventory.*;
-import idealindustrial.impl.tile.inventory.EmptyInventory;
 import idealindustrial.api.tile.inventory.InternalInventory;
 import idealindustrial.api.tile.inventory.RecipedInventory;
 import idealindustrial.util.lang.LangHandler;

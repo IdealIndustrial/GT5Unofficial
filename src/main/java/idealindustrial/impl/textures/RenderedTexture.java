@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 
+@SuppressWarnings("IfStatementWithIdenticalBranches")
 public class RenderedTexture implements ITexture {
-    private IconContainer icon;
-    private boolean maxBrightness;
-    private int[] rgba;
+    private final IconContainer icon;
+    private final int[] rgba;
 
     public RenderedTexture(IconContainer icon, int[] rgba) {
         assert icon != null && rgba != null && rgba.length == 4;
@@ -30,7 +30,7 @@ public class RenderedTexture implements ITexture {
     }
 
     public RenderedTexture maxBrightness() {
-        maxBrightness = true;
+        boolean maxBrightness = true;
         return this;
     }
 

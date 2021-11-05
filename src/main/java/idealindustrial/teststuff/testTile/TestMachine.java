@@ -40,7 +40,7 @@ public class TestMachine extends TileFacing1Output<HostMachineTile> {
 
     @Override
     public GuiContainer getClientGUI(EntityPlayer player, int internalID) {
-        return new GenericGuiContainer(new TestContainer(getHost(), player), II_Paths.PATH_GUI + "BasicGui.png");
+        return new GenericGuiContainer<>(new TestContainer(getHost(), player), II_Paths.PATH_GUI + "BasicGui.png");
     }
 
     @Override

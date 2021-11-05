@@ -71,7 +71,6 @@ public class Vector3d {
             case Z:
                 Vec2d rotatedZ = rotate(new Vec2d(neg.x, neg.y), angle);
                 res.x += rotatedZ.x;
-                ;
                 res.y += rotatedZ.y;
                 res.z = neg.z;
                 break;

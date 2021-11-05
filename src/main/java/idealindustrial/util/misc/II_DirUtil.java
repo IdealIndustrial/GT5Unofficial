@@ -69,6 +69,7 @@ public class II_DirUtil {
         return -1;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static int getDirection(Vector3d vec) {
         double[] plain = new double[6];
         plain[0] = vec.y;

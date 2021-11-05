@@ -18,7 +18,7 @@ public class OreInfo {
     public OreInfo(Prefixes prefix, II_Material material) {
         this.material = material;
         this.prefix = prefix;
-        this.name = prefix.name() + material.name();
+        this.name = prefix.name() + material.oreDictName();
         this.subItems = new ArrayList<>();
     }
 
@@ -83,6 +83,6 @@ public class OreInfo {
 
     @Override
     public String toString() {
-        return name + " "  + (material != null ? "Material: " + material.name() : "") + (prefix != null ? ", Prefix: " + prefix.name() : "");
+        return name + " "  + (material != null ? "Material: " + material.oreDictName() : "") + (prefix != null ? ", Prefix: " + prefix.name() : "");
     }
 }

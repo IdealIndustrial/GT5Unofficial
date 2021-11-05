@@ -29,8 +29,9 @@ public class RecipeMapStorage<R extends IMachineRecipe>{
         return JsonUtil.recipeDefaultGson;
     }
 
+    @SuppressWarnings("unchecked")
     public ArrayObject<R> toArrayObject() {
-        return new ArrayObject<R>(map.getAllRecipes().toArray((R[])new IMachineRecipe[0]));
+        return new ArrayObject<>(map.getAllRecipes().toArray((R[])new IMachineRecipe[0]));
     }
 
 }

@@ -314,21 +314,10 @@ public class BlockMachines
     }
 
     public int getLightOpacity(IBlockAccess aWorld, int aX, int aY, int aZ) {
-        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-        if (tTileEntity == null) {
-            return 0;
-        }
-//        if ((tTileEntity instanceof II_BaseTile)) {
-//            return ((II_BaseTile) tTileEntity).getLightOpacity();
-//        }
         return  0;
     }
 
     public int getLightValue(IBlockAccess aWorld, int aX, int aY, int aZ) {
-        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-//        if ((tTileEntity instanceof BaseMetaTileEntity)) {
-//            return ((BaseMetaTileEntity) tTileEntity).getLightValue();
-//        }
         return 0;
     }
 
@@ -337,13 +326,10 @@ public class BlockMachines
     }
 
     public float getExplosionResistance(Entity par1Entity, World aWorld, int aX, int aY, int aZ, double explosionX, double explosionY, double explosionZ) {
-        TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
-//        if (((tTileEntity instanceof II_BaseTile))) {
-//            return ((II_BaseTile) tTileEntity).getBlastResistance((byte) 6);
-//        }
         return 10.0F;
     }
 
+    @SuppressWarnings("unchecked")
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
         for (int i = 1; i < II_Values.TILES.length; i++) {
@@ -405,6 +391,7 @@ public class BlockMachines
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     public void addCollisionBoxesToList(World aWorld, int aX, int aY, int aZ, AxisAlignedBB inputAABB, List outputAABB, Entity collider) {
         TileEntity tTileEntity = aWorld.getTileEntity(aX, aY, aZ);
         if (((tTileEntity instanceof HostPipeTile)) && (((HostPipeTile) tTileEntity).getMetaTile() != null)) {

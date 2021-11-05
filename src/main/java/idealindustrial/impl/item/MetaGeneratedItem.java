@@ -34,7 +34,7 @@ public class MetaGeneratedItem extends MetaItem {
     boolean hasLocal;
     protected static final List<MetaGeneratedItem> instances = new ArrayList<>();
 
-    public MetaGeneratedItem(String unlocalized, II_Material[] materials, Prefixes[] prefixes) {
+    public MetaGeneratedItem(String unlocalized, II_Material[] materials, Prefixes... prefixes) {
         super(unlocalized);
         instances.add(this);
         assert materials != null && materials.length == 1000;

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings("ALL")
 public class ReloadRecipesCommand extends CommandBase {
 
     //list for loader classes, only empty constructors are accepted

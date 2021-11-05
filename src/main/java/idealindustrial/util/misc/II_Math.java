@@ -6,13 +6,7 @@ public class II_Math {
     }
 
     public static int sign(int a) {
-        if (a < 0) {
-            return -1;
-        }
-        if (a > 0) {
-            return 1;
-        }
-        return 0;
+        return Integer.compare(a, 0);
     }
 
     public static final double NINETY_DEGREES_RAD = Math.toRadians(90);

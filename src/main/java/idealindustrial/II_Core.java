@@ -40,9 +40,8 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
-import java.io.IOException;
 
-@Mod(modid = "iicore", name = "II_Core", version = "MC1710", useMetadata = false)
+@Mod(modid = "iicore", name = "II_Core", version = "MC1710")
 public class II_Core {
     public static final String MOD_ID = "iicore";
     @Mod.Instance(MOD_ID)
@@ -122,7 +121,7 @@ public class II_Core {
         GameRegistry.registerTileEntity(TestTile.class, "testTile");
         ClientRegistry.bindTileEntitySpecialRenderer(TestTile.class, new RenderTest());
         II_GuiHandler.init();
-        tileLoader.run();;
+        tileLoader.run();
         JsonManager.loadMachineConfigs(aEvent);
     }
 
@@ -221,11 +220,6 @@ public class II_Core {
         File iiSaveDir = new File(DimensionManager.getCurrentSaveRootDirectory(), "IIM");
         if (!iiSaveDir.isDirectory() && !iiSaveDir.mkdir()) {
             throw new IllegalStateException("Cannot create IIM save folder");
-        }
-        try {
-            CommandFixMaterials.loadWorld(iiSaveDir);
-        } catch (IOException exception) {
-            exception.printStackTrace();
         }
     }
 

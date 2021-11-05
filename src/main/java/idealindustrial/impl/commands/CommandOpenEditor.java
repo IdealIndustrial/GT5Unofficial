@@ -46,6 +46,7 @@ public class CommandOpenEditor extends CommandBase {
     }
 
 
+    @SuppressWarnings("rawtypes")
     @Override
     public List addTabCompletionOptions(ICommandSender player, String[] args) {
         String filter = args == null || args.length == 0 ? "" : args[0];

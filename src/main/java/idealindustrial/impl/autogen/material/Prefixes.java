@@ -1,6 +1,8 @@
 package idealindustrial.impl.autogen.material;
+
+import java.util.Arrays;
+
 /*
- todo: import prefixes from TextureSet.java
  *
  */
 public enum Prefixes {
@@ -52,6 +54,7 @@ public enum Prefixes {
     protected static void postInit() { //called after cl-init due to enum value init after static{  } fields
         setUnifiable(ingot, plate, dust, dustSmall, dustTiny);
         setNonOreDicted(cell, gasCell, plasmaCell);//no ores for cells, use fluid registry xD
+        setNonOreDicted(Arrays.stream(values()).filter(pr -> pr.name().toLowerCase().contains("toolhead")).toArray(Prefixes[]::new));//no ordicts for tool heads, they are
     }
 
 }

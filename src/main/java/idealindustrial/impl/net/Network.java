@@ -36,13 +36,11 @@ public class Network
         this.mSubChannels = new GT_Packet[]{null, null, new GT_Packet_Block_Event(),null,null,null, new GT_Packet_ExtendedBlockEvent(), new GT_Packet_ByteStream(), new PacketCover()};
     }
 
-    protected void encode(ChannelHandlerContext aContext, GT_Packet aPacket, List<Object> aOutput)
-            throws Exception {
+    protected void encode(ChannelHandlerContext aContext, GT_Packet aPacket, List<Object> aOutput) {
         aOutput.add(new FMLProxyPacket(Unpooled.buffer().writeByte(aPacket.getPacketID()).writeBytes(aPacket.encode()).copy(), (String) aContext.channel().attr(NetworkRegistry.FML_CHANNEL).get()));
     }
 
-    protected void decode(ChannelHandlerContext aContext, FMLProxyPacket aPacket, List<Object> aOutput)
-            throws Exception {
+    protected void decode(ChannelHandlerContext aContext, FMLProxyPacket aPacket, List<Object> aOutput) {
         ByteArrayDataInput aData = ByteStreams.newDataInput(aPacket.payload().array());
         aOutput.add(this.mSubChannels[aData.readByte()].decode(aData));
     }
@@ -94,7 +92,7 @@ public class Network
             try {
                 aPacket.process(aPlayer == null ? null : aPlayer.worldObj);
             }catch ( Exception e) {
-                e.printStackTrace();;
+                e.printStackTrace();
             }
         }
     }

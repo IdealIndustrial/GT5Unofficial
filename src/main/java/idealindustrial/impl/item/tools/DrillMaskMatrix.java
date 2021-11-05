@@ -6,10 +6,12 @@ import idealindustrial.impl.world.util.Vector3;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("ALL")
 public class DrillMaskMatrix extends CoordinateMatrix<DrillMaskMatrix.Action, MatrixCoordConsumer<DrillMaskMatrix.Action>> {
 
     int radius;
 
+    @SuppressWarnings("unchecked")
     public DrillMaskMatrix(int radius, boolean vertical) {
         this.radius = radius;
         this.subMatrices = new ArrayList<>();

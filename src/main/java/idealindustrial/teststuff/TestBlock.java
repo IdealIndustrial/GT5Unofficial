@@ -20,8 +20,7 @@ public class TestBlock extends BaseBlock implements ITileEntityProvider {
 
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-        TestTile testTile = new TestTile(p_149915_1_);
-        return testTile;
+        return new TestTile(p_149915_1_);
     }
 
     @Override

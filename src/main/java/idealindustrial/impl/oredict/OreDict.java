@@ -14,7 +14,7 @@ import java.io.PrintStream;
 import java.util.*;
 
 public class OreDict {
-    //todo DONT FORGET ABOUT IDs FUCK UP EVENT
+    //todo DON'T FORGET ABOUT IDs FUCK UP EVENT
     static Map<String, OreInfo> name2info = new HashMap<>();
     static Map<HashedStack, OreInfo> stack2info = ItemHelper.queryMap(new HashMap<>()); // only for unification, so no list cause stack cannot be unified to different stacks =)
     static Multimap<HashedStack, OreInfo> anyStack2info = ItemHelper.queryMap(HashMultimap.create());
@@ -47,7 +47,7 @@ public class OreDict {
     }
 
     static OreInfo make(Prefixes prefix, II_Material material) {
-        return name2info.computeIfAbsent(prefix.name() + material.name(), name -> new OreInfo(prefix, material));
+        return name2info.computeIfAbsent(prefix.name() + material.oreDictName(), name -> new OreInfo(prefix, material));
     }
 
     static OreInfo make(String name) {
@@ -55,7 +55,7 @@ public class OreDict {
     }
 
     public static OreInfo get(Prefixes prefixes, II_Material material) {
-        return get(prefixes.name() + material.name());
+        return get(prefixes.name() + material.oreDictName());
     }
 
     public static II_StackSignature get(Prefixes prefixes, II_Material material, int amount) {
@@ -104,9 +104,7 @@ public class OreDict {
     }
 
     public static void printAll(PrintStream stream) {
-       name2info.forEach((key, value) -> {
-           stream.println(key + " -> " + value);
-       });
+       name2info.forEach((key, value) -> stream.println(key + " -> " + value));
     }
 
 

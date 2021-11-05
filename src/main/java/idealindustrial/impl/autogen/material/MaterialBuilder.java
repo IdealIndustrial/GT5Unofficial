@@ -27,6 +27,7 @@ public class MaterialBuilder {
     private final FluidInfo fluidInfo = new FluidInfo();
     private final Set<Prefixes> prefixes = new HashSet<>();
     private final Set<Prefixes> expectedPrefixes = new HashSet<>();
+    @SuppressWarnings("FieldCanBeLocal")
     private FuelInfo fuelInfo;
     private BlockInfo blockInfo;
     private MaterialAutogenInfo autogenInfo;
@@ -121,6 +122,11 @@ public class MaterialBuilder {
             prefixes.add(Prefixes.dustSmall);
             prefixes.add(Prefixes.dustTiny);
             prefixes.add(Prefixes.nugget);
+            return this;
+        }
+
+        public SolidFormBuilder enableTools() {
+            prefixes.add(Prefixes.toolHeadDrill);
             return this;
         }
 
