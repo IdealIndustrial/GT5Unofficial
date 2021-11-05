@@ -2,9 +2,9 @@ package idealindustrial.util.json;
 
 import com.google.gson.*;
 import cpw.mods.fml.common.registry.GameRegistry;
-import idealindustrial.autogen.oredict.OreDict;
-import idealindustrial.autogen.oredict.OreInfo;
-import idealindustrial.util.item.II_ItemStack;
+import idealindustrial.impl.oredict.OreDict;
+import idealindustrial.impl.oredict.OreInfo;
+import idealindustrial.impl.item.stack.II_ItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 

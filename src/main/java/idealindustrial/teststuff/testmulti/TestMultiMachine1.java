@@ -1,16 +1,16 @@
 package idealindustrial.teststuff.testmulti;
 
-import idealindustrial.textures.ITexture;
-import idealindustrial.textures.RenderedTexture;
-import idealindustrial.blocks.II_Blocks;
-import idealindustrial.recipe.BasicMachineRecipe;
-import idealindustrial.recipe.RecipeMaps;
-import idealindustrial.textures.TextureManager;
-import idealindustrial.tile.impl.multi.RecipedMultiMachineBase;
-import idealindustrial.tile.interfaces.host.HostMachineTile;
-import idealindustrial.tile.interfaces.meta.Tile;
-import idealindustrial.tile.impl.multi.struct.MachineStructureBuilder;
-import idealindustrial.tile.impl.multi.struct.MultiMachineShape;
+import idealindustrial.api.textures.ITexture;
+import idealindustrial.impl.textures.RenderedTexture;
+import idealindustrial.impl.blocks.II_Blocks;
+import idealindustrial.impl.recipe.BasicMachineRecipe;
+import idealindustrial.impl.recipe.RecipeMaps;
+import idealindustrial.impl.textures.TextureManager;
+import idealindustrial.impl.tile.impl.multi.RecipedMultiMachineBase;
+import idealindustrial.api.tile.host.HostMachineTile;
+import idealindustrial.api.tile.meta.Tile;
+import idealindustrial.impl.tile.impl.multi.struct.MachineStructureBuilder;
+import idealindustrial.impl.tile.impl.multi.struct.MultiMachineShape;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.parameter.RecipedMachineStats;
 import net.minecraft.init.Blocks;

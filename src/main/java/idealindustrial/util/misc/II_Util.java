@@ -1,10 +1,8 @@
 package idealindustrial.util.misc;
 
 import com.google.common.collect.HashMultimap;
-import idealindustrial.items.GT_FluidDisplayItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import org.omg.CORBA.Object;
 

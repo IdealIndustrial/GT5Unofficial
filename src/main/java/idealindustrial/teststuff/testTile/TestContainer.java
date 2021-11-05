@@ -1,9 +1,9 @@
 package idealindustrial.teststuff.testTile;
 
-import idealindustrial.tile.gui.base.GenericContainer;
-import idealindustrial.tile.interfaces.host.HostMachineTile;
-import idealindustrial.tile.gui.base.component.II_Slot;
-import idealindustrial.tile.gui.base.component.SlotOutput;
+import idealindustrial.impl.tile.gui.base.GenericContainer;
+import idealindustrial.api.tile.host.HostMachineTile;
+import idealindustrial.impl.tile.gui.base.component.II_Slot;
+import idealindustrial.impl.tile.gui.base.component.SlotOutput;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class TestContainer extends GenericContainer {

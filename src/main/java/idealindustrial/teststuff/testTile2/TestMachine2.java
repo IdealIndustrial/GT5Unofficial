@@ -1,22 +1,21 @@
 package idealindustrial.teststuff.testTile2;
 
-import idealindustrial.textures.ITexture;
-import idealindustrial.textures.RenderedTexture;
-import idealindustrial.textures.TextureManager;
-import idealindustrial.tile.IOType;
-import idealindustrial.tile.gui.base.GenericGuiContainer;
-import idealindustrial.tile.interfaces.host.HostMachineTile;
-import idealindustrial.tile.interfaces.meta.Tile;
-import idealindustrial.tile.impl.TileFacing2Main;
-import idealindustrial.util.energy.electric.InputEnergyHandler;
-import idealindustrial.util.fluid.MultiFluidHandler;
-import idealindustrial.util.inventory.ArrayRecipedInventory;
-import idealindustrial.util.inventory.EmptyInventory;
+import idealindustrial.api.textures.ITexture;
+import idealindustrial.impl.textures.RenderedTexture;
+import idealindustrial.impl.textures.TextureManager;
+import idealindustrial.impl.tile.IOType;
+import idealindustrial.impl.tile.gui.base.GenericGuiContainer;
+import idealindustrial.api.tile.host.HostMachineTile;
+import idealindustrial.api.tile.meta.Tile;
+import idealindustrial.impl.tile.impl.TileFacing2Main;
+import idealindustrial.impl.tile.energy.electric.InputEnergyHandler;
+import idealindustrial.impl.tile.fluid.MultiFluidHandler;
+import idealindustrial.impl.tile.inventory.ArrayRecipedInventory;
+import idealindustrial.impl.tile.inventory.EmptyInventory;
 import idealindustrial.util.misc.II_Paths;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.stream.Stream;
 

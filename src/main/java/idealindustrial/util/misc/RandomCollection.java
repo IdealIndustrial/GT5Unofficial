@@ -1,6 +1,6 @@
 package idealindustrial.util.misc;
 
-import idealindustrial.util.world.underbedrock.WeightedRandom;
+import idealindustrial.api.world.underbedrock.WeightedRandom;
 
 import java.util.ArrayList;
 import java.util.List;

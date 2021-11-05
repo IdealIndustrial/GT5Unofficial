@@ -1,8 +1,8 @@
 package idealindustrial.util.lang.materials;
 
-import idealindustrial.autogen.material.II_Material;
-import idealindustrial.autogen.material.Prefixes;
-import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.impl.autogen.material.II_Material;
+import idealindustrial.impl.autogen.material.Prefixes;
+import idealindustrial.impl.autogen.material.submaterial.MatterState;
 
 public interface MaterialLocalizer {
 

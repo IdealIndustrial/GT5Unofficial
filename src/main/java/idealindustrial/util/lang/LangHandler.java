@@ -1,7 +1,7 @@
 package idealindustrial.util.lang;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import idealindustrial.reflection.events.EventManager;
+import idealindustrial.impl.reflection.events.EventManager;
 import net.minecraft.util.StatCollector;
 
 import java.lang.reflect.Field;

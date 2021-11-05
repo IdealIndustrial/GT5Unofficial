@@ -1,6 +1,6 @@
 package idealindustrial.util.lang;
 
-import idealindustrial.reflection.events.II_EventListener;
+import idealindustrial.api.reflection.II_EventListener;
 
 @II_EventListener
 public class LangTest {

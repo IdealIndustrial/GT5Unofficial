@@ -1,6 +1,6 @@
 package idealindustrial.util.misc;
 
-import idealindustrial.util.worldgen.util.Vector3d;
+import idealindustrial.impl.world.util.Vector3d;
 import net.minecraft.util.MathHelper;
 
 import java.util.stream.IntStream;

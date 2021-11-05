@@ -2,8 +2,8 @@ package idealindustrial.util.misc;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import idealindustrial.autogen.material.Prefixes;
-import idealindustrial.autogen.material.submaterial.MatterState;
+import idealindustrial.impl.autogen.material.Prefixes;
+import idealindustrial.impl.autogen.material.submaterial.MatterState;
 
 import java.util.HashMap;
 import java.util.Map;

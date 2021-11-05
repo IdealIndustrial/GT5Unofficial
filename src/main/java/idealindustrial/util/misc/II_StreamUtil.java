@@ -2,9 +2,9 @@ package idealindustrial.util.misc;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-import idealindustrial.textures.ITexture;
-import idealindustrial.textures.INetworkedTexture;
-import idealindustrial.textures.TextureManager;
+import idealindustrial.api.textures.ITexture;
+import idealindustrial.api.textures.INetworkedTexture;
+import idealindustrial.impl.textures.TextureManager;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Arrays;

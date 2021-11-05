@@ -1,8 +1,7 @@
 package idealindustrial.teststuff;
 
-import idealindustrial.autogen.material.II_Materials;
-import idealindustrial.autogen.material.Prefixes;
-import idealindustrial.textures.IconContainer;
+import idealindustrial.impl.autogen.material.II_Materials;
+import idealindustrial.api.textures.IconContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

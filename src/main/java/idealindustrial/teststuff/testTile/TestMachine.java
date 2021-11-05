@@ -1,15 +1,15 @@
 package idealindustrial.teststuff.testTile;
 
-import idealindustrial.reflection.config.Config;
-import idealindustrial.textures.ITexture;
-import idealindustrial.textures.TextureUtil;
-import idealindustrial.tile.IOType;
-import idealindustrial.tile.gui.base.GenericGuiContainer;
-import idealindustrial.tile.interfaces.host.HostMachineTile;
-import idealindustrial.tile.impl.TileFacing1Output;
-import idealindustrial.util.energy.electric.OutputEnergyHandler;
-import idealindustrial.util.inventory.EmptyInventory;
-import idealindustrial.util.inventory.ArrayRecipedInventory;
+import idealindustrial.api.reflection.Config;
+import idealindustrial.api.textures.ITexture;
+import idealindustrial.impl.textures.TextureUtil;
+import idealindustrial.impl.tile.IOType;
+import idealindustrial.impl.tile.gui.base.GenericGuiContainer;
+import idealindustrial.api.tile.host.HostMachineTile;
+import idealindustrial.impl.tile.impl.TileFacing1Output;
+import idealindustrial.impl.tile.energy.electric.OutputEnergyHandler;
+import idealindustrial.impl.tile.inventory.EmptyInventory;
+import idealindustrial.impl.tile.inventory.ArrayRecipedInventory;
 import idealindustrial.util.misc.II_Paths;
 import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;

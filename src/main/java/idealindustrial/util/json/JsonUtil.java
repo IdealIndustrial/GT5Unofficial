@@ -2,9 +2,9 @@ package idealindustrial.util.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import idealindustrial.recipe.RecipeEnergyParams;
-import idealindustrial.util.item.II_ItemStack;
-import idealindustrial.util.item.II_StackSignature;
+import idealindustrial.impl.recipe.RecipeEnergyParams;
+import idealindustrial.impl.item.stack.II_ItemStack;
+import idealindustrial.impl.item.stack.II_StackSignature;
 import net.minecraftforge.fluids.FluidStack;
 
 public class JsonUtil {

@@ -1,9 +1,9 @@
 package idealindustrial.teststuff;
 
-import idealindustrial.textures.ITexture;
-import idealindustrial.textures.IconContainer;
-import idealindustrial.textures.RenderedTexture;
-import idealindustrial.render.GT_Renderer_Block;
+import idealindustrial.api.textures.ITexture;
+import idealindustrial.api.textures.IconContainer;
+import idealindustrial.impl.textures.RenderedTexture;
+import idealindustrial.impl.render.GT_Renderer_Block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;

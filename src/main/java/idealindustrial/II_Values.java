@@ -1,6 +1,6 @@
 package idealindustrial;
 
-import idealindustrial.tile.interfaces.meta.Tile;
+import idealindustrial.api.tile.meta.Tile;
 
 import java.util.Arrays;
 import java.util.Objects;

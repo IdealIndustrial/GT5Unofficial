@@ -1,7 +1,7 @@
 package idealindustrial.util.json;
 
 import com.google.gson.*;
-import idealindustrial.recipe.RecipeEnergyParams;
+import idealindustrial.impl.recipe.RecipeEnergyParams;
 
 import java.lang.reflect.Type;
 

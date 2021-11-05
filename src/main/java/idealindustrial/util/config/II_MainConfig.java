@@ -1,7 +1,7 @@
 package idealindustrial.util.config;
 
-import idealindustrial.reflection.config.Config;
-import idealindustrial.reflection.config.ReflectionConfig;
+import idealindustrial.api.reflection.Config;
+import idealindustrial.impl.reflection.config.ReflectionConfig;
 
 public class II_MainConfig extends ReflectionConfig {
 
