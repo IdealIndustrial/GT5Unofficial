@@ -3400,7 +3400,7 @@ if(Loader.isModLoaded("Railcraft")){
 
         GT_Values.RA.addChemicalRecipe(                   Materials.Ethanol.getCells(9),      GT_Utility.getIntegratedCircuit(1),  Materials.SulfuricAcid.getFluid(7000), Materials.DilutedSulfuricAcid.getFluid(10000), Materials.Ethylene.getCells(6), Materials.Empty.getCells(3), 1200, 120);
         GT_Values.RA.addChemicalRecipe(                   Materials.SulfuricAcid.getCells(7), GT_Utility.getIntegratedCircuit(1),  Materials.Ethanol.getFluid(9000),      Materials.DilutedSulfuricAcid.getFluid(10000), Materials.Ethylene.getCells(6), Materials.Empty.getCells(1), 1200, 120);
-        GT_Values.RA.addChemicalRecipe(                   Materials.Ethanol.getCells(9),      Materials.Empty.getCells(1), Materials.SulfuricAcid.getFluid(7000), Materials.Ethylene.getGas(6000), Materials.DilutedSulfuricAcid.getCells(10),   GT_Values.NI, 1200, 120);
+        GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.Ethanol.getCells(9),      Materials.Empty.getCells(1), Materials.SulfuricAcid.getFluid(7000), Materials.Ethylene.getGas(6000), Materials.DilutedSulfuricAcid.getCells(10),   GT_Values.NI, 1200, 120);
         GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.SulfuricAcid.getCells(7), Materials.Empty.getCells(3),         Materials.Ethanol.getFluid(9000),      Materials.Ethylene.getGas(6000), Materials.DilutedSulfuricAcid.getCells(10),   GT_Values.NI, 1200, 120);
         GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.Ethanol.getCells(9),      Materials.SulfuricAcid.getCells(7),  GT_Values.NF,                          GT_Values.NF,                    Materials.DilutedSulfuricAcid.getCells(10),   Materials.Ethylene.getCells(6), 1200, 120);
 
