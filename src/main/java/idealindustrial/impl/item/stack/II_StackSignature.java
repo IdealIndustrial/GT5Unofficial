@@ -19,7 +19,7 @@ public class II_StackSignature extends II_ItemStack {
     }
 
     public II_StackSignature(OreInfo oreInfo, int amount) {
-        assert oreInfo != null;
+        assert oreInfo != null && !oreInfo.getName().equals("nothing");
         this.type = CheckType.OREDICT;
         this.oreInfo = oreInfo;
         this.amount = amount;
@@ -110,5 +110,10 @@ public class II_StackSignature extends II_ItemStack {
                 return new II_ItemStack(oreInfo.getMain().item, oreInfo.getMain().getDamage(), amount);
         }
         throw new IllegalStateException("never thrown");
+    }
+
+    @Override
+    public ItemStack toMCStack() {
+        return getAsStack().toMCStack();
     }
 }

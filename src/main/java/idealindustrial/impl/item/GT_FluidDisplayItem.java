@@ -85,7 +85,7 @@ public class GT_FluidDisplayItem
     }
 
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void addSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
 
     }
 }

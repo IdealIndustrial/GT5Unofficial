@@ -20,4 +20,9 @@ public class II_NBTUtil {
         is.setTagCompound(nbt);
     }
 
+    public static NBTTagCompound getTag(ItemStack is) {
+        NBTTagCompound nbt = is.getTagCompound();
+        return nbt == null ? new NBTTagCompound() : nbt;
+    }
+
 }

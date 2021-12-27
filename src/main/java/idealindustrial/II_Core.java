@@ -12,12 +12,13 @@ import idealindustrial.impl.item.MetaGeneratedCellItem;
 import idealindustrial.impl.autogen.material.II_Materials;
 import idealindustrial.impl.oredict.OreDict;
 import idealindustrial.impl.oredict.OredictHandler;
-import idealindustrial.impl.autogen.recipes.JsonManager;
+import idealindustrial.impl.autogen.recipes.LoadManager;
 import idealindustrial.impl.autogen.recipes.materialprocessing.AutogenRecipes;
 import idealindustrial.impl.commands.*;
 import idealindustrial.impl.loader.*;
 import idealindustrial.teststuff.RenderTest;
 import idealindustrial.teststuff.TestBlock;
+import idealindustrial.teststuff.TestRecipes;
 import idealindustrial.teststuff.TestTile;
 import idealindustrial.impl.tile.gui.II_GuiHandler;
 import idealindustrial.impl.item.tools.ToolRegistry;
@@ -62,12 +63,12 @@ public class II_Core {
 
     private static final String version = "1.17.1";
 
-    RenderLoader renderLoader;
-    ItemsLoader itemsLoader;
-    BlocksLoader blocksLoader;
-    TileLoader tileLoader;
-    OredictHandler oredictLoader;
-    AutogenRecipes autogen;
+    public RenderLoader renderLoader;
+    public ItemsLoader itemsLoader;
+    public BlocksLoader blocksLoader;
+    public TileLoader tileLoader;
+    public OredictHandler oredictLoader;
+    public AutogenRecipes autogen;
 
     public II_Core() {
         FMLCommonHandler.instance().bus().register(this);
@@ -122,7 +123,7 @@ public class II_Core {
         ClientRegistry.bindTileEntitySpecialRenderer(TestTile.class, new RenderTest());
         II_GuiHandler.init();
         tileLoader.run();
-        JsonManager.loadMachineConfigs(aEvent);
+        LoadManager.loadMachineConfigs(aEvent);
     }
 
     @Mod.EventHandler
@@ -136,18 +137,20 @@ public class II_Core {
 
     @Mod.EventHandler
     public void onPostLoad(FMLPostInitializationEvent aEvent) {
+        LoadManager.loadMaterialAutogenInfo();
         GameRegistry.registerWorldGenerator(new OreGenerator(), 100);
         try {
             ToolRegistry.initTools();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        LangHandler.dumpAll();
-        LangHandler.pushLocalToMinecraft();
         oredictLoader.init();
         II_Materials.initMaterialLoops();
-        JsonManager.loadRecipes();
+        LoadManager.loadRecipes();
+        new TestRecipes().run();
         OreDict.printAll(System.out);
+        LangHandler.dumpAll();
+        LangHandler.pushLocalToMinecraft();
 
     }
 
@@ -208,7 +211,7 @@ public class II_Core {
     public void onServerStarting(FMLServerStartingEvent aEvent) {
         aEvent.registerServerCommand(new CommandFixQuests());
         aEvent.registerServerCommand(new DimTPCommand());
-        aEvent.registerServerCommand(new ReloadRecipesCommand());
+//        aEvent.registerServerCommand(new ReloadRecipesCommand());
         aEvent.registerServerCommand(new CommandOpenEditor());
 
         //  aEvent.registerServerCommand(new CommandFixMaterials());
@@ -231,6 +234,5 @@ public class II_Core {
     public void onIDChangingEvent(FMLModIdMappingEvent event) {
         ItemHelper.onIDsCharge();
     }
-
 
 }

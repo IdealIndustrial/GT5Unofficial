@@ -1,11 +1,14 @@
 package idealindustrial.impl.render;
 
+import idealindustrial.api.textures.ITexture;
+import idealindustrial.api.textures.IconContainer;
 import idealindustrial.impl.autogen.material.II_Material;
 import idealindustrial.impl.autogen.material.II_Materials;
 import idealindustrial.impl.autogen.material.Prefixes;
 import idealindustrial.impl.autogen.material.submaterial.MatterState;
 import idealindustrial.impl.item.MetaToolItem;
 import idealindustrial.impl.textures.OverlayIconContainer;
+import idealindustrial.impl.textures.TextureManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -19,6 +22,8 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 
 public class MetaToolRenderer implements IItemRenderer {
+
+    static IconContainer durability = TextureManager.INSTANCE.itemTexture("misc/durability");
 
     public MetaToolRenderer() {
         MinecraftForgeClient.registerItemRenderer(MetaToolItem.INSTANCE, this);
@@ -72,10 +77,15 @@ public class MetaToolRenderer implements IItemRenderer {
         doRender(headIcon.getOverlay(), type, Color.WHITE);
         doRender(baseIcon.getOverlay(), type, Color.WHITE);
         GL11.glDisable(GL11.GL_BLEND);
+        if (type == ItemRenderType.INVENTORY) {
+            double damageFactor = 1 - MetaToolItem.INSTANCE.getDamageD(item);
+            damageFactor = Math.max(0, damageFactor);
+            MetaItem_Renderer.renderItem(durability.getIcon(), 0d, 0d, 16d * damageFactor, 16.0d, 0.02, 0.0f, 0.0f, -1.0F);
+        }
 
     }
 
-    private static void doRender(IIcon icon, ItemRenderType type, Color color) {
+    public static void doRender(IIcon icon, ItemRenderType type, Color color) {
         GL11.glColor3f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
         if (type == ItemRenderType.INVENTORY) {
             renderItemIcon(icon);
@@ -90,26 +100,7 @@ public class MetaToolRenderer implements IItemRenderer {
 
 
     public static void renderItemIcon(IIcon icon, double size, double z, float nx, float ny, float nz) {
-        renderItemIcon(icon, 0.0D, 0.0D, size, size, z, nx, ny, nz);
+        MetaItem_Renderer.renderItem(icon, 0.0D, 0.0D, size, size, z, nx, ny, nz);
     }
 
-    public static void renderItemIcon(IIcon icon, double xStart, double yStart, double xEnd, double yEnd, double z, float nx, float ny, float nz) {
-        if (icon == null) {
-            return;
-        }
-        Tessellator.instance.startDrawingQuads();
-        Tessellator.instance.setNormal(nx, ny, nz);
-        if (nz > 0.0F) {
-            Tessellator.instance.addVertexWithUV(xStart, yStart, z, icon.getMinU(), icon.getMinV());
-            Tessellator.instance.addVertexWithUV(xEnd, yStart, z, icon.getMaxU(), icon.getMinV());
-            Tessellator.instance.addVertexWithUV(xEnd, yEnd, z, icon.getMaxU(), icon.getMaxV());
-            Tessellator.instance.addVertexWithUV(xStart, yEnd, z, icon.getMinU(), icon.getMaxV());
-        } else {
-            Tessellator.instance.addVertexWithUV(xStart, yEnd, z, icon.getMinU(), icon.getMaxV());
-            Tessellator.instance.addVertexWithUV(xEnd, yEnd, z, icon.getMaxU(), icon.getMaxV());
-            Tessellator.instance.addVertexWithUV(xEnd, yStart, z, icon.getMaxU(), icon.getMinV());
-            Tessellator.instance.addVertexWithUV(xStart, yStart, z, icon.getMinU(), icon.getMinV());
-        }
-        Tessellator.instance.draw();
-    }
 }

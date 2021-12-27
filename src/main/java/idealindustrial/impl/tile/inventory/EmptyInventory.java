@@ -75,4 +75,9 @@ public class EmptyInventory implements RecipedInventory {
     public void validate() {
 
     }
+
+    @Override
+    public boolean isEmpty() {
+        return true;
+    }
 }

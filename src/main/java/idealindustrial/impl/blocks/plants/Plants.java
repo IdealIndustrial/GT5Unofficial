@@ -31,11 +31,12 @@ public class Plants {
         return definitions[id];
     }
 
-    public static PlantDef copperPlant;
+    public static PlantDef copperPlant, tinPlant;
 
     public static void init() {
         register(0, "argentia").setLevels(3, new int[]{10, 10, 10, 10}, 2).setTextures(RenderType.Sharp);
         copperPlant = register(1, "copperplant").setLevels(0, new int[]{25}, 2).setTextures(RenderType.Cross);
+        tinPlant = register(2, "tinPlant").setLevels(0, new int[]{25}, 2).setTextures(RenderType.Cross);
     }
 
 }

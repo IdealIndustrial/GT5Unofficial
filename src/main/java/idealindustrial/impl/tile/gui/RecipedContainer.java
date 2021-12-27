@@ -1,11 +1,12 @@
 package idealindustrial.impl.tile.gui;
 
+import idealindustrial.api.recipe.IRecipeGuiParams;
+import idealindustrial.api.tile.host.HostMachineTile;
 import idealindustrial.impl.net.fields.NetworkedShort;
 import idealindustrial.impl.recipe.GuiSlotDefinition;
-import idealindustrial.api.recipe.IRecipeGuiParams;
 import idealindustrial.impl.tile.gui.base.GenericContainer;
-import idealindustrial.api.tile.host.HostMachineTile;
 import idealindustrial.impl.tile.impl.recipe.TileMachineReciped;
+import idealindustrial.impl.tile.inventory.ArrayRecipedInventory;
 import idealindustrial.impl.tile.inventory.InternalInventoryWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -56,7 +57,9 @@ public class RecipedContainer extends GenericContainer {
         addAllSlots(new InternalInventoryWrapper(tile.getSpecial()), tile.getSpecial().size(), 0, params.getItemSpecial());
 
         addAllSlots(representation, representation.getInSize(), 0, params.getFluidsIn());
-        addAllSlots(representation, representation.getOutSize(),  representation.getInSize(), params.getFluidsOut());
+        addAllSlots(representation, representation.getOutSize(), representation.getInSize(), params.getFluidsOut());
+
+        addAllSlots(new InternalInventoryWrapper(new ArrayRecipedInventory(params.getHoloSlots().length, 0)), params.getHoloSlots().length, 0, params.getHoloSlots());
     }
 
     protected void addAllSlots(IInventory inventory, int toAdd, int idOffset, GuiSlotDefinition[] definitions) {
@@ -64,8 +67,6 @@ public class RecipedContainer extends GenericContainer {
             addSlotToContainer(definitions[i].construct(inventory, idOffset + i));
         }
     }
-
-
 
 
     protected short getProgressBar() {

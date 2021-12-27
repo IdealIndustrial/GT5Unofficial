@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static idealindustrial.impl.autogen.material.MaterialBuilder.make;
 import static idealindustrial.impl.autogen.material.Prefixes.*;
@@ -24,12 +26,16 @@ public class II_Materials {
     //elements
     public static II_Material iron, copper, tin, lightWater, arsenic, arsenicBronze;
 
+    //molecules
+    public static II_Material cassiterite;
+
     static {
         Prefixes.postInit();
         init();
     }
     private static void init() {
         initElements();
+        initMolecules();
         initAlloys();
     }
 
@@ -42,7 +48,6 @@ public class II_Materials {
                 .addGas().setTemperature(5000).addCell().setRender(new Color(243, 95, 83))
                 .addPlasma().addCell().setRender(new Color(116, 239, 116))
                 .addPrefixes(ingot, dust, dustSmall, dustTiny, plate, ore, oreSmall)
-                .recipeAutogen().addMetallicActions().add()
                 .setChemicalFormula("Fe")
                 .construct();
 
@@ -51,7 +56,6 @@ public class II_Materials {
                 .addFluid().setTemperature(1000).addCell().setRender(new Color(83, 46, 2))
                 .addPlasma().addCell().setRender(new Color(116, 239, 186))
                 .addPrefixes(ingot, dust, dustSmall, dustTiny, plate, ore, oreSmall)
-                .recipeAutogen().addMetallicActions().add()
                 .setChemicalFormula("Cu")
                 .construct();
         tin = make(2, "Tin", Textures.testSet)
@@ -59,7 +63,6 @@ public class II_Materials {
                 .addFluid().setTemperature(1000).addCell().setRender(new Color(189, 186, 186))
                 .addPlasma().addCell().setRender(new Color(2, 139, 83))
                 .addPrefixes(ingot, dust, dustSmall, dustTiny, plate, ore, oreSmall)
-                .recipeAutogen().addMetallicActions().add()
                 .setChemicalFormula("Sn")
                 .construct();
 
@@ -76,12 +79,22 @@ public class II_Materials {
 
     }
 
+    private static void initMolecules() {
+        cassiterite = make(300, "Cassiterite", Textures.testSet)
+                .addSolid().setRender(new Color(151, 151, 151))
+                .setChemicalFormula("SnO2")
+                .addPrefixes(dust, dustSmall, dustTiny)
+                .addOres().add()
+                .construct();
+    }
+
     private static void initAlloys() {
         arsenicBronze = make(150, "Arsenic Bronze", Textures.testSet)
                 .addSolid().enableBaseComponents().enableTools().setRender(new Color(252, 151, 53))
                 .addFluid().addCell().setRender(new Color(255, 132, 0))
                 .setChemicalFormula("Cu20As")
-                .addPrefixes(nugget, nuggetBig)
+                .addPrefixes(nugget, nuggetBig, nuggetBigHot)
+                .addTools()
                 .addOres().setSmallOreDrops(r -> {
                     ArrayList<ItemStack> is = new ArrayList<>();
                     is.add(OreDict.getMainAsIS(nugget, arsenicBronze, 3 + r.nextInt(3)));
@@ -109,8 +122,9 @@ public class II_Materials {
 
     static Map<String, II_Material> nameToMaterial = new HashMap<>();
     public static II_Material materialForName(String name) {
+        name = name.toLowerCase().replace(" ", "");
         if (nameToMaterial.isEmpty()) {
-            II_Materials.allMaterials.forEach(m -> nameToMaterial.put(m.name().toLowerCase(), m));
+            II_Materials.allMaterials.forEach(m -> nameToMaterial.put(m.name().toLowerCase().replace(" ", ""), m));
         }
         return nameToMaterial.get(name);
     }
@@ -122,5 +136,19 @@ public class II_Materials {
         return null;
     }
 
+    public static II_Material[] getMaterialArray(int arrayID) {
+        if (arrayID == 0) {
+            return materialsK1;
+        }
+        return null;
+    }
 
+
+    public static Stream<II_Material> stream() {
+        return allMaterials.stream();
+    }
+
+    public static void foreach(Consumer<II_Material> consumer) {
+        allMaterials.forEach(consumer);
+    }
 }

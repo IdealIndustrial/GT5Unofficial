@@ -10,6 +10,7 @@ import static idealindustrial.impl.oredict.OreDict.getMain;
 import static idealindustrial.impl.autogen.recipes.RecipeAction.plateBending;
 import static idealindustrial.impl.recipe.RecipeBuilder.basicBuilder;
 
+@Deprecated
 public class BenderAutogenRecipes extends AutogenRecipeAdder {
 
     protected BenderAutogenRecipes() {
@@ -18,12 +19,6 @@ public class BenderAutogenRecipes extends AutogenRecipeAdder {
 
     @Override
     public void addRecipes(II_Material material) {
-        if (material.getAutogenInfo().isActionAllowed(plateBending) && !isBlackListed(material, plateBending)) {
-            RecipeMaps.benderRecipes.addRecipe(basicBuilder()
-                    .addInputs(get(ingot, material, 1))
-                    .addOutputs(getMain(plate, material, 1))
-                    .addEnergyValues(20, 1,20)
-                    .construct());
-        }
+
     }
 }

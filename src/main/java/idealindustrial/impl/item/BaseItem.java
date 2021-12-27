@@ -87,7 +87,7 @@ public abstract class BaseItem extends Item {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public final void getSubItems(Item item, CreativeTabs tab, List list) {
         addSubItems(item, tab, list);
     }
 

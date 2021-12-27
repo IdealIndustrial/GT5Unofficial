@@ -7,18 +7,23 @@ import idealindustrial.util.json.ArrayObject;
 import idealindustrial.util.json.JsonUtil;
 
 public class RecipeMapStorage<R extends IMachineRecipe>{
-    String fileName;
+    String recipesFileName, autogenFileName;
     Class<R> recipeType;
     RecipeMap<R> map;
 
-    public RecipeMapStorage(String fileName, Class<R> recipeType, RecipeMap<R> map) {
-        this.fileName = fileName;
+    public RecipeMapStorage(String recipesFileName, String autogenFileName, Class<R> recipeType, RecipeMap<R> map) {
+        this.recipesFileName = recipesFileName;
+        this.autogenFileName = autogenFileName;
         this.recipeType = recipeType;
         this.map = map;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getRecipesFileName() {
+        return recipesFileName;
+    }
+
+    public String getAutogenFileName() {
+        return autogenFileName;
     }
 
     public Class<R> getRecipeType() {

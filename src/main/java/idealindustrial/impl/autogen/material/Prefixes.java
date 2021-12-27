@@ -13,6 +13,7 @@ public enum Prefixes {
     dustTiny("Tiny Pile of", "Dust"),
     nugget("", "Nugget"),
     nuggetBig("Big", "Nugget"),
+    nuggetBigHot("Big", "Nugget (Hot)"),
     block("Block of", ""),
     cell("", "Cell"),
     gasCell("", "Cell"),
@@ -20,21 +21,35 @@ public enum Prefixes {
     cable01("1x", "Cable"),
     ore("", "Ore"),
     oreSmall("Small", "Ore"),
-    toolHeadDrill("", "Drill Head");
+    toolHeadDrill("", "Drill Head"),
+    pickaxe("", "Pickaxe"),
+    toolHeadPickaxe("", "Pickaxe Head", pickaxe)
 
+    ;
+
+    //used for naming items eg: prefix + material_name + postfix
     public final String prefix, postfix;
-    protected boolean unifiable = false;
-    protected boolean isOreDicted = true;
+    //used for prefixes like pick head and pick, pick is subPrefix (used for localization)
+    public final Prefixes subPrefix;
+    private boolean unifiable = false;
+    private boolean isOreDicted = true;
 
-    Prefixes(String prefix, String postfix) {
+    Prefixes(String prefix, String postfix, Prefixes subPrefix) {
         this.prefix = prefix;
         this.postfix = postfix;
+        this.subPrefix = subPrefix;
+    }
+
+    Prefixes(String prefix, String postfix) {
+        this(prefix, postfix, null);
     }
 
     public boolean isUnifiable() {
         return unifiable;
     }
 
+    //only corresponds for adding this prefix to Forge Ore Dict,
+    //prefix will be still added to my OreDict even if is not oreDicted
     public boolean isOreDicted() {
         return isOreDicted;
     }

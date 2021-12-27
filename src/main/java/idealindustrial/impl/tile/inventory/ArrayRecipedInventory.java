@@ -192,6 +192,16 @@ public class ArrayRecipedInventory implements RecipedInventory {
     }
 
     @Override
+    public II_ItemStack getII(int i) {
+        return contents[i];
+    }
+
+    @Override
+    public void set(int i, II_ItemStack stack) {
+        contents[i] = stack;
+    }
+
+    @Override
     public ItemStack reduce(int i, int amount) {
         ItemStack stack = contents[i].toMCStack();
         contents[i].amount -= amount;
@@ -203,12 +213,25 @@ public class ArrayRecipedInventory implements RecipedInventory {
     }
 
     @Override
+    public void reduceII(int i, int amount) {
+        contents[i].amount -= amount;
+        if (contents[i].amount == 0) {
+            contents[i] = null;
+        }
+    }
+
+    @Override
     public int size() {
         return contents.length;
     }
 
     @Override
     public boolean allowInput(int i, ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean isIndexed() {
         return true;
     }
 
@@ -246,5 +269,15 @@ public class ArrayRecipedInventory implements RecipedInventory {
                 contents[i] = null;
             }
         }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for (II_ItemStack content : contents) {
+            if (content != null) {
+                return false;
+            }
+        }
+        return true;
     }
 }

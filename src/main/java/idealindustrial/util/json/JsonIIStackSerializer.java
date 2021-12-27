@@ -19,7 +19,7 @@ public class JsonIIStackSerializer implements JsonSerializer<II_ItemStack>, Json
         object.addProperty("name", src.getUniqueID().name);
         object.addProperty("damage", src.getDamageValue());
         if (src.getTagCompound() != null) {
-            object.add("nbt", context.serialize(src.getTagCompound()));
+            object.add("nbt", context.serialize(src.getTagCompound(), NBTTagCompound.class));
         }
         object.addProperty("amount", src.amount);
         return object;

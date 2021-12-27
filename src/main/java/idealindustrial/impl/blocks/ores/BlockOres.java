@@ -80,4 +80,39 @@ public class BlockOres extends Tile32kBlock<TileOres> {
     protected Class<TileOres> getTileClass() {
         return TileOres.class;
     }
+
+    @Override
+    public String getHarvestTool(int metadata) {
+        return "pickaxe";
+    }
+
+    @Override
+    public int getHarvestLevel(int metadata) {
+        return metadata;
+    }
+
+    @Override
+    public float getBlockHardness(World world, int x, int y, int z) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TileOres) {
+            return ((TileOres) tileEntity).getHardness();
+        }
+        return super.getBlockHardness(world, x, y, z);
+    }
+
+    @Override
+    public boolean isNormalCube() {
+        return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+
 }

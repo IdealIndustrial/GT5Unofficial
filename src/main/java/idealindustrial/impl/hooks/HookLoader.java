@@ -17,23 +17,23 @@ public class HookLoader extends gloomyfolken.hooklib.minecraft.HookLoader {
     protected void registerHooks() {
         II_PatchConfig.load();
         if (neiGui)
-            registerHookContainer("idealindustrial.hooks.II_AE2NeiPatch");
+            registerHookContainer("idealindustrial.impl.hooks.II_AE2NeiPatch");
         if (ec2Faces)
-            registerHookContainer("idealindustrial.hooks.II_FluidInterfacePatch");
+            registerHookContainer("idealindustrial.impl.hooks.II_FluidInterfacePatch");
         if (gtMats)
-            registerHookContainer("idealindustrial.hooks.II_RemapGTMaterialsPatch");
+            registerHookContainer("idealindustrial.impl.hooks.II_RemapGTMaterialsPatch");
         if (ae2SpatialFix)
-            registerHookContainer("idealindustrial.hooks.II_AE2SpatialPatch");
+            registerHookContainer("idealindustrial.impl.hooks.II_AE2SpatialPatch");
         if (mineIcon)
-            registerHookContainer("idealindustrial.hooks.II_GameTitlePatch");
+            registerHookContainer("idealindustrial.impl.hooks.II_GameTitlePatch");
         if (opis)
-            registerHookContainer("idealindustrial.hooks.II_OpisPatch");
+            registerHookContainer("idealindustrial.impl.hooks.II_OpisPatch");
         if (worldMultiThread)
-            registerHookContainer("idealindustrial.hooks.II_WorldMultithreadingPatch");
+            registerHookContainer("idealindustrial.impl.hooks.II_WorldMultithreadingPatch");
         if (true)
-            registerHookContainer("idealindustrial.hooks.II_NeiIdePatch");
-        registerHookContainer("idealindustrial.hooks.II_GUI_Chat_Patch");
-        registerHookContainer("idealindustrial.hooks.II_DrillBreakAnimationHook");
+            registerHookContainer("idealindustrial.impl.hooks.II_NeiIdePatch");
+        registerHookContainer("idealindustrial.impl.hooks.II_GUI_Chat_Patch");
+        registerHookContainer("idealindustrial.impl.hooks.II_DrillBreakAnimationHook");
 
     }
 }

@@ -11,5 +11,6 @@ public class GuiTextures {
     public static class SlotTextures {
         public static final int SLOT_DEFAULT = 0;
         public static final int SLOT_FLUID_DEFAULT = 2;
+        public static final int SLOT_HOLO_HAMMER = 4;
     }
 }

@@ -19,7 +19,7 @@ public class OreDict {
     static Map<HashedStack, OreInfo> stack2info = ItemHelper.queryMap(new HashMap<>()); // only for unification, so no list cause stack cannot be unified to different stacks =)
     static Multimap<HashedStack, OreInfo> anyStack2info = ItemHelper.queryMap(HashMultimap.create());
 
-    protected static OreInfo emptyInfo = null;
+    public static OreInfo emptyInfo = new OreInfo("nothing");
 
     public static String register(Prefixes prefix, II_Material material, ItemStack stack) {
         OreInfo info = make(prefix, material);
@@ -108,4 +108,15 @@ public class OreDict {
     }
 
 
+    public static boolean exists(Prefixes prefixes, II_Material material) {
+        return get(prefixes, material) != emptyInfo;
+    }
+
+    public static boolean exists(Prefixes prefixes, II_Material... materials) {
+        return Arrays.stream(materials).allMatch(m -> exists(prefixes, m));
+    }
+
+    public static boolean exists(II_Material material, Prefixes... prefixes) {
+        return Arrays.stream(prefixes).allMatch(p -> exists(p, material));
+    }
 }

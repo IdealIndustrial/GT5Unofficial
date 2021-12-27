@@ -9,7 +9,10 @@ public abstract class BaseLocalizer implements MaterialLocalizer {
 
     @Override
     public String get(II_Material material, Prefixes prefix) {
-        return String.format(getFormatFor(material, prefix), getNameFor(material, prefix));
+        if (prefix.subPrefix != null) {
+            return get(material, prefix.subPrefix);
+        }
+        return String.format(getFormatFor(material, prefix), getNameFor(material, prefix)).trim();
     }
 
     @Override

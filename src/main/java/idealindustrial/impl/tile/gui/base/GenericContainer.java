@@ -6,6 +6,7 @@ import idealindustrial.api.tile.fluid.FluidHandler;
 import idealindustrial.impl.tile.fluid.EmptyFluidRepresentation;
 import idealindustrial.impl.tile.fluid.II_FluidHelper;
 import idealindustrial.api.tile.fluid.FluidInventoryRepresentation;
+import idealindustrial.impl.tile.gui.base.component.SlotHoloEvent;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -76,6 +77,10 @@ public class GenericContainer extends Container {
             return processFluids(index, mouse, hotkeys, player);
         }
         try {
+            if (index >= 0 && index < inventorySlots.size() && inventorySlots.get(index) instanceof SlotHoloEvent) {
+                ((SlotHoloEvent) inventorySlots.get(index)).slotClicked(tile, player, mouse, hotkeys);
+                return null;
+            }
             if (hotkeys == 5) {
                 return super.slotClick(index, mouse, hotkeys, player);
             } else {

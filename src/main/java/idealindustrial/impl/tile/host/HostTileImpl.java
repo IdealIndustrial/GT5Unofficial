@@ -7,6 +7,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import gregtech.api.metatileentity.BaseTileEntity;
 import gregtech.api.net.GT_Packet_ByteStream;
 import gregtech.api.net.GT_Packet_ExtendedBlockEvent;
+import gregtech.api.net.GT_Packet_ExtendedBlockEvent_Server;
 import idealindustrial.II_Core;
 import idealindustrial.II_Values;
 import idealindustrial.api.tile.render.CustomRenderer;
@@ -353,6 +354,10 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
 
     public void sendEvent(int id, int value) {
         NW.sendPacketToAllPlayersInRange(worldObj, new GT_Packet_ExtendedBlockEvent(xCoord, (short) yCoord, zCoord, id, value), xCoord, zCoord);
+    }
+
+    public void sendEventToServer(int id, int value) {
+        NW.sendToServer(new GT_Packet_ExtendedBlockEvent_Server(xCoord, yCoord, zCoord, worldObj.provider.dimensionId, id, value));
     }
 
     @Override

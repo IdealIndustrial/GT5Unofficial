@@ -55,7 +55,7 @@ public class BlockMachines
     }
 
     public String getHarvestTool(int aMeta) {
-        return "wrench";
+        return "pickaxe";
     }
 
     public int getHarvestLevel(int aMeta) {
@@ -314,11 +314,11 @@ public class BlockMachines
     }
 
     public int getLightOpacity(IBlockAccess aWorld, int aX, int aY, int aZ) {
-        return  0;
+        return  lightOpacity;
     }
 
     public int getLightValue(IBlockAccess aWorld, int aX, int aY, int aZ) {
-        return 0;
+        return lightValue;
     }
 
     public TileEntity createTileEntity(World aWorld, int aMeta) {

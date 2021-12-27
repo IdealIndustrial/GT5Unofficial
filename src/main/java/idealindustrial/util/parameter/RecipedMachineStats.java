@@ -8,13 +8,14 @@ import idealindustrial.util.misc.II_Util;
 
 public class RecipedMachineStats {
 
-    public final int tier, inSlots, outSlots, stackSize, fluidsIn, fluidsOut, fluidCapacity;
+    public final int tier, inSlots, outSlots, specialSlots, stackSize, fluidsIn, fluidsOut, fluidCapacity;
     public final long voltageIn, amperageIn, energyCapacity;
 
-    public RecipedMachineStats(int tier, int inSlots, int outSlots, int stackSize, int fluidsIn, int fluidsOut, int fluidCapacity, long amperageIn, long energyCapacity) {
+    public RecipedMachineStats(int tier, int inSlots, int outSlots, int specialSlots, int stackSize, int fluidsIn, int fluidsOut, int fluidCapacity, long amperageIn, long energyCapacity) {
         this.tier = tier;
         this.inSlots = inSlots;
         this.outSlots = outSlots;
+        this.specialSlots = specialSlots;
         this.stackSize = stackSize;
         this.fluidsIn = fluidsIn;
         this.fluidsOut = fluidsOut;
@@ -44,6 +45,12 @@ public class RecipedMachineStats {
         return II_TileUtil.constructInternalInventory(outSlots, stackSize);
     }
 
+    public InternalInventory inventorySpecial() {
+        return II_TileUtil.constructInternalInventory(specialSlots, stackSize);
+    }
+
+
+    //todo: deprecate
     public int totalSlotsToRender() {
         return inSlots + outSlots + fluidsIn + fluidsOut;
     }

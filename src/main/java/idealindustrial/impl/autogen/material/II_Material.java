@@ -1,9 +1,12 @@
 package idealindustrial.impl.autogen.material;
 
+import idealindustrial.II_Core;
 import idealindustrial.impl.autogen.material.submaterial.*;
 import idealindustrial.impl.autogen.material.submaterial.chem.ChemicalInfo;
 import idealindustrial.impl.autogen.material.submaterial.render.RenderInfo;
+import idealindustrial.impl.item.stack.II_ItemStack;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -91,5 +94,18 @@ public class II_Material {
 
     public WorldOreInfo getOreInfo() {
         return oreInfo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        II_Material that = (II_Material) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode() * 31 + id;
     }
 }

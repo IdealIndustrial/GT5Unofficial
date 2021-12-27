@@ -3,7 +3,7 @@ package idealindustrial.impl.world;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
-import idealindustrial.impl.item.tools.ToolDrill;
+import idealindustrial.impl.item.tools.ToolWithBreakingMatrix;
 import idealindustrial.impl.tile.energy.electric.system.EnergySystemHandler;
 import idealindustrial.impl.tile.energy.kinetic.system.KineticSystemHandler;
 
@@ -21,7 +21,7 @@ public class WorldTickHandler {
             if (event.phase == TickEvent.Phase.END) {
                 EnergySystemHandler.onTick();
                 KineticSystemHandler.onTick();
-                ToolDrill.onServerTick();
+                ToolWithBreakingMatrix.onServerTick();
             }
             else {
                 ChunkLoadingMonitor.tickStart();

@@ -2,13 +2,20 @@ package idealindustrial.util.misc;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+import gnu.trove.TIntCollection;
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.set.TIntSet;
 import idealindustrial.api.textures.ITexture;
 import idealindustrial.api.textures.INetworkedTexture;
 import idealindustrial.impl.textures.TextureManager;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.function.IntConsumer;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class II_StreamUtil {
 
@@ -122,6 +129,27 @@ public class II_StreamUtil {
             }
         }
         return -1;
+    }
+
+    @SafeVarargs
+    public static <T> Set<T> set(T... ar) {
+        return new HashSet<>(Arrays.asList(ar));
+    }
+
+    public static IntStream stream(TIntCollection collection) {
+        TIntIterator iterator = collection.iterator();
+        return StreamSupport.intStream(Spliterators.spliteratorUnknownSize(new PrimitiveIterator.OfInt(){
+
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public int nextInt() {
+                return iterator.next();
+            }
+        }, Spliterator.ORDERED), false);
     }
 
 }

@@ -3,12 +3,13 @@ package idealindustrial.util.misc;
 import com.google.common.collect.HashMultimap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.util.ChatComponentText;
 import org.omg.CORBA.Object;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class II_Util {
@@ -23,7 +24,7 @@ public class II_Util {
 
     public static <K, V> void rehash(Map<K, V> map) {
         List<K> keys = new ArrayList<>(map.size());
-        List<V> values  = new ArrayList<>(map.size());//not using entries to save some performance
+        List<V> values = new ArrayList<>(map.size());//not using entries to save some performance
         int i = 0;
         for (Map.Entry<K, V> entry : map.entrySet()) {
             keys.add(entry.getKey());
@@ -83,15 +84,27 @@ public class II_Util {
         return (int) (l >> 32);
     }
 
-    public static int intBFromLong(long l)  {
+    public static int intBFromLong(long l) {
         return (int) l;
+    }
+
+    public static int shortsToInt(int a, int b) {
+        return (a << 16) | (b & 0xFFFF);
+    }
+
+    public static int shortAFromInt(int l) {
+        return (short) (l >> 16);
+    }
+
+    public static int shortBFromInt(int l) {
+        return (short) l;
     }
 
     public static int getTier(long usage) {
         if (usage <= 8) {
             return 0;
         }
-        return (int) Math.floor(Math.log10(usage * 2 - 1)/Math.log10(4)) - 1;
+        return (int) Math.floor(Math.log10(usage * 2 - 1) / Math.log10(4)) - 1;
     }
 
     public static long getVoltage(int tier) {
@@ -123,7 +136,7 @@ public class II_Util {
         if (Math.abs(spread) < 0.000000001) {
             return minQuantity;
         }
-        return minQuantity +  (Math.abs(random.nextDouble()) % spread);
+        return minQuantity + (Math.abs(random.nextDouble()) % spread);
     }
 
     public static void sendChatToPlayer(EntityPlayer player, String s) {
@@ -142,5 +155,12 @@ public class II_Util {
     public static int getColorAsInt(Color color) {
         return (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
     }
+
+    public static void addCraftingRecipe(ItemStack result, java.lang.Object... rest) {
+        assert rest != null;
+        assert Arrays.stream(rest).noneMatch(Objects::isNull);
+        CraftingManager.getInstance().addRecipe(result, rest);
+    }
+
 
 }

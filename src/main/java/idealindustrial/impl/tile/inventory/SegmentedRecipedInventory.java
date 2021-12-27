@@ -36,6 +36,11 @@ public class SegmentedRecipedInventory implements RecipedInventory {
         }
 
         @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
         public void nbtSave(NBTTagCompound tag, String prefix) {
 
         }
@@ -86,6 +91,11 @@ public class SegmentedRecipedInventory implements RecipedInventory {
     @Override
     public void validate() {
 
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
     }
 
     @Override

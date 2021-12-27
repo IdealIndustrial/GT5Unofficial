@@ -54,7 +54,10 @@ public class II_ItemStack {
             HashedStack that = ((HashedStack) o);
 
         }
-        if (o == null || getClass() != o.getClass()) return false;
+//        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof II_ItemStack)) {
+            return false;
+        }
         II_ItemStack that = (II_ItemStack) o;
         return def.equals(that.def);
     }
@@ -142,5 +145,9 @@ public class II_ItemStack {
 
     public boolean isValid() {
         return def != null && def.getItem() != null;
+    }
+
+    public void setTagCompound(NBTTagCompound nbt) {
+        def.setTagCompound(II_Hackery.getNBTHackery(nbt, toMCStack()));
     }
 }

@@ -1,7 +1,7 @@
 package idealindustrial.impl.hooks;
 
 import gloomyfolken.hooklib.asm.Hook;
-import idealindustrial.impl.item.tools.ToolDrill;
+import idealindustrial.impl.item.tools.ToolWithBreakingMatrix;
 import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraft.world.World;
 
@@ -27,7 +27,7 @@ public class II_DrillBreakAnimationHook {
 
     @Hook
     public static void cancelDestroyingBlock(ItemInWorldManager mn, int p_73073_1_, int p_73073_2_, int p_73073_3_) {
-        ToolDrill.cancelBlockBreaking(mn, mn.thisPlayerMP.getEntityId(), p_73073_1_, p_73073_2_, p_73073_3_);
+        ToolWithBreakingMatrix.cancelBlockBreaking(mn, mn.thisPlayerMP.getEntityId(), p_73073_1_, p_73073_2_, p_73073_3_);
     }
 
     @Hook(injectOnExit = true)
@@ -36,7 +36,7 @@ public class II_DrillBreakAnimationHook {
             return;
         }
         isInInvocation = true;
-        ToolDrill.updateBlockBreaking(updatingManager, p_147443_1_, p_147443_2_, p_147443_3_, p_147443_4_, p_147443_5_);
+        ToolWithBreakingMatrix.updateBlockBreaking(updatingManager, p_147443_1_, p_147443_2_, p_147443_3_, p_147443_4_, p_147443_5_);
         isInInvocation = false;
 
     }

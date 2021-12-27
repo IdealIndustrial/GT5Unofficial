@@ -1,5 +1,6 @@
 package idealindustrial.api.recipe;
 
+import idealindustrial.api.tile.inventory.InternalInventory;
 import idealindustrial.impl.recipe.MachineEnergyParams;
 import idealindustrial.impl.recipe.RecipeMapStorage;
 import idealindustrial.api.tile.fluid.FluidHandler;
@@ -11,13 +12,11 @@ import java.util.Set;
 
 public interface RecipeMap<R extends IMachineRecipe> {
 
-    R findRecipe(RecipedInventory inventory, FluidHandler fluidInputs, MachineEnergyParams params);
+    R findRecipe(RecipedInventory inventory, InternalInventory special, FluidHandler fluidInputs, MachineEnergyParams params);
 
     boolean addRecipe(R recipe);
 
     List<R> getAllRecipes();
-
-    void optimize();
 
     String getName();
 
@@ -30,6 +29,10 @@ public interface RecipeMap<R extends IMachineRecipe> {
     RecipeMapStorage<R> getJsonReflection();
 
     RecipeMap<R> newEmpty();
+
+    default void optimize() {
+
+    }
 
 //    boolean isInputEqualStacks(R recipe, II_RecipedInventory inventory, II_FluidHandler fluidInputs, boolean doConsume);
 

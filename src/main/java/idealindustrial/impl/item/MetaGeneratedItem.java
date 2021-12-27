@@ -7,6 +7,7 @@ import idealindustrial.impl.autogen.material.II_Material;
 import idealindustrial.impl.autogen.material.Prefixes;
 import idealindustrial.impl.autogen.material.submaterial.chem.ChemicalInfo;
 import idealindustrial.impl.autogen.material.submaterial.render.RenderInfo;
+import idealindustrial.impl.item.stack.II_ItemStack;
 import idealindustrial.impl.oredict.OredictHandler;
 import idealindustrial.api.reflection.events.RegisterOresEvent;
 import idealindustrial.api.reflection.II_EventListener;
@@ -70,8 +71,7 @@ public class MetaGeneratedItem extends MetaItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void addSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         foreachEnabled(i -> list.add(new ItemStack(item, 1, i)));
     }
 
@@ -113,9 +113,6 @@ public class MetaGeneratedItem extends MetaItem {
         for (MetaGeneratedItem item : instances) {
             item.foreachEnabled(i -> {
                 Prefixes prefix = item.prefix(i);
-                if (!prefix.isOreDicted()) {
-                    return;
-                }
                 II_Material material = item.material(i);
                 assert material != null;
                 handler.registerOre(prefix, material, new ItemStack(item, 1, i));
@@ -145,4 +142,5 @@ public class MetaGeneratedItem extends MetaItem {
             }
         }
     }
+
 }

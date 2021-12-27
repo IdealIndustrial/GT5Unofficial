@@ -27,9 +27,9 @@ public class II_RemapGTMaterialsPatch {
 
     @Hook(injectOnExit = true, returnCondition = ReturnCondition.ALWAYS)
     public static NBTTagCompound writeToNBT(ItemStack stack, NBTTagCompound p_77955_1_, @Hook.ReturnValue NBTTagCompound nbt) {
-        if (CommandFixMaterials.isExecuting()) {
-            return CommandFixMaterials.processStack(stack, nbt);
-        }
+//        if (CommandFixMaterials.isExecuting()) {
+//            return CommandFixMaterials.processStack(stack, nbt);
+//        }
         return nbt;
     }
 }

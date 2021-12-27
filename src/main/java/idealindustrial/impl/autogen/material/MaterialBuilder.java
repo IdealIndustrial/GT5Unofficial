@@ -16,6 +16,9 @@ import java.awt.*;
 import java.util.*;
 import java.util.function.Function;
 
+import static idealindustrial.impl.autogen.material.Prefixes.toolHeadDrill;
+import static idealindustrial.impl.autogen.material.Prefixes.toolHeadPickaxe;
+
 /**
  * @author Andrey Solodovnikov (github.com/AndreySolodovnikov)
  */
@@ -55,6 +58,10 @@ public class MaterialBuilder {
         return this;
     }
 
+    public MaterialBuilder addTools() {
+        return addPrefixes(toolHeadPickaxe, toolHeadDrill);
+    }
+
     public MaterialBuilder addExpectedPrefixes(Prefixes... prefixes) {
         this.expectedPrefixes.addAll(Arrays.asList(prefixes));
         return this;
@@ -81,6 +88,7 @@ public class MaterialBuilder {
         return new LiquidFormBuilder(MatterState.Plasma).setTemperature(10_000);
     }
 
+    @Deprecated
     public AutogenBuilder recipeAutogen() {
         return new AutogenBuilder();
     }
@@ -103,7 +111,7 @@ public class MaterialBuilder {
         material.fluidInfo = fluidInfo;
         material.normalForm = normalForm;
         material.expectedPrefixes = expectedPrefixes;
-        material.autogenInfo = autogenInfo == null ? new MaterialAutogenInfo(new HashSet<>()) : autogenInfo;
+        material.autogenInfo = autogenInfo == null ? new MaterialAutogenInfo() : autogenInfo;
         material.chemicalInfo = chemicalInfo == null ? new ChemicalInfo(new ChemicalStack(null, 1)) : chemicalInfo;
         material.oreInfo = oreInfo;
         if (id >= 0 && id < 1000) {
@@ -170,6 +178,7 @@ public class MaterialBuilder {
         }
     }
 
+    @Deprecated
     public class AutogenBuilder {
         Set<RecipeAction> actions = new HashSet<>();
 
@@ -183,7 +192,6 @@ public class MaterialBuilder {
         }
 
         public MaterialBuilder add() {
-            autogenInfo = new MaterialAutogenInfo(actions);
             return MaterialBuilder.this;
         }
 

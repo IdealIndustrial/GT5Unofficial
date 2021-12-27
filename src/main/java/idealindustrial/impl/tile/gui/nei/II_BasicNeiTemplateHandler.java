@@ -81,7 +81,8 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
                 "Total: " + params.total() + " EU",
                 "Usage: " + params.voltage * params.amperage + " EU/t",
                 "Voltage: " + params.voltage + " EU",
-                "Amperage: " + params.amperage
+                "Amperage: " + params.amperage,
+                "Duration: " + params.duration / 20 + " s"
         };
         drawArray(10, 73, -16777216, ar);
 
@@ -193,6 +194,9 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
 
         protected <T> void addTo(List<PositionedStack> list, T[] objects, GuiSlotDefinition[] definitions, Function2<T, GuiSlotDefinition, PositionedStack> converter) {
             for (int i = 0; i < objects.length; i++) {
+                if (objects[i] == null) {
+                    continue;
+                }
                 list.add(converter.apply(objects[i], definitions[i]));
             }
         }

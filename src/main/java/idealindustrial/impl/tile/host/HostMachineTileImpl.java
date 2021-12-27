@@ -56,30 +56,39 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
-        super.writeToNBT(tag);
-        in.nbtSave(tag, "in");
-        out.nbtSave(tag, "out");
+        try {
+            super.writeToNBT(tag);
+            in.nbtSave(tag, "in");
+            out.nbtSave(tag, "out");
 
-        inTank.nbtSave(tag, "in");
-        outTank.nbtSave(tag, "out");
+            inTank.nbtSave(tag, "in");
+            outTank.nbtSave(tag, "out");
 
-        handler.nbtSave(tag, "eu");
+            handler.nbtSave(tag, "eu");
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
+        try {
+            super.readFromNBT(tag);
 
-        in.nbtLoad(tag, "in");
-        out.nbtLoad(tag, "out");
+            in.nbtLoad(tag, "in");
+            out.nbtLoad(tag, "out");
 
-        inTank.nbtLoad(tag, "in");
-        outTank.nbtLoad(tag, "out");
+            inTank.nbtLoad(tag, "in");
+            outTank.nbtLoad(tag, "out");
 
-        handler.nbtLoad(tag, "eu");
-        if (tile != null) {
-            onIOConfigurationChanged(IOType.ALL);
+            handler.nbtLoad(tag, "eu");
+            if (tile != null) {
+                onIOConfigurationChanged(IOType.ALL);
+            }
+        }catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 

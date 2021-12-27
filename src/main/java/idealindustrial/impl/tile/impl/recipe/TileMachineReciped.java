@@ -3,6 +3,8 @@ package idealindustrial.impl.tile.impl.recipe;
 import idealindustrial.api.textures.ITexture;
 import idealindustrial.api.recipe.IMachineRecipe;
 import idealindustrial.api.recipe.RecipeMap;
+import idealindustrial.api.tile.meta.Tile;
+import idealindustrial.impl.tile.TileEvents;
 import idealindustrial.impl.tile.gui.RecipedContainer;
 import idealindustrial.impl.tile.gui.RecipedGuiContainer;
 import idealindustrial.api.tile.host.HostMachineTile;
@@ -16,13 +18,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class TileMachineReciped<H extends HostMachineTile, R extends IMachineRecipe> extends TileFacing2Main<H> {
+import java.util.function.Function;
+
+public class TileMachineReciped<H extends HostMachineTile, R extends IMachineRecipe> extends TileFacing2Main<H> {
     RecipeModule<R> module;
 
-    public TileMachineReciped(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays, RecipeMap<R> recipeMap, RecipedMachineStats stats) {
+    public TileMachineReciped(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays, RecipeMap<R> recipeMap,
+                              RecipedMachineStats stats, Function<TileMachineReciped<H,R>,RecipeModule<R>> module) {
         super(baseTile, name, baseTextures, overlays);
-        module = new BasicRecipeModule<>(this, stats, recipeMap);
+        this.module = module.apply(this);
     }
+
+    public TileMachineReciped(H baseTile, String name, ITexture[] baseTextures, ITexture[] overlays, RecipeMap<R> recipeMap, RecipedMachineStats stats) {
+        this(baseTile, name, baseTextures, overlays, recipeMap, stats, (th) -> new BasicRecipeModule<>(th, stats, recipeMap));
+    }
+
 
     public TileMachineReciped(H baseTile, TileMachineReciped<H, R> copyFrom) {
         super(baseTile, copyFrom);
@@ -58,6 +68,15 @@ public abstract class TileMachineReciped<H extends HostMachineTile, R extends IM
         return true;
     }
 
+    @Override
+    public boolean receiveClientEvent(int id, int value) {
+        if (TileEvents.isTileModuleEvent(id)) {
+            module.receiveEvent(id, value);
+            return true;
+        }
+        return super.receiveClientEvent(id, value);
+    }
+
     /**
      * value that represents the machine progress clamped between 0 and 20
      * used to render progress arrow on client
@@ -66,6 +85,11 @@ public abstract class TileMachineReciped<H extends HostMachineTile, R extends IM
      */
     public short getProgress() {
         return module.getProgress();
+    }
+
+    @Override
+    public Tile<H> newMetaTile(H baseTile) {
+        return new TileMachineReciped<H, R>(baseTile, this);
     }
 
     @Override

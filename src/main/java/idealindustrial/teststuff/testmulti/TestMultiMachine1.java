@@ -28,7 +28,7 @@ public class TestMultiMachine1 extends RecipedMultiMachineBase<HostMachineTile, 
                         null, null, null, "test/fusgy", null)
                         .map(s -> s == null ? null : TextureManager.INSTANCE.blockTexture(s))
                         .map(i -> i == null ? null : new RenderedTexture(i)).toArray(ITexture[]::new),
-                RecipeMaps.benderRecipes, new RecipedMachineStats(1, 0, 0, 64, 0, 0, 0, 0, 0));
+                RecipeMaps.benderRecipes, new RecipedMachineStats(1, 0, 0, 0,64, 0, 0, 0, 0, 0));
     }
 
     public TestMultiMachine1(HostMachineTile baseTile, TestMultiMachine1 copyFrom) {

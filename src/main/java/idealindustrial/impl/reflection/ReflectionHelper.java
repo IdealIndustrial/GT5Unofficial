@@ -1,5 +1,7 @@
 package idealindustrial.impl.reflection;
 
+import idealindustrial.api.recipe.IMachineRecipe;
+import idealindustrial.api.recipe.RecipeMap;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -17,7 +19,17 @@ public class ReflectionHelper {
             return method.invoke(on, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
-            return null;
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static Object call(String method, Object on, Object... args) {
+        try {
+            Method method1 = on.getClass().getDeclaredMethod(method);
+            method1.setAccessible(true);
+            return call(method1, on, args);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(e);
         }
     }
 
@@ -63,5 +75,6 @@ public class ReflectionHelper {
         }
         return null;
     }
+
 
 }

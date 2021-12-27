@@ -2,7 +2,7 @@ package idealindustrial.impl.loader;
 
 import idealindustrial.impl.render.GT_Renderer_Block;
 import idealindustrial.impl.render.MachineItemRenderer;
-import idealindustrial.impl.render.MetaGeneratedItem_Renderer;
+import idealindustrial.impl.render.MetaItem_Renderer;
 import idealindustrial.impl.render.MetaToolRenderer;
 
 public class RenderLoader implements ILoader {
@@ -13,7 +13,7 @@ public class RenderLoader implements ILoader {
 
 
     public void load() {
-        new MetaGeneratedItem_Renderer();
+        new MetaItem_Renderer();
         new MachineItemRenderer();
         new GT_Renderer_Block();
         new MetaToolRenderer();

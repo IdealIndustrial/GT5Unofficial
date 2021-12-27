@@ -4,44 +4,48 @@ import idealindustrial.api.recipe.IMachineRecipe;
 import idealindustrial.api.recipe.IRecipeGuiParams;
 import idealindustrial.api.recipe.RecipeMap;
 import idealindustrial.api.tile.fluid.FluidHandler;
+import idealindustrial.api.tile.inventory.InternalInventory;
 import idealindustrial.impl.tile.fluid.MultiFluidHandler;
 import idealindustrial.impl.tile.inventory.ArrayRecipedInventory;
 import idealindustrial.api.tile.inventory.RecipedInventory;
 import idealindustrial.impl.item.stack.HashedStack;
+import idealindustrial.impl.tile.inventory.EmptyInventory;
 import idealindustrial.util.misc.ItemHelper;
 import idealindustrial.impl.item.stack.II_ItemStack;
-import idealindustrial.impl.item.stack.II_StackSignature;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
+public class BasicRecipeMap<R extends IMachineRecipe> extends AbstractRecipeMap<R> {
 
     private static final boolean EXCEPTION_ON_CONFLICTS = true;
 
-    protected String name;
+
     protected boolean checkConflicts, allowNulls;
     protected Map<HashedStack, List<R>> map = ItemHelper.queryMap(new HashMap<>());
     protected List<R> allRecipes = new ArrayList<>();
-    protected IRecipeGuiParams params;
-    protected Map<HashedStack, Set<R>> outputMap = ItemHelper.queryMap(new HashMap<>()), inputMap = ItemHelper.queryMap(new HashMap<>());
-    protected RecipeMapStorage<R> storage;
     protected Class<R> recipeType;
 
     public BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls, IRecipeGuiParams guiParams, Class<R> recipeType) {
-        this.name = name;
+        super(name, guiParams);
         this.checkConflicts = checkConflicts;
         this.allowNulls = allowNulls;
-        this.params = guiParams;
-        RecipeMaps.allRecipeMaps.add(this);
-        this.storage = new RecipeMapStorage<>(name.replace(' ', '.').toLowerCase() + ".json", recipeType, this);
+        this.storage = new RecipeMapStorage<>(
+                name.replace(' ', '.').toLowerCase() + ".json",
+                Arrays.stream(name.split(" "))
+                        .map(String::toLowerCase)
+                        .map(s -> s.substring(0, 1).toUpperCase().concat(s.substring(1)))
+                        .reduce("", String::concat)
+                .concat(".groovy"),
+                recipeType, this);
         this.recipeType = recipeType;
+        RecipeMaps.allRecipeMaps.add(this);
     }
 
     @Override
-    public R findRecipe(RecipedInventory inventory, FluidHandler fluidHandler, MachineEnergyParams params) {
+    public R findRecipe(RecipedInventory inventory, InternalInventory special, FluidHandler fluidHandler, MachineEnergyParams params) {
         for (II_ItemStack stack : inventory) {
-            if (map.containsKey(stack.toHashedStack())) {
+            if (stack != null && map.containsKey(stack.toHashedStack())) {
                 for (R recipe : map.get(stack.toHashedStack())) {
                     if (recipe.isInputEqualStacks(inventory, fluidHandler, false) && recipe.recipeParams().areValid(params)) {
                         return recipe;
@@ -52,11 +56,8 @@ public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
         return null;
     }
 
-
-
-
     protected R findRecipe(R recipe) {
-        return findRecipe(new ArrayRecipedInventory(recipe.getAllPossibleInputs().stream().map(HashedStack::toIIStack).toArray(II_ItemStack[]::new)),
+        return findRecipe(new ArrayRecipedInventory(recipe.getAllPossibleInputs().stream().map(HashedStack::toIIStack).toArray(II_ItemStack[]::new)), EmptyInventory.INSTANCE,
                 new MultiFluidHandler(recipe.getFluidInputs()), recipe.recipeParams());
     }
 
@@ -80,20 +81,13 @@ public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
 
     }
 
+    @Override
     protected void addToLists(R recipe) {
         for (HashedStack stack : recipe.getAllPossibleInputs()) {
             map.computeIfAbsent(stack, s -> new ArrayList<>()).add(recipe);
         }
         allRecipes.add(recipe);
-        for (II_StackSignature signature : recipe.getInputs()) {
-            for (HashedStack stack : signature.correspondingStacks()) {
-                inputMap.computeIfAbsent(stack, s -> new HashSet<>()).add(recipe);
-            }
-        }
-        for (II_ItemStack signature : recipe.getOutputs()) {
-            HashedStack stack = signature.toHashedStack();
-            outputMap.computeIfAbsent(stack, s -> new HashSet<>()).add(recipe);
-        }
+        super.addToLists(recipe);
     }
 
     @Override
@@ -109,43 +103,9 @@ public class BasicRecipeMap<R extends IMachineRecipe> implements RecipeMap<R> {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public IRecipeGuiParams getGuiParams() {
-        return params;
-    }
-
-    @Override
-    public Set<R> getCraftingRecipes(II_StackSignature stackSignature) {
-        return loadRecipes(stackSignature, outputMap);
-    }
-
-    @Override
-    public Set<R> getUsageRecipes(II_StackSignature signature) {
-        return loadRecipes(signature, inputMap);
-    }
-
-    @Override
-    public RecipeMapStorage<R> getJsonReflection() {
-        return storage;
-    }
-
-    @Override
     public RecipeMap<R> newEmpty() {
         return new BasicRecipeMap<>(name, checkConflicts, allowNulls, params, recipeType);
     }
 
-    protected Set<R> loadRecipes(II_StackSignature signature, Map<HashedStack, Set<R>> inputMap) {
-        Set<R> out = new HashSet<>();
-        for (HashedStack stack : signature.correspondingStacks()) {
-            Set<R> toAdd = inputMap.get(stack);
-            if (toAdd != null) {
-                out.addAll(toAdd);
-            }
-        }
-        return out;
-    }
+
 }

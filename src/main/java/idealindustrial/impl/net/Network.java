@@ -33,7 +33,7 @@ public class Network
 
     public Network() {
         this.mChannel = NetworkRegistry.INSTANCE.newChannel("II_Core", this, new HandlerShared());
-        this.mSubChannels = new GT_Packet[]{null, null, new GT_Packet_Block_Event(),null,null,null, new GT_Packet_ExtendedBlockEvent(), new GT_Packet_ByteStream(), new PacketCover()};
+        this.mSubChannels = new GT_Packet[]{null, null, new GT_Packet_Block_Event(),null,null, new GT_Packet_ExtendedBlockEvent_Server(), new GT_Packet_ExtendedBlockEvent(), new GT_Packet_ByteStream(), new PacketCover()};
     }
 
     protected void encode(ChannelHandlerContext aContext, GT_Packet aPacket, List<Object> aOutput) {

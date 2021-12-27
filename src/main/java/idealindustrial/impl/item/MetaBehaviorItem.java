@@ -1,17 +1,22 @@
 package idealindustrial.impl.item;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import idealindustrial.api.items.II_ItemRenderer;
 import idealindustrial.api.items.IItemBehavior;
 import idealindustrial.api.reflection.II_EventListener;
 import idealindustrial.api.textures.IconContainer;
 import idealindustrial.impl.textures.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @II_EventListener
 public class MetaBehaviorItem extends MetaItem32k {
@@ -25,6 +30,17 @@ public class MetaBehaviorItem extends MetaItem32k {
         instances.add(this);
     }
 
+    public static List<MetaBehaviorItem> getInstances() {
+        return instances;
+    }
+
+    public IItemBehavior getBehavior(int damage) {
+        if (!isEnabled(damage)) {
+            return null;
+        }
+        return behaviors[damage];
+    }
+
 
     @Override
     public IIcon getIconFromDamage(int par1) {
@@ -36,6 +52,14 @@ public class MetaBehaviorItem extends MetaItem32k {
         super.registerIcons(iconRegister);
     }
 
+    @Override
+    public void addSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+        forEachEnabled(i -> {
+            if (behaviors[i] == null || !behaviors[i].addSubItems(item, i, tab, list)) {
+                list.add(new ItemStack(item, 1, i));
+            }
+        });
+    }
 
     @Override
     public ItemStack onItemRightClick(ItemStack is, World world, EntityPlayer player) {
@@ -64,17 +88,8 @@ public class MetaBehaviorItem extends MetaItem32k {
         return behaviors[damage].onItemUseFirst(is, player, world, x, y, z, side, hitX, hitY, hitZ);
     }
 
-//    public ItemStack registerItem(int damage, String localName, IItemBehavior behavior) {
-//        engNames[damage] = localName;
-//        behaviors[damage] = behavior;
-//        icons[damage] = TextureManager.INSTANCE.itemTexture("meta/" + getUnlocalizedName().substring(3) + "/" + damage);
-//        return new ItemStack(this, 1, damage);
-//    }
-
-
     public Builder registerItem(int id, String localName) {
         addItem(id, localName);
-        icons[id] = TextureManager.INSTANCE.itemTexture("meta/" + getUnlocalizedName().substring(3) + "/" + id);
         return new Builder(id);
     }
 
@@ -93,8 +108,39 @@ public class MetaBehaviorItem extends MetaItem32k {
             return this;
         }
 
+        public void added() {
+            if (behaviors[damage] == null || behaviors[damage].loadIcon()) {
+                icons[damage] = TextureManager.INSTANCE.itemTexture("meta/" + getUnlocalizedName().substring(3) + "/" + damage);
+            }
+        }
+
+//        public Builder setRender(Class<II_ItemRenderer> render) {
+//            if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+//                try {
+//                    renderers[damage] = render.newInstance();
+//                } catch (InstantiationException | IllegalAccessException e) {
+//                    e.printStackTrace();
+//                    throw new IllegalStateException("Cannot create renderer for id: " + damage, e);
+//                }
+//            }
+//            return this;
+//        }
+//
+//        public Builder setRender(Supplier<II_ItemRenderer> render) {
+//            if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+//                renderers[damage] = render.get();
+//            }
+//            return this;
+//        }
+//
+//        public Builder setRender(II_ItemRenderer render) {
+//            renderers[damage] = render;
+//            return this;
+//        }
+
 
         public ItemStack toIS() {
+            added();
             return new ItemStack(MetaBehaviorItem.this, 1, damage);
         }
 

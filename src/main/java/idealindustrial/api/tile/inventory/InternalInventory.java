@@ -13,4 +13,6 @@ public interface InternalInventory extends Iterable<II_ItemStack>, BaseInventory
 
     void validate();
 
+    boolean isEmpty();
+
 }

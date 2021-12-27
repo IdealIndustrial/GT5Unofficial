@@ -32,6 +32,9 @@ public class BasicMachineRecipe implements IMachineRecipe {
     public List<HashedStack> getAllPossibleInputs() {
         List<HashedStack> out = new ArrayList<>();
         for (II_StackSignature stack : inputs) {
+            if (stack == null) {
+                continue;
+            }
             out.addAll(stack.correspondingStacks());
         }
         return out;

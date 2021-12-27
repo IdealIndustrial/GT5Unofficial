@@ -1,15 +1,15 @@
 package idealindustrial.impl.recipe;
 
+import idealindustrial.api.recipe.IMachineRecipe;
 import idealindustrial.api.recipe.RecipeMap;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class RecipeMaps {
     public static List<RecipeMap<?>> allRecipeMaps = new ArrayList<>();
+    @Deprecated //todo: remove recipe map from here, move it to bender
     public static RecipeMap<BasicMachineRecipe> benderRecipes = new BasicRecipeMap<>("Bender Recipes", true, false,
             new RecipeGuiParamsBuilder(1, 1, 0, 1, 1).construct(), BasicMachineRecipe.class);
 
@@ -21,9 +21,10 @@ public class RecipeMaps {
 
     public static final Map<Integer, RecipeMap<?>> id2map = new HashMap<>();
     public static final Map<String, Integer> name2id = new HashMap<>();
+    private static int freeID = 1;
 
     static {
-        Field[] declaredFields = RecipeMaps.class.getDeclaredFields();
+        Field[] declaredFields = RecipeMaps.class.getDeclaredFields();//todo: replace with loop over allRecipes
         for (Field field : declaredFields) {
             if (RecipeMap.class.isAssignableFrom(field.getType())) {
                 try {
@@ -37,15 +38,21 @@ public class RecipeMaps {
         }
     }
 
-    public static RecipeMap<?> getMap(String name) {
-        try {
-            Field field = RecipeMaps.class.getDeclaredField(name);
-            if (RecipeMap.class.isAssignableFrom(field.getType())) {
-                return (RecipeMap<?>) field.get(null);
-            }
-        } catch (NoSuchFieldException | IllegalAccessException exception) {
-            exception.printStackTrace();
+    @SuppressWarnings("unchecked")
+    public static  <R extends IMachineRecipe> RecipeMap<R> getMap(String name) {
+        name = name.toLowerCase().replace(' ', '_').trim();
+        return (RecipeMap<R>) id2map.get(name2id.get(name));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <R extends IMachineRecipe> RecipeMap<R> getMap(String name, Supplier<RecipeMap<R>> supplier) {
+        name = name.toLowerCase().replace(' ', '_').trim();
+        if (name2id.containsKey(name)) {
+            return (RecipeMap<R>) id2map.get(name2id.get(name));
         }
-        return null;
+        RecipeMap<R> map = supplier.get();
+        name2id.put(name, freeID);
+        id2map.put(freeID++, map);
+        return map;
     }
 }

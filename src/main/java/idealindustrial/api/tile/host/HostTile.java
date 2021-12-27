@@ -24,6 +24,7 @@ public interface HostTile extends IUpdatableTileEntity, IHasWorldObjectAndCoords
     void syncTileEntity();
 
     void sendEvent(int id, int value);
+    void sendEventToServer(int id, int value);
     void issueTextureUpdate();
 
     void onPlaced();

@@ -99,4 +99,9 @@ public class MultipartInternalInventory implements InternalInventory {
     public void validate() {
 
     }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 }

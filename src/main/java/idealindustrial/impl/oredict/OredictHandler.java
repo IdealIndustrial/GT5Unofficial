@@ -14,14 +14,17 @@ import java.util.List;
 public class OredictHandler {
     List<OreInfo> expectedOres = new ArrayList<>();
     List<OrePair> delayedOres = new ArrayList<>();
+    List<Func> callbacks = new ArrayList<>();
 
     public void init() {
         for (OrePair pair : delayedOres) {
             OreDict.register(pair.name, pair.stack);
         }
         checkExpected();
+        callbacks.forEach(Func::call);
         delayedOres = null;
         expectedOres = null;
+        callbacks = null;
     }
 
     private void checkExpected() {
@@ -38,6 +41,14 @@ public class OredictHandler {
 
     public void fireRegisterEvent() {
         EventManager.INSTANCE.callAll(RegisterOresEvent.class, this);
+    }
+
+    public interface Func {
+        void call();
+    }
+
+    public void onPostRegistered(Func func) {
+        callbacks.add(func);
     }
 
     @SubscribeEvent
@@ -57,7 +68,9 @@ public class OredictHandler {
         else {
             oreName = OreDict.register(prefix, material, stack);
         }
-        OreDictionary.registerOre(oreName, stack);
+        if (prefix.isOreDicted()) {
+            OreDictionary.registerOre(oreName, stack);
+        }
         isAddingOre = false;
     }
 

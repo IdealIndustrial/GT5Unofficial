@@ -1,13 +1,23 @@
 package idealindustrial.impl.item;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 import idealindustrial.api.items.ToolBehavior;
+import idealindustrial.api.reflection.II_EventListener;
 import idealindustrial.impl.autogen.material.II_Material;
 import idealindustrial.impl.autogen.material.II_Materials;
 import idealindustrial.impl.autogen.material.Prefixes;
-import idealindustrial.impl.item.tools.ToolDrill;
+import idealindustrial.impl.item.tools.ToolPickaxe;
 import idealindustrial.impl.textures.OverlayIconContainer;
 import idealindustrial.impl.textures.TextureManager;
+import idealindustrial.util.lang.LangHandler;
+import idealindustrial.util.lang.LocalizeEvent;
+import idealindustrial.util.lang.materials.EngLocalizer;
+import idealindustrial.util.lang.materials.MaterialLocalizer;
+import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,6 +28,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -25,13 +36,16 @@ import net.minecraftforge.event.world.BlockEvent;
 
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Stream;
 
+@II_EventListener
 public class MetaToolItem extends MetaItem32k {
     OverlayIconContainer[] toolIcons;
     Color[] toolColors;
     ToolBehavior[] behaviors;
     Prefixes[] headPrefixes;
-
+    TIntSet[] enabledMaterials;
+    TObjectIntMap<Prefixes> tool2Idmap;
     public static MetaToolItem INSTANCE;
 
     public MetaToolItem() {
@@ -41,9 +55,12 @@ public class MetaToolItem extends MetaItem32k {
         toolColors = new Color[engNames.length];
         behaviors = new ToolBehavior[engNames.length];
         headPrefixes = new Prefixes[engNames.length];
+        enabledMaterials = Stream.generate(TIntHashSet::new).limit(engNames.length).toArray(TIntSet[]::new);
+        tool2Idmap = new TObjectIntHashMap<>();
         INSTANCE = this;
         init();
         MinecraftForge.EVENT_BUS.register(this);
+        setMaxStackSize(1);
     }
 
     public II_Material getMaterial(ItemStack is) {
@@ -71,9 +88,19 @@ public class MetaToolItem extends MetaItem32k {
         return behaviors[Items.feather.getDamage(itemStack)];
     }
 
+
     @Override
     public void addSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         forEachEnabled(id -> list.add(getTool(id, II_Materials.iron)));
+    }
+
+    public boolean hasPrefix(Prefixes prefix) {
+        return tool2Idmap.containsKey(prefix);
+    }
+
+    public ItemStack getTool(Prefixes headPrefix, II_Material material) {
+        assert tool2Idmap.containsKey(headPrefix);
+        return getTool(tool2Idmap.get(headPrefix), material);
     }
 
     public ItemStack getTool(int id, II_Material material) {
@@ -81,6 +108,10 @@ public class MetaToolItem extends MetaItem32k {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("mat", material.getID());
         is.setTagCompound(nbt);
+        enabledMaterials[id].add(material.getID());
+        if (behaviors[id] != null) {
+            behaviors[id].initForMaterial(is, material);
+        }
         return is;
     }
 
@@ -90,7 +121,39 @@ public class MetaToolItem extends MetaItem32k {
     }
 
     private void init() {
-        registerTool(0, "Drill zbs").setHeadPrefix(Prefixes.toolHeadDrill).setToolBehavior(new ToolDrill()).setRender("drill", Color.WHITE);
+        registerTool(0, "_mat_ Pickaxe").setHeadPrefix(Prefixes.toolHeadPickaxe).setToolBehavior(new ToolPickaxe(0)).setRender("stick", Color.WHITE);
+    }
+
+    @Override
+    protected boolean doLocalize() {
+        return false;
+    }
+
+    @LocalizeEvent
+    public static void localize() {
+        MaterialLocalizer localizer = EngLocalizer.getInstance();
+        INSTANCE.forEachEnabled(i -> {
+            Prefixes prefix = INSTANCE.headPrefixes[i];
+            II_StreamUtil.stream(INSTANCE.enabledMaterials[i]).forEach(materialID ->
+                    LangHandler.add(INSTANCE.getUnlocalizedName(i) + "." + materialID + ".name", localizer.get(II_Materials.materialForID(materialID), prefix))
+            );
+        });
+    }
+
+    @Override
+    public String getItemStackDisplayName(ItemStack is) {
+        II_Material material = getMaterial(is);
+        int i = is.getItemDamage();
+        if (material == null || !isEnabled(i)) {
+            return "deleted item =(";
+        }
+        return StatCollector.translateToLocal(getUnlocalizedName(i) + "." + material.getID() + ".name");
+    }
+
+    public double getDamageD(ItemStack itemStack) {
+        int maxDamage = ToolBehavior.maxDamage.get(itemStack);
+        int damage = ToolBehavior.currentDamage.get(itemStack);
+        return ((double) damage) / maxDamage;
     }
 
     public class Builder {
@@ -107,6 +170,7 @@ public class MetaToolItem extends MetaItem32k {
 
         public Builder setHeadPrefix(Prefixes prefix) {
             headPrefixes[id] = prefix;
+            tool2Idmap.put(prefix, id);
             return this;
         }
 

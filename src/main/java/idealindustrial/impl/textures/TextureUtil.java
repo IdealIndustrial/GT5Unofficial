@@ -3,6 +3,7 @@ package idealindustrial.impl.textures;
 import idealindustrial.api.textures.ITexture;
 import idealindustrial.api.textures.IconContainer;
 import idealindustrial.api.textures.TextureConfiguration;
+import idealindustrial.util.misc.II_Paths;
 import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -66,6 +67,10 @@ public class TextureUtil {
         return asGtRendered(configuration.loadAll(path));
     }
 
+    public static ITexture[] loadRecipedMachineTextures(TextureConfiguration configuration, String name) {
+        return asGtRendered(configuration.loadAll(II_Paths.RECIPE_MACHINE_TEXTURES + TextureUtil.asTextureName(name) + "/"));
+    }
+
     public static ITexture copyTexture(Block block, int meta, int side) {
         return new RenderedTexture(new IconContainer() {
             @Override
@@ -78,5 +83,9 @@ public class TextureUtil {
                 return TextureMap.locationBlocksTexture;
             }
         });
+    }
+
+    public static String asTextureName(String name) {
+        return name.replace(' ', '_').toLowerCase();
     }
 }

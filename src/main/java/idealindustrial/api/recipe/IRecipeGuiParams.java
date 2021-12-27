@@ -14,6 +14,8 @@ public interface IRecipeGuiParams extends Iterable<GuiSlotDefinition> {
 
     GuiSlotDefinition[] getFluidsOut();
 
+    GuiSlotDefinition[] getHoloSlots();
+
     GuiArrowDefinition getArrow();
 
 }

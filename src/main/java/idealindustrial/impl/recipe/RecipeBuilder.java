@@ -1,6 +1,7 @@
 package idealindustrial.impl.recipe;
 
 import idealindustrial.api.recipe.IMachineRecipe;
+import idealindustrial.api.recipe.RecipeMap;
 import idealindustrial.impl.item.stack.II_ItemStack;
 import idealindustrial.impl.item.stack.II_StackSignature;
 import idealindustrial.util.misc.Defaultable;
@@ -17,6 +18,10 @@ public abstract class RecipeBuilder<R extends IMachineRecipe> {
     protected Defaultable<RecipeEnergyParams> machineParams = II_Util.makeDefault(new RecipeEnergyParams( 0, 0, 20));
 
     public abstract R construct();
+
+    public void addTo(RecipeMap<R> map) {
+        map.addRecipe(construct());
+    }
 
     public RecipeBuilder<R> addInputs(II_StackSignature... inputs) {
         this.inputs.set(inputs);
@@ -55,7 +60,19 @@ public abstract class RecipeBuilder<R extends IMachineRecipe> {
         }
     }
 
+    public static final class ShapedRecipeBuilder extends RecipeBuilder<ShapedMachineRecipe> {
+
+        @Override
+        public ShapedMachineRecipe construct() {
+            return new ShapedMachineRecipe(inputs.get(), outputs.get(), fluidInputs.get(), fluidOutputs.get(), machineParams.get());
+        }
+    }
+
     public static RecipeBuilder<BasicMachineRecipe> basicBuilder() {
         return new BasicRecipeBuilder();
+    }
+
+    public static RecipeBuilder<ShapedMachineRecipe> shapedBuilder() {
+        return new ShapedRecipeBuilder();
     }
 }

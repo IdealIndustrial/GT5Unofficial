@@ -6,6 +6,7 @@ import idealindustrial.impl.autogen.material.Prefixes;
 import idealindustrial.impl.blocks.ores.TileOres;
 import idealindustrial.impl.blocks.plants.Plants;
 import idealindustrial.impl.item.stack.HashedBlock;
+import idealindustrial.impl.world.gen.Torus;
 import idealindustrial.util.misc.RandomCollection;
 import idealindustrial.api.world.underbedrock.WeightedRandom;
 import idealindustrial.impl.world.gen.ClampedEllipsoid;
@@ -20,9 +21,12 @@ import java.util.Random;
 public class OreGenerator implements IWorldGenerator {
     static WeightedRandom<OreEntry> ores = new RandomCollection<>(1d);
     static {
-        ores.add(5, new OreEntry(II_Materials.iron, Prefixes.ore, new ClampedEllipsoid(4, 10), new LinearRange(10, 50)));
-        ores.add(3, new OreEntry(II_Materials.copper, Prefixes.ore, new ClampedEllipsoid(4, 15), new LinearRange(10, 50))
+        ores.add(3, new OreEntry(II_Materials.arsenicBronze, Prefixes.oreSmall, new ClampedEllipsoid(4, 10), new LinearRange(50, 70))
         .addGenerator(new PlantGenerator(r -> Plants.copperPlant).setRadius(10)));
+        ores.add(5, new OreEntry(II_Materials.copper, Prefixes.ore, new ClampedEllipsoid(5, 13), new LinearRange(40, 50))
+                .addGenerator(new PlantGenerator(r -> Plants.copperPlant)));
+        ores.add(4, new OreEntry(II_Materials.tin, Prefixes.ore, new Torus(5, 8, 5), new LinearRange(40, 50))
+                .addGenerator(new PlantGenerator(r -> Plants.tinPlant)));
     }
 
     private static int successCounter = 0;

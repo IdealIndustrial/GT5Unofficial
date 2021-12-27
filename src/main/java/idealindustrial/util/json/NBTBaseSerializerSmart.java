@@ -29,6 +29,6 @@ public class NBTBaseSerializerSmart implements JsonSerializer<NBTBase>, JsonDese
     @Override
     public JsonElement serialize(NBTBase src, Type typeOfSrc, JsonSerializationContext context)
     {
-        return NbtToJson.nbtJson.toJsonTree(src);
+        return NbtToJson.nbtJson.toJsonTree(src, typeOfSrc);
     }
 }

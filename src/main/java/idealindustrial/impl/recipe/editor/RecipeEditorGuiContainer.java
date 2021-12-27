@@ -81,7 +81,7 @@ public class RecipeEditorGuiContainer extends GenericGuiContainer<RecipeEditorCo
         if (!dir.exists()) {
             dir.mkdir();
         }
-        File file = new File(dir, storage.getFileName());
+        File file = new File(dir, storage.getRecipesFileName());
         RecipeMap tmp = map.newEmpty();
         if (!file.exists()) {
             file.createNewFile();

@@ -5,6 +5,7 @@ import idealindustrial.api.textures.ITexture;
 import idealindustrial.II_Values;
 import idealindustrial.api.tile.render.CustomRenderer;
 import idealindustrial.api.tile.host.HostTile;
+import idealindustrial.impl.render.GT_Renderer_Block;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -43,7 +44,7 @@ public class MetaConnectedRenderer implements CustomRenderer {
         }//convert II connections to GT connections
         float tThickness = tileConnected.getThickness();
         if (tThickness >= 0.99F) {
-            return renderStandardBlock(world, x, y, z, block, renderBlocks);
+            return GT_Renderer_Block.INSTANCE.renderStandardBlock2(world, x, y, z, block, renderBlocks);
         }
         float sp = (1.0F - tThickness) / 2.0F;
         boolean[] tIsCovered = new boolean[6];
@@ -51,7 +52,7 @@ public class MetaConnectedRenderer implements CustomRenderer {
             tIsCovered[i] = (tileConnected.getHost().getCoverIDAtSide(i) != 0);
         }
         if ((tIsCovered[0]) && (tIsCovered[1]) && (tIsCovered[2]) && (tIsCovered[3]) && (tIsCovered[4]) && (tIsCovered[5])) {
-            return renderStandardBlock(world, x, y, z, block, renderBlocks);
+            return GT_Renderer_Block.INSTANCE.renderStandardBlock2(world, x, y, z, block, renderBlocks);
         }
         ITexture[][] tIcons;
         ITexture[][] tCovers;

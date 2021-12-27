@@ -157,22 +157,27 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
         syncTileEntity();
     }
 
+    public float getHardness() {
+        return 1 + material.getAutogenInfo().oreTier * 10;
+    }
+
     public static void replaceBlock(World world, int x, int y, int z, int meta) {
+        II_Material material = II_Materials.materialForID(meta % 1000);
+        assert material != null;
         Block block = world.getBlock(x, y, z);
         int blockMeta = world.getBlockMetadata(x, y, z);
         if (!block.isOpaqueCube()) {
             block = Blocks.stone;
             blockMeta = 0;
         }
-        world.setBlock(x, y, z, II_Blocks.INSTANCE.blockOres, 0, 3);
+        int harvestLevel = material.getAutogenInfo().oreTier;
+        world.setBlock(x, y, z, II_Blocks.INSTANCE.blockOres, harvestLevel, 3);
         TileOres tile = (TileOres) world.getTileEntity(x, y, z);
         if (tile != null) {
             tile.setValuesFromMeta(meta);
             tile.block = block;
             tile.meta = blockMeta;
             tile.syncTileEntity();
-        } else {
-            int a = 0;
         }
     }
 
@@ -196,7 +201,7 @@ public class TileOres extends TileEntity implements IFastRenderedTileEntity, ISy
         WorldOreInfo info = material.getOreInfo();
         if (info == null) {
             return new ArrayList<ItemStack>() {{
-                add(new ItemStack(II_Blocks.INSTANCE.blockOres, 1, 0));
+                add(new ItemStack(II_Blocks.INSTANCE.blockOres, 1, getMeta()));
             }};
         }
         return info.apply(prefix, worldObj.rand);

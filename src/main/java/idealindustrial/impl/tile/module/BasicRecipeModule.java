@@ -28,7 +28,7 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
     protected R recipe;
     protected TileFacing1Output<?> machine;
     protected HostMachineTile baseTile;
-    protected InternalInventory inventoryIn, inventoryOut;
+    protected InternalInventory inventoryIn, inventorySpecial, inventoryOut;
     protected FluidHandler tankIn, tankOut;
     protected EnergyHandler energyHandler;
     protected RecipedMachineStats machineStats;
@@ -47,7 +47,7 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
         machine.hasInventory = true;
         inventoryIn = machine.inventoryIn = stats.inventoryIn();
         inventoryOut = machine.inventoryOut = stats.inventoryOut();
-        machine.inventorySpecial = EmptyInventory.INSTANCE;
+        inventorySpecial = machine.inventorySpecial = stats.inventorySpecial();
     }
 
     public BasicRecipeModule(TileFacing2Main<?> machine, BasicRecipeModule<R> module) {
@@ -151,7 +151,7 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
     }
 
     protected R checkRecipe() {
-        R found = recipeMap.findRecipe((RecipedInventory) inventoryIn, tankIn, params);
+        R found = recipeMap.findRecipe((RecipedInventory) inventoryIn, inventorySpecial, tankIn, params);
         if (found != null) {
             usage = found.recipeParams().amperage * found.recipeParams().voltage;
         }
@@ -199,9 +199,9 @@ public class BasicRecipeModule<R extends IMachineRecipe> implements RecipeModule
     }
 
 
-    protected String recipeToString(R recipe) {
+    protected String recipeToString(R recipe) {// todo: handling for other recipe types
         //        System.out.println(str);
-        return JsonUtil.recipeDefaultGson.toJson(recipe);
+        return JsonUtil.getRecipeGson().create().toJson(recipe, BasicMachineRecipe.class);
     }
 
     @SuppressWarnings("unchecked")

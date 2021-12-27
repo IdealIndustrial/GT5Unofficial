@@ -1,6 +1,7 @@
 package idealindustrial.impl.recipe;
 
 import idealindustrial.api.recipe.IRecipeGuiParams;
+import idealindustrial.api.tile.gui.SlotSupplier;
 import idealindustrial.impl.tile.gui.base.component.GuiTextures;
 import idealindustrial.impl.tile.gui.base.component.II_Slot;
 import idealindustrial.impl.tile.gui.base.component.SlotHolo;
@@ -11,13 +12,18 @@ import java.util.stream.Stream;
 
 public class RecipeGuiParamsBuilder {
 
-    GuiSlotDefinition[] itemsIn, itemsOut, itemsSpecial, fluidsIn, fluidsOut;
+    GuiSlotDefinition[] itemsIn, itemsOut, itemsSpecial, fluidsIn, fluidsOut, holo;
     GuiArrowDefinition arrow;
 
     public RecipeGuiParamsBuilder(int itemsIn, int itemsOut, int itemsSpecial, int fluidsIn, int fluidsOut) {
+        this(itemsIn, itemsOut, itemsSpecial, fluidsIn, fluidsOut, 0);
+    }
+
+    public RecipeGuiParamsBuilder(int itemsIn, int itemsOut, int itemsSpecial, int fluidsIn, int fluidsOut, int holo) {
         this.itemsIn = Stream.generate(GuiSlotDefinition::new).limit(itemsIn).toArray(GuiSlotDefinition[]::new);
         this.itemsOut = Stream.generate(GuiSlotDefinition::new).limit(itemsOut).toArray(GuiSlotDefinition[]::new);
         this.itemsSpecial = Stream.generate(GuiSlotDefinition::new).limit(itemsSpecial).toArray(GuiSlotDefinition[]::new);
+        this.holo = Stream.generate(GuiSlotDefinition::new).limit(holo).toArray(GuiSlotDefinition[]::new);
 
         Stream.of(this.itemsIn, this.itemsSpecial).forEach(ar -> Arrays.stream(ar).forEach(def -> def.slotSupplier = II_Slot::new));
         Arrays.stream(this.itemsOut).forEach(def -> def.slotSupplier = SlotOutput::new);
@@ -28,7 +34,7 @@ public class RecipeGuiParamsBuilder {
 
         setGlobalItemTexture(GuiTextures.SlotTextures.SLOT_DEFAULT);
         setGlobalFluidTexture(GuiTextures.SlotTextures.SLOT_FLUID_DEFAULT);
-        setMachineRecipeSlotCoords();
+        setMachineRecipeSlotCoords(53, 107, 25, 63);
 
         setArrowTexture(0);
     }
@@ -43,11 +49,12 @@ public class RecipeGuiParamsBuilder {
         return this;
     }
 
-    public RecipeGuiParamsBuilder setMachineRecipeSlotCoords() {
-        addInventorySlotsPositioned(53, itemsIn.length <= 3 ? 25 : 34, false, itemsIn);
-        addInventorySlotsPositioned(107, itemsOut.length <= 3 ? 25 : 34, true, itemsOut);
-        addInventorySlotsPositioned(53, 63, false, fluidsIn);
-        addInventorySlotsPositioned(107, 63, true, fluidsOut);
+    public RecipeGuiParamsBuilder setMachineRecipeSlotCoords(int inputX, int outputX, int itemY, int fluidY) {
+        int[] rowOffsets = new int[]{0, 9, -18};
+        addInventorySlotsPositioned(inputX, itemY + rowOffsets[(itemsIn.length - 1) / 3], false, itemsIn);
+        addInventorySlotsPositioned(outputX, itemY + rowOffsets[(itemsOut.length - 1) / 3], true, itemsOut);
+        addInventorySlotsPositioned(inputX, fluidY, false, fluidsIn);
+        addInventorySlotsPositioned(outputX, fluidY, true, fluidsOut);
         return this;
     }
 
@@ -60,10 +67,28 @@ public class RecipeGuiParamsBuilder {
         return setArrow(76, 26, texture, 1);//todo check dir
     }
 
+    public enum SlotType {
+        ItemsIn, ItemsOut, ItemsSpecial, FluidsIn, FluidsOut, Holo
+    }
+
+    public RecipeGuiParamsBuilder moveSlot(SlotType type, int id, int x, int y) {
+        GuiSlotDefinition[][] ar = new GuiSlotDefinition[][]{itemsIn, itemsOut, itemsSpecial, fluidsIn, fluidsOut, holo};//todo: store this array
+        GuiSlotDefinition slot = ar[type.ordinal()][id];
+        slot.x = x;
+        slot.y = y;
+        return this;
+    }
+
+    public RecipeGuiParamsBuilder setSlot(SlotType type, int id, int x, int y, int texture, SlotSupplier slotSupplier) {
+        GuiSlotDefinition[][] ar = new GuiSlotDefinition[][]{itemsIn, itemsOut, itemsSpecial, fluidsIn, fluidsOut, holo};
+        ar[type.ordinal()][id] = new GuiSlotDefinition(x, y, texture, slotSupplier);
+        return this;
+    }
+
     protected void addInventorySlotsPositioned(int startX, int startY, boolean xIncrease, GuiSlotDefinition[] definitions) {
         int multiplier = xIncrease ? 1 : -1;
         int alreadyAdded = 0;
-        for (int y = 0; y < 2; y++) {
+        for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 if (alreadyAdded >= definitions.length) {
                     return;
@@ -76,6 +101,7 @@ public class RecipeGuiParamsBuilder {
     }
 
     public IRecipeGuiParams construct() {
-        return new RecipeGuiParamsImpl(itemsIn, itemsOut, itemsSpecial, fluidsIn, fluidsOut, arrow);
+        return new RecipeGuiParamsImpl(itemsIn, itemsOut, itemsSpecial, fluidsIn, fluidsOut, holo, arrow);
     }
+
 }

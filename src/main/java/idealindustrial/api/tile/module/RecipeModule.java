@@ -5,7 +5,7 @@ import idealindustrial.api.recipe.RecipeMap;
 import idealindustrial.impl.tile.impl.TileFacing2Main;
 import net.minecraft.nbt.NBTTagCompound;
 
-public interface RecipeModule<R extends IMachineRecipe> extends MetaTileModule {
+public interface RecipeModule<R extends IMachineRecipe> extends TileModule {
 
 
    void saveToNBT(String prefix, NBTTagCompound nbt);
@@ -19,4 +19,5 @@ public interface RecipeModule<R extends IMachineRecipe> extends MetaTileModule {
    RecipeMap<R> getRecipeMap();
 
    RecipeModule<R> reInit(TileFacing2Main<?> machine);
+
 }

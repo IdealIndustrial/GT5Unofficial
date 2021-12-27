@@ -13,7 +13,7 @@ public class MultiMachineRecipedModule<R extends IMachineRecipe> extends BasicRe
 
     public MultiMachineRecipedModule(RecipedMultiMachineBase<?, R> machine, RecipeMap<R> map) {
         this.recipeMap = map;
-        this.machineStats = new RecipedMachineStats(0, 0, 0, 0, 0, 0, 0, 0, 0);
+        this.machineStats = new RecipedMachineStats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         this.machine = machine;
         this.baseTile = machine.getHost();
         this.params = new MachineEnergyParams(machineStats);

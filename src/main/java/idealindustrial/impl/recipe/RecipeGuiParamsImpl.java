@@ -7,18 +7,19 @@ import java.util.Iterator;
 
 public class RecipeGuiParamsImpl implements IRecipeGuiParams {
 
-    GuiSlotDefinition[] itemsIn, itemsOut, itemSpecial, fluidsIn, fluidsOut;
+    GuiSlotDefinition[] itemsIn, itemsOut, itemSpecial, fluidsIn, fluidsOut, holo;
     GuiSlotDefinition[][] arrays;
     GuiArrowDefinition arrow;
 
-    public RecipeGuiParamsImpl(GuiSlotDefinition[] itemsIn, GuiSlotDefinition[] itemsOut, GuiSlotDefinition[] itemSpecial, GuiSlotDefinition[] fluidsIn, GuiSlotDefinition[] fluidsOut, GuiArrowDefinition arrow) {
+    public RecipeGuiParamsImpl(GuiSlotDefinition[] itemsIn, GuiSlotDefinition[] itemsOut, GuiSlotDefinition[] itemSpecial, GuiSlotDefinition[] fluidsIn, GuiSlotDefinition[] fluidsOut, GuiSlotDefinition[] holo,GuiArrowDefinition arrow) {
         this.itemsIn = itemsIn;
         this.itemsOut = itemsOut;
         this.itemSpecial = itemSpecial;
         this.fluidsIn = fluidsIn;
         this.fluidsOut = fluidsOut;
+        this.holo = holo;
         this.arrow = arrow;
-        this.arrays = new GuiSlotDefinition[][]{this.itemsIn, this.itemsOut, this.itemSpecial, this.fluidsIn, this.fluidsOut};
+        this.arrays = new GuiSlotDefinition[][]{this.itemsIn, this.itemsOut, this.itemSpecial, this.fluidsIn, this.fluidsOut, this.holo};
     }
 
 
@@ -45,6 +46,11 @@ public class RecipeGuiParamsImpl implements IRecipeGuiParams {
     @Override
     public GuiSlotDefinition[] getFluidsOut() {
         return fluidsOut;
+    }
+
+    @Override
+    public GuiSlotDefinition[] getHoloSlots() {
+        return holo;
     }
 
     @Override
