@@ -11,7 +11,11 @@ public class FormulaParser {
     public static FormulaParser INSTANCE = new FormulaParser();
 
     public static ChemicalStack parse(String str) {
-        return INSTANCE.parse(new StringSource(str), true);
+        ChemicalStack stack = INSTANCE.parse(new StringSource(str), true);
+        if (stack.getAmount() == 1 && stack.amount() == 1 && stack.getElement() instanceof Molecule) {
+            return ((Molecule) stack.getElement()).get(0);//just remove "boxing"
+        }
+        return stack;
     }
 
     public ChemicalStack parse(CharSource source, boolean prefixed) {

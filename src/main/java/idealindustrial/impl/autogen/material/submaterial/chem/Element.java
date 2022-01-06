@@ -1,5 +1,10 @@
 package idealindustrial.impl.autogen.material.submaterial.chem;
 
+import idealindustrial.impl.autogen.material.II_Material;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Element implements ChemicalMatter {
     H("Hydrogen"),
     He("Helium"),
@@ -118,10 +123,16 @@ public enum Element implements ChemicalMatter {
     Mc("Moscovium"),
     Lv("Livermorium"),
     Ts("Tennessine"),
-    Og("Oganesson")
-    ;
+    Og("Oganesson"),
+    NULL("Nothing") {
+        @Override
+        public boolean isPrimitive() {
+            return false;
+        }
+    };
 
-    String name;
+    final String name;
+    II_Material material;
 
     Element(String name) {
 
@@ -133,4 +144,21 @@ public enum Element implements ChemicalMatter {
     public boolean isPrimitive() {
         return true;
     }
+
+    @Override
+    public int amount() {
+        return 1;
+    }
+
+    @Override
+    public int countElement(Element element) {
+        return element == this ? 1 : 0;
+    }
+
+
+
+    public II_Material getMaterial() {
+        return material;
+    }
+
 }

@@ -21,6 +21,7 @@ public enum Prefixes {
     cable01("1x", "Cable"),
     ore("", "Ore"),
     oreSmall("Small", "Ore"),
+    gem("", "Gem"),
     toolHeadDrill("", "Drill Head"),
     pickaxe("", "Pickaxe"),
     toolHeadPickaxe("", "Pickaxe Head", pickaxe)

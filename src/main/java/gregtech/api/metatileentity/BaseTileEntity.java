@@ -90,7 +90,7 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
 
     @Override
     public final boolean isServerSide() {
-        return !worldObj.isRemote;
+        return !worldObj.isRemote;//todo replace with global platform
     }
 
     @Override

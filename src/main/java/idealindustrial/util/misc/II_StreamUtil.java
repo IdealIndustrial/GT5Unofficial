@@ -152,4 +152,9 @@ public class II_StreamUtil {
         }, Spliterator.ORDERED), false);
     }
 
+    @SafeVarargs
+    public static <T> ArrayList<T> list(T...ts) {
+        return new ArrayList<>(Arrays.asList(ts));
+    }
+
 }

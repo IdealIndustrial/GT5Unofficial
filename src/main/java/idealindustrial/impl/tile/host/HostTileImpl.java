@@ -111,6 +111,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     public void setInitialValuesAsNBT(NBTTagCompound nbt, int metaTileID) {
         this.metaTileID = metaTileID;
         setMetaTileEntity(II_Values.TILES[metaTileID].newMetaTile(this));
+        assert tile != null && tile.getHost() == this;
     }
 
     public boolean alive() {
@@ -379,6 +380,7 @@ public class HostTileImpl extends BaseTileEntity implements HostTile {
     @Override
     public void setActive(boolean active) {
         if (active != this.active) {
+            tile.onActiveUpdated(active);
             this.active = active;
             if (isServerSide()) {
                 sendEvent(EVENT_ACTIVE, boolToInt(active));

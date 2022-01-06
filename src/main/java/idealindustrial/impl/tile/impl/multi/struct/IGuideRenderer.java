@@ -7,4 +7,8 @@ public interface IGuideRenderer {
     void registerNewParticle(EntityFX particle);
 
     int getMaxAge();
+
+    boolean isXInverted();
+
+    boolean isZInverted();
 }

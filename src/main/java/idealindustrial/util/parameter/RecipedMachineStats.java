@@ -1,5 +1,6 @@
 package idealindustrial.util.parameter;
 
+import idealindustrial.api.recipe.IRecipeGuiParams;
 import idealindustrial.api.tile.fluid.FluidHandler;
 import idealindustrial.api.tile.inventory.InternalInventory;
 import idealindustrial.api.tile.inventory.RecipedInventory;
@@ -23,6 +24,11 @@ public class RecipedMachineStats {
         this.voltageIn = II_Util.getVoltage(tier);
         this.amperageIn = amperageIn;
         this.energyCapacity = energyCapacity;
+    }
+
+    public RecipedMachineStats(int tier, IRecipeGuiParams params, int stackSize, int fluidCapacity, int amperageIn, int energyCapacity) {
+        this(tier, params.getItemsIn().length, params.getItemsOut().length, params.getItemSpecial().length, stackSize,
+                params.getFluidsIn().length, params.getFluidsOut().length, fluidCapacity, amperageIn, energyCapacity);
     }
 
     public boolean hasTank() {

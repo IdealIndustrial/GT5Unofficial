@@ -1,6 +1,6 @@
 package idealindustrial.teststuff;
 
-import idealindustrial.impl.blocks.MetaBlock_Item;
+import idealindustrial.impl.blocks.MetaGeneratedBlock_Item;
 import idealindustrial.impl.blocks.base.BaseBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class TestBlock extends BaseBlock implements ITileEntityProvider {
     public TestBlock() {
-        super(MetaBlock_Item.class, "testBlockZBS", Material.iron);
+        super(MetaGeneratedBlock_Item.class, "testBlockZBS", Material.iron);
 
     }
 

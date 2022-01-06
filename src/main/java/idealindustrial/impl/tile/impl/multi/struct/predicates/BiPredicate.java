@@ -1,4 +1,4 @@
-package idealindustrial.impl.tile.impl.multi.struct;
+package idealindustrial.impl.tile.impl.multi.struct.predicates;
 
 public abstract class BiPredicate implements MatrixCoordPredicate {
     
@@ -7,6 +7,11 @@ public abstract class BiPredicate implements MatrixCoordPredicate {
     public BiPredicate(MatrixCoordPredicate left, MatrixCoordPredicate right) {
         this.left = left;
         this.right = right;
+    }
+
+    @Override
+    public void setChar(char ch) {
+        left.setChar(ch);
     }
 
     @Override

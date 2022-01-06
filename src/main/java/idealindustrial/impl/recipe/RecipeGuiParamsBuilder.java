@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 
 public class RecipeGuiParamsBuilder {
 
+    public static final IRecipeGuiParams EMPTY_PARAMS = new RecipeGuiParamsBuilder(0, 0, 0, 0,0).construct();
+
     GuiSlotDefinition[] itemsIn, itemsOut, itemsSpecial, fluidsIn, fluidsOut, holo;
     GuiArrowDefinition arrow;
 

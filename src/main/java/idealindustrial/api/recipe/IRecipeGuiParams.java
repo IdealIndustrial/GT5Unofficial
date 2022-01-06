@@ -18,4 +18,7 @@ public interface IRecipeGuiParams extends Iterable<GuiSlotDefinition> {
 
     GuiArrowDefinition getArrow();
 
+
+
+
 }

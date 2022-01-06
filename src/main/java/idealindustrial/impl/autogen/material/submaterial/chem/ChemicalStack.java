@@ -1,5 +1,8 @@
 package idealindustrial.impl.autogen.material.submaterial.chem;
 
+import idealindustrial.impl.autogen.material.II_Material;
+import idealindustrial.impl.autogen.material.MaterialStack;
+
 public class ChemicalStack {
 
     ChemicalMatter element;
@@ -30,4 +33,29 @@ public class ChemicalStack {
         }
         return amount + element.toString();
     }
+
+    public int amount() {
+        return amount * element.amount();
+    }
+
+    public int countElement(Element element) {
+        return amount * element.countElement(element);
+    }
+
+    public ChemicalMatter getElement() {
+        return element;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public MaterialStack asMaterialStack() {
+        II_Material material = ChemicalInfo.materialMap.get(element.toString());
+        if (material == null) {
+            return null;
+        }
+        return new MaterialStack(material, amount);
+    }
+
 }

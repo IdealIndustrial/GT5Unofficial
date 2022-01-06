@@ -17,7 +17,10 @@ import static idealindustrial.util.misc.II_Paths.TEXTURE_SET;
 
 public class TextureSet {
     private static final Set<String> blockIcons = Stream.of(Prefixes.block, Prefixes.cable01).map(Enum::toString).collect(Collectors.toSet());
-    private static final Set<String> itemIcons = Stream.of(Prefixes.ingot, Prefixes.plate, Prefixes.dust, Prefixes.dustSmall, Prefixes.dustTiny, Prefixes.nugget, Prefixes.nuggetBig)
+    private static final Set<String> itemIcons = Stream.of(
+            Prefixes.ingot, Prefixes.plate, Prefixes.dust, Prefixes.dustSmall, Prefixes.dustTiny, Prefixes.nugget, Prefixes.nuggetBig,
+            Prefixes.gem
+            )
             .map(Enum::toString).collect(Collectors.toSet());
     private static final Set<String> itemWithOverlays = Stream.of(Prefixes.cell, Prefixes.gasCell, Prefixes.plasmaCell,  Prefixes.nuggetBigHot, Prefixes.toolHeadDrill, Prefixes.toolHeadPickaxe)
             .map(Enum::toString).collect(Collectors.toSet());

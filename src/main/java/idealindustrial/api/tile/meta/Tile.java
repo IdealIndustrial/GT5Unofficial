@@ -177,4 +177,8 @@ public interface Tile<H extends HostTile> extends IUpdatableTileEntity, ISyncedT
     default void receiveStructureUpdate() {
 
     }
+
+    default void onActiveUpdated(boolean active) {
+
+    }
 }

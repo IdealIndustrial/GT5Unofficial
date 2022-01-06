@@ -3,6 +3,7 @@ package idealindustrial.impl.autogen.material;
 import idealindustrial.impl.autogen.material.submaterial.*;
 import idealindustrial.impl.autogen.material.submaterial.chem.ChemicalInfo;
 import idealindustrial.impl.autogen.material.submaterial.chem.ChemicalStack;
+import idealindustrial.impl.autogen.material.submaterial.chem.Element;
 import idealindustrial.impl.autogen.material.submaterial.chem.parser.FormulaParser;
 import idealindustrial.impl.autogen.material.submaterial.render.RenderInfo;
 import idealindustrial.impl.autogen.material.submaterial.render.TextureSet;
@@ -112,12 +113,14 @@ public class MaterialBuilder {
         material.normalForm = normalForm;
         material.expectedPrefixes = expectedPrefixes;
         material.autogenInfo = autogenInfo == null ? new MaterialAutogenInfo() : autogenInfo;
-        material.chemicalInfo = chemicalInfo == null ? new ChemicalInfo(new ChemicalStack(null, 1)) : chemicalInfo;
+        material.chemicalInfo = chemicalInfo == null ? new ChemicalInfo(new ChemicalStack(Element.NULL, 1)) : chemicalInfo;
         material.oreInfo = oreInfo;
         if (id >= 0 && id < 1000) {
             II_Materials.materialsK1[id] = material;
         }
         II_Materials.allMaterials.add(material);
+        material.chemicalInfo.putToMap(material);
+
         return material;
     }
 
@@ -134,7 +137,7 @@ public class MaterialBuilder {
         }
 
         public SolidFormBuilder enableTools() {
-            prefixes.add(Prefixes.toolHeadDrill);
+            Arrays.stream(Prefixes.values()).filter(p -> p.name().toLowerCase().startsWith("toolhead")).forEach(prefixes::add);
             return this;
         }
 
@@ -216,6 +219,8 @@ public class MaterialBuilder {
             drops = function;
             return this;
         }
+
+
 
         public MaterialBuilder add() {
             prefixes.add(Prefixes.oreSmall);

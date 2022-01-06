@@ -24,4 +24,18 @@ public class Molecule implements ChemicalMatter{
     public boolean isPrimitive() {
         return false;
     }
+
+    @Override
+    public int amount() {
+        return elements.stream().mapToInt(ChemicalStack::amount).sum();
+    }
+
+    @Override
+    public int countElement(Element element) {
+        return elements.stream().mapToInt(c -> countElement(element)).sum();
+    }
+
+    public ChemicalStack get(int i) {
+        return elements.get(i);
+    }
 }

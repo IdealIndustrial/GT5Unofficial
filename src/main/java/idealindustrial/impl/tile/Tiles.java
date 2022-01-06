@@ -28,38 +28,38 @@ import static idealindustrial.util.misc.II_TileUtil.makeBaseMachineTile;
  */
 public class Tiles {
 
-
     public static Tile<?> makePrimitiveForge() {
         String name = "Primitive Forge";
         String mapName = name + " Recipes";
         //using getMap just to be sure that map is constructed only once
-        RecipeMap<BasicMachineRecipe> recipes = RecipeMaps.getMap(mapName, () -> {
-            IRecipeGuiParams guiParams = new RecipeGuiParamsBuilder(2, 2, 1, 0, 0)
-                    .setMachineRecipeSlotCoords(43, 107, 25, 63)
-                    .moveSlot(ItemsSpecial, 0, 30, 25).construct();
-            return new BasicRecipeMap<>(mapName, true, false, guiParams, BasicMachineRecipe.class);
+        RecipeMap<BasicMachineRecipe> recipes = RecipeMaps.getMap(mapName, (n) -> {
+            IRecipeGuiParams guiParams = new RecipeGuiParamsBuilder(3, 2, 0, 0, 0)
+//                    .setMachineRecipeSlotCoords(43, 107, 25, 63)
+//                    .moveSlot(ItemsSpecial, 0, 30, 25)
+                    .construct();
+            return new BasicRecipeMap<>(n, true, false, guiParams, BasicMachineRecipe.class);
         });
 
         return new TileMachineBasicRecipe(makeBaseMachineTile(), name,
                 II_StreamUtil.arrayOf(Textures.baseTiredTextures[1], new ITexture[10]),
-                TextureUtil.loadRecipedMachineTextures(TextureUtil.facing2Configuration, name),
+                TextureUtil.loadRecipedMachineTextures(name),
                 recipes,
-                new RecipedMachineStats(0, 2, 2, 1, 64, 0, 0, 0, 0, 0));
+                new RecipedMachineStats(0, recipes.getGuiParams(), 64, 0, 0, 0));
     }
 
     public static Tile<?> makePrimitiveAnvil() {
         String name = "Primitive Anvil";
         String mapName = name + " Recipes";
-        RecipeMap<ShapedMachineRecipe> recipes = RecipeMaps.getMap(mapName, () -> {
+        RecipeMap<ShapedMachineRecipe> recipes = RecipeMaps.getMap(mapName, (n) -> {
             IRecipeGuiParams params = new RecipeGuiParamsBuilder(9, 1, 0, 0, 0, 1)
                     .setSlot(Holo, 0, 120, 5, SLOT_HOLO_HAMMER, (inv, id, x, y, t) -> new SlotHoloEvent(inv, id, x, y, t, MODULE_START_PROCESSING))
                     .construct();
-            return new BasicRecipeMap<>(mapName, true, true, params, ShapedMachineRecipe.class);
+            return new BasicRecipeMap<>(n, true, true, params, ShapedMachineRecipe.class);
         });
         RecipedMachineStats stats = new RecipedMachineStats(0, 9, 1, 0, 64, 0, 0, 0, 0, 0);
         return new TileMachineReciped<>(makeBaseMachineTile(), name,
                 II_StreamUtil.arrayOf(Textures.baseTiredTextures[1], new ITexture[10]),
-                TextureUtil.loadRecipedMachineTextures(TextureUtil.facing2Configuration, name),
+                TextureUtil.loadRecipedMachineTextures(name),
                 recipes,
                 stats,
                 (th) -> new EventRecipedModule<>(th, stats, recipes));

@@ -21,7 +21,7 @@ public class NetworkedTexture extends RenderedTexture implements INetworkedTextu
         int meta = (id >> 16) & 0xF;
         int side = (id >> 20) & 0b111;
         Block b = Block.getBlockById(blockId);
-        return new NetworkedTexture(b, side, meta);
+        return new NetworkedTexture(b, meta, side);
     }
 
     @Override

@@ -9,13 +9,15 @@ import idealindustrial.impl.textures.TextureManager;
 import idealindustrial.impl.tile.impl.multi.RecipedMultiMachineBase;
 import idealindustrial.api.tile.host.HostMachineTile;
 import idealindustrial.api.tile.meta.Tile;
-import idealindustrial.impl.tile.impl.multi.struct.MachineStructureBuilder;
+import idealindustrial.impl.tile.impl.multi.struct.MachineShapeBuilder;
 import idealindustrial.impl.tile.impl.multi.struct.MultiMachineShape;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.parameter.RecipedMachineStats;
 import net.minecraft.init.Blocks;
 
 import java.util.stream.Stream;
+
+import static idealindustrial.impl.blocks.II_Blocks.CasingBlocks.TestCasing;
 
 public class TestMultiMachine1 extends RecipedMultiMachineBase<HostMachineTile, BasicMachineRecipe> {
 
@@ -37,7 +39,7 @@ public class TestMultiMachine1 extends RecipedMultiMachineBase<HostMachineTile, 
 
     @Override
     protected MultiMachineShape getStructure() {
-        return MachineStructureBuilder.start().addShape(
+        return MachineShapeBuilder.start().addShape(
                 new String[][]{
                         {
                                 "XXX",
@@ -55,7 +57,7 @@ public class TestMultiMachine1 extends RecipedMultiMachineBase<HostMachineTile, 
                                 "XXX"
                         }
                 })
-                .define('X', blockPredicate(II_Blocks.INSTANCE.casing1, 0).orHatch(HatchType.ItemIn, HatchType.ItemOut))
+                .define('X', blockPredicate(TestCasing).orHatch(HatchType.ItemIn, HatchType.ItemOut))
                 .define('B', blockPredicate(Blocks.brick_block, 0).orHatch(HatchType.EnergyIn))
                 .added()
                 .create();

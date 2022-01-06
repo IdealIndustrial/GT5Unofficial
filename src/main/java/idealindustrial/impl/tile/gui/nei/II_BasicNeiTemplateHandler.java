@@ -6,6 +6,7 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import idealindustrial.api.recipe.IMachineRecipe;
 import idealindustrial.api.recipe.IRecipeGuiParams;
 import idealindustrial.api.recipe.RecipeMap;
+import idealindustrial.impl.item.MetaBehaviorItem;
 import idealindustrial.impl.oredict.OreDict;
 import idealindustrial.impl.oredict.OreInfo;
 import idealindustrial.impl.recipe.*;
@@ -20,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
+import tconstruct.mechworks.landmine.behavior.Behavior;
 
 import java.util.*;
 import java.util.function.Function;
@@ -35,6 +37,11 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
     public II_BasicNeiTemplateHandler(RecipeMap<?> map) {
         this.map = map;
         this.params = map.getGuiParams();
+    }
+
+    @Override
+    public int recipiesPerPage() {
+        return 1;
     }
 
     @Override
@@ -121,7 +128,7 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
     protected Set<IMachineRecipe> loadRecipes(ItemStack result, Function<II_StackSignature, Set<? extends IMachineRecipe>> recipeFunction) {
         Set<IMachineRecipe> out = new HashSet<>();
         Collection<OreInfo> infoSet = OreDict.getInfo(new HashedStack(result));
-        if (infoSet != null) {
+        if (!infoSet.isEmpty()) {
             for (OreInfo info : infoSet) {
                 Set<? extends IMachineRecipe> recipes = recipeFunction.apply(new II_StackSignature(info, 1));
                 if (recipes != null) {
@@ -129,12 +136,20 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
                 }
             }
         } else {
-            Set<? extends IMachineRecipe> recipes = recipeFunction.apply(new II_StackSignature(result, CheckType.DAMAGE));
+            Set<? extends IMachineRecipe> recipes = recipeFunction.apply(new II_StackSignature(result, shouldCheckDirect(result) ? CheckType.DIRECT : CheckType.DAMAGE));
             if (recipes != null) {
                 out.addAll(recipes);
             }
         }
         return out;
+    }
+
+    public static boolean shouldCheckDirect(ItemStack is) {
+
+        if (is.getItem() instanceof MetaBehaviorItem) {
+            return MetaBehaviorItem.getBehavior(is).shouldNEICheckDirect();
+        }
+        return false;
     }
 
 
@@ -216,4 +231,6 @@ public class II_BasicNeiTemplateHandler extends TemplateRecipeHandler {
             return null;
         }
     }
+
+
 }

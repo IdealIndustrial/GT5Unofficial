@@ -19,15 +19,24 @@ public class CoordinateMatrix<M, T extends MatrixCoordConsumer<M>> implements IC
         return new ICoordManipulator<M>() {
             final Vector3 start = new Vector3();
             int rotation = 0;
+            boolean xInverted = false, zInverted = false;
 
             @Override
             public void start(M mode) {
+//                if (rotation % 2 == 1) {
+//                    boolean t = xInverted;
+//                    xInverted = zInverted;
+//                    zInverted = t;
+//                }
+                Vector3 newCenter = new Vector3(xInverted ? matrix.length - center.x - 1 : center.x,
+                        center.y,
+                        zInverted ? matrix[0][0].length - center.z - 1 : center.z);
                 Vector3d rotationCenter = new Vector3d(0, 0, 0);
-                start.addm(center.invert().rotateY(rotation, rotationCenter));
+                start.addm(newCenter.invert().rotateY(rotation, rotationCenter));
                 for (int x = 0; x < matrix.length; x++) {
                     for (int y = 0; y < matrix[0].length; y++) {
                         for (int z = 0; z < matrix[0][0].length; z++) {
-                            T element = matrix[x][y][z];
+                            T element = matrix[xInverted ? matrix.length - x - 1 : x][y][zInverted ? matrix[0][0].length - z - 1 : z];
                             Vector3 position = new Vector3(x, y, z);
                             position.rotateYm(rotation, rotationCenter);
                             element.apply(mode, position.addm(start), rotation);
@@ -46,9 +55,13 @@ public class CoordinateMatrix<M, T extends MatrixCoordConsumer<M>> implements IC
 
             @Override
             public BoundingBox getBox() {
+                Vector3 newCenter = new Vector3(xInverted ? matrix.length - center.x - 1 : center.x,
+                        center.y,
+                        zInverted ? matrix[0][0].length - center.z - 1 : center.z);
+
                 BoundingBox.BoxBuilder builder = BoundingBox.builder();
                 Vector3d rotationCenter = new Vector3d(0, 0, 0);
-                start.addm(center.invert().rotateY(rotation, rotationCenter));
+                start.addm(newCenter.invert().invert(xInverted, false, zInverted).rotateY(rotation, rotationCenter));
 
                 for (int x : new int[]{0, matrix.length - 1}) {
                     for (int y : new int[]{0, matrix[0].length - 1}) {
@@ -79,6 +92,16 @@ public class CoordinateMatrix<M, T extends MatrixCoordConsumer<M>> implements IC
             public void rotateY(int angle) {
                 rotation += angle;
             }
+
+            public void invert(boolean x, boolean z) {
+                if (x) {
+                    xInverted = !xInverted;
+                }
+                if (z) {
+                    zInverted = !zInverted;
+                }
+            }
+
 
         };
     }

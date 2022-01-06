@@ -48,6 +48,9 @@ public class EngLocalizer extends BaseLocalizer {
 
     @Override
     protected String getNameFor(II_Material material, Prefixes prefix) {
+        if (prefix == null) {
+            return material.name();
+        }
         if (MiscValues.cellToStateMap.containsKey(prefix)) {
             return get(material, MiscValues.cellToStateMap.get(prefix));
         }

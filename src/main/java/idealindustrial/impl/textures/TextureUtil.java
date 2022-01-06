@@ -19,6 +19,10 @@ public class TextureUtil {
     public static class MachineTextureConfig implements TextureConfiguration {
         public final String[] textureNames;
 
+        public MachineTextureConfig(String... textureNames) {
+            this(false, textureNames);
+        }
+
         public MachineTextureConfig(boolean hasActive, String... textureNames) {
             if (hasActive) {
                 this.textureNames = II_StreamUtil.concatArrays(textureNames, Arrays.stream(textureNames).map(s -> s + "_active").toArray(String[]::new));
@@ -69,6 +73,18 @@ public class TextureUtil {
 
     public static ITexture[] loadRecipedMachineTextures(TextureConfiguration configuration, String name) {
         return asGtRendered(configuration.loadAll(II_Paths.RECIPE_MACHINE_TEXTURES + TextureUtil.asTextureName(name) + "/"));
+    }
+
+    public static ITexture[] loadRecipedMachineTextures(String name) {
+        return loadRecipedMachineTextures(facing2Configuration, name);
+    }
+
+    public static ITexture[] loadMultiMachineTextures(TextureConfiguration configuration, String name) {
+        return asGtRendered(configuration.loadAll(II_Paths.MULTI_MACHINE_TEXTURES + TextureUtil.asTextureName(name) + "/"));
+    }
+
+    public static ITexture[] loadMultiMachineTextures(String name) {
+        return loadMultiMachineTextures(facing2Configuration, name);
     }
 
     public static ITexture copyTexture(Block block, int meta, int side) {

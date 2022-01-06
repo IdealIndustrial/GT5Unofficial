@@ -43,6 +43,7 @@ public class MaterialAutogenInfo {
         MetalFormType(String name) {
             this.name = name;
         }
+
         public static MetalFormType parse(String s) {
             return Arrays.stream(values()).filter(t -> t.name.equals(s)).findFirst().orElseThrow(() -> new IllegalArgumentException("cannot parse MetalFormType " + s));
         }
@@ -82,15 +83,17 @@ public class MaterialAutogenInfo {
                 field.setAccessible(true);
                 Class<?> type = field.getType();
                 if (type.equals(int.class)) {
-                    field.set(MaterialAutogenInfo.this, Integer.parseInt(data));
+                    int parsed = data.equals("") ? 0 : Integer.parseInt(data);
+                    field.set(MaterialAutogenInfo.this, parsed);
                 } else if (type.equals(long.class)) {
-                    field.set(MaterialAutogenInfo.this, Long.parseLong(data));
+                    long parsed = data.equals("") ? 0 : Long.parseLong(data);
+                    field.set(MaterialAutogenInfo.this, parsed);
                 } else if (type.equals(String.class)) {
                     field.set(MaterialAutogenInfo.this, data);
                 } else {
                     throw new IllegalArgumentException("Unknown data type " + type);
                 }
-            }catch (NoSuchFieldException | IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new IllegalStateException("error", e);
             }
         }

@@ -16,6 +16,7 @@ import idealindustrial.impl.autogen.recipes.LoadManager;
 import idealindustrial.impl.autogen.recipes.materialprocessing.AutogenRecipes;
 import idealindustrial.impl.commands.*;
 import idealindustrial.impl.loader.*;
+import idealindustrial.impl.registries.FuelRegistry;
 import idealindustrial.teststuff.RenderTest;
 import idealindustrial.teststuff.TestBlock;
 import idealindustrial.teststuff.TestRecipes;
@@ -145,6 +146,7 @@ public class II_Core {
             e.printStackTrace();
         }
         oredictLoader.init();
+        FuelRegistry.initMap();
         II_Materials.initMaterialLoops();
         LoadManager.loadRecipes();
         new TestRecipes().run();

@@ -1,7 +1,8 @@
-package idealindustrial.impl.tile.impl.multi.struct;
+package idealindustrial.impl.tile.impl.multi.struct.predicates;
 
 import idealindustrial.impl.tile.impl.multi.MultiMachineBase;
 import idealindustrial.api.world.util.MatrixCoordConsumer;
+import idealindustrial.impl.tile.impl.multi.struct.CheckMachineParams;
 import net.minecraft.block.Block;
 
 public interface MatrixCoordPredicate extends MatrixCoordConsumer<CheckMachineParams> {
@@ -9,7 +10,9 @@ public interface MatrixCoordPredicate extends MatrixCoordConsumer<CheckMachinePa
     void resetCounters();
     
     void checkCounters();
-    
+
+    void setChar(char ch);
+
     default MatrixCoordPredicate and(MatrixCoordPredicate predicate) {
         return new AndPredicate(this, predicate);
     }

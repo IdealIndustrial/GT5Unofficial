@@ -7,6 +7,7 @@ import idealindustrial.api.reflection.events.RegisterOresEvent;
 import idealindustrial.api.reflection.II_EventListener;
 import idealindustrial.impl.textures.Textures;
 import idealindustrial.impl.tile.covers.CoverRegistry;
+import idealindustrial.util.misc.II_StreamUtil;
 import net.minecraft.item.ItemStack;
 
 import java.awt.*;
@@ -17,6 +18,8 @@ import java.util.stream.Stream;
 
 import static idealindustrial.impl.autogen.material.MaterialBuilder.make;
 import static idealindustrial.impl.autogen.material.Prefixes.*;
+import static idealindustrial.impl.oredict.OreDict.getMainAsIS;
+import static idealindustrial.util.misc.II_StreamUtil.list;
 
 @II_EventListener
 public class II_Materials {
@@ -24,15 +27,16 @@ public class II_Materials {
     public static final II_Material[] materialsK1 = new II_Material[1000];
     public static final List<II_Material> allMaterials = new ArrayList<>();
     //elements
-    public static II_Material iron, copper, tin, lightWater, arsenic, arsenicBronze;
+    public static II_Material iron, copper, tin, lightWater, arsenic, coal;
 
     //molecules
-    public static II_Material cassiterite;
+    public static II_Material cassiterite,  arsenicBronze, bronze, steel;
 
     static {
         Prefixes.postInit();
         init();
     }
+
     private static void init() {
         initElements();
         initMolecules();
@@ -66,6 +70,7 @@ public class II_Materials {
                 .setChemicalFormula("Sn")
                 .construct();
 
+
         lightWater = make(3, "Water2", Textures.testSet)
                 .addFluid().setTemperature(1000).addCell().setRender(new Color(27, 255, 255))
                 .construct();//todo remove
@@ -76,6 +81,12 @@ public class II_Materials {
                 .setChemicalFormula("As")
                 .construct();
 
+        coal = make(5, "Coal", Textures.testSet)
+                .addSolid().addBlock(3, BlockType.METALLIC).setRender(new Color(28, 27, 27))
+                .addPrefixes(gem, dust, dustSmall, dustTiny)
+                .setChemicalFormula("C")
+                .construct();
+
 
     }
 
@@ -84,7 +95,8 @@ public class II_Materials {
                 .addSolid().setRender(new Color(151, 151, 151))
                 .setChemicalFormula("SnO2")
                 .addPrefixes(dust, dustSmall, dustTiny)
-                .addOres().add()
+                .addOres().setOreDrops(r -> list(getMainAsIS(dust, cassiterite, 1)))
+                .add()
                 .construct();
     }
 
@@ -97,12 +109,23 @@ public class II_Materials {
                 .addTools()
                 .addOres().setSmallOreDrops(r -> {
                     ArrayList<ItemStack> is = new ArrayList<>();
-                    is.add(OreDict.getMainAsIS(nugget, arsenicBronze, 3 + r.nextInt(3)));
+                    is.add(getMainAsIS(nugget, arsenicBronze, 3 + r.nextInt(3)));
                     if (r.nextInt(5) == 0) {
-                        is.add(OreDict.getMainAsIS(nuggetBig, arsenicBronze, 1));
+                        is.add(getMainAsIS(nuggetBig, arsenicBronze, 1));
                     }
                     return is;
                 }).add()
+                .construct();
+
+        bronze = make(151, "Bronze", Textures.testSet)
+                .addSolid().enableBaseComponents().enableTools().setRender(new Color(222, 163, 0))
+                .addFluid().addCell().setRender(new Color(255, 132, 0))
+                .setChemicalFormula("Cu3Sn")
+                .construct();
+
+        steel = make(152, "Steel", Textures.testSet)
+                .addSolid().addBlock(4, BlockType.METALLIC).enableBaseComponents().enableTools().setRender(new Color(107, 107, 107))
+                .setChemicalFormula("Fe50C")
                 .construct();
     }
 

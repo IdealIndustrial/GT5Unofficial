@@ -1,7 +1,6 @@
 package idealindustrial.util.misc;
 
 import com.google.common.collect.HashMultimap;
-import idealindustrial.util.misc.II_Util;
 
 import java.util.*;
 
@@ -9,10 +8,11 @@ public class ItemHelper {
 
 
     private static final List<Rehashable> hashedStacks = new ArrayList<>();
-    private static final List<HashMap<? extends Rehashable, ?>> hashMaps = new ArrayList<>();
-    private static final List<HashSet<? extends Rehashable>> hashSets = new ArrayList<>();
+    private static final List<Map<? extends Rehashable, ?>> hashMaps = new ArrayList<>();
+    private static final List<Set<? extends Rehashable>> hashSets = new ArrayList<>();
     private static final List<HashMultimap<? extends Rehashable, ?>> hashMultiMaps = new ArrayList<>();
-    private static final List<HashMap<?, ?>> nonRehashableMas = new ArrayList<>();
+    private static final List<Map<?, ?>> nonRehashableMas = new ArrayList<>();
+
     /**
      * Minecraft Item IDs can change during server start up
      * so we need to fix hash of stack if this happens
@@ -37,16 +37,30 @@ public class ItemHelper {
         return map;
     }
 
-    public static <K extends Rehashable> HashSet<K> querySet(HashSet<K> set) {
+    public static <K extends Rehashable> Set<K> querySet(Set<K> set) {
         hashSets.add(set);
         return set;
+    }
+
+    @SafeVarargs
+    public static <K extends Rehashable> Set<K> set(K... elements) {
+        return querySet(new HashSet<>(Arrays.asList(elements)));
+    }
+
+    @SafeVarargs
+    public static <K extends Rehashable> Set<K> set(Set<K>... sets) {
+        Set<K> out = querySet(new HashSet<>());
+        for (Set<K> set : sets) {
+            out.addAll(set);
+        }
+        return out;
     }
 
     public static void onIDsCharge() {
         for (Rehashable stack : hashedStacks) {
             stack.fixHash();
         }
-        for (HashMap<? extends Rehashable, ?> map : hashMaps) {//non hackery solution, idk if it's possible here
+        for (Map<? extends Rehashable, ?> map : hashMaps) {//non hackery solution, idk if it's possible here
             for (Map.Entry<? extends Rehashable, ?> entry : map.entrySet()) {
                 entry.getKey().fixHash();
             }
@@ -60,13 +74,13 @@ public class ItemHelper {
             II_Util.rehash(map);
         }
 
-        for (HashSet<? extends Rehashable> set : hashSets) {
+        for (Set<? extends Rehashable> set : hashSets) {
             for (Rehashable item : set) {
                 item.fixHash();
             }
             II_Util.rehash(set);
         }
-        for (HashMap<?, ?> map : nonRehashableMas) {
+        for (Map<?, ?> map : nonRehashableMas) {
             II_Util.rehash(map);
         }
     }

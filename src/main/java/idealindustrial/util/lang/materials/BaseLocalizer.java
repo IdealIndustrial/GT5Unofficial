@@ -9,6 +9,9 @@ public abstract class BaseLocalizer implements MaterialLocalizer {
 
     @Override
     public String get(II_Material material, Prefixes prefix) {
+        if (prefix == null) {
+            return getNameFor(material, (Prefixes) null);
+        }
         if (prefix.subPrefix != null) {
             return get(material, prefix.subPrefix);
         }

@@ -9,6 +9,9 @@ import idealindustrial.impl.autogen.material.Prefixes;
 import idealindustrial.impl.recipe.RecipeMaps;
 import idealindustrial.impl.render.RotatingTileRenderer;
 import idealindustrial.impl.tile.Tiles;
+import idealindustrial.impl.tile.impl.multi.CharcoalPile;
+import idealindustrial.impl.tile.impl.multi.PrimitiveBlastFurnace;
+import idealindustrial.impl.tile.impl.multi.PrimitiveMultiFurnace;
 import idealindustrial.teststuff.testTile.TestMachine;
 import idealindustrial.teststuff.testTile2.TestMachine2;
 import idealindustrial.teststuff.testmulti.TestMultiMachine1;
@@ -58,7 +61,9 @@ public class TileLoader implements Runnable {
         II_TileUtil.registerMetaTile(14, TileKUSplitter.testMachine());
         II_TileUtil.registerMetaTile(15, Tiles.makePrimitiveForge());
         II_TileUtil.registerMetaTile(16, Tiles.makePrimitiveAnvil());
-
+        II_TileUtil.registerMetaTile(17,new CharcoalPile(makeBaseMachineTile()));
+        II_TileUtil.registerMetaTile(18, new PrimitiveMultiFurnace(makeBaseMachineTile()));
+        II_TileUtil.registerMetaTile(19, new PrimitiveBlastFurnace(makeBaseMachineTile()));
 
 
 

@@ -1,5 +1,6 @@
-package idealindustrial.impl.tile.impl.multi.struct;
+package idealindustrial.impl.tile.impl.multi.struct.predicates;
 
+import idealindustrial.impl.tile.impl.multi.struct.CheckMachineParams;
 import idealindustrial.impl.world.util.Vector3;
 
 public class TruePredicate implements MatrixCoordPredicate {
@@ -11,6 +12,11 @@ public class TruePredicate implements MatrixCoordPredicate {
 
     @Override
     public void checkCounters() {
+
+    }
+
+    @Override
+    public void setChar(char ch) {
 
     }
 

@@ -2,30 +2,39 @@ package idealindustrial.impl.tile.impl.multi;
 
 import gnu.trove.set.TLongSet;
 import idealindustrial.api.textures.ITexture;
+import idealindustrial.impl.blocks.II_Blocks;
+import idealindustrial.impl.item.stack.HashedBlock;
+import idealindustrial.impl.item.stack.HashedBlockContainer;
 import idealindustrial.impl.tile.impl.TileFacing2Main;
 import idealindustrial.impl.tile.impl.multi.parts.Hatch_Energy.EnergyHatch;
 import idealindustrial.impl.tile.impl.multi.parts.Hatch_Item.InputBus;
 import idealindustrial.impl.tile.impl.multi.parts.Hatch_Item.OutputBus;
 import idealindustrial.impl.tile.impl.multi.parts.TileHatch;
-import idealindustrial.impl.tile.impl.multi.struct.DirectBlockPredicate;
-import idealindustrial.impl.tile.impl.multi.struct.HatchPredicate;
-import idealindustrial.impl.tile.impl.multi.struct.IStructuredMachine;
-import idealindustrial.impl.tile.impl.multi.struct.MultiMachineShape;
+import idealindustrial.impl.tile.impl.multi.struct.*;
 import idealindustrial.api.tile.host.HostMachineTile;
 import idealindustrial.impl.tile.energy.electric.EmptyEnergyHandler;
 import idealindustrial.impl.tile.energy.electric.MultiEnergyHandler;
 import idealindustrial.impl.tile.fluid.EmptyTank;
+import idealindustrial.impl.tile.impl.multi.struct.predicates.DirectBlockPredicate;
+import idealindustrial.impl.tile.impl.multi.struct.predicates.HashedBlockPredicate;
+import idealindustrial.impl.tile.impl.multi.struct.predicates.HatchPredicate;
+import idealindustrial.impl.tile.impl.multi.struct.predicates.LambdaPredicate;
 import idealindustrial.impl.tile.inventory.EmptyInventory;
 import idealindustrial.impl.tile.inventory.StupidMultipartInv;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.impl.world.ChunkLoadingMonitor;
 import idealindustrial.impl.world.util.Vector3;
+import idealindustrial.util.misc.II_Util;
+import idealindustrial.util.misc.ItemHelper;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFacing2Main<H> implements IStructuredMachine {
@@ -67,9 +76,14 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
                 startUpSleep--;
                 return;
             }
-            if (structUpdate && checkMachine()) {
-                assembled = true;
-                onAssembled();
+            if (structUpdate) {
+                if (checkMachine()) {
+                    assembled = true;
+                    onAssembled();
+                }
+                else {
+                    assembled = false;
+                }
             }
             structUpdate = false;
         }
@@ -79,7 +93,7 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
         for (List<?> list : Arrays.asList(energyHatches, dynamoHatches, inputBuses, inputHatches, outputBuses, outputHatches)) {
             list.clear();
         }
-        return shape.checkMachine(this);
+        return getShape().checkMachine(this);//todo return to shape
     }
 
     @Override
@@ -183,6 +197,18 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
         DataIO, DataStorage
     }
 
+    public static LambdaPredicate lambdaPredicate(LambdaPredicate.WorldPredicate predicate) {
+        return new LambdaPredicate(predicate);
+    }
+
+    public static DirectBlockPredicate blockPredicate(HashedBlock hb) {
+        return blockPredicate(hb.getBlock(), hb.getMeta());
+    }
+
+    public static DirectBlockPredicate blockPredicate(HashedBlockContainer casing) {
+        return blockPredicate(casing.get());
+    }
+
     public static DirectBlockPredicate blockPredicate(Block block, int meta) {
         return new DirectBlockPredicate(block, meta, 0);
     }
@@ -193,5 +219,21 @@ public abstract class MultiMachineBase<H extends HostMachineTile> extends TileFa
 
     public static HatchPredicate hatchPredicate(HatchType... types) {
         return new HatchPredicate(types);
+    }
+
+    public static HashedBlockPredicate blocksPredicate(Set<HashedBlock> blocks) {
+        return new HashedBlockPredicate(blocks);
+    }
+
+    public static HashedBlockPredicate blocksPredicate(HashedBlock... blocks) {
+        return blocksPredicate(ItemHelper.set(blocks));
+    }
+
+    @Override
+    public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
+        if (hostTile.isServerSide()) {
+            II_Util.sendChatToPlayer(player, "is assmbled: " + assembled);
+        }
+        return super.onRightClick(player, item, side, hitX, hitY, hitZ);
     }
 }

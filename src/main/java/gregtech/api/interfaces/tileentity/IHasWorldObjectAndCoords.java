@@ -1,5 +1,8 @@
 package gregtech.api.interfaces.tileentity;
 
+import idealindustrial.impl.item.stack.HashedBlock;
+import idealindustrial.impl.item.stack.HashedBlockContainer;
+import idealindustrial.impl.world.util.Vector3;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -62,6 +65,32 @@ public interface IHasWorldObjectAndCoords {
     Block getBlockAtSide(byte aSide);
 
     Block getBlockAtSideAndDistance(byte aSide, int aDistance);
+
+    default HashedBlock getHBlockOffset(int x, int y, int z) {
+        Block block = getBlockOffset(x, y, z);
+        int meta = getMetaIDOffset(x, y, z);
+        return new HashedBlock(block, meta);
+    }
+
+    default boolean setBlock(int x, int y, int z, Block block, int meta, int flags) {
+        return getWorld().setBlock(x, y, z, block, meta, flags);//todo move impl to BaseTileEntity
+    }
+
+    default boolean setBlock(Vector3 pos, Block block, int meta) {
+        return setBlock(pos.x, pos.y, pos.z, block, meta, 3);
+    }
+
+    default boolean setBlock(Vector3 pos, Block block) {
+        return setBlock(pos, block, 0);
+    }
+
+    default boolean setBlock(Vector3 pos, HashedBlock block) {
+        return setBlock(pos, block.getBlock(), block.getMeta());
+    }
+
+    default boolean setBlock(Vector3 pos, HashedBlockContainer container) {
+        return setBlock(pos, container.get());
+    }
 
     byte getMetaID(int aX, int aY, int aZ);
 

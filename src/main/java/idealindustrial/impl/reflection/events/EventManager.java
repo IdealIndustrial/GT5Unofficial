@@ -78,7 +78,7 @@ public class EventManager {
                 method.invoke(null, theArgs);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
-                throw new IllegalStateException("error processing event " + forEvent.getSimpleName());
+                throw new IllegalStateException("error processing event " + forEvent.getSimpleName(), e);
             }
         }
     }

@@ -81,6 +81,10 @@ public class OreDict {
         return name2info.get(name);
     }
 
+    public static II_StackSignature get(String name, int amount) {
+        return new II_StackSignature(get(name), amount);
+    }
+
     public static Collection<OreInfo> getInfo(HashedStack stack) {
         Collection<OreInfo> collection =  anyStack2info.get(stack);
         if (collection.isEmpty()) {

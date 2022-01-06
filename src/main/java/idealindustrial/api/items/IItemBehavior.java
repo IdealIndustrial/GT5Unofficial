@@ -35,4 +35,16 @@ public interface IItemBehavior {
     default boolean loadIcon() {
         return true;
     }
+
+    default void onAddedTo(ItemStack is) {
+
+    }
+
+    default boolean shouldNEICheckDirect() {
+        return false;
+    }
+
+    default void addAdditionalToolTips(List<String> list, ItemStack stack, EntityPlayer player, boolean f3_H) {
+
+    }
 }

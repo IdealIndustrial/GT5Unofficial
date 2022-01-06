@@ -54,6 +54,14 @@ public class Vector3 {
         return new Vector3(-x, -y, -z);
     }
 
+    public Vector3 invert(boolean bx, boolean by, boolean bz) {
+        return new Vector3(
+                bx ? -x : x,
+                by ? -y : y,
+                bz ? -z : z
+        );
+    }
+
     public Vector3 invertm() {
         x = -x;
         y = -y;

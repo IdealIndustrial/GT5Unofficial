@@ -1,4 +1,4 @@
-package idealindustrial.impl.tile.impl.multi.struct;
+package idealindustrial.impl.tile.impl.multi.struct.predicates;
 
 import idealindustrial.api.textures.INetworkedTexture;
 import idealindustrial.impl.textures.NetworkedTexture;
@@ -6,6 +6,8 @@ import idealindustrial.impl.tile.impl.multi.MultiMachineBase;
 import idealindustrial.impl.tile.impl.multi.MultiMachineBase.HatchType;
 import idealindustrial.impl.tile.impl.multi.parts.TileHatch;
 import idealindustrial.api.tile.meta.Tile;
+import idealindustrial.impl.tile.impl.multi.struct.CheckMachineParams;
+import idealindustrial.impl.tile.impl.multi.struct.MachineStructureException;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.misc.II_TileUtil;
 import idealindustrial.impl.world.util.Vector3;
@@ -41,6 +43,11 @@ public class HatchPredicate implements MatrixCoordPredicate, BlockDependentPredi
 
     @Override
     public void checkCounters() {
+
+    }
+
+    @Override
+    public void setChar(char ch) {
 
     }
 

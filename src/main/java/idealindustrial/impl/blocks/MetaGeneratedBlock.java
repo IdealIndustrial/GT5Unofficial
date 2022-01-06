@@ -3,11 +3,13 @@ package idealindustrial.impl.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import idealindustrial.II_Core;
+import idealindustrial.api.reflection.II_EventListener;
 import idealindustrial.impl.blocks.base.MetaBlock;
 import idealindustrial.impl.autogen.material.II_Material;
 import idealindustrial.impl.autogen.material.Prefixes;
 import idealindustrial.impl.autogen.material.submaterial.MatterState;
 import idealindustrial.api.textures.IconContainer;
+import idealindustrial.impl.blocks.base.MetaBlock_Item;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -46,6 +48,14 @@ public class MetaGeneratedBlock extends MetaBlock {
         materials[i] = material;
         icons[i] = material.getRenderInfo().getTextureSet().forPrefix(prefix);
         colors[i] = material.getRenderInfo().getColorAsInt(MatterState.Solid);
+    }
+
+    public Prefixes prefix(int id) {
+        return Prefixes.block;
+    }
+
+    public II_Material material(int id) {
+        return materials[id];
     }
 
     @Override

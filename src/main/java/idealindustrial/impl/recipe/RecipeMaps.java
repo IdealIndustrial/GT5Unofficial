@@ -5,6 +5,7 @@ import idealindustrial.api.recipe.RecipeMap;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class RecipeMaps {
@@ -45,12 +46,13 @@ public class RecipeMaps {
     }
 
     @SuppressWarnings("unchecked")
-    public static <R extends IMachineRecipe> RecipeMap<R> getMap(String name, Supplier<RecipeMap<R>> supplier) {
+    public static <R extends IMachineRecipe> RecipeMap<R> getMap(String name, Function<String, RecipeMap<R>> supplier) {
+        String engName = name;
         name = name.toLowerCase().replace(' ', '_').trim();
         if (name2id.containsKey(name)) {
             return (RecipeMap<R>) id2map.get(name2id.get(name));
         }
-        RecipeMap<R> map = supplier.get();
+        RecipeMap<R> map = supplier.apply(engName);
         name2id.put(name, freeID);
         id2map.put(freeID++, map);
         return map;

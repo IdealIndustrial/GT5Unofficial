@@ -85,4 +85,16 @@ public class OreInfo {
     public String toString() {
         return name + " "  + (material != null ? "Material: " + material.oreDictName() : "") + (prefix != null ? ", Prefix: " + prefix.name() : "");
     }
+
+    public boolean hasMaterialPrefixDefinition() {
+        return material != null && prefix != null;
+    }
+
+    public II_Material getMaterial() {
+        return material;
+    }
+
+    public Prefixes getPrefix() {
+        return prefix;
+    }
 }

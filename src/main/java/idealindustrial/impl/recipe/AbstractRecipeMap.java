@@ -6,12 +6,15 @@ import idealindustrial.api.recipe.RecipeMap;
 import idealindustrial.api.tile.fluid.FluidHandler;
 import idealindustrial.api.tile.inventory.RecipedInventory;
 import idealindustrial.api.tile.module.RecipeModule;
+import idealindustrial.impl.item.stack.CheckType;
 import idealindustrial.impl.item.stack.HashedStack;
 import idealindustrial.impl.item.stack.II_ItemStack;
 import idealindustrial.impl.item.stack.II_StackSignature;
 import idealindustrial.util.misc.ItemHelper;
 
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import static idealindustrial.impl.recipe.RecipeGuiParamsBuilder.SlotType.ItemsSpecial;
 
@@ -34,21 +37,16 @@ public abstract class AbstractRecipeMap<R extends IMachineRecipe> implements Rec
 
     @Override
     public IRecipeGuiParams getGuiParams() {
-        if (name.equals("Primitive Forge Recipes")) {
-            return new RecipeGuiParamsBuilder(2, 2, 1, 0, 0)
-                    .setMachineRecipeSlotCoords(43, 107, 25, 63)
-                    .moveSlot(ItemsSpecial, 0, 43, 27+18).construct();
-        }
         return params;
     }
     @Override
     public Set<R> getCraftingRecipes(II_StackSignature stackSignature) {
-        return loadRecipes(stackSignature, outputMap);
+        return loadRecipes(stackSignature, outputMap, IMachineRecipe::containsOutput);
     }
 
     @Override
     public Set<R> getUsageRecipes(II_StackSignature signature) {
-        return loadRecipes(signature, inputMap);
+        return loadRecipes(signature, inputMap, IMachineRecipe::containsInput);
     }
 
     @Override
@@ -56,12 +54,17 @@ public abstract class AbstractRecipeMap<R extends IMachineRecipe> implements Rec
         return storage;
     }
 
-    protected Set<R> loadRecipes(II_StackSignature signature, Map<HashedStack, Set<R>> inputMap) {
+    protected Set<R> loadRecipes(II_StackSignature signature, Map<HashedStack, Set<R>> inputMap, BiPredicate<R, II_StackSignature> contains) {
         Set<R> out = new HashSet<>();
         for (HashedStack stack : signature.correspondingStacks()) {
             Set<R> toAdd = inputMap.get(stack);
             if (toAdd != null) {
-                out.addAll(toAdd);
+                if (signature.getType().equals(CheckType.DIRECT)) {
+                    toAdd.stream().filter(r -> contains.test(r, signature)).forEach(out::add);
+                }
+                else {
+                    out.addAll(toAdd);
+                }
             }
         }
         return out;

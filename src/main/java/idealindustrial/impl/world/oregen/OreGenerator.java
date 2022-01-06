@@ -25,7 +25,7 @@ public class OreGenerator implements IWorldGenerator {
         .addGenerator(new PlantGenerator(r -> Plants.copperPlant).setRadius(10)));
         ores.add(5, new OreEntry(II_Materials.copper, Prefixes.ore, new ClampedEllipsoid(5, 13), new LinearRange(40, 50))
                 .addGenerator(new PlantGenerator(r -> Plants.copperPlant)));
-        ores.add(4, new OreEntry(II_Materials.tin, Prefixes.ore, new Torus(5, 8, 5), new LinearRange(40, 50))
+        ores.add(4, new OreEntry(II_Materials.cassiterite, Prefixes.ore, new Torus(5, 8, 5), new LinearRange(40, 50))
                 .addGenerator(new PlantGenerator(r -> Plants.tinPlant)));
     }
 

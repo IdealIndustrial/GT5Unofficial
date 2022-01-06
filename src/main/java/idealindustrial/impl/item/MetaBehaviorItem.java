@@ -41,7 +41,10 @@ public class MetaBehaviorItem extends MetaItem32k {
         return behaviors[damage];
     }
 
-
+    public static IItemBehavior getBehavior(ItemStack is) {
+        MetaBehaviorItem behaviorItem = (MetaBehaviorItem) is.getItem();
+        return behaviorItem.getBehavior(is.getItemDamage());
+    }
     @Override
     public IIcon getIconFromDamage(int par1) {
         return icons[par1] == null ? null : icons[par1].getIcon();
@@ -88,6 +91,15 @@ public class MetaBehaviorItem extends MetaItem32k {
         return behaviors[damage].onItemUseFirst(is, player, world, x, y, z, side, hitX, hitY, hitZ);
     }
 
+    @Override
+    protected void addAdditionalToolTips(List<String> list, ItemStack stack, EntityPlayer player, boolean f3_H) {
+        super.addAdditionalToolTips(list, stack, player, f3_H);
+        int damage = getDamage(stack);
+        if (behaviors[damage] != null) {
+            behaviors[damage].addAdditionalToolTips(list, stack, player, f3_H);
+        }
+    }
+
     public Builder registerItem(int id, String localName) {
         addItem(id, localName);
         return new Builder(id);
@@ -111,6 +123,9 @@ public class MetaBehaviorItem extends MetaItem32k {
         public void added() {
             if (behaviors[damage] == null || behaviors[damage].loadIcon()) {
                 icons[damage] = TextureManager.INSTANCE.itemTexture("meta/" + getUnlocalizedName().substring(3) + "/" + damage);
+            }
+            if (behaviors[damage] != null) {
+                behaviors[damage].onAddedTo(new ItemStack(MetaBehaviorItem.this, 1, damage));
             }
         }
 

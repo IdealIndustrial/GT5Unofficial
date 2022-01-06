@@ -87,6 +87,9 @@ public class CubeRenderedParticle extends EntityFX {
             }
             for (int textureI = 0; textureI < icons[i].length; textureI++) {
                 IIcon toRender = icons[i][textureI];
+                if (toRender == null) {
+                    continue;
+                }
                 double u = toRender.getMinU();
                 double U = toRender.getMaxU();
                 double v = toRender.getMinV();

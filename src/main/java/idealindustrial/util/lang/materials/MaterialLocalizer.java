@@ -8,5 +8,9 @@ public interface MaterialLocalizer {
 
     String get(II_Material material, Prefixes prefix);
 
+    default String get(II_Material material) {
+        return get(material, (Prefixes) null);
+    }
+
     String get(II_Material material, MatterState liquidState);
 }

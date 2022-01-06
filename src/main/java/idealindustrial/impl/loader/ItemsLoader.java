@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 public class ItemsLoader {
 
     static MetaBehaviorItem behaviorItem1;
-    public static ItemStack wrench, mallet, cell, clock, mold_ingot, mold_plate;
+    public static ItemStack wrench, mallet, cell, clock, mold_ingot, mold_plate, mold_pickHead;
 
     public void preLoad() {
         registerMetaItems();
@@ -37,7 +37,8 @@ public class ItemsLoader {
             new MetaGeneratedItem("metagenerated.heads" + postfix, mat,
                     Prefixes.toolHeadDrill, Prefixes.toolHeadPickaxe);
             new MetaGeneratedItem("metagenerated1" + postfix, mat,
-                    Prefixes.ingot, Prefixes.dust, Prefixes.dustSmall, Prefixes.dustTiny, Prefixes.plate, Prefixes.nugget, Prefixes.nuggetBig, Prefixes.nuggetBigHot);
+                    Prefixes.ingot, Prefixes.dust, Prefixes.dustSmall, Prefixes.dustTiny, Prefixes.plate, Prefixes.nugget, Prefixes.nuggetBig, Prefixes.nuggetBigHot,
+                    Prefixes.gem);
         }
 
     }
@@ -53,7 +54,8 @@ public class ItemsLoader {
         cell = behaviorItem1.registerItem(5, "Empty Cell").toIS();
         clock = behaviorItem1.registerItem(6, "Clock").setBehavior(new BehaviorClock()).toIS();
         mold_ingot = behaviorItem1.registerItem(7, "Primitive Mold (Ingot)").setBehavior(new BehaviorPrimitiveMold(Prefixes.ingot)).toIS();
-        mold_ingot = behaviorItem1.registerItem(8, "Primitive Mold (Plate)").setBehavior(new BehaviorPrimitiveMold(Prefixes.plate)).toIS();
+        mold_plate = behaviorItem1.registerItem(8, "Primitive Mold (Plate)").setBehavior(new BehaviorPrimitiveMold(Prefixes.plate)).toIS();
+        mold_pickHead = behaviorItem1.registerItem(9, "Primitive Mold (Pickaxe Head)").setBehavior(new BehaviorPrimitiveMold(Prefixes.toolHeadPickaxe)).toIS();
     }
 
 }

@@ -26,7 +26,7 @@ public class BasicRecipeMap<R extends IMachineRecipe> extends AbstractRecipeMap<
     protected List<R> allRecipes = new ArrayList<>();
     protected Class<R> recipeType;
 
-    public BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls, IRecipeGuiParams guiParams, Class<R> recipeType) {
+    public BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls, IRecipeGuiParams guiParams, Class<R> recipeType, boolean isSpecial) {
         super(name, guiParams);
         this.checkConflicts = checkConflicts;
         this.allowNulls = allowNulls;
@@ -39,8 +39,15 @@ public class BasicRecipeMap<R extends IMachineRecipe> extends AbstractRecipeMap<
                 .concat(".groovy"),
                 recipeType, this);
         this.recipeType = recipeType;
-        RecipeMaps.allRecipeMaps.add(this);
+        if (!isSpecial) {
+            RecipeMaps.allRecipeMaps.add(this);
+        }
     }
+
+    public BasicRecipeMap(String name, boolean checkConflicts, boolean allowNulls, IRecipeGuiParams guiParams, Class<R> recipeType) {
+        this(name, checkConflicts, allowNulls, guiParams, recipeType, false);
+    }
+
 
     @Override
     public R findRecipe(RecipedInventory inventory, InternalInventory special, FluidHandler fluidHandler, MachineEnergyParams params) {

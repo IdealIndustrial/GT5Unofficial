@@ -3,6 +3,10 @@ package idealindustrial.impl.item.stack;
 import idealindustrial.util.misc.ItemHelper;
 import net.minecraft.block.Block;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * class for use in HashMap, ignores NBT and NBT when comparing
@@ -25,6 +29,16 @@ public class HashedBlock implements ItemHelper.Rehashable {
         blockID = hash & 0x0000FFFF;
         this.hash = hash;
         block = Block.getBlockById(blockID);
+    }
+
+    public static Set<HashedBlock> anyMeta(Block... blocks) {
+        Set<HashedBlock> out = new HashSet<>();
+        for (Block b : blocks) {
+            for (int i = 0; i < 16; i++) {
+                out.add(new HashedBlock(b, i));
+            }
+        }
+        return out;
     }
 
     public int getMeta() {//untested, so todo: check
