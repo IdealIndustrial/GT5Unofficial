@@ -5,7 +5,7 @@ import idealindustrial.II_Values;
 
 public class II_Paths {
 
-    public static final String PATH_GUI = "gregtech:textures/gui/iia/";
+    public static final String PATH_GUI = "iicore:textures/gui/";
     public static final String SLOTS = PATH_GUI + "slots.png";
     public static final String GUI_ARROWS = PATH_GUI + "processingArrows.png";
     public static final String PATH_BLOCK_ICONS = II_Values.MOD_ID + ":";

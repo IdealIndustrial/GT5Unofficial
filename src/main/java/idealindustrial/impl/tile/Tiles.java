@@ -3,11 +3,13 @@ package idealindustrial.impl.tile;
 import idealindustrial.api.recipe.IRecipeGuiParams;
 import idealindustrial.api.recipe.RecipeMap;
 import idealindustrial.api.textures.ITexture;
+import idealindustrial.api.tile.host.HostMachineTile;
 import idealindustrial.api.tile.meta.Tile;
 import idealindustrial.impl.recipe.*;
 import idealindustrial.impl.textures.TextureUtil;
 import idealindustrial.impl.textures.Textures;
 import idealindustrial.impl.tile.gui.base.component.SlotHoloEvent;
+import idealindustrial.impl.tile.impl.TileFacing2Main;
 import idealindustrial.impl.tile.impl.recipe.TileMachineBasicRecipe;
 import idealindustrial.impl.tile.impl.recipe.TileMachineReciped;
 import idealindustrial.impl.tile.module.EventRecipedModule;
@@ -15,7 +17,6 @@ import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.parameter.RecipedMachineStats;
 
 import static idealindustrial.impl.recipe.RecipeGuiParamsBuilder.SlotType.Holo;
-import static idealindustrial.impl.recipe.RecipeGuiParamsBuilder.SlotType.ItemsSpecial;
 import static idealindustrial.impl.tile.TileEvents.MODULE_START_PROCESSING;
 import static idealindustrial.impl.tile.gui.base.component.GuiTextures.SlotTextures.SLOT_HOLO_HAMMER;
 import static idealindustrial.util.misc.II_TileUtil.makeBaseMachineTile;
@@ -63,6 +64,28 @@ public class Tiles {
                 recipes,
                 stats,
                 (th) -> new EventRecipedModule<>(th, stats, recipes));
+    }
+
+    static class Test extends TileFacing2Main<HostMachineTile> {
+
+        public Test(HostMachineTile baseTile) {
+            super(baseTile, "another test machine",
+                    II_StreamUtil.arrayOf(Textures.baseTiredTextures[1], new ITexture[10]),
+                    TextureUtil.loadRecipedMachineTextures("Primitive Anvil"));
+        }
+
+        public Test(HostMachineTile baseTile, TileFacing2Main<?> copyFrom) {
+            super(baseTile, copyFrom);
+        }
+
+        @Override
+        public Tile<HostMachineTile> newMetaTile(HostMachineTile baseTile) {
+            return new Test(baseTile, this);
+        }
+    }
+
+    public static Tile<?> makeTestTile() {
+       return new Test(makeBaseMachineTile());
     }
 
 }

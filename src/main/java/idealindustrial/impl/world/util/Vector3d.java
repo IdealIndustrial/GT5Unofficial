@@ -57,19 +57,19 @@ public class Vector3d {
         Vector3d res = new Vector3d();
         switch (axis) {
             case X:
-                Vec2d rotatedX = rotate(new Vec2d(neg.y, neg.z), angle);
+                Vector2d rotatedX = rotate(new Vector2d(neg.y, neg.z), angle);
                 res.y += rotatedX.x;
                 res.z += rotatedX.y;
                 res.x = neg.x;
                 break;
             case Y:
-                Vec2d rotatedY = rotate(new Vec2d(neg.x, neg.z), angle);
+                Vector2d rotatedY = rotate(new Vector2d(neg.x, neg.z), angle);
                 res.x += rotatedY.x;
                 res.z += rotatedY.y;
                 res.y = neg.y;
                 break;
             case Z:
-                Vec2d rotatedZ = rotate(new Vec2d(neg.x, neg.y), angle);
+                Vector2d rotatedZ = rotate(new Vector2d(neg.x, neg.y), angle);
                 res.x += rotatedZ.x;
                 res.y += rotatedZ.y;
                 res.z = neg.z;
@@ -81,10 +81,10 @@ public class Vector3d {
 
     }
 
-    protected Vec2d rotate(Vec2d vec, double angle) {
+    protected Vector2d rotate(Vector2d vec, double angle) {
         double x = vec.x * Math.cos(angle) - vec.y * Math.sin(angle);
         double y = vec.x * Math.sin(angle) + vec.y * Math.cos(angle);
-        return new Vec2d(x, y);
+        return new Vector2d(x, y);
     }
 
 
