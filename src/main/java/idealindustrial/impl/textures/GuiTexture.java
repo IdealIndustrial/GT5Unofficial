@@ -1,5 +1,6 @@
 package idealindustrial.impl.textures;
 
+import idealindustrial.impl.world.util.Vector2;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
@@ -20,6 +21,10 @@ public class GuiTexture {
     public void draw(int x, int y, int z) {
         Minecraft.getMinecraft().renderEngine.bindTexture(location);
         draw(x, y, xPos, yPos, z, width, height);
+    }
+
+    public void draw(Vector2 start, int z) {
+        draw(start.x, start.y, z);
     }
 
     public void draw(int x, int y, int u, int v, int z, int width, int height) {

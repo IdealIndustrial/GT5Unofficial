@@ -11,6 +11,9 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import static idealindustrial.impl.world.underbedrock.VeinProviderBuilder.ProviderType.CIRCLE;
+import static idealindustrial.impl.world.underbedrock.VeinProviderBuilder.ProviderType.SQUARE;
+
 public class PaneTestUnderbedrock {
 
     private static final int cellSize = 10;
@@ -19,18 +22,31 @@ public class PaneTestUnderbedrock {
     private static final int gridSize = 10, clusterSize = 15;
 
     private static UnderbedrockLayer<ColoredCell> provideLayer() {
-        RandomCollection<VeinProvider<ColoredCell>> random = new RandomCollection<>(0);
+        RandomCollection<VeinProvider<ColoredCell>> random = new RandomCollection<>();
 
-        random.add(3, new SquareVeinProvider<>(i -> new ColoredCell(Color.RED), 0, 100).setOffsets(0, 4).setSizes(1, 3));
+        random.add(3,
+                new VeinProviderBuilder<>(SQUARE, i -> new ColoredCell(new Color((int)i + 100, 0, 0)), 0, 100)
+                        .setOffsets(0, 0)
+                        .setSizes(1, 2)
+                        .setExponentialDifference(2)
+                        .setCenterBonus(0.3)
+                        .get());
+        random.add(4,
+                new VeinProviderBuilder<>(CIRCLE, i -> new ColoredCell(new Color(0, 0, (int) i + 1)), 50, 50)
+                        .setSizes(3, 8)
+                        .setExponentialDifference(0.5)
+                        .setCenterBonus(4)
+                        .get()
+        );
         GridGenerationRules<ColoredCell> rules = new GridGenerationRules<ColoredCell>() {
             @Override
             public int getPassCount() {
-                return 1;
+                return 6;
             }
 
             @Override
             public WeightedRandom<VeinProvider<ColoredCell>> getProviderForPass(int pass) {
-                return random.copy();
+                return random;
             }
 
             @Override

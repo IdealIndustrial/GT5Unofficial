@@ -20,7 +20,7 @@ public class PlantDef {
     public int[] xpPerLevel;
     public int minerals = 1, mineralConsumption = 1;
     public ITexture[] textures;
-    public WeightedRandom<II_ItemStack> drops = new RandomCollection<>(1d);
+    public WeightedRandom<II_ItemStack> drops = new RandomCollection<>();
     public BiomeStats biome = new BiomeStats(BiomeGenBase.plains);
     public boolean canSpread, superFastGrowth;
     public RenderType renderType = RenderType.Cross;

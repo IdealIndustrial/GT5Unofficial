@@ -54,6 +54,7 @@ public class RotatingTileRenderer extends TileEntitySpecialRenderer {
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
             World aWorld = null;
             RenderBlocks aRenderer = RenderBlocks.getInstance();
+            aRenderer.enableAO = false;
             aRenderer.setRenderBounds(0, 0, 0, 1, 1, 1);
             Block aBlock = II_Blocks.INSTANCE.blockMachines;
             {

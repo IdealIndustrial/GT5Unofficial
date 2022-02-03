@@ -2,21 +2,28 @@ package idealindustrial.impl.tile.gui.scheme;
 
 import idealindustrial.impl.tile.gui.base.GenericContainer;
 import idealindustrial.impl.tile.gui.base.GenericGuiContainer;
-import net.minecraft.inventory.Slot;
+import idealindustrial.impl.world.util.Vector2;
 
 public class TestSchemeGui extends GenericGuiContainer<GenericContainer> {
     public TestSchemeGui(GenericContainer container, String background) {
         super(container, background);
+
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        addWidget(new GuiNetScheme());
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mx, int my) {
-        super.drawGuiContainerForegroundLayer(mx, my);
+        widgets.forEach(w -> w.drawGuiContainerForegroundLayer(mx, my));
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float tmp, int mx, int my) {
-        super.drawGuiContainerBackgroundLayer(tmp, mx, my);
+        widgets.forEach(w -> w.drawBackground(tmp, mx, my));
     }
 
 
@@ -26,8 +33,8 @@ public class TestSchemeGui extends GenericGuiContainer<GenericContainer> {
     }
 
     @Override
-    protected void mouseMovedOrUp(int p_146286_1_, int p_146286_2_, int p_146286_3_) {
-        super.mouseMovedOrUp(p_146286_1_, p_146286_2_, p_146286_3_);
+    protected void mouseMovedOrUp(int mx, int my, int button) {
+        super.mouseMovedOrUp(mx, my, button);
     }
 
     @Override

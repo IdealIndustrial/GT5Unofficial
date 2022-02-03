@@ -3,7 +3,6 @@ package idealindustrial.api.tile.host;
 import idealindustrial.impl.tile.IOType;
 import idealindustrial.api.tile.meta.Tile;
 import idealindustrial.impl.tile.energy.electric.EnergyHandler;
-import idealindustrial.api.tile.energy.kinetic.KineticEnergyHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -22,12 +21,14 @@ public interface HostMachineTile extends HostTile, IFluidHandler, ISidedInventor
 
     EnergyHandler getEnergyHandler();
 
-    KineticEnergyHandler getKineticEnergyHandler();
-
     void reloadIOContainers(Tile<?> tile);
 
     void overVoltage();
 
+    /**
+     *  6 bool per outputs
+     *  6 bool per inputs
+     */
     boolean[] getIO(IOType type);
 
     boolean calculateIOatSide(int side, IOType type, boolean input);

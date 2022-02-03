@@ -1,19 +1,19 @@
 package idealindustrial.impl.tile.impl.connected;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import idealindustrial.impl.autogen.material.submaterial.MatterState;
+import gnu.trove.set.TLongSet;
+import gnu.trove.set.hash.TLongHashSet;
 import idealindustrial.api.textures.ITexture;
-import idealindustrial.impl.textures.RenderedTexture;
-import idealindustrial.impl.autogen.material.II_Material;
-import idealindustrial.impl.autogen.material.Prefixes;
-import idealindustrial.impl.tile.IOType;
-import idealindustrial.impl.tile.host.HostPipeTileRotatingImpl;
-import idealindustrial.api.tile.host.HostMachineTile;
+import idealindustrial.api.tile.energy.kinetic.KineticTile;
 import idealindustrial.api.tile.host.HostTile;
 import idealindustrial.api.tile.meta.Tile;
-import idealindustrial.api.tile.energy.kinetic.KUPassThrough;
-import idealindustrial.api.tile.energy.kinetic.KineticEnergyHandler;
+import idealindustrial.impl.autogen.material.II_Material;
+import idealindustrial.impl.autogen.material.Prefixes;
+import idealindustrial.impl.autogen.material.submaterial.MatterState;
+import idealindustrial.impl.textures.RenderedTexture;
+import idealindustrial.impl.tile.IOType;
 import idealindustrial.impl.tile.energy.kinetic.system.KineticSystem;
+import idealindustrial.impl.tile.host.HostPipeTileRotatingImpl;
 import idealindustrial.util.lang.materials.EngLocalizer;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_TileUtil;
@@ -21,14 +21,12 @@ import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static idealindustrial.impl.tile.TileEvents.ROTATION_SPEED;
+import static idealindustrial.api.tile.energy.kinetic.KineticTile.localPoint;
 import static idealindustrial.impl.tile.TileEvents.ROTATION_SPEED_DIRECT;
+import static idealindustrial.util.misc.II_DirUtil.getOppositeSide;
+import static idealindustrial.util.misc.II_TileUtil.getMetaTileAtSide;
 
-public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThrough {
-    public KineticSystem system;
+public class ConnectedRotor extends ConnectedBase<HostTile>  implements KineticTile {
     int rotationSpeed;
 
     public ConnectedRotor(HostTile hostTile, II_Material material, Prefixes prefix, float thickness) {
@@ -45,72 +43,22 @@ public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThr
     }
 
     @Override
+    public void onPostTick(long timer, boolean serverSide) {
+        if (serverSide && (timer & 4) == 4) {
+            sendSpeed(rotationSpeed);
+            rotationSpeed = 0;
+        }
+    }
+
+    @Override
     public boolean canConnect(int side) {
-        if (hostTile.isClientSide()) {
-            return false;
-        }
-        Tile<?> tile = II_TileUtil.getMetaTileAtSide(hostTile, side);
-        if (tile == null) {
-            return false;
-        }
-        int connections = connectionCount();
-        int oppositeSide = II_DirUtil.getOppositeSide(side);
-
-
-        if (tile instanceof ConnectedRotor) {
-            ConnectedRotor rotor = (ConnectedRotor) tile;
-            if (rotor.isConnected(oppositeSide)) {
-                return true;
-            }
-            if (connections != 0 && (connections != 1 || !isConnected(oppositeSide))) {
-                return false;
-            }
-            int otherConnections = rotor.connectionCount();
-            if (otherConnections == 0) {
-                return true;
-            }
-
-
-            if (otherConnections == 1 || otherConnections == 2) {
-                return rotor.isConnected(oppositeSide) || rotor.isConnected(side);
-            }
-            return false;
-
-        }
-        HostTile hostTile = tile.getHost();
-        if (hostTile instanceof HostMachineTile && tile.hasKineticEnergy()) {
-            boolean[] io = ((HostMachineTile) hostTile).getIO(IOType.Kinetic);
-            boolean result = io[oppositeSide] || io[oppositeSide + 6];
-            if (!result) {
-                return false;
-            }
-            if (connections == 0 || connections == 1 && isConnected(oppositeSide)) {
-                KineticEnergyHandler handler = ((HostMachineTile) hostTile).getKineticEnergyHandler();
-                if (handler.getProducer(oppositeSide) != null) {
-                    handler.getProducer(oppositeSide).onConnectionAppended();
-                }
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
 
 
     @Override
     public ConnectedRotor newMetaTile(HostTile hostTile) {
         return new ConnectedRotor(hostTile, name, textureInactive, textureActive, thickness);
-    }
-
-    @Override
-    public void onConnectionUpdate() {
-        if (hostTile.isServerSide() && system != null) {
-            system.invalidate();
-        }
-    }
-
-    @Override
-    public void onPostTick(long timer, boolean serverSide) {
-
     }
 
     @Override
@@ -125,52 +73,25 @@ public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThr
         return hostTile.hashCode();
     }
 
-    public void onSystemInvalidate() {
-        system = null;
-        hostTile.sendEvent(ROTATION_SPEED_DIRECT, 0);
-    }
-
-    @Override
-    public void onRemoval() {
-        super.onRemoval();
-        if (system != null) {
-            system.invalidate();
-        }
-    }
-
-    @Override
-    public boolean onRightClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
-        if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-            II_Util.sendChatToPlayer(player, "   " + system);
-        }
-        return super.onRightClick(player, item, side, hitX, hitY, hitZ);
-    }
 
     public int getRotationSpeed() {
         return rotationSpeed;
     }
 
-    public void sendRotationSpeed(int speed) {
-        hostTile.sendEvent(ROTATION_SPEED, speed);
-    }
 
     @Override
     public boolean receiveClientEvent(int id, int value) {
-        if (id == ROTATION_SPEED) {
-            spreadSetSpeed(new HashSet<>(), value, hostTile);
-            return true;
-        }
         if (id == ROTATION_SPEED_DIRECT) {
-            rotationSpeed = 0;
+            rotationSpeed = value;
             return true;
         }
         return super.receiveClientEvent(id, value);
     }
 
-    public void spreadSetSpeed(Set<KUPassThrough> alreadyPassedSet, int speed, HostTile hostTile) {
-        rotationSpeed = speed;
-        KUPassThrough.super.spreadSetSpeed(alreadyPassedSet, speed, hostTile);
+    void sendSpeed(int speed) {
+        hostTile.sendEvent(ROTATION_SPEED_DIRECT, speed);
     }
+
 
     @Override
     public Class<? extends HostTile> getBaseTileClass() {
@@ -186,15 +107,64 @@ public class ConnectedRotor extends ConnectedBase<HostTile> implements KUPassThr
         return 0;
     }
 
+
     @Override
-    public void receiveNeighbourIOConfigChange(IOType type) {
-        if (type.is(IOType.Kinetic)) {
-            updateConnections();
+    public boolean onWrenchClick(EntityPlayer player, ItemStack item, int side, float hitX, float hitY, float hitZ) {
+        if (hostTile.isClientSide()) {
+            return true;
         }
+//        rotationSpeed = 0;
+//        for (int i = 0; i < 6; i++) {
+//            if (isConnected(i)) {
+//                sendUsePower(new TLongHashSet(), i, 0, -1);
+//            }
+//        }
+        sendSpeed(0);
+        rotationSpeed = 0;
+        disconnectAll();
+        int wrenchingSide = II_DirUtil.determineWrenchingSide(side, hitX, hitY, hitZ);
+        setConnected(wrenchingSide);
+        setConnected(getOppositeSide(wrenchingSide));
+        updateConnections();
+        II_Util.sendChatToPlayer(player, "Connected");
+        return true;
     }
 
     @Override
-    public void setSystem(KineticSystem system) {
-        this.system = system;
+    public boolean autoConnect() {
+        return false;
+    }
+
+    @Override
+    public long powerUsage(TLongSet passed, int side, int speed) {
+        localPoint.setPosition(hostTile);
+        if (!isConnected(side) || !passed.add(localPoint.toLong())) {
+            return 0;
+        }
+        int opSide = getOppositeSide(side);
+        Tile<?> other = getMetaTileAtSide(hostTile, opSide);
+        if (isConnected(side) && other instanceof KineticTile && II_TileUtil.canInteract(side, IOType.Kinetic, other.getHost())) {
+            return ((KineticTile) other).powerUsage(passed, side, speed);
+        }
+        return 0;
+    }
+
+    @Override
+    public void usePower(TLongSet passed, int side, int speed, double satisfaction) {
+        localPoint.setPosition(hostTile);
+        if (!isConnected(side) || !passed.add(localPoint.toLong())) {
+            return;
+        }
+        rotationSpeed = speed;
+        sendUsePower(passed, side, speed, satisfaction);
+
+    }
+
+    void sendUsePower(TLongSet passed, int side, int speed, double satisfaction) {
+        int opSide = getOppositeSide(side);
+        Tile<?> other = getMetaTileAtSide(hostTile, opSide);
+        if (other instanceof KineticTile && II_TileUtil.canInteract(side, IOType.Kinetic, other.getHost())) {
+            ((KineticTile) other).usePower(passed, side, speed, satisfaction);
+        }
     }
 }

@@ -64,6 +64,7 @@ public class TileLoader implements Runnable {
         II_TileUtil.registerMetaTile(17,new CharcoalPile(makeBaseMachineTile()));
         II_TileUtil.registerMetaTile(18, new PrimitiveMultiFurnace(makeBaseMachineTile()));
         II_TileUtil.registerMetaTile(19, new PrimitiveBlastFurnace(makeBaseMachineTile()));
+        II_TileUtil.registerMetaTile(20, Tiles.makeTestTile());
 
 
 

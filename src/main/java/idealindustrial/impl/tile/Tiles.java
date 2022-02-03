@@ -8,13 +8,18 @@ import idealindustrial.api.tile.meta.Tile;
 import idealindustrial.impl.recipe.*;
 import idealindustrial.impl.textures.TextureUtil;
 import idealindustrial.impl.textures.Textures;
+import idealindustrial.impl.tile.gui.base.GenericContainer;
 import idealindustrial.impl.tile.gui.base.component.SlotHoloEvent;
+import idealindustrial.impl.tile.gui.scheme.TestSchemeGui;
 import idealindustrial.impl.tile.impl.TileFacing2Main;
 import idealindustrial.impl.tile.impl.recipe.TileMachineBasicRecipe;
 import idealindustrial.impl.tile.impl.recipe.TileMachineReciped;
 import idealindustrial.impl.tile.module.EventRecipedModule;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.parameter.RecipedMachineStats;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 
 import static idealindustrial.impl.recipe.RecipeGuiParamsBuilder.SlotType.Holo;
 import static idealindustrial.impl.tile.TileEvents.MODULE_START_PROCESSING;
@@ -81,6 +86,16 @@ public class Tiles {
         @Override
         public Tile<HostMachineTile> newMetaTile(HostMachineTile baseTile) {
             return new Test(baseTile, this);
+        }
+
+        @Override
+        public GuiContainer getClientGUI(EntityPlayer player, int internalID) {
+            return new TestSchemeGui(new GenericContainer(hostTile, player, false, false), "gg");
+        }
+
+        @Override
+        public Container getServerGUI(EntityPlayer player, int internalID) {
+            return new GenericContainer(hostTile, player, false, false);
         }
     }
 

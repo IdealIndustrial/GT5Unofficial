@@ -19,7 +19,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import java.util.Random;
 
 public class OreGenerator implements IWorldGenerator {
-    static WeightedRandom<OreEntry> ores = new RandomCollection<>(1d);
+    static WeightedRandom<OreEntry> ores = new RandomCollection<>();
     static {
         ores.add(3, new OreEntry(II_Materials.arsenicBronze, Prefixes.oreSmall, new ClampedEllipsoid(4, 10), new LinearRange(50, 70))
         .addGenerator(new PlantGenerator(r -> Plants.copperPlant).setRadius(10)));

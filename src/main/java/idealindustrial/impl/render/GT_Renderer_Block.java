@@ -1731,10 +1731,6 @@ public class GT_Renderer_Block extends RenderBlocks
         tessellator.setNormal(0, 0, 0);
 //        tessellator.setBrightness(l);
 
-        if (this.hasOverrideBlockTexture()) {
-            flag1 = false;
-        }
-
         boolean flag2;
         boolean flag3;
         boolean flag4;

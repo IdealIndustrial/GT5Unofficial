@@ -2,6 +2,7 @@ package idealindustrial.util;
 
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
+import idealindustrial.api.tile.host.HostTile;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -141,6 +142,12 @@ public class HPoint {
         if (log) {
             System.out.println("Elapsed: " + timer.next());
         }
+    }
+
+    public void setPosition(HostTile hostTile) {
+        x = hostTile.getXCoord();
+        y = hostTile.getYCoord();
+        z = hostTile.getZCoord();
     }
 
     private static class Point {

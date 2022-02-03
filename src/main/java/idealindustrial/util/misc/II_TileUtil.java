@@ -3,6 +3,7 @@ package idealindustrial.util.misc;
 import idealindustrial.II_Values;
 import idealindustrial.api.tile.fluid.FluidHandler;
 import idealindustrial.api.reflection.II_EventListener;
+import idealindustrial.impl.tile.IOType;
 import idealindustrial.impl.tile.fluid.EmptyTank;
 import idealindustrial.impl.tile.host.HostMachineTileImpl;
 import idealindustrial.impl.tile.host.HostPipeTileImpl;
@@ -159,6 +160,29 @@ public class II_TileUtil {
             }
             LangHandler.add("ii.itemmachine." + i + ".name",tile.getInventoryName());
         }
+    }
+
+
+    public static boolean canInput(int side, IOType type, HostTile tile) {
+        if (tile instanceof HostMachineTile) {
+            return ((HostMachineTile) tile).getIO(type)[side + 6];
+        }
+        return true;
+    }
+
+    public static boolean canOutput(int side, IOType type, HostTile tile) {
+        if (tile instanceof HostMachineTile) {
+            return ((HostMachineTile) tile).getIO(type)[side];
+        }
+        return true;
+    }
+
+    public static boolean canInteract(int side, IOType type, HostTile tile) {
+        if (tile instanceof HostMachineTile) {
+            boolean[] io = ((HostMachineTile) tile).getIO(type);
+            return io[side] || io[side + 6];
+        }
+        return true;
     }
 
 }

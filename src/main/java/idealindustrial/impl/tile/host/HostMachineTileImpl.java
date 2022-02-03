@@ -6,8 +6,6 @@ import idealindustrial.api.tile.host.HostMachineTile;
 import idealindustrial.api.tile.meta.Tile;
 import idealindustrial.impl.tile.energy.electric.EmptyEnergyHandler;
 import idealindustrial.impl.tile.energy.electric.EnergyHandler;
-import idealindustrial.impl.tile.energy.kinetic.EmptyKineticHandler;
-import idealindustrial.api.tile.energy.kinetic.KineticEnergyHandler;
 import idealindustrial.impl.tile.fluid.EmptyTank;
 import idealindustrial.api.tile.fluid.FluidHandler;
 import idealindustrial.api.tile.fluid.FluidInventoryRepresentation;
@@ -41,7 +39,6 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
     protected boolean[] itemIO = II_Util.trueAr(12), fluidIO = II_Util.trueAr(12), energyIO = II_Util.trueAr(12), kineticIO = II_Util.trueAr(12);
 
     protected EnergyHandler handler = EmptyEnergyHandler.INSTANCE;
-    protected KineticEnergyHandler kineticHandler;
 
 
     protected List<Consumer<IOType>> ioListeners = new ArrayList<>();
@@ -124,13 +121,6 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
         } else {
             handler = EmptyEnergyHandler.INSTANCE;
         }
-
-        if (this.tile.hasKineticEnergy()) {
-            kineticHandler = this.tile.getKineticHandler();
-        } else {
-            kineticHandler = EmptyKineticHandler.INSTANCE;
-        }
-
         onIOConfigurationChanged(IOType.ALL);
     }
 
@@ -325,11 +315,6 @@ public class HostMachineTileImpl extends HostTileImpl implements HostMachineTile
     @Override
     public EnergyHandler getEnergyHandler() {
         return handler;
-    }
-
-    @Override
-    public KineticEnergyHandler getKineticEnergyHandler() {
-        return kineticHandler;
     }
 
     public void onBufferFull() {

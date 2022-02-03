@@ -64,6 +64,10 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
         connections &= ~(1 << side);
     }
 
+    public void disconnectAll() {
+        connections = 0;
+    }
+
     public void set(int side, boolean connected) {
         if (connected) {
             setConnected(side);
@@ -142,20 +146,24 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
         updateConnections();
     }
 
+    public boolean autoConnect() {
+        return true;
+    }
 
 
     public void updateConnections() {
         int oldConnections = connections;
-        connections = 0;
-        for (int i = 0; i < 6; i++) {
-            if (canConnect(i)) {
-                setConnected(i);
-            }
-            else {
-                setDisconnected(i);
+        if (autoConnect()) {
+            connections = 0;
+            for (int i = 0; i < 6; i++) {
+                if (canConnect(i)) {
+                    setConnected(i);
+                } else {
+                    setDisconnected(i);
+                }
             }
         }
-        if (oldConnections != connections) {
+        if (!autoConnect() || oldConnections != connections) {
             syncClient();
             onConnectionUpdate();
         }

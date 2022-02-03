@@ -1,8 +1,8 @@
 package idealindustrial.impl.tile.impl.kinetic;
 
+import gnu.trove.set.TLongSet;
 import idealindustrial.api.textures.ITexture;
-import idealindustrial.api.tile.energy.kinetic.KUSplitter;
-import idealindustrial.api.tile.energy.kinetic.KineticEnergyHandler;
+import idealindustrial.api.tile.energy.kinetic.KineticTile;
 import idealindustrial.impl.textures.RenderedTexture;
 import idealindustrial.impl.textures.TextureManager;
 import idealindustrial.impl.tile.IOType;
@@ -14,9 +14,11 @@ import idealindustrial.impl.tile.energy.kinetic.system.KineticSystem;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.misc.II_TileUtil;
 
-public class TileKUSplitter extends TileFacing1Output<HostMachineTile> implements KUSplitter {
+import static idealindustrial.util.misc.II_DirUtil.getOppositeSide;
+import static idealindustrial.util.misc.II_TileUtil.getMetaTileAtSide;
 
-    KineticSystem system;
+public class TileKUSplitter extends TileFacing1Output<HostMachineTile> implements KineticTile {
+
     public static TileKUSplitter testMachine() {
         return new TileKUSplitter(II_TileUtil.makeBaseMachineTile(), "KU Splitter",
                 II_StreamUtil.repeated("test/cob3", 8).map(TextureManager.INSTANCE::blockTexture).map(RenderedTexture::new).toArray(ITexture[]::new),
@@ -26,11 +28,6 @@ public class TileKUSplitter extends TileFacing1Output<HostMachineTile> implement
 
     public TileKUSplitter(HostMachineTile hostTile, String name, ITexture[] baseTextures, ITexture[] overlays) {
         super(hostTile, name, baseTextures, overlays);
-        hostTile.onWorldStateUpdated(wa -> {
-            if (system != null) {
-                system.invalidate();
-            }
-        });
     }
 
     protected TileKUSplitter(HostMachineTile hostTile, TileFacing1Output<?> copyFrom) {
@@ -48,28 +45,10 @@ public class TileKUSplitter extends TileFacing1Output<HostMachineTile> implement
     }
 
     @Override
-    public boolean hasKineticEnergy() {
-        return true;
+    protected IOType getOutputIOType() {
+        return IOType.Kinetic;
     }
 
-    @Override
-    public KineticEnergyHandler getKineticHandler() {
-        return EmptyKineticHandler.INSTANCE;
-    }
-
-    //
-//    @Override
-//    protected IOType getOutputIOType() {
-//        return IOType.Kinetic;
-//    }
-//
-    @Override
-    protected void onOutputFacingChanged() {
-        super.onOutputFacingChanged();
-        if (system != null) {
-            system.invalidate();
-        }
-    }
 
     @Override
     public void onPostTick(long timer, boolean serverSide) {
@@ -77,12 +56,40 @@ public class TileKUSplitter extends TileFacing1Output<HostMachineTile> implement
     }
 
     @Override
-    public int getInputSide() {
-        return outputFacing;
+    public long powerUsage(TLongSet passed, int side, int speed) {
+        localPoint.setPosition(hostTile);
+        if (!passed.add(localPoint.toLong())) {
+            return 0;
+        }
+        long sum = 0;
+        for (int i = 0; i < 6; i++) {
+            if (i == side) {
+                continue;
+            }
+            Tile<?> other = getMetaTileAtSide(hostTile, i);
+            int opSide = getOppositeSide(i);
+            if (other instanceof KineticTile && II_TileUtil.canInteract(opSide, IOType.Kinetic, other.getHost())) {
+                sum += ((KineticTile) other).powerUsage(passed, opSide, speed);
+            }
+        }
+        return sum;
     }
 
     @Override
-    public void setSystem(KineticSystem system) {
-        this.system = system;
+    public void usePower(TLongSet passed, int side, int speed, double satisfaction) {
+        localPoint.setPosition(hostTile);
+        if (!passed.add(localPoint.toLong())) {
+            return;
+        }
+        for (int i = 0; i < 6; i++) {
+            if (i == side) {
+                continue;
+            }
+            Tile<?> other = getMetaTileAtSide(hostTile, i);
+            int opSide = getOppositeSide(i);
+            if (other instanceof KineticTile && II_TileUtil.canInteract(opSide, IOType.Kinetic, other.getHost())) {
+               ((KineticTile) other).usePower(passed, opSide, speed, satisfaction);
+            }
+        }
     }
 }

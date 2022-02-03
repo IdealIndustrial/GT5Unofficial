@@ -125,8 +125,8 @@ public class RecipeEditorGuiContainer extends GenericGuiContainer<RecipeEditorCo
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        super.drawGuiContainerForegroundLayer(p_146979_1_, p_146979_2_);
+    protected void drawGuiContainerForegroundLayer(int mx, int my) {
+        super.drawGuiContainerForegroundLayer(mx, my);
         fontRendererObj.drawString(container.tile.getInventoryName(), 10, 10, 4210752, false);
         fontRendererObj.drawString("V:", 4, 85, 4210752, false);
         fontRendererObj.drawString("A:", 4, 100, 4210752, false);
@@ -134,8 +134,8 @@ public class RecipeEditorGuiContainer extends GenericGuiContainer<RecipeEditorCo
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-        super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
+    protected void drawGuiContainerBackgroundLayer(float tmp, int mx, int my) {
+        super.drawGuiContainerBackgroundLayer(tmp, mx, my);
         int guiX = (width - xSize) / 2 - 1;
         int guiY = (height - ySize) / 2 - 1;
         GuiArrowDefinition arrow = container.params.getArrow();
@@ -155,10 +155,10 @@ public class RecipeEditorGuiContainer extends GenericGuiContainer<RecipeEditorCo
     }
 
     @Override
-    protected void mouseClicked(int par1, int par2, int par3) {
-        super.mouseClicked(par1, par2, par3);
+    protected void mouseClicked(int mx, int my, int buttons) {
+        super.mouseClicked(mx, my, buttons);
         for (GuiTextField f : boxes) {
-            f.mouseClicked(par1, par2, par3);
+            f.mouseClicked(mx, my, buttons);
         }
     }
 

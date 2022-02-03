@@ -1,6 +1,9 @@
 package idealindustrial.impl.tile.gui.base;
 
+import idealindustrial.impl.tile.gui.GuiRect;
 import idealindustrial.impl.tile.gui.base.component.II_Slot;
+import idealindustrial.impl.tile.gui.scheme.GuiWidget;
+import idealindustrial.impl.world.util.Vector2;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -13,10 +16,10 @@ import java.util.List;
 
 import static idealindustrial.impl.tile.gui.base.component.GuiTextures.SLOTS;
 
-public class GenericGuiContainer<ContainerType extends GenericContainer> extends GuiContainer {
+public class GenericGuiContainer<ContainerType extends GenericContainer> extends GuiContainer implements GuiRect {
     protected ContainerType container;
     protected ResourceLocation background;
-    protected List<Gui> elements = new ArrayList<>();
+    protected List<GuiWidget> widgets = new ArrayList<>();
 
     public GenericGuiContainer(ContainerType container, String background) {
         super(container);
@@ -24,19 +27,25 @@ public class GenericGuiContainer<ContainerType extends GenericContainer> extends
         this.background = new ResourceLocation(background);
     }
 
+    protected void addWidget(GuiWidget widget) {
+        widget.setRect(this);
+        widgets.add(widget);
+    }
+
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        super.drawGuiContainerForegroundLayer(p_146979_1_, p_146979_2_);
-        fontRendererObj.drawString(container.tile.getInventoryName(), 10, 10, 4210752, false);
+    protected void drawGuiContainerForegroundLayer(int mx, int my) {
+        super.drawGuiContainerForegroundLayer(mx, my);
+        fontRendererObj.drawString(container.tile.getInventoryName(), 10, 10, 4210752, false);//todo: move to widget
+        widgets.forEach(w -> w.drawGuiContainerForegroundLayer(mx, my));
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
+    protected void drawGuiContainerBackgroundLayer(float tmp, int mx, int my) {
         Minecraft.getMinecraft().renderEngine.bindTexture(background);
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
-        drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+        drawTexturedModalRect(x, y, 0, 0, xSize, ySize);//todo: move to widget
         Minecraft.getMinecraft().renderEngine.bindTexture(SLOTS.location());
         for (Object o : container.inventorySlots) {
             if (!(o instanceof II_Slot)) {
@@ -46,6 +55,32 @@ public class GenericGuiContainer<ContainerType extends GenericContainer> extends
             slot.draw(slot.xDisplayPosition + x - 1, slot.yDisplayPosition + y - 1, this);
         }
 
+        widgets.forEach(w -> w.drawBackground(tmp, mx, my));
+
+    }
+
+    @Override
+    protected void mouseClicked(int mx, int my, int buttons) {
+        if (widgets.stream().anyMatch(w -> w.mouseClicked(mx, my, buttons))) {
+            return;
+        }
+        super.mouseClicked(mx, my, buttons);
+    }
+
+    @Override
+    protected void mouseClickMove(int mx, int my, int button, long timeSince) {
+        if (widgets.stream().anyMatch(w -> w.mouseClickMove(mx, my, button, timeSince))) {
+            return;
+        }
+        super.mouseClickMove(mx, my, button, timeSince);
+    }
+
+    @Override
+    protected void mouseMovedOrUp(int mx, int my, int button) {
+        if (widgets.stream().anyMatch(w -> w.mouseMovedOrUp(mx, my, button))) {
+            return;
+        }
+        super.mouseMovedOrUp(mx, my, button);
     }
 
     public void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, Color color) {
@@ -63,5 +98,20 @@ public class GenericGuiContainer<ContainerType extends GenericContainer> extends
 
     public float getZLevel() {
         return zLevel;
+    }
+
+    @Override
+    public Vector2 screenSize() {
+        return new Vector2(width, height);
+    }
+
+    @Override
+    public Vector2 guiSize() {
+        return new Vector2(xSize, ySize);
+    }
+
+    @Override
+    public Vector2 guiOffset() {
+        return new Vector2(guiLeft, guiTop);
     }
 }

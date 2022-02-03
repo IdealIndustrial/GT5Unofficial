@@ -1,19 +1,20 @@
 package idealindustrial.impl.tile.impl.kinetic;
 
+import gnu.trove.set.TLongSet;
 import idealindustrial.api.textures.ITexture;
+import idealindustrial.api.tile.energy.kinetic.KineticTile;
 import idealindustrial.impl.textures.RenderedTexture;
 import idealindustrial.impl.textures.TextureManager;
 import idealindustrial.impl.tile.IOType;
 import idealindustrial.impl.tile.impl.TileFacing2Main;
 import idealindustrial.api.tile.host.HostMachineTile;
 import idealindustrial.api.tile.meta.Tile;
-import idealindustrial.api.tile.energy.kinetic.KUConsumer;
-import idealindustrial.api.tile.energy.kinetic.KUProducer;
-import idealindustrial.api.tile.energy.kinetic.KineticEnergyHandler;
 import idealindustrial.util.misc.II_StreamUtil;
 import idealindustrial.util.misc.II_TileUtil;
 
-public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements KineticEnergyHandler, KUConsumer {
+import static idealindustrial.api.tile.energy.kinetic.KineticTile.localPoint;
+
+public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements KineticTile {
 
     public static KUMachineBase testMachine() {
         return new KUMachineBase(II_TileUtil.makeBaseMachineTile(), "TestConsumerKinetic",
@@ -28,11 +29,6 @@ public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements K
 
     public KUMachineBase(HostMachineTile baseTile, KUMachineBase copyFrom) {
         super(baseTile, copyFrom);
-    }
-
-    @Override
-    public boolean hasKineticEnergy() {
-        return true;
     }
 
     @Override
@@ -51,31 +47,28 @@ public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements K
     }
 
     @Override
-    public int getPowerUsage() {
-        return 10;
-    }
-
-    @Override
-    public void supply(int power, int speed) {
-//        System.out.println("Got " + power + " " + speed) ;
-    }
-
-    @Override
-    public KUConsumer getConsumer(int side) {
-        if (side == outputFacing) {
-            return this;
+    public long powerUsage(TLongSet passed, int side, int speed) {
+        localPoint.setPosition(hostTile);
+        if (!passed.add(localPoint.toLong())) {
+            return 0;
         }
-        return null;
+        return getPowerRequest();
     }
 
     @Override
-    public KUProducer getProducer(int side) {
-        return null;
+    public void usePower(TLongSet passed, int side, int speed, double satisfaction) {
+        localPoint.setPosition(hostTile);
+        if (!passed.add(localPoint.toLong())) {
+            return;
+        }
+        powerAdded(speed, satisfaction);
     }
 
+    void powerAdded(int speed, double satisfaction) {
 
-    @Override
-    public KineticEnergyHandler getKineticHandler() {
-        return this;
+    }
+
+    long getPowerRequest() {
+        return 10;
     }
 }

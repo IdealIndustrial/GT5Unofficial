@@ -9,7 +9,6 @@ import idealindustrial.api.tile.IToolClickableTile;
 import idealindustrial.api.tile.IUpdatableTileEntity;
 import idealindustrial.api.tile.host.HostTile;
 import idealindustrial.impl.tile.energy.electric.EnergyHandler;
-import idealindustrial.api.tile.energy.kinetic.KineticEnergyHandler;
 import idealindustrial.api.tile.fluid.FluidHandler;
 import idealindustrial.api.tile.inventory.InternalInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -126,13 +125,6 @@ public interface Tile<H extends HostTile> extends IUpdatableTileEntity, ISyncedT
         return null;
     }
 
-    default boolean hasKineticEnergy() {
-        return false;
-    }
-
-    default KineticEnergyHandler getKineticHandler() {
-        return null;
-    }
 
     default void onBufferFull() {
 

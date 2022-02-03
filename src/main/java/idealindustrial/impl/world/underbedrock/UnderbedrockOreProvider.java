@@ -49,9 +49,7 @@ public class UnderbedrockOreProvider<T> implements ChunkProvider<T> {
         }
         VeinProvider<T> vein = provider.next(random);
         Vein<T> ore = vein.provide(random, rules);
-        if (chunk.isFree(ore.getCollider())) {
-            chunk.insert(ore);
-        }
+        chunk.insert(ore);
         return chunk;
     }
 }

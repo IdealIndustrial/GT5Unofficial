@@ -1,5 +1,6 @@
 package idealindustrial.impl.tile.gui.scheme;
 
+import idealindustrial.impl.tile.gui.GuiRect;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface GuiWidget {
@@ -16,7 +17,7 @@ public interface GuiWidget {
         return false;
     }
 
-    default boolean mouseMovedOrUp(int p_146286_1_, int p_146286_2_, int p_146286_3_) {
+    default boolean mouseMovedOrUp(int mx, int my, int button) {
         return false;
     }
 
@@ -39,4 +40,8 @@ public interface GuiWidget {
     default void serverNBTLoad(NBTTagCompound nbt) {
 
     }
+
+    GuiRect getRect();
+
+    void setRect(GuiRect rect);
 }

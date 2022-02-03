@@ -20,7 +20,7 @@ public class WorldTickHandler {
         if (event.side == Side.SERVER) {
             if (event.phase == TickEvent.Phase.END) {
                 EnergySystemHandler.onTick();
-                KineticSystemHandler.onTick();
+//                KineticSystemHandler.onTick();
                 ToolWithBreakingMatrix.onServerTick();
             }
             else {

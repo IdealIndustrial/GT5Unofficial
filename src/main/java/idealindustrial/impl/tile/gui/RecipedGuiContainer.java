@@ -13,8 +13,8 @@ public class RecipedGuiContainer extends GenericGuiContainer<RecipedContainer> {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-        super.drawGuiContainerBackgroundLayer(p_146976_1_, p_146976_2_, p_146976_3_);
+    protected void drawGuiContainerBackgroundLayer(float tmp, int mx, int my) {
+        super.drawGuiContainerBackgroundLayer(tmp, mx, my);
         int guiX = (width - xSize) / 2 - 1;
         int guiY = (height - ySize) / 2 - 1;
         GuiArrowDefinition arrow = container.params.getArrow();
