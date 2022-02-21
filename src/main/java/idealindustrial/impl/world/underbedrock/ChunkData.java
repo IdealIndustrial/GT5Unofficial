@@ -6,10 +6,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class ChunkData {
+public class ChunkData implements ChunkStorageProvider.DataHandler {
     private int minerals;
     private int pollution;
 
+    private GridChunk<?> gridChunk;
 
     public int getMinerals() {
         return minerals;
@@ -21,10 +22,17 @@ public class ChunkData {
 
     public void setMinerals(int minerals) {
         this.minerals = minerals;
+        gridChunk.setModified(true);
     }
 
     public void setPollution(int pollution) {
         this.pollution = pollution;
+        gridChunk.setModified(true);
+    }
+
+    @Override
+    public void loaded(GridChunk<?> gridChunk) {
+        this.gridChunk = gridChunk;
     }
 
     public static class ChunkDataSupplier implements ChunkStorageProvider.CoordSupplier<ChunkData> {

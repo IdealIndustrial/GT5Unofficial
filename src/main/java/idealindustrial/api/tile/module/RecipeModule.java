@@ -7,11 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public interface RecipeModule<R extends IMachineRecipe> extends TileModule {
 
-
-   void saveToNBT(String prefix, NBTTagCompound nbt);
-
-   void loadFromNBT(String prefix, NBTTagCompound nbt);
-
    void onInInventoryModified(int id);
 
    short getProgress();

@@ -19,6 +19,7 @@ import idealindustrial.impl.recipe.BasicMachineRecipe;
 import idealindustrial.impl.recipe.RecipeMapStorage;
 import idealindustrial.impl.recipe.RecipeMaps;
 import idealindustrial.impl.reflection.config.ReflectionConfig;
+import idealindustrial.impl.world.UnderbedrockLayerProvider;
 import idealindustrial.util.json.ArrayObject;
 import net.minecraftforge.common.config.Configuration;
 
@@ -163,6 +164,22 @@ public class LoadManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static UnderbedrockLayerProvider loadUnderbedrockOresProvider() {
+        InputStream stream = UnderbedrockLayerProvider.class.getResourceAsStream("UnderbedrockOres.groovy");
+        if (stream != null) {
+            try {
+                String classSrc = Util.readAsTxt(stream);
+                Class<?> clazz = loader.parseClass(classSrc);
+                if (UnderbedrockLayerProvider.class.isAssignableFrom(clazz)) {
+                    return (UnderbedrockLayerProvider) clazz.newInstance();
+                }
+            } catch (IOException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 

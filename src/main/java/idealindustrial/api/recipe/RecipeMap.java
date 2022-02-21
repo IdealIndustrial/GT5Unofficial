@@ -33,8 +33,4 @@ public interface RecipeMap<R extends IMachineRecipe> {
     default void optimize() {
 
     }
-
-//    boolean isInputEqualStacks(R recipe, II_RecipedInventory inventory, II_FluidHandler fluidInputs, boolean doConsume);
-
-    //todo reinit call on IDs reFuck
 }

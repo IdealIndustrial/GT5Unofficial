@@ -23,7 +23,11 @@ public class ChunkStorageProvider<T> implements ChunkProvider<T> {
         GridChunk<T> chunk = new GridChunk<>(gridSize);
         for (int x = 0; x < gridSize; x++) {
             for (int z = 0; z < gridSize; z++) {
-                chunk.set(x, z, supplier.provide(gridX * gridSize + x, gridZ * gridSize + z));
+                T t = supplier.provide(gridX * gridSize + x, gridZ * gridSize + z);
+                if (t instanceof DataHandler) {
+                    ((DataHandler) t).loaded(chunk);
+                }
+                chunk.set(x, z, t);
             }
         }
         chunkCache.put(address, chunk);
@@ -31,6 +35,11 @@ public class ChunkStorageProvider<T> implements ChunkProvider<T> {
 
     public interface CoordSupplier<E> {
         E provide(int x, int z);
+    }
+
+    public interface DataHandler {
+
+        void loaded(GridChunk<?> gridChunk);
     }
 
 

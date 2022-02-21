@@ -38,6 +38,11 @@ public class PaneTestUnderbedrock {
                         .setCenterBonus(4)
                         .get()
         );
+        random.add(10,
+                VeinProviderBuilder.ellipsoid(i -> new ColoredCell(new Color(0, (int) i + 100, 0)), 0, 100)
+                        .setElipsoidAB(5, 2)
+                        .setSizes(7, 7)
+                        .get());
         GridGenerationRules<ColoredCell> rules = new GridGenerationRules<ColoredCell>() {
             @Override
             public int getPassCount() {

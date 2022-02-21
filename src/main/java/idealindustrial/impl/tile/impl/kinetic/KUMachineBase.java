@@ -52,7 +52,7 @@ public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements K
         if (!passed.add(localPoint.toLong())) {
             return 0;
         }
-        return getPowerRequest();
+        return getPowerRequest(speed);
     }
 
     @Override
@@ -64,11 +64,11 @@ public class KUMachineBase extends TileFacing2Main<HostMachineTile> implements K
         powerAdded(speed, satisfaction);
     }
 
-    void powerAdded(int speed, double satisfaction) {
+    protected void powerAdded(int speed, double satisfaction) {
 
     }
 
-    long getPowerRequest() {
+    protected long getPowerRequest(int speed) {
         return 10;
     }
 }

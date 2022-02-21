@@ -124,7 +124,7 @@ public class TilePlants extends TileEntity implements Tile32k, IFastRenderedTile
 
     private int calculateXp() {
         int out = stats.growth + 20;
-        UnderbedrockLayer<ChunkData> layer = DimensionChunkData.getLayer(worldObj);
+        UnderbedrockLayer<ChunkData> layer = DimensionChunkData.getChunkData(worldObj);
         ChunkData data = layer.get(xCoord >> 4, zCoord >> 4);
         int minerals = data.getMinerals();
         double supply = ((double) minerals) / def.minerals;

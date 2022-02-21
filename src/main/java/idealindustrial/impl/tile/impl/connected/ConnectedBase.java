@@ -4,9 +4,9 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import idealindustrial.api.textures.ITexture;
+import idealindustrial.api.tile.host.HostTile;
 import idealindustrial.api.tile.render.CustomRenderer;
 import idealindustrial.impl.tile.host.HostPipeTileImpl;
-import idealindustrial.api.tile.host.HostTile;
 import idealindustrial.util.misc.II_DirUtil;
 import idealindustrial.util.misc.II_Util;
 import net.minecraft.entity.Entity;
@@ -104,13 +104,17 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
 
     @Override
     public NBTTagCompound saveToNBT(NBTTagCompound nbt) {
-//        nbt.setInteger("connections", connections);
+        if (!autoConnect()) {
+            nbt.setInteger("connections", connections);
+        }
         return super.saveToNBT(nbt);
     }
 
     @Override
     public void loadFromNBT(NBTTagCompound nbt) {
-//        connections = nbt.getInteger("connections");
+        if (!autoConnect()) {
+            connections = nbt.getInteger("connections");
+        }
         super.loadFromNBT(nbt);
     }
 
@@ -248,4 +252,5 @@ public abstract class ConnectedBase<H extends HostTile> extends TileBase<H> {
             if (inputAABB.intersectsWith(aabb)) outputAABB.add(aabb);
         }
     }
+
 }

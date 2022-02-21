@@ -26,6 +26,13 @@ public class Vector3 {
         return this;
     }
 
+    public Vector3 addm(int x, int y, int z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return this;
+    }
+
     public Vector3d toDVector() {
         return new Vector3d(x, y, z);
     }

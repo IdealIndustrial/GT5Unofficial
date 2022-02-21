@@ -125,11 +125,6 @@ public abstract class BaseTileEntity extends TileEntity implements IHasWorldObje
     }
 
     @Override
-    public final Block getBlockAtSide(byte aSide) {
-        return getBlockAtSideAndDistance(aSide, 1);
-    }
-
-    @Override
     public final Block getBlockAtSideAndDistance(byte aSide, int aDistance) {
         return getBlock(getOffsetX(aSide, aDistance), getOffsetY(aSide, aDistance), getOffsetZ(aSide, aDistance));
     }

@@ -17,6 +17,12 @@ public class VeinProviderBuilder<T> {
             <V> SquareVeinProvider<V> init(DifferenceSupplier<V> s, long min, long max) {
                 return new CircleVeinProvider<>(s, min, max);
             }
+        },
+        ELLIPSOID {
+            @Override
+            <V> SquareVeinProvider<V> init(DifferenceSupplier<V> s, long min, long max) {
+                return new EllipsoidVeinProvider<>(s, min, max);
+            }
         }
         ;
 
@@ -55,7 +61,25 @@ public class VeinProviderBuilder<T> {
         return this;
     }
 
+    public VeinProviderBuilder<T> setElipsoidAB(double a, double b) {
+        assert provider instanceof EllipsoidVeinProvider;
+       ((EllipsoidVeinProvider<T>) provider).setAB(a, b);
+        return this;
+    }
+
     public VeinProvider<T> get() {
         return provider;
+    }
+
+    public static <T> VeinProviderBuilder<T> square(DifferenceSupplier<T> supplier, long minQuantity, long maxQuantity) {
+        return new VeinProviderBuilder<>(ProviderType.SQUARE, supplier, minQuantity, maxQuantity);
+    }
+
+    public static <T> VeinProviderBuilder<T> circle(DifferenceSupplier<T> supplier, long minQuantity, long maxQuantity) {
+        return new VeinProviderBuilder<>(ProviderType.CIRCLE, supplier, minQuantity, maxQuantity);
+    }
+
+    public static <T> VeinProviderBuilder<T> ellipsoid(DifferenceSupplier<T> supplier, long minQuantity, long maxQuantity) {
+        return new VeinProviderBuilder<>(ProviderType.ELLIPSOID, supplier, minQuantity, maxQuantity);
     }
 }

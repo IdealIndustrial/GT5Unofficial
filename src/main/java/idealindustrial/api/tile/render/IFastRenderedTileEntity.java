@@ -13,7 +13,5 @@ public interface IFastRenderedTileEntity {
 
     void rebakeMap();
 
-    default CustomRenderer getCustomRenderer() { //todo : remove default
-        return null;
-    }
+    CustomRenderer getCustomRenderer();
 }

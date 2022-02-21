@@ -58,11 +58,21 @@ public interface IHasWorldObjectAndCoords {
 
     IFluidHandler getITankContainerAtSideAndDistance(byte aSide, int aDistance);
 
-    Block getBlock(int aX, int aY, int aZ);
+    Block getBlock(int x, int y, int z);
+
+    default HashedBlock getHBlock(int x, int y, int z) {
+        return new HashedBlock(getBlock(x, y, z), getMetaID(x, y, z));
+    }
+
+    default HashedBlock getHBlock(Vector3 pos) {
+        return getHBlock(pos.x, pos.y, pos.z);
+    }
 
     Block getBlockOffset(int aX, int aY, int aZ);
 
-    Block getBlockAtSide(byte aSide);
+    default Block getBlockAtSide(byte aSide) {
+        return getBlockAtSideAndDistance(aSide, 1);
+    }
 
     Block getBlockAtSideAndDistance(byte aSide, int aDistance);
 
