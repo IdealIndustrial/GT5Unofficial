@@ -28,7 +28,9 @@ import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeInputItemStack;
 import ic2.api.recipe.RecipeInputOreDict;
 import ic2.api.recipe.RecipeOutput;
+import li.cil.oc.util.GameTimeFormatter;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -99,11 +101,35 @@ public class GT_Utility {
     public static boolean TE_CHECK = false, BC_CHECK = false, CHECK_ALL = true, RF_CHECK = false;
     public static Map<GT_PlayedSound, Integer> sPlayedSoundMap = new /*Concurrent*/HashMap<GT_PlayedSound, Integer>();
     private static int sBookCount = 0;
+    private static boolean isPrevLogStatusOdd = false;
+    private static long startDateTime = System.currentTimeMillis();
 
 
     static {
         GregTech_API.sItemStackMappings.add(sFilledContainerToData);
         GregTech_API.sItemStackMappings.add(sEmptyContainerToFluidToData);
+    }
+
+    public static void logToChat(String[] msg){
+        for(String str : msg){
+            logToChat(str, false);
+        }
+    }
+
+    public static void logToChat(String msg){
+        logToChat(msg, false);
+    }
+    public static void logToChat(String msg, boolean showSecondsFelt){
+        String dt = "";
+        if(showSecondsFelt) {
+            long deltaTime = (System.currentTimeMillis() - startDateTime) / 1000;
+            dt = deltaTime+" ";
+        }
+        ChatComponentText logText = new ChatComponentText(
+                dt + (isPrevLogStatusOdd ? EnumChatFormatting.GRAY : EnumChatFormatting.WHITE) + msg
+        );
+        Minecraft.getMinecraft().thePlayer.addChatComponentMessage(logText);
+        isPrevLogStatusOdd = !isPrevLogStatusOdd;
     }
     
     public static int safeInt(long number, int margin){

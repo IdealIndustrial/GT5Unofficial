@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Behaviour_DataOrb
@@ -42,6 +43,40 @@ public class Behaviour_DataOrb
             return "";
         }
         return tNBT.getString("mDataTitle");
+    }
+
+    public static String[] getSubTitleLines(ItemStack aStack) {
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        if (tNBT == null) return new String[0];
+        byte subTitleLinesCount = tNBT.getByte("subTitleLinesCount");
+        String[] lines = new String[subTitleLinesCount];
+        for (byte i = 0; i < subTitleLinesCount; i++) {
+            lines[i] = tNBT.getString("subTitleLine"+i);
+        }
+        return lines;
+    }
+
+    public static void cleanSubTitleLines(NBTTagCompound tNBT){
+        byte subTitleLinesCount = tNBT.getByte("subTitleLinesCount");
+        for (byte i = 0; i < subTitleLinesCount; i++) {
+            tNBT.setString("subTitleLine"+i, "");
+        }
+    }
+
+    public static NBTTagCompound setSubTitleLines(ItemStack aStack, String[] lines) {
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        if (tNBT == null) {
+            tNBT = new NBTTagCompound();
+        } else {
+            cleanSubTitleLines(tNBT);
+        }
+        if(lines == null) return tNBT;
+        tNBT.setByte("subTitleLinesCount", (byte)lines.length);
+        for (byte i = 0; i < lines.length; i++){
+            tNBT.setString("subTitleLine"+i, lines[i]);
+        }
+        aStack.setTagCompound(tNBT);
+        return tNBT;
     }
 
     public static NBTTagCompound setDataName(ItemStack aStack, String aDataName) {
@@ -115,6 +150,7 @@ public class Behaviour_DataOrb
         if (!(getDataTitle(aStack).length() == 0)) {
             aList.add(getDataTitle(aStack));
             aList.add(getDataName(aStack));
+            aList.addAll(Arrays.asList(getSubTitleLines(aStack)));
         }
         return aList;
     }
