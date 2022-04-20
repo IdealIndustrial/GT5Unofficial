@@ -55,7 +55,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
     int totalMinedOresCount;
     int moreCyclesTimes = 1;
     boolean isFoundOreUnderBr = false; // it used to control drilling fluid consuming
-    short underBrOperationsCount = 0; // it used to consume mining pipes in under-bedrock mode
+    int underBrOperationsCount = 0; // it used to consume mining pipes in under-bedrock mode
     float operationsCountPerCalcPeriod = -1f;
     ArrayList<OreHash> oreHashes; // it used to keep ore blocks that miner can find under bedrock
 
@@ -175,12 +175,12 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
-        aNBT.setShort("underBrOperationsCount", underBrOperationsCount);
+        aNBT.setInteger("underBrOperationsCount", underBrOperationsCount);
     }
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
-        underBrOperationsCount = aNBT.getShort("underBrOperationsCount");
+        underBrOperationsCount = aNBT.getInteger("underBrOperationsCount");
     }
 
     private String prepareDataOrbTitle(IGregTechTileEntity te){
@@ -235,7 +235,6 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         int currentIdx = 0;
         int totalBlocksCount = 0;
         int oreTypesCount = 0;
-        int oresPerLine = 3;
         ArrayList<OreCollection> oreCollection = new ArrayList<>();
         HashMap<String, Integer> oresMap = new HashMap<>();
         for(GT_ItemStack gts : gtStackMap.keySet()){
@@ -269,7 +268,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         if(roundValue == 0) {
             return "0.001 <";
         }
-        oreFlow = Math.round(oreFlow * roundValue) / roundValue;
+        oreFlow = Math.round(oreFlow * roundValue) / roundValue; // to round more if number is not so tiny
         return ""+oreFlow;
     }
 
@@ -456,11 +455,11 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         mEfficiencyIncrease = 10000;
         int tier = Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
         mEUt = -3 * (1 << (tier << 1));
-        short mProgTime;
+        int mProgTime;
         if(workState == STATE_DOWNWARD) {
-            mProgTime = (short)getBaseProgressTime();
+            mProgTime = getBaseProgressTime();
         } else if (workState == STATE_AT_BOTTOM){
-            mProgTime = (short)(getBaseProgressTime() * underBrWorkTimeMoreInTimes);
+            mProgTime = (getBaseProgressTime() * underBrWorkTimeMoreInTimes);
         } else {
             mProgTime = 80;
         }
