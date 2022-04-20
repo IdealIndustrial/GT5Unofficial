@@ -35,18 +35,25 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-
         mTool = mPlayer.getHeldItem();
         if (!(ItemList.Tool_DataReader_MV.isStackEqual(mTool, false, true) || ItemList.Tool_DataReader_EV.isStackEqual(mTool, false, true)))
             return;
         ItemStack aStick = ((GT_Container_DataReader)inventorySlots).mInventory.getStackInSlot(0);
-        if (!ItemList.Tool_DataStick.isStackEqual(aStick, false, true) && !ItemList.Tool_CD.isStackEqual(aStick, false, true))
-            return;
-        if (mTool == null || mTool.getTagCompound() == null)
+        if(aStick == null)
             return;
         NBTTagCompound tNBT = aStick.getTagCompound();
-
         if (tNBT == null)
+            return;
+        if (!tNBT.hasKey("pages"))
+            return;
+        if(ItemList.Tool_DataOrb.isStackEqual(aStick, false, true)) {
+            drawPages(tNBT);
+            return;
+        }
+        if (!ItemList.Tool_DataStick.isStackEqual(aStick, false, true)
+                && !ItemList.Tool_CD.isStackEqual(aStick, false, true))
+            return;
+        if (mTool == null || mTool.getTagCompound() == null)
             return;
         if (mTool.getTagCompound().getInteger("prog") > 0) {
             int tier = ((GT_MetaBase_Item)mTool.getItem()).getTier(mTool);
@@ -61,8 +68,9 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
             drawTexturedModalRect(x + xOff, y + yOff - 1, 0, 239, 119, 17);
             return;
         }
-        if (!tNBT.hasKey("pages"))
-            return;
+        drawPages(tNBT);
+    }
+    protected void drawPages(NBTTagCompound tNBT){
         int tPage = mTool.getTagCompound().getInteger("page");
         NBTTagList pages = tNBT.getTagList("pages", 8);
         String s = pages.getStringTagAt(tPage);
@@ -72,6 +80,5 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
         GL11.glScaled(.7d, .7d, .7d);
         fontRendererObj.drawSplitString(s,  (int)((guiLeft+10)*10d/7d), (int)((guiTop+10)*10d/7d), 200, 255 + (255 << 8) + (255 << 16) + (255 << 24));
         GL11.glPopMatrix();
-
     }
 }

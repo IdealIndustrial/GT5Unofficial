@@ -107,8 +107,13 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
         case 1: return 1;
         case 2: return 3;
         }
-        
-        if (!GT_Utility.setBlockByFakePlayer(getFakePlayer(getBaseMetaTileEntity()), xPipe, yHead - 1, zPipe, miningPipeTipBlock, 0, isSimulating)) return 3;
+
+        if (!GT_Utility.setBlockByFakePlayer(getFakePlayer(getBaseMetaTileEntity()), xPipe, yHead - 1, zPipe, miningPipeTipBlock, 0, isSimulating)) {
+            Block nextBlock = getBaseMetaTileEntity().getWorld().getBlock(xPipe, yHead - 1, zPipe);
+            if (!Block.isEqualTo(nextBlock, miningPipeTipBlock)) {
+                return 3; // fixed! return 3 only if it was not "miningPipeTipBlock", otherwise it is ok.
+            }
+        }
         if (!isSimulating) {
             if (yHead != yDrill) getBaseMetaTileEntity().getWorld().setBlock(xPipe, yHead, zPipe, miningPipeBlock);
             getBaseMetaTileEntity().decrStackSize(1, 1);
