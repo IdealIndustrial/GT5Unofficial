@@ -158,10 +158,44 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         return rTextures;
     }
 
-    @Override
+    // Original :
+    /*@Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         return mTextures[mMainFacing < 2 ? aSide == aFacing ? aActive ? 2 : 3 : aSide == 0 ? aActive ? 6 : 7 : aSide == 1 ? aActive ? 4 : 5 : aActive ? 0 : 1 : aSide == mMainFacing ? aActive ? 2 : 3 : (showPipeFacing() && aSide == aFacing) ? aSide == 0 ? aActive ? 8 : 9 : aSide == 1 ? aActive ? 10 : 11 : aActive ? 12 : 13 : aSide == 0 ? aActive ? 6 : 7 : aSide == 1 ? aActive ? 4 : 5 : aActive ? 0 : 1][aColorIndex + 1];
+    }*/
+
+    // formatted (still not good, but looks a bit better):
+    @Override
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
+        return mTextures[
+                mMainFacing < 2 ?
+                    aSide == aFacing ?
+                        (aActive ? 2 : 3)
+                    : aSide == 0 ?
+                        (aActive ? 6 : 7)
+                    : aSide == 1 ?
+                        (aActive ? 4 : 5) : (aActive ? 0 : 1)
+                    : aSide == mMainFacing ?
+                        (aActive ? 2 : 3)
+                    : (showPipeFacing() && aSide == aFacing) ?
+                        aSide == 0 ?
+                            (aActive ? 8 : 9)
+                        : aSide == 1 ?
+                           ( aActive ? 10 : 11)
+                        : (aActive ? 12 : 13)
+                    : aSide == 0 ?
+                        (aActive ? 6 : 7)
+                    : aSide == 1 ? (aActive ? 4 : 5) : (aActive ? 0 : 1)
+                ][aColorIndex + 1];
     }
+    @Override
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone, byte aFluidFacing) {
+        if(aSide != mMainFacing && aSide == aFluidFacing && aFacing != aFluidFacing) {
+            return new ITexture[]{getBottomFacingInactive(aColorIndex)[0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FLUID_OUT)};
+        }
+        return getTexture(aBaseMetaTileEntity, aSide, aFacing, aColorIndex, aActive, aRedstone);
+    }
+    // return new ITexture[]{aBaseTexture, new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
 
     @Override
     public boolean isSimpleMachine() {
@@ -477,14 +511,14 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
             boolean tRemovedOutputFluid = false;
 
-            if (doesAutoOutputFluids() && getDrainableStack() != null && aBaseMetaTileEntity.getFrontFacing() != mMainFacing && (tSucceeded || aTick % 20 == 0)) {
-                IFluidHandler tTank = aBaseMetaTileEntity.getITankContainerAtSide(aBaseMetaTileEntity.getFrontFacing());
+            if (doesAutoOutputFluids() && getDrainableStack() != null && aBaseMetaTileEntity.getFluidFacing() != mMainFacing && (tSucceeded || aTick % 20 == 0)) {
+                IFluidHandler tTank = aBaseMetaTileEntity.getITankContainerAtSide(aBaseMetaTileEntity.getFluidFacing());
                 if (tTank != null) {
                     FluidStack tDrained = drain(1000 * (int) Math.pow(1.5, mTier), false);
                     if (tDrained != null) {
-                        int tFilledAmount = tTank.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), tDrained, false);
+                        int tFilledAmount = tTank.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFluidFacing()), tDrained, false);
                         if (tFilledAmount > 0)
-                            tTank.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()), drain(tFilledAmount, true), true);
+                            tTank.fill(ForgeDirection.getOrientation(aBaseMetaTileEntity.getFluidFacing()), drain(tFilledAmount, true), true);
                     }
                 }
                 if (getDrainableStack() == null) tRemovedOutputFluid = true;
@@ -876,5 +910,9 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
     public ITexture[] getSideFacingPipeInactive(byte aColor) {
         return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT)};
+    }
+
+    public ITexture[] getSideFacingFluidOutput(byte aColor) {
+        return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[mTier][aColor + 1], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_FLUID_OUT)};
     }
 }

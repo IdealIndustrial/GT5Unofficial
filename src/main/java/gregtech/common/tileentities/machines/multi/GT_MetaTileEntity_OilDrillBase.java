@@ -25,6 +25,7 @@ import net.minecraft.util.StatCollector;
 public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_DrillerBase {
 
     private boolean completedCycle = false;
+    protected boolean isAllowPutPipesToController = true;
 
     private ArrayList<Chunk> mOilFieldChunks = new ArrayList<Chunk>();
     private int mOilId = 0;
@@ -41,6 +42,10 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
         aNBT.setInteger("mOilId", mOilId);
+    }
+
+    protected boolean allowPutPipesToController() {
+        return isAllowPutPipesToController;
     }
 
     @Override

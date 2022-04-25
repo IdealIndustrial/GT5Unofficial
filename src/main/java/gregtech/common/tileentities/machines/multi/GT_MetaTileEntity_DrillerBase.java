@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import static gregtech.api.enums.GT_Values.W;
 
 public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_MultiBlockBase {
-	private static final ItemStack miningPipe = GT_ModHandler.getIC2Item("miningPipe", 0);
+	protected static final ItemStack miningPipe = GT_ModHandler.getIC2Item("miningPipe", 0);
     private static final ItemStack miningPipeTip = GT_ModHandler.getIC2Item("miningPipeTip", 0);
     private static final Block miningPipeBlock = GT_Utility.getBlockFromStack(miningPipe);
     private static final Block miningPipeTipBlock = GT_Utility.getBlockFromStack(miningPipeTip);
@@ -148,10 +148,18 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
     }
 
     private boolean tryOutputPipe(){
-    	if (!getBaseMetaTileEntity().addStackToSlot(1, GT_Utility.copyAmount(1, miningPipe)))
-    		mOutputItems = new ItemStack[] {GT_Utility.copyAmount(1, miningPipe)};
+        if(allowPutPipesToController()) {
+            if (!getBaseMetaTileEntity().addStackToSlot(1, GT_Utility.copyAmount(1, miningPipe))) {
+                mOutputItems = new ItemStack[]{GT_Utility.copyAmount(1, miningPipe)};
+            }
+        } else {
+            ItemStack pickedUpPipe = miningPipe.copy();
+            pickedUpPipe.stackSize = 1;
+            addOutput(pickedUpPipe);
+        }
     	return true;
     }
+
 
     /**
      * @return 0 for available, 1 for invalid block, 2 for event canceled.
@@ -337,6 +345,7 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
         return false;
     }
 
+    protected abstract boolean allowPutPipesToController();
     protected abstract ItemList getCasingBlockItem();
 
     protected abstract Materials getFrameMaterial();

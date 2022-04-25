@@ -488,6 +488,16 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     public void setFrontFacing(byte aFacing) {/*Do nothing*/}
 
     @Override
+    public void setFrontFacingByWrench(byte aSide, EntityPlayer aPlayer){
+
+    }
+
+    @Override
+    public byte getFluidFacing() {
+        return 0;
+    }
+
+    @Override
     public int getSizeInventory() {
         if (canAccessData()) return mMetaTileEntity.getSizeInventory();
         return 0;
@@ -755,7 +765,7 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
     }
 
     @Override
-    public ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers) {
+    public ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers, byte aFluidFacing) {
         return new ITexture[0][]; //pipe render is too hard. I'll do it on day...
     }
 
@@ -1094,6 +1104,13 @@ public class BaseMetaPipeEntity extends BaseTileEntity implements IGregTechTileE
 
     @Override
     public void setErrorDisplayID(int aErrorID) {
+        //
+    }
+
+    public int getExtraInfo(){
+        return 0;
+    }
+    public void setExtraInfo(int eInfo) {
         //
     }
 

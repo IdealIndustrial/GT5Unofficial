@@ -157,7 +157,7 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     @Override
     public boolean onWrenchRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         if (getBaseMetaTileEntity().isValidFacing(aWrenchingSide)) {
-            getBaseMetaTileEntity().setFrontFacing(aWrenchingSide);
+            getBaseMetaTileEntity().setFrontFacingByWrench(aWrenchingSide, aPlayer);
             return true;
         }
         return false;

@@ -44,7 +44,9 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
         NBTTagCompound tNBT = aStick.getTagCompound();
         if (tNBT == null)
             return;
-        if (!tNBT.hasKey("pages"))
+
+        int tProgress = mTool.getTagCompound().getInteger("prog");
+        if (!tNBT.hasKey("pages") && tProgress == 0)
             return;
         if(ItemList.Tool_DataOrb.isStackEqual(aStick, false, true)) {
             drawPages(tNBT);
@@ -55,10 +57,8 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
             return;
         if (mTool == null || mTool.getTagCompound() == null)
             return;
-        if (mTool.getTagCompound().getInteger("prog") > 0) {
+        if (tProgress > 0) {
             int tier = ((GT_MetaBase_Item)mTool.getItem()).getTier(mTool);
-            int tProgress = mTool.getTagCompound().getInteger("prog");
-
             double tBarLength = ((double) tProgress) / 1000* (1 << (tier-2));
             int xOff = 28, yOff = 75;
             fontRendererObj.drawSplitString("Scanning...",  x + xOff, y + yOff - 20, 200, 255 + (255 << 8) + (255 << 16) + (255 << 24));

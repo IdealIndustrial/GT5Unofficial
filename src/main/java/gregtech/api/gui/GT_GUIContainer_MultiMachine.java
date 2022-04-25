@@ -82,10 +82,10 @@ public class GT_GUIContainer_MultiMachine extends GT_GUIContainerMetaTile_Machin
                     fontRendererObj.drawString(trans("142", "Running perfectly."), 10, 18, 16448255);
                     fontRendererObj.drawString(trans("145", "Progress") + " " + EnumChatFormatting.GREEN + mContainer.mProgressTime / 20 + EnumChatFormatting.RESET + " / " + EnumChatFormatting.YELLOW + mContainer.mMaxProgressTime / 20 + EnumChatFormatting.RESET + " s", 10, 28, 16448255);
                 }
-                if (mContainer.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_DrillerBase) {
-                    ItemStack tItem = mContainer.mTileEntity.getMetaTileEntity().getStackInSlot(1);
+                if (mContainer.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_DrillerBase && mContainer.mActive == 0) {
+                    ItemStack tItem = mContainer.mTileEntity.getMetaTileEntity().getStackInSlot(1);  // it should come here only if not working
                     if (tItem == null || !GT_Utility.areStacksEqual(tItem, GT_ModHandler.getIC2Item("miningPipe", 1L))) {
-                        fontRendererObj.drawString(trans("143", "Missing Mining Pipe"), 10, mContainer.mActive == 0 ? 40 : 24, 16448255);
+                        fontRendererObj.drawString(trans("143", "Missing Mining Pipe"), 10, 40, 16448255);
                     }
                 } else if (mContainer.mTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_LargeTurbine) {
                     ItemStack tItem = mContainer.mTileEntity.getMetaTileEntity().getStackInSlot(1);

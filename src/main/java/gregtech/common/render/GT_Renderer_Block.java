@@ -80,7 +80,7 @@ public class GT_Renderer_Block
             renderPositiveXFacing(null, aRenderer, aBlock, 0, 0, 0, tMetaTileEntity.getTexture(tMetaTileEntity.getBaseMetaTileEntity(), (byte) 5, (byte) 9, (byte) -1, true, false), true);
             Tessellator.instance.draw();
         } else {
-            ITexture[][] textures = tMetaTileEntity.getBaseMetaTileEntity().getTextures(is, (byte) 4, true, false,  !aInWorld);
+            ITexture[][] textures = tMetaTileEntity.getBaseMetaTileEntity().getTextures(is, (byte) 4, true, false,  !aInWorld, (byte) 2);
             Tessellator.instance.startDrawingQuads();
             Tessellator.instance.setNormal(0.0F, -1.0F, 0.0F);
             renderNegativeYFacing(null, aRenderer, aBlock, 0, 0, 0, textures[0], true);
