@@ -35,27 +35,17 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
     public static int dFluidPerOperation; // an amount of drilling fluid that miner consumes each operation in normal mode
 
     // under-bedrock params:
-    public static int dFluidUnderBrOnGetOre; // an amount of drilling fluid that miner consumes each operation in under-bedrock mode if found an ore
-    public static int dFluidUnderBrOnGetStoneDust; // an amount of drilling fluid that miner consumes each operation in under-bedrock mode if not found an ore
-    public static int closeRangeRadius;
-    public static int middleRangeRadius;
-    public static int closeRangeMoreInTimes; // a value to multiply count of blocks in close range to keep for under-bedrock mode
-    public static int middleRangeMoreInTimes; // a value to multiply count of blocks in middle range to keep for under-bedrock mode
-    public static int eachTierPercentChanceDoubleDrop; // a chance between 0 and 100 to make an output double, depends on miner tier
+    public static int dFluidUnderBredrock; // an amount of drilling fluid that miner consumes each operation in under-bedrock mode if found an ore
     public static int consumeMiningPipeAfterCycles; // after each count of cycles miner will consume 1 mining pipe
-    public static int underBrWorkTimeMoreInTimes; // decrease in times value of working speed for under-bedrock mode
-    public static int origOreFactor; // the bigger value will more reduce chance to get an ore
+    public static int optimizationRate; // decrease in times value of working speed for under-bedrock mode
+    public static int[] origOreFactors; // the bigger value will more reduce chance to get an ore
     public int oreFactor; // the bigger value will more reduce chance to get an ore
-    boolean isCloseRangeCycle = false; // multiply ore blocks if ore is near in under-bedrock mode
-    boolean isMiddleRangeCycle = false; // multiply ore blocks if ore not far near in under-bedrock mode
 
-    // next 3 variables will be init after call "prepareUnderBedrockOres"
     int currentOreFactor;
     int totalMinedOresCount;
     int moreCyclesTimes = 1;
 
     boolean isAllowPutPipesToController = false;
-    boolean isFoundOreUnderBr = false; // it used to control drilling fluid consuming
     int underBrOperationsCount = 0; // it used to consume mining pipes in under-bedrock mode
     float operationsCountPerCalcPeriod = -1f;
     ArrayList<OreHash> oreHashes; // it used to keep ore blocks that miner can find under bedrock
@@ -80,42 +70,6 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
     private static final String minedOreTypesCountLabel = GT_LanguageManager.addStringLocalization("minedOreTypesCount", "Mined Ore Types Count");
     private static final String underBrModeEnabledLabel = EnumChatFormatting.YELLOW + GT_LanguageManager.addStringLocalization(
             "underBrModeEnabledLabel", "Mining under bedrock") + EnumChatFormatting.RESET;
-
-    // ************************DBG
-    boolean isDbg = true;
-    boolean foundSmall = true;
-    double startTime = 0;
-    int oreBlocksCount = 0;
-    int smallBlocksCount = 0;
-    boolean stopLogging = false;
-    void addOre(){
-        if(stopLogging) return;
-        if(startTime == 0) {
-            startTime = System.currentTimeMillis();
-            GT_Utility.logToChat("timer started");
-        }
-        if(!isDbg) {
-            GT_Utility.logToChat(new String[]{
-                    "oreBlocksCount "+oreBlocksCount, "smallBlocksCount "+smallBlocksCount,
-                    "seconds left from start: "+((int)((System.currentTimeMillis() - startTime) / 1000)),
-                    "! ! ! FINAL ! ! !"
-            });
-            stopLogging = true;
-        } else {
-
-            if(foundSmall) smallBlocksCount++;
-            else oreBlocksCount++;
-            if((oreBlocksCount + smallBlocksCount) % 1000 == 0){
-                GT_Utility.logToChat(new String[]{
-                        "oreBlocksCount "+oreBlocksCount, "smallBlocksCount "+smallBlocksCount,
-                        "seconds left from start: "+((int)((System.currentTimeMillis() - startTime) / 1000))
-                });
-            }
-        }
-
-    }
-    //System.currentTimeMillis()
-    // ************************DBG
 
     class OreHash{
         OreHash(ItemStack itst, int i, int a){
@@ -184,23 +138,34 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
             }
             return tTagList;
         }
-
     }
 
     @Override
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
+        optimizationRate = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.optimizationRate", 1);
+        optimizationRate = optimizationRate < 1 ? 1 : Math.min(optimizationRate, 4);
         dFluidPerOperation = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidPerOperation", 2000);
-        dFluidUnderBrOnGetOre = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidUnderBrOnGetOre", 3000);
-        dFluidUnderBrOnGetStoneDust = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidUnderBrOnGetStoneDust", 100);
-        consumeMiningPipeAfterCycles = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.consumeMiningPipeAfterCycles", 1000);
-        closeRangeRadius = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.closeRangeRadius", 16);
-        middleRangeRadius = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.middleRangeRadius", 32);
-        eachTierPercentChanceDoubleDrop = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.eachTierPercentChanceDoubleDrop", 10);
-        origOreFactor = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.oreFactorPerEchChunkRadius", 2000);
-        closeRangeMoreInTimes = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.closeRangeMoreInTimes", 4);
-        middleRangeMoreInTimes = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.middleRangeMoreInTimes", 2);
-        underBrWorkTimeMoreInTimes = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.underBrWorkTimeMoreInTimes", 2);
+        dFluidUnderBredrock = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidUnderBredrock", 1000) * optimizationRate;
+        consumeMiningPipeAfterCycles = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.consumeMiningPipeAfterCycles", 1000) / optimizationRate;
+        boolean isFactorsConfigInvalid;
+        try {
+            String factorsStr = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.oreFactors", "70000,120000,263000,575000").replaceAll("[^\\d,]", "");
+            String[] factors = factorsStr.split(",");
+            isFactorsConfigInvalid = factors.length != 4;
+            if(!isFactorsConfigInvalid) {
+                origOreFactors = new int[4];
+                for(int i = 0; i < 4; i++){
+                    origOreFactors[i] = Integer.parseInt(factors[i]);
+                    if(origOreFactors[i] < 10000) origOreFactors[i] = 10000;
+                }
+            }
+        } catch (Throwable e) {
+            isFactorsConfigInvalid = true;
+            System.out.println("ERROR - OreDrillingPlant.oreFactors config is invalid, it should be 4 numbers separated by comma without spaces");
+            e.printStackTrace(GT_Log.err);
+        }
+        if(isFactorsConfigInvalid) origOreFactors = new int[]{70000,120000,263000,575000};
     }
 
     public GT_MetaTileEntity_OreDrillingPlantBase(int aID, String aName, String aNameRegional) {
@@ -259,8 +224,6 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
                 }
                 gtStackMap.putIfAbsent(gtStack, 0);
                 int blocksCount = gtStack.mStackSize;
-                if(isCloseRangeCycle) blocksCount *= closeRangeMoreInTimes;
-                else if (isMiddleRangeCycle) blocksCount *= middleRangeMoreInTimes;
                 gtStackMap.put(gtStack, gtStackMap.get(gtStack) + blocksCount);
                 saveDataToOrb(orb, orbNbt, gtStackMap);
             }
@@ -309,7 +272,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         double oreFlow = chanceToGet * getUnderBrOperationsCountPerPeriod();
         double roundValue = oreFlow < 0.001d ? 0 : (oreFlow < 0.01d ? 1000d : (oreFlow < 0.1d ? 100d : (oreFlow > 10d ? 10 : 100d))) ;
         if(roundValue == 0) {
-            return "< 0.001";
+            return EnumChatFormatting.RED + "<" + EnumChatFormatting.RESET + " 0.001";
         }
         oreFlow = Math.round(oreFlow * roundValue) / roundValue; // to round more if number is not so tiny
         return ""+oreFlow;
@@ -317,8 +280,8 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
 
     float getUnderBrOperationsCountPerPeriod(){
         if(operationsCountPerCalcPeriod > 0) return operationsCountPerCalcPeriod;
-        float hourInTicks = 20*60*60;
-        operationsCountPerCalcPeriod = hourInTicks / (960f * underBrWorkTimeMoreInTimes);
+        float ticksIn1hour = 20*60*60;
+        operationsCountPerCalcPeriod = ticksIn1hour / 960f; // 960f is progress time for 1 tier miner
         return operationsCountPerCalcPeriod;
     }
 
@@ -338,7 +301,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
                     if(oreHashes == null) {
                         prepareUnderBedrockOres(orbNbt);
                     }
-                    result = getRandomUnderBedrockOre(orbNbt);
+                    result = getRandomUnderBedrockOre();
                 }
             }
         }
@@ -369,29 +332,24 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
 
     private int getOreFactor(){
         if(oreFactor > 0) return oreFactor;
-        oreFactor = (int)(Math.pow((getRadiusInChunks()*2), 2) * origOreFactor);
+        oreFactor = origOreFactors[getMinTier() - 2];
         return oreFactor;
     }
 
-    private ItemStack getRandomUnderBedrockOre(NBTTagCompound orbNbt){
+    private ItemStack getRandomUnderBedrockOre(){
         ItemStack output = null;
-        isFoundOreUnderBr = true; // but it will set to false if not found
         int randVal = getBaseMetaTileEntity().getRandomNumber(currentOreFactor);
         for(OreHash hash : oreHashes){
             if(output == null) output = hash.tryGetItem(randVal);
         }
         if(output == null) {
-            isFoundOreUnderBr = false;
             output = GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L);
         }
         if(moreCyclesTimes > 1) {
             output.stackSize *= moreCyclesTimes;
         }
-        if(getMinTier() > 2 && eachTierPercentChanceDoubleDrop > 0) {
-            // if standard chance value is 10, for 1 tier miner - 0% chance, and for 4 tier - 30%
-            if((eachTierPercentChanceDoubleDrop * (getMinTier()-2)) >= getBaseMetaTileEntity().getRandomNumber(100)){
-                output.stackSize *= 2; // if random is success, it will set a double amount of ore blocks;
-            }
+        if(optimizationRate > 1) {
+            output.stackSize *= optimizationRate;
         }
         return output;
     }
@@ -430,21 +388,13 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
             oreBlockPos = oreBlockPositions.remove(0);
             if (GT_Utility.eraseBlockByFakePlayer(getFakePlayer(te), oreBlockPos.chunkPosX, oreBlockPos.chunkPosY, oreBlockPos.chunkPosZ, true))
             	oreBlock = te.getBlock(oreBlockPos.chunkPosX, oreBlockPos.chunkPosY, oreBlockPos.chunkPosZ);
-            if(oreBlock != null && (closeRangeRadius > 0 || middleRangeRadius > 0)) {
-                isCloseRangeCycle = Math.abs(oreBlockPos.chunkPosX - xPipe) <= closeRangeRadius && Math.abs(oreBlockPos.chunkPosZ - zPipe) <= closeRangeRadius;
-                if(!isCloseRangeCycle) {
-                    isMiddleRangeCycle = Math.abs(oreBlockPos.chunkPosX - xPipe) <= middleRangeRadius && Math.abs(oreBlockPos.chunkPosZ - zPipe) <= middleRangeRadius;
-                }
-            }
         }
 
         if (oreBlock != null && oreBlock != Blocks.air) {
-            foundSmall = true;
             ArrayList<ItemStack> oreBlockDrops = getBlockDrops(oreBlock, oreBlockPos.chunkPosX, oreBlockPos.chunkPosY, oreBlockPos.chunkPosZ);
             saveMinedOreBlocks((ArrayList<ItemStack>)oreBlockDrops.clone());
             getBaseMetaTileEntity().getWorld().setBlockToAir(oreBlockPos.chunkPosX, oreBlockPos.chunkPosY, oreBlockPos.chunkPosZ);
             mOutputItems = getOutputByDrops(oreBlockDrops);
-            addOre();
         }
         return true;
     }
@@ -481,8 +431,6 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
             } else {
                 getBaseMetaTileEntity().setExtraInfo(-1);
             }
-            isDbg = false;
-            addOre();
             if(!consumeExpendableMaterials()){
                 mMaxProgresstime = 0; return false;
             }
@@ -500,7 +448,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
                 getBaseMetaTileEntity().decrStackSize(1, 1);
                 underBrOperationsCount = 0;
             }
-            isSuccess = tryConsumeDrillingFluid(isFoundOreUnderBr ? dFluidUnderBrOnGetOre : dFluidUnderBrOnGetStoneDust);
+            isSuccess = tryConsumeDrillingFluid(dFluidUnderBredrock);
         } else {
             isSuccess = false;
         }
@@ -512,7 +460,6 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         for(ItemStack itst : oreBlockDrops){
             if(itst.getItem() instanceof ItemBlock){
                 updateDataOrbNbt(new GT_ItemStack(itst));
-                foundSmall = false;
             }
         }
     }
@@ -532,7 +479,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         if(workState == STATE_DOWNWARD) {
             mProgTime = getBaseProgressTime();
         } else if (workState == STATE_AT_BOTTOM){
-            mProgTime = (getBaseProgressTime() * underBrWorkTimeMoreInTimes);
+            mProgTime = (getBaseProgressTime() * optimizationRate);
         } else {
             mProgTime = 80;
         }
