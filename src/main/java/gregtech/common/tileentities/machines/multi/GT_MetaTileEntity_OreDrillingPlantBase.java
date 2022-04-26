@@ -149,7 +149,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         dFluidUnderBredrock = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidUnderBredrock", 1000) * optimizationRate;
         consumeMiningPipeAfterCycles = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.consumeMiningPipeAfterCycles", 1000) / optimizationRate;
         boolean isFactorsConfigInvalid;
-        try {
+        try { // protection from fools
             String factorsStr = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.oreFactors", "70000,120000,263000,575000").replaceAll("[^\\d,]", "");
             String[] factors = factorsStr.split(",");
             isFactorsConfigInvalid = factors.length != 4;
@@ -261,7 +261,6 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         orbNbt.setIntArray("blocksCounts", blocksCounts);
         orbNbt.setString("mDataTitle", prepareDataOrbTitle(te));
         orbNbt.setString("mDataName", underBrOresFlowLabel1);
-
         NBTTagList tTagList = new OreCollection().getTooltipLines(oreCollection, totalBlocksCount, oreTypesCount);
         orbNbt.setTag("pages", tTagList);
         orb.setTagCompound(orbNbt);
@@ -365,8 +364,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
     	if (yHead != oldYHead) oreBlockPositions.clear();
         fillMineListIfEmpty(xDrill, yDrill, zDrill, xPipe, zPipe, yHead);
         if (oreBlockPositions.isEmpty()) {
-            int LowerPipeResult = (int)tryLowerPipe();
-        	switch (LowerPipeResult) {
+        	switch (tryLowerPipe()) {
                 case 2: mMaxProgresstime = 0; return false;
                 case 3: workState = STATE_UPWARD; return true;
                 case 1: workState = STATE_AT_BOTTOM; return true;
