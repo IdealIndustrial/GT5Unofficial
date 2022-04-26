@@ -186,7 +186,11 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
             mWorkData = aNBT.getByte("mWorkData");
             mStrongRedstone = aNBT.getByte("mStrongRedstone");
             mFacing = oFacing = (byte) aNBT.getShort("mFacing");
-            mFluidFacing = oFluidFacing = aNBT.getByte("mFluidFacing");
+            if(aNBT.hasKey("mFluidFacing")) {
+                mFluidFacing = oFluidFacing = aNBT.getByte("mFluidFacing");
+            } else {
+                mFluidFacing = oFluidFacing = mFacing;
+            }
             mOwnerName = aNBT.getString("mOwnerName");
             mLockUpgrade = aNBT.getBoolean("mLockUpgrade");
             mMuffler = aNBT.getBoolean("mMuffler");
@@ -404,15 +408,6 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                         dropCover(i, i, true);
                             issueBlockUpdate();
                         }
-
-//                        if (mFluidFacing != oFluidFacing) {
-//                            oFluidFacing = mFluidFacing;
-//                            for (byte i = 0; i < 6; i++)
-//                                if (getCoverIDAtSide(i) != 0)
-//                                    if (!mMetaTileEntity.allowCoverOnSide(i, new GT_ItemStack(getCoverIDAtSide(i))))
-//                                        dropCover(i, i, true);
-//                            issueBlockUpdate();
-//                        }
 
                         if (mTickTimer > 20 && mMetaTileEntity.isElectric()) {
                             mAcceptedAmperes = 0;
@@ -1512,6 +1507,9 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
 
                     if (GT_Utility.isStackInList(tCurrentItem, GregTech_API.sScrewdriverList)) {
                         if (GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 200, aPlayer)) {
+                            if(getCoverIDAtSide(aSide) == 0){
+                                aSide = GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ);
+                            }
                             setCoverDataAtSide(aSide, getCoverBehaviorAtSide(aSide).onCoverScrewdriverclick(aSide, getCoverIDAtSide(aSide), getCoverDataAtSide(aSide), this, aPlayer, aX, aY, aZ));
                             mMetaTileEntity.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(100), 1.0F, -1, xCoord, yCoord, zCoord);

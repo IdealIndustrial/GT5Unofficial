@@ -474,13 +474,17 @@ public class GT_Client extends GT_Proxy
                 GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sCrowbarList) ||
                 GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sScrewdriverList))
         {
-            if (((ICoverable) aTileEntity).getCoverIDAtSide((byte) aEvent.target.sideHit) == 0)
-                for (byte i = 0; i < 6; i++)
+            boolean found = false;
+            if (((ICoverable) aTileEntity).getCoverIDAtSide((byte) aEvent.target.sideHit) == 0) {
+                for (byte i = 0; i < 6; i++) {
                     if (((ICoverable) aTileEntity).getCoverIDAtSide(i) > 0) {
                         drawGrid(aEvent, true);
-                        return;
+                        found = true;
                     }
-            return;
+                }
+                if(!found) drawGrid(aEvent, false);
+                return;
+            }
         }
 
         if (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sCovers.keySet()))

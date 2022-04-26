@@ -21,12 +21,14 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static gregtech.api.enums.GT_Values.V;
 
@@ -47,8 +49,8 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     public static final int OTHER_SLOT_COUNT = 4;
     public final ItemStack[] mOutputItems;
     public final int mInputSlotCount, mAmperage;
-    public boolean mAllowInputFromOutputSide = false, mFluidTransfer = false, mItemTransfer = false, mHasBeenUpdated = false, mStuttering = false, mCharge = false, mDecharge = false;
-    public int mMainFacing = -1, mProgresstime = 0, mMaxProgresstime = 0, mEUt = 0, mOutputBlocked = 0;
+    public boolean mAllowInputFromOutputSide = false, mAllowFluidInputFromOutputSide = false, mFluidTransfer = false, mItemTransfer = false, mHasBeenUpdated = false, mStuttering = false, mCharge = false, mDecharge = false;
+    public int mMainFacing = -1, mProgresstime = 0, mMaxProgresstime = 0, mEUt = 0, mOutputBlocked = 0, inputFromOutputCounter = 0;
     public FluidStack mOutputFluid;
     public String mGUIName = "", mNEIName = "";
     public GT_MetaTileEntity_MultiBlockBase mCleanroom;
@@ -59,6 +61,13 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     protected GT_Recipe mLastRecipe = null;
     public FluidStack mFluidOut;
     public FluidStack mFluid1, mFluid2;
+
+    public static final String labelInToOut = wTrans("inToOutStatus", "Input from Output Side for");
+    public static final String labelItems = wTrans("items", "Items");
+    public static final String labelFluids = wTrans("fluids", "Fluids");
+    public static final String labelAndFor = wTrans("andFor", "and for");
+    public static final String labelAllowed = EnumChatFormatting.DARK_GREEN + wTrans("allowed", "Allowed") + EnumChatFormatting.RESET;
+    public static final String labelForbidden = EnumChatFormatting.RED + wTrans("forbidden", "Forbidden") + EnumChatFormatting.RESET;
 
     /**
      * @param aOverlays 0 = SideFacingActive
@@ -249,7 +258,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
     @Override
     public boolean isLiquidInput(byte aSide) {
-        return aSide != mMainFacing && (mAllowInputFromOutputSide || aSide != getBaseMetaTileEntity().getFrontFacing());
+        return aSide != mMainFacing && (mAllowFluidInputFromOutputSide || aSide != getBaseMetaTileEntity().getFrontFacing());
     }
 
     @Override
@@ -433,6 +442,8 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         aNBT.setBoolean("mItemTransfer", mItemTransfer);
         aNBT.setBoolean("mHasBeenUpdated", mHasBeenUpdated);
         aNBT.setBoolean("mAllowInputFromOutputSide", mAllowInputFromOutputSide);
+        aNBT.setBoolean("mAllowFluidInputFromOutputSide", mAllowFluidInputFromOutputSide);
+        aNBT.setInteger("inputFromOutputCounter", inputFromOutputCounter);
         aNBT.setInteger("mEUt", mEUt);
         aNBT.setInteger("mMainFacing", mMainFacing);
         aNBT.setInteger("mProgresstime", mProgresstime);
@@ -452,6 +463,8 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         mItemTransfer = aNBT.getBoolean("mItemTransfer");
         mHasBeenUpdated = aNBT.getBoolean("mHasBeenUpdated");
         mAllowInputFromOutputSide = aNBT.getBoolean("mAllowInputFromOutputSide");
+        mAllowFluidInputFromOutputSide = aNBT.getBoolean("mAllowFluidInputFromOutputSide");
+        inputFromOutputCounter = aNBT.getInteger("inputFromOutputCounter");
         mEUt = aNBT.getInteger("mEUt");
         mMainFacing = aNBT.getInteger("mMainFacing");
         mProgresstime = aNBT.getInteger("mProgresstime");
@@ -482,10 +495,10 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
                             for (int j = 0; j < mOutputItems.length; j++)
                                 if (aBaseMetaTileEntity.addStackToSlot(getOutputSlot() + ((j + i) % mOutputItems.length), mOutputItems[i]))
                                     break;
-                        if (mOutputFluid != null)
-                            if (getDrainableStack() == null) setDrainableStack(mOutputFluid.copy());
-                            else if (mOutputFluid.isFluidEqual(getDrainableStack()))
-                                getDrainableStack().amount += mOutputFluid.amount;
+                                if (mOutputFluid != null)
+                                    if (getDrainableStack() == null) setDrainableStack(mOutputFluid.copy());
+                                    else if (mOutputFluid.isFluidEqual(getDrainableStack()))
+                                        getDrainableStack().amount += mOutputFluid.amount;
                         for (int i = 0; i < mOutputItems.length; i++) mOutputItems[i] = null;
                         mOutputFluid = null;
                         mEUt = 0;
@@ -766,9 +779,22 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
     @Override
     public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-        if (aSide == getBaseMetaTileEntity().getFrontFacing() || aSide == mMainFacing) {
+        IGregTechTileEntity te = getBaseMetaTileEntity();
+        if(aSide == mMainFacing || (aSide == te.getFrontFacing() && aSide == te.getFluidFacing())) {
+            inputFromOutputCounter++;
+            mAllowInputFromOutputSide = inputFromOutputCounter % 2 == 1;
+            mAllowFluidInputFromOutputSide = inputFromOutputCounter % 4 > 1;
+            GT_Utility.sendChatToPlayer(aPlayer, labelInToOut + " " + labelItems
+                    + " " + (mAllowInputFromOutputSide ? labelAllowed : labelForbidden) + " " + labelAndFor
+                    + " " + labelFluids + " " + (mAllowFluidInputFromOutputSide ? labelAllowed : labelForbidden));
+        } else if(aSide == te.getFrontFacing()){
             mAllowInputFromOutputSide = !mAllowInputFromOutputSide;
-            GT_Utility.sendChatToPlayer(aPlayer, mAllowInputFromOutputSide ? trans("095","Input from Output Side allowed") : trans("096","Input from Output Side forbidden"));
+            GT_Utility.sendChatToPlayer(aPlayer, labelInToOut + " " + labelItems
+                    + " " + (mAllowInputFromOutputSide ? labelAllowed : labelForbidden));
+        } else if(aSide == te.getFluidFacing()){
+            mAllowFluidInputFromOutputSide = !mAllowFluidInputFromOutputSide;
+            GT_Utility.sendChatToPlayer(aPlayer, labelInToOut + " " + labelFluids
+                    + " " + (mAllowFluidInputFromOutputSide ? labelAllowed : labelForbidden));
         }
     }
 
