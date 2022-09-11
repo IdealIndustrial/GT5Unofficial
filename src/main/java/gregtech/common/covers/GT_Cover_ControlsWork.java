@@ -11,7 +11,6 @@ import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_ControlsWork extends GT_CoverBehavior {
@@ -63,7 +62,6 @@ public class GT_Cover_ControlsWork extends GT_CoverBehavior {
         aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % 3;
         if(aCoverVariable <0){aCoverVariable = 2;}
         if (aCoverVariable == 0) {
-            //TODO Kotl replace code start
             GT_Utility.sendChatToPlayer(aPlayer, trans("003", "Normal"));
         }
         if (aCoverVariable == 1) {
@@ -71,7 +69,6 @@ public class GT_Cover_ControlsWork extends GT_CoverBehavior {
         }
         if (aCoverVariable == 2) {
             GT_Utility.sendChatToPlayer(aPlayer, trans("005", "No Work at all"));
-            //TODO Kotl replace code end
         }
         return aCoverVariable;
     }
