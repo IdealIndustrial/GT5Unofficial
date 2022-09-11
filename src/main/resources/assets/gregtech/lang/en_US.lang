@@ -23288,3 +23288,8 @@ tc.research_text.GT_TRANSNICKEL=[GT] Transformation of metals into nickel
 tc.research_text.GT_TRANSSOLDERINGALLOY=[GT] Transformation of metals into soldering alloy
 tc.research_text.GT_TRANSZINC=[GT] Transformation of metals into zinc
 tc.research_text.GT_WOOD_TO_CHARCOAL=[GT] Turning wood into charcoal
+
+
+gt.message.cover.normal=§7Normal
+gt.message.cover.inverted=§7Inverted
+gt.message.cover.no.work=§7No Work at all
