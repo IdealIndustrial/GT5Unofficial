@@ -12,7 +12,6 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_ControlsWork extends GT_CoverBehavior {
@@ -65,16 +64,13 @@ public class GT_Cover_ControlsWork extends GT_CoverBehavior {
         if(aCoverVariable <0){aCoverVariable = 2;}
         if (aCoverVariable == 0) {
             //TODO Kotl replace code start
-            //GT_Utility.sendChatToPlayer(aPlayer, trans("003", "Normal"));
-            aPlayer.addChatComponentMessage(new ChatComponentTranslation("gt.message.cover.normal"));
+            GT_Utility.sendChatToPlayer(aPlayer, trans("003", "Normal"));
         }
         if (aCoverVariable == 1) {
-            //GT_Utility.sendChatToPlayer(aPlayer, trans("004", "Inverted"));
-            aPlayer.addChatComponentMessage(new ChatComponentTranslation("gt.message.cover.inverted"));
+            GT_Utility.sendChatToPlayer(aPlayer, trans("004", "Inverted"));
         }
         if (aCoverVariable == 2) {
-            //GT_Utility.sendChatToPlayer(aPlayer, trans("005", "No Work at all"));
-            aPlayer.addChatComponentMessage(new ChatComponentTranslation("gt.message.cover.no.work"));
+            GT_Utility.sendChatToPlayer(aPlayer, trans("005", "No Work at all"));
             //TODO Kotl replace code end
         }
         return aCoverVariable;
@@ -123,11 +119,9 @@ public class GT_Cover_ControlsWork extends GT_CoverBehavior {
         @Override
         public void drawExtras(int mouseX, int mouseY, float parTicks) {
             super.drawExtras(mouseX, mouseY, parTicks);
-            //TODO Kotl replace code start
-            this.fontRendererObj.drawString(trans("243", StatCollector.translateToLocal("gt.message.cover.normal")), 3+startX + spaceX*1, 4+startY+spaceY*0, 0xFF555555);
-            this.fontRendererObj.drawString(trans("244", StatCollector.translateToLocal("gt.message.cover.inverted")),3+startX + spaceX*1, 4+startY+spaceY*1, 0xFF555555);
-            this.fontRendererObj.drawString(trans("245", StatCollector.translateToLocal("gt.message.cover.no.work")),3+startX + spaceX*1, 4+startY+spaceY*2, 0xFF555555);
-            //TODO Kotl replace code end
+            this.fontRendererObj.drawString(trans("243", "Enable with Redstone"), 3+startX + spaceX*1, 4+startY+spaceY*0, 0xFF555555);
+            this.fontRendererObj.drawString(trans("244", "Disable with Redstone"),3+startX + spaceX*1, 4+startY+spaceY*1, 0xFF555555);
+            this.fontRendererObj.drawString(trans("245", "Disable machine"),              3+startX + spaceX*1, 4+startY+spaceY*2, 0xFF555555);
         }
 
         @Override
