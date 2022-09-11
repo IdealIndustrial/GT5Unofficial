@@ -47384,7 +47384,7 @@ tc.aspect.strontio=Тупость, Некомпетентность
 
 
 gt.message.integrated.circuit=§7Конфигурация микросхемы: §a%s
-gt.message.cover.normal=§7Нормальный
-gt.message.cover.inverted=§7Инвертированный
-gt.message.cover.no.work=§7Вообще никакой работы
+gt.message.cover.normal=§7§7Включать по сигналу редстоуна
+gt.message.cover.inverted=§7Выключать по сигналу редстоуна
+gt.message.cover.no.work=§7Машина всегда выключена
 

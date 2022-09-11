@@ -23291,6 +23291,6 @@ tc.research_text.GT_WOOD_TO_CHARCOAL=[GT] Turning wood into charcoal
 
 
 gt.message.integrated.circuit=§7Integrated Circuit config is: §a%s
-gt.message.cover.normal=§7Normal
-gt.message.cover.inverted=§7Inverted
-gt.message.cover.no.work=§7No Work at all
+gt.message.cover.normal=§7Enable with Redstone
+gt.message.cover.inverted=§7Disable with Redstone
+gt.message.cover.no.work=§7Disable machine
