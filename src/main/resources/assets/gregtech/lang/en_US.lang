@@ -827,6 +827,7 @@ Interaction_DESCRIPTION_Index_213=Input disabled
 Interaction_DESCRIPTION_Index_214=Connected
 Interaction_DESCRIPTION_Index_215=Disconnected
 Interaction_DESCRIPTION_Index_216=Deprecated Recipe
+Interaction_DESCRIPTION_Index_217=Integrated Circuit config is: %s
 Item_DESCRIPTION_Index_000=Stored Heat: %s
 Item_DESCRIPTION_Index_001=Durability: %s/%s
 Item_DESCRIPTION_Index_002=%s lvl %s
