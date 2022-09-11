@@ -23290,7 +23290,7 @@ tc.research_text.GT_TRANSZINC=[GT] Transformation of metals into zinc
 tc.research_text.GT_WOOD_TO_CHARCOAL=[GT] Turning wood into charcoal
 
 
-gt.message.integrated.circuit=§0Integrated Circuit config is: §a%s
-gt.message.cover.normal=§0Enable with Redstone
-gt.message.cover.inverted=§0Disable with Redstone
-gt.message.cover.no.work=§0Disable machine
+gt.message.integrated.circuit=Integrated Circuit config is: §a%s
+gt.message.cover.normal=Enable with Redstone
+gt.message.cover.inverted=Disable with Redstone
+gt.message.cover.no.work=Disable machine

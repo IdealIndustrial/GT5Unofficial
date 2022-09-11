@@ -47383,8 +47383,8 @@ tc.aspect.radio=Радиация
 tc.aspect.strontio=Тупость, Некомпетентность
 
 
-gt.message.integrated.circuit=§0Конфигурация микросхемы: §a%s
-gt.message.cover.normal=§0Включать по сигналу редстоуна
-gt.message.cover.inverted=§0Выключать по сигналу редстоуна
-gt.message.cover.no.work=§0Машина всегда выключена
+gt.message.integrated.circuit=Конфигурация микросхемы: §a%s
+gt.message.cover.normal=Включать по сигналу
+gt.message.cover.inverted=Выключать по сигналу
+gt.message.cover.no.work=Машина всегда выключена
 
