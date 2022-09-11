@@ -108,7 +108,7 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
             tConfig -= 24;
         aStack.setItemDamage(tConfig);
         //GT_Utility.sendChatToPlayer(aPlayer, "Integrated Circuit config is: " + tConfig);
-        GT_Utility.sendChatToPlayer(aPlayer, trans("217","Integrated Circuit config is: ") + tConfig);
+        GT_Utility.sendChatToPlayer(aPlayer, transString("217","Integrated Circuit config is: ") + tConfig);
         return super.onItemRightClick(aStack, aWorld, aPlayer);
     }
 

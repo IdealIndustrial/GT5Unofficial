@@ -45,6 +45,14 @@ public class GT_LanguageManager {
 		//TODO LuxinfineTeam code END
     }
 
+    public static synchronized String addStringLocalizationMessage(String aKey, String aEnglish, boolean aWriteIntoLangFile) {
+        if (aKey == null) return E;
+        String translate = aKey;
+        if(!translate.isEmpty()) return translate;
+        LanguageRegistry.instance().addStringLocalization(aKey, "en_US", aEnglish);
+        return aEnglish;
+    }
+
     private static synchronized String writeToLangFile(String aKey, String aEnglish) {
 		/*TODO LuxinfineTeam code REMOVE
 
