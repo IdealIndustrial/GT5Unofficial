@@ -12,6 +12,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
 
@@ -78,9 +79,9 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
         if(getBaseMetaTileEntity().isServerSide()){
             mAutoOutput = !mAutoOutput;
             if(mAutoOutput)
-                GT_Utility.sendChatToPlayer(aPlayer,"Automatic output enabled");
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_089").appendSibling(new ChatComponentTranslation( "Interaction_DESCRIPTION_Index_088")));
             else
-                GT_Utility.sendChatToPlayer(aPlayer,"Automatic output disabled");
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_089").appendSibling(new ChatComponentTranslation( "Interaction_DESCRIPTION_Index_087")));
         }
     }
 

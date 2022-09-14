@@ -247,8 +247,4 @@ public abstract class GT_CoverBehavior {
     public String trans(String aNr, String aEnglish){
     	return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_"+aNr, aEnglish, false);
     }
-
-    public String transString(String aKey, String aEnglish){
-        return GT_LanguageManager.addStringLocalizationMessage("Item_DESCRIPTION_Index_"+aKey, aEnglish, false);
-    }
 }

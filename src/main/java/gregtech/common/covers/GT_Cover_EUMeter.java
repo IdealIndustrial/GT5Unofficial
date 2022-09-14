@@ -17,6 +17,7 @@ import ic2.api.item.IElectricItem;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_EUMeter
@@ -100,18 +101,18 @@ public class GT_Cover_EUMeter
         aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % 12;
         if(aCoverVariable <0){aCoverVariable = 11;}
         switch(aCoverVariable) {
-            case 0: GT_Utility.sendChatToPlayer(aPlayer, trans("031", "Normal Universal Storage")); break;
-            case 1: GT_Utility.sendChatToPlayer(aPlayer, trans("032", "Inverted Universal Storage")); break;
-            case 2: GT_Utility.sendChatToPlayer(aPlayer, trans("033", "Normal Electricity Storage")); break;
-            case 3: GT_Utility.sendChatToPlayer(aPlayer, trans("034", "Inverted Electricity Storage")); break;
-            case 4: GT_Utility.sendChatToPlayer(aPlayer, trans("035", "Normal Steam Storage")); break;
-            case 5: GT_Utility.sendChatToPlayer(aPlayer, trans("036", "Inverted Steam Storage")); break;
-            case 6: GT_Utility.sendChatToPlayer(aPlayer, trans("037", "Normal Average Electric Input")); break;
-            case 7: GT_Utility.sendChatToPlayer(aPlayer, trans("038", "Inverted Average Electric Input")); break;
-            case 8: GT_Utility.sendChatToPlayer(aPlayer, trans("039", "Normal Average Electric Output")); break;
-            case 9: GT_Utility.sendChatToPlayer(aPlayer, trans("040", "Inverted Average Electric Output")); break;
-            case 10: GT_Utility.sendChatToPlayer(aPlayer, trans("041", "Normal Electricity Storage(Including Batteries)")); break;
-            case 11: GT_Utility.sendChatToPlayer(aPlayer, trans("042", "Inverted Electricity Storage(Including Batteries)")); break;
+            case 0: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_031")); break;
+            case 1: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_032")); break;
+            case 2: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_033")); break;
+            case 3: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_034")); break;
+            case 4: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_035")); break;
+            case 5: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_036")); break;
+            case 6: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_037")); break;
+            case 7: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_038")); break;
+            case 8: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_039")); break;
+            case 9: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_040")); break;
+            case 10: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_041")); break;
+            case 11: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_042")); break;
         }
         return aCoverVariable;
     }

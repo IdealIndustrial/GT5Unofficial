@@ -15,6 +15,7 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
@@ -73,52 +74,52 @@ public class GT_Cover_NeedMaintainance extends GT_CoverBehavior {
         }
         switch (aCoverVariable) {
             case 0:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("056", "Emit if 1 Maintenance Needed"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_056"));
                 break;
             case 1:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("057", "Emit if 1 Maintenance Needed(inverted)"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_057"));
                 break;
             case 2:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("058", "Emit if 2 Maintenance Needed"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_058"));
                 break;
             case 3:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("059", "Emit if 2 Maintenance Needed(inverted)"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_059"));
                 break;
             case 4:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("060", "Emit if 3 Maintenance Needed"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_060"));
                 break;
             case 5:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("061", "Emit if 3 Maintenance Needed(inverted)"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_061"));
                 break;
             case 6:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("062", "Emit if 4 Maintenance Needed"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_062"));
                 break;
             case 7:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("063", "Emit if 4 Maintenance Needed(inverted)"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_063"));
                 break;
             case 8:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("064", "Emit if 5 Maintenance Needed"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_064"));
                 break;
             case 9:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("065", "Emit if 5 Maintenance Needed(inverted)"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_065"));
                 break;
             case 10:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("066", "Emit if rotor needs maintenance low accuracy mod"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_066"));
                 break;
             case 11:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("067", "Emit if rotor needs maintenance low accuracy mod(inverted)"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_067"));
                 break;
             case 12:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("068", "Emit if rotor needs maintenance high accuracy mod"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_068"));
                 break;
             case 13:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("069", "Emit if rotor needs maintenance high accuracy mod(inverted)"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_069"));
                 break;
             case 14:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("070", "Emit rotor damage"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_070"));
                 break;
             case 15:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("071", "Emit rotor toughness"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_071"));
                 break;
         }
         return aCoverVariable;

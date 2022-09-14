@@ -24,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -955,10 +956,10 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         }
         mResolveRecipeConflicts = !mResolveRecipeConflicts;
         if (mResolveRecipeConflicts) {
-            GT_Utility.sendChatToPlayer(aPlayer, "Resolve Conflicts Mode Enabled");
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_218").appendSibling(new ChatComponentTranslation( "Interaction_DESCRIPTION_Index_088")));
         }
         else {
-            GT_Utility.sendChatToPlayer(aPlayer, "Resolve Conflicts Mode Disabled");
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_218").appendSibling(new ChatComponentTranslation( "Interaction_DESCRIPTION_Index_087")));
         }
         return true;
     }

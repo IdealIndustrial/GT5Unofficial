@@ -29,6 +29,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -1469,7 +1470,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                         if (GT_ModHandler.damageOrDechargeItem(tCurrentItem, 1, 1000, aPlayer)) {
                             mInputDisabled = !mInputDisabled;
                             if (mInputDisabled) mOutputDisabled = !mOutputDisabled;
-                            GT_Utility.sendChatToPlayer(aPlayer, trans("086","Auto-Input: ") + (mInputDisabled ? trans("087","Disabled") : trans("088","Enabled") + trans("089","  Auto-Output: ") + (mOutputDisabled ? trans("087","Disabled") : trans("088","Enabled"))));
+                            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_086").appendSibling(new ChatComponentTranslation(mInputDisabled ? "Interaction_DESCRIPTION_Index_087": "Interaction_DESCRIPTION_Index_088").appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_089").appendSibling(new ChatComponentTranslation(mOutputDisabled ? "Interaction_DESCRIPTION_Index_087" : "Interaction_DESCRIPTION_Index_088")))));
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(1), 1.0F, -1, xCoord, yCoord, zCoord);
                         }
                         return true;
@@ -1480,10 +1481,10 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                             if (mWorks) disableWorking();
                             else enableWorking();
                             {
-                                String tChat = trans("090", "Machine Processing: ") + (isAllowedToWork() ? trans("088", "Enabled") : trans("087", "Disabled"));
+                                String tChat = isAllowedToWork() ? "Interaction_DESCRIPTION_Index_088" : "Interaction_DESCRIPTION_Index_087";
                                 if (getMetaTileEntity() != null && getMetaTileEntity().hasAlternativeModeText())
                                     tChat = getMetaTileEntity().getAlternativeModeText();
-                                GT_Utility.sendChatToPlayer(aPlayer, tChat);
+                                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_090").appendSibling(new ChatComponentTranslation(tChat)));
                             }
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(101), 1.0F, -1, xCoord, yCoord, zCoord);
                         }
@@ -1497,7 +1498,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(103), 1.0F, -1, xCoord, yCoord, zCoord);
                         } else if (GT_ModHandler.useSolderingIron(tCurrentItem, aPlayer)) {
                             mStrongRedstone ^= (1 << tSide);
-                            GT_Utility.sendChatToPlayer(aPlayer, trans("091","Redstone Output at Side ") + tSide + trans("092"," set to: ") + ((mStrongRedstone & (1 << tSide)) != 0 ? trans("093","Strong") : trans("094","Weak")));
+                            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_091", tSide).appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_092").appendSibling(new ChatComponentTranslation((mStrongRedstone & (1 << tSide)) != 0 ? "Interaction_DESCRIPTION_Index_093" : "Interaction_DESCRIPTION_Index_094"))));
                             GT_Utility.sendSoundToPlayers(worldObj, GregTech_API.sSoundList.get(103), 3.0F, -1, xCoord, yCoord, zCoord);
                             issueBlockUpdate();
                         }

@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class GT_MetaTileEntity_Hatch_InputBus extends GT_MetaTileEntity_Hatch {
     public GT_Recipe_Map mRecipeMap = null;
@@ -152,7 +153,7 @@ public class GT_MetaTileEntity_Hatch_InputBus extends GT_MetaTileEntity_Hatch {
             return;
         if (aPlayer.isSneaking()) {
             disableSort = !disableSort;
-            GT_Utility.sendChatToPlayer(aPlayer, trans("200", "Sort mode: " + (disableSort ? "Disabled" : "Enabled")));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_200").appendSibling(new ChatComponentTranslation(disableSort ? "Interaction_DESCRIPTION_Index_087" : "Interaction_DESCRIPTION_Index_088")));
         }
     }
 

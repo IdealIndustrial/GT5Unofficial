@@ -14,6 +14,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class GT_MetaTileEntity_ItemDistributor extends GT_MetaTileEntity_Buffer {
 	private byte[] itemsPerSide = new byte[6];
@@ -153,7 +154,7 @@ public class GT_MetaTileEntity_ItemDistributor extends GT_MetaTileEntity_Buffer 
 		//Adjust items per side by 1 or -1, constrained to the cyclic interval [0, 127]
 		itemsPerSide[aSide] += aPlayer.isSneaking() ? -1 : 1;
 		itemsPerSide[aSide] = (byte) ((itemsPerSide[aSide] + 128) % 128);
-		GT_Utility.sendChatToPlayer(aPlayer, trans("211", "Items per side: ") + itemsPerSide[aSide]);
+		aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_211", itemsPerSide[aSide]));
 	}
 
 	@Override
