@@ -827,6 +827,7 @@ Interaction_DESCRIPTION_Index_216=Устаревший рецепт
 Interaction_DESCRIPTION_Index_217=Конфигурация микросхемы: %s
 Interaction_DESCRIPTION_Index_218=Режим разрешения конффликтов:
 Interaction_DESCRIPTION_Index_219=Входная Шина
+Interaction_DESCRIPTION_Index_220=Выходная Шина
 Item_DESCRIPTION_Index_000=Хранит тепла: %s
 Item_DESCRIPTION_Index_001=Прочность: %s/%s
 Item_DESCRIPTION_Index_002=%s Уровень %s

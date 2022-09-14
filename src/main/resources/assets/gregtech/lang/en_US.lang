@@ -830,6 +830,7 @@ Interaction_DESCRIPTION_Index_216=Deprecated Recipe
 Interaction_DESCRIPTION_Index_217=Integrated Circuit config is: %s
 Interaction_DESCRIPTION_Index_218=Resolve Conflicts Mode:
 Interaction_DESCRIPTION_Index_219=Input Bus
+Interaction_DESCRIPTION_Index_220=Output Bus
 Item_DESCRIPTION_Index_000=Stored Heat: %s
 Item_DESCRIPTION_Index_001=Durability: %s/%s
 Item_DESCRIPTION_Index_002=%s lvl %s

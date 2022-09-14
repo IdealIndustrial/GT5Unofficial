@@ -117,15 +117,15 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         switch (mTier) {
             case 0:
-                return new GT_GUIContainer_1by1(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_1by1(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"));
             case 1:
-                return new GT_GUIContainer_2by2(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_2by2(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"));
             case 2:
-                return new GT_GUIContainer_3by3(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_3by3(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"));
             case 3:
-                return new GT_GUIContainer_4by4(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_4by4(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"));
             default:
-                return new GT_GUIContainer_NbyN(aPlayerInventory, aBaseMetaTileEntity, "Output Bus", mTier<=6?mTier+1:8);
+                return new GT_GUIContainer_NbyN(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"), mTier<=6?mTier+1:8);
         }
     }
 
