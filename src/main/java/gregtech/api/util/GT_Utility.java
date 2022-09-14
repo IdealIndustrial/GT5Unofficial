@@ -337,7 +337,7 @@ public class GT_Utility {
 
     public static void sendChatToPlayer(EntityPlayer aPlayer, String aChatMessage) {
         if (aPlayer instanceof EntityPlayerMP && aChatMessage != null) {
-            aPlayer.addChatComponentMessage(new ChatComponentTranslation(aChatMessage));
+            aPlayer.addChatComponentMessage(new ChatComponentText(aChatMessage));
         }
     }
 
