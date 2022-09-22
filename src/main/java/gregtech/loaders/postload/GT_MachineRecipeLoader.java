@@ -3314,7 +3314,7 @@ if(Loader.isModLoaded("Railcraft")){
 
     	GT_Values.RA.addUniversalDistillationRecipe(FluidRegistry.getFluidStack("potion.vinegar", 40), new FluidStack[]{Materials.AceticAcid.getFluid(5), Materials.Water.getFluid(35)}, GT_Values.NI, 20, 64);
 		GT_Values.RA.addElectrolyzerRecipe(Materials.Salt.getDust(2), GT_Values.NI, GT_Values.NF, Materials.Chlorine.getGas(1000), Materials.Sodium.getDust(1), GT_Values.NI, GT_Values.NI, GT_Values.NI,GT_Values.NI, GT_Values.NI, null, 320, 30);
-		GT_Values.RA.addMixerRecipe(Materials.Salt.getDust(2), GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(3000), Materials.SaltWater.getFluid(5000), GT_Values.NI, 80, 8);
+		GT_Values.RA.addMixerRecipe(Materials.Salt.getDust(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Water.getFluid(1500), Materials.SaltWater.getFluid(2500), GT_Values.NI, 40, 8);
 //		GT_Values.RA.addUniversalDistillationRecipe(Materials.SaltWater.getFluid(1000), new FluidStack[]{GT_ModHandler.getDistilledWater(750)}, Materials.Salt.getDustSmall(1), 300, 256);
 		GT_Values.RA.addDistilleryRecipe(1, Materials.SaltWater.getFluid(1000), Materials.Water.getFluid(750), Materials.Salt.getDustSmall(1), 30*20, 64, false);
 		GT_Values.RA.addDistillationTowerRecipe(Materials.SaltWater.getFluid(1000), new FluidStack[]{Materials.Water.getFluid(750)}, Materials.Salt.getDustSmall(1), 30*20, 64);
