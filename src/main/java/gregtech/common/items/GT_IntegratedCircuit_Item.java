@@ -103,9 +103,9 @@ public class GT_IntegratedCircuit_Item extends GT_Generic_Item {
         else
             tConfig++;
         if (tConfig < 0)
-            tConfig += 24;
+            tConfig += 25;
         if (tConfig > 24)
-            tConfig -= 24;
+            tConfig -= 25;
         aStack.setItemDamage(tConfig);
         GT_Utility.sendChatToPlayer(aPlayer, "Integrated Circuit config is: " + tConfig);
         return super.onItemRightClick(aStack, aWorld, aPlayer);

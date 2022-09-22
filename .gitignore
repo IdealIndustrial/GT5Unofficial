@@ -65,6 +65,7 @@ local.properties
 .idea/
 .idea_modules/
 classes/
+temp_scripts/
 
 /out/
 
