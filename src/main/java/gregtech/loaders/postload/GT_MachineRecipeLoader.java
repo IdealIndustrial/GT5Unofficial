@@ -2891,36 +2891,36 @@ if(Loader.isModLoaded("Railcraft")){
                 ItemList.Transformer_MV_LV.get(4L),
                 ItemList.Transformer_HV_MV.get(2L),
                 ItemList.Transformer_EV_HV.get(1L),
-                ItemList.Cover_Screen.get(1L), 
-                ItemList.Circuit_Nanocomputer.get(4L)
+                ItemList.Cover_Screen.get(1L),
+                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Data, 4L)
                 }, 2400, 16);
 				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_IV.get(1), new ItemStack[]{
                 ItemList.Transformer_IV_EV.get(1L),
                 ItemList.Machine_DigitalTransformer_EV.get(1L),
-                ItemList.Circuit_Quantumcomputer.get(2L)
+                ItemList.Circuit_Elite.get(2L)
                 }, 2400, 16); 
 				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_LuV.get(1), new ItemStack[]{
                 ItemList.Transformer_LuV_IV.get(1L),
                 ItemList.Machine_DigitalTransformer_IV.get(1L),
-                ItemList.Circuit_Crystalcomputer.get(2L)
+                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Master, 2L)
                 }, 2400, 16);
 				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_ZPM.get(1), new ItemStack[]{
                 ItemList.Transformer_ZPM_LuV.get(1L),
                 ItemList.Machine_DigitalTransformer_LuV.get(1L),
-                ItemList.Circuit_Wetwarecomputer.get(2L)
+                ItemList.Circuit_Quantummainframe.get(2L)
                 }, 2400, 16);   
 				
         GT_Values.RA.addDisassemblerRecipe(
                 ItemList.Machine_DigitalTransformer_UV.get(1), new ItemStack[]{
                 ItemList.Transformer_UV_ZPM.get(1L),
                 ItemList.Machine_DigitalTransformer_ZPM.get(1L),
-                ItemList.Circuit_Wetwaresupercomputer.get(2L)
+                GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Superconductor, 2L)
                 }, 2400, 16);
 				
         GT_Values.RA.addDisassemblerRecipe(
