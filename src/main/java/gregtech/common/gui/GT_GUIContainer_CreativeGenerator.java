@@ -10,7 +10,7 @@ import static gregtech.api.enums.GT_Values.*;
 public class GT_GUIContainer_CreativeGenerator
         extends GT_GUIContainerMetaTile_Machine {
     public GT_GUIContainer_CreativeGenerator(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity) {
-        super(new GT_Container_CreativeGenerator(aInventoryPlayer, aTileEntity), RES_PATH_GUI + "Teleporter.png");
+        super(new GT_Container_CreativeGenerator(aInventoryPlayer, aTileEntity), RES_PATH_GUI + "Creative_Generator.png");
     }
 
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
