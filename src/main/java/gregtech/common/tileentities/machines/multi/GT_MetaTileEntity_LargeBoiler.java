@@ -16,6 +16,7 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -24,10 +25,10 @@ import java.util.ArrayList;
 public abstract class GT_MetaTileEntity_LargeBoiler
         extends GT_MetaTileEntity_MultiBlockBase {
     private boolean firstRun = true;
-    private int mSuperEfficencyIncrease = 0;
     private int integratedCircuitConfig = 0; //Steam output is reduced by 1000L per config
     private int excessFuel = 0; //Eliminate rounding errors for fuels that burn half items
     private int excessProjectedEU = 0; //Eliminate rounding errors from throttling the boiler
+    private int progressTimeStash = 0;
     private float water;
 
     public GT_MetaTileEntity_LargeBoiler(int aID, String aName, String aNameRegional) {
@@ -92,6 +93,23 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "LargeBoiler.png");
     }
+    @Override
+    public void saveNBTData(NBTTagCompound aNBT) {
+        super.saveNBTData(aNBT);
+        aNBT.setFloat("water", water);
+        aNBT.setInteger("excessProjectedEU", excessProjectedEU);
+        aNBT.setInteger("progressTimeStash", progressTimeStash);
+        aNBT.setInteger("excessFuel", excessFuel);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound aNBT) {
+        super.loadNBTData(aNBT);
+        water = aNBT.getFloat("water");
+        excessProjectedEU = aNBT.getInteger("excessProjectedEU");
+        progressTimeStash = aNBT.getInteger("progressTimeStash");
+        excessFuel = aNBT.getInteger("excessFuel");
+    }
 
     public boolean isCorrectMachinePart(ItemStack aStack) {
         return true;
@@ -113,15 +131,27 @@ public abstract class GT_MetaTileEntity_LargeBoiler
             //If not, set the config to zero
             this.integratedCircuitConfig = 0;
         }
+        if(this.progressTimeStash >= 20) {
+            this.progressTimeStash -= 20;
+            this.mMaxProgresstime = 20;
+            this.mMaxProgresstime = adjustBurnTimeForConfig(runtimeBoost(this.mMaxProgresstime));
+            this.mEUt = adjustEUtForConfig(getEUt());
+            this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease();
+            return true;
+        }
 
-        this.mSuperEfficencyIncrease = 0;
         for (GT_Recipe tRecipe : GT_Recipe.GT_Recipe_Map.sDieselFuels.mRecipeList) {
             FluidStack tFluid = GT_Utility.getFluidForFilledItem(tRecipe.getRepresentativeInput(0), true);
             if (tFluid != null && tRecipe.mSpecialValue > 1) {
-                tFluid.amount = 1000;
+                tFluid.amount = 8000;
                 if (depleteInput(tFluid)) {
-                    this.mMaxProgresstime = adjustBurnTimeForConfig(runtimeBoost(tRecipe.mSpecialValue / 2));
+                    this.mMaxProgresstime = runtimeBoost((tRecipe.mSpecialValue * (tFluid.amount / 1000)) / 2);
                     this.mEUt = adjustEUtForConfig(getEUt());
+                    if(this.mMaxProgresstime >= 20) {
+                        this.progressTimeStash = this.mMaxProgresstime-20;
+                        this.mMaxProgresstime = 20;
+                    }
+                    this.mMaxProgresstime = adjustBurnTimeForConfig(this.mMaxProgresstime);
                     this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease() * 4;
                     return true;
                 }
@@ -130,10 +160,15 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         for (GT_Recipe tRecipe : GT_Recipe.GT_Recipe_Map.sDenseLiquidFuels.mRecipeList) {
             FluidStack tFluid = GT_Utility.getFluidForFilledItem(tRecipe.getRepresentativeInput(0), true);
             if (tFluid != null) {
-                tFluid.amount = 1000;
+                tFluid.amount = 8000;
                 if (depleteInput(tFluid)) {
-                    this.mMaxProgresstime = adjustBurnTimeForConfig(Math.max(1, runtimeBoost(tRecipe.mSpecialValue * 2)));
+                    this.mMaxProgresstime = Math.max(1, runtimeBoost(tRecipe.mSpecialValue * (tFluid.amount / 1000) * 2));
                     this.mEUt = adjustEUtForConfig(getEUt());
+                    if(this.mMaxProgresstime >= 20) {
+                        this.progressTimeStash = this.mMaxProgresstime-20;
+                        this.mMaxProgresstime = 20;
+                    }
+                    this.mMaxProgresstime = adjustBurnTimeForConfig(this.mMaxProgresstime);
                     this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease();
                     return true;
                 }
@@ -143,24 +178,39 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         if (!tInputList.isEmpty()) {
             for (ItemStack tInput : tInputList) {
 				if (tInput != GT_OreDictUnificator.get(OrePrefixes.bucket, Materials.Lava, 1)){
-					if (GT_Utility.getFluidForFilledItem(tInput, true) == null && (this.mMaxProgresstime = GT_ModHandler.getFuelValue(tInput) / 80) > 0) {
-                    	this.excessFuel += GT_ModHandler.getFuelValue(tInput) % 80;
-                    	this.mMaxProgresstime += this.excessFuel / 80;
-                    	this.excessFuel %= 80;
-                    	this.mMaxProgresstime = adjustBurnTimeForConfig(runtimeBoost(this.mMaxProgresstime));
-                    	this.mEUt = adjustEUtForConfig(getEUt());
-                    	this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease();
-                    	this.mOutputItems = new ItemStack[]{GT_Utility.getContainerItem(tInput, true)};
-                    	tInput.stackSize -= 1;
+                    int fuelValue = GT_ModHandler.getFuelValue(tInput) / 80;
+					if ((GT_Utility.getFluidForFilledItem(tInput, true) == null && fuelValue > 0)) {
+                        this.mMaxProgresstime = 0;
+                        while (tInput.stackSize > 0 && this.mMaxProgresstime < 20) {
+                            this.mMaxProgresstime += fuelValue;
+                            this.excessFuel += GT_ModHandler.getFuelValue(tInput) % 80;
+                            this.mMaxProgresstime += this.excessFuel / 80;
+                            this.excessFuel %= 80;
+                            this.mOutputItems = new ItemStack[]{GT_Utility.getContainerItem(tInput, true)};
+                            tInput.stackSize -= 1;
+                        }
+                        this.mMaxProgresstime += this.progressTimeStash;
+                        this.progressTimeStash = 0;
+                        if(this.mMaxProgresstime >= 20) {
+                            this.progressTimeStash = this.mMaxProgresstime-20;
+                            this.mMaxProgresstime = 20;
+                        }
+                        this.mEUt = adjustEUtForConfig(getEUt());
+                        this.mMaxProgresstime = adjustBurnTimeForConfig(runtimeBoost(this.mMaxProgresstime));
+                        this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease();
                     	updateSlots();
-                    	if (this.mEfficiencyIncrease > 5000) {
-                        	this.mEfficiencyIncrease = 0;
-                        	this.mSuperEfficencyIncrease = 20;
-                    	}
                     	return true;
                 	}
 				}
             }
+        }
+        if(this.progressTimeStash > 0) {
+            this.mMaxProgresstime = this.progressTimeStash;
+            this.progressTimeStash = 0;
+            this.mMaxProgresstime = adjustBurnTimeForConfig(runtimeBoost(this.mMaxProgresstime));
+            this.mEUt = adjustEUtForConfig(getEUt());
+            this.mEfficiencyIncrease = this.mMaxProgresstime * getEfficiencyIncrease();
+            return true;
         }
         this.mMaxProgresstime = 0;
         this.mEUt = 0;
@@ -171,8 +221,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
 
     public boolean onRunningTick(ItemStack aStack) {
         if (this.mEUt > 0) {
-            if (this.mSuperEfficencyIncrease > 0)
-                mEfficiency = Math.max(0, Math.min(mEfficiency + mSuperEfficencyIncrease, getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
+            mEfficiency = Math.max(0, Math.min(mEfficiency, getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
             int tGeneratedEU = (int) (this.mEUt * 2L * this.mEfficiency / 10000L);
             if (tGeneratedEU > 0) {
                 water = water + tGeneratedEU/160f;
@@ -277,6 +326,9 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     }
 
     private int adjustEUtForConfig(int rawEUt) {
+        if (mEfficiency < getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)) {
+            return rawEUt;
+        }
         int adjustedSteamOutput = rawEUt - 25 * integratedCircuitConfig;
         return Math.max(adjustedSteamOutput, 25);
     }
