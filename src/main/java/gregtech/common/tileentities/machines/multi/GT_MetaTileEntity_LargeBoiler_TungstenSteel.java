@@ -12,7 +12,7 @@ public class GT_MetaTileEntity_LargeBoiler_TungstenSteel
     private long oxygenPerOperation = 40;
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
-        oxygenPerOperation = aConfig.get(ConfigCategories.machineconfig, "LargeBoiler.TungstenSteel.oxygenPerOperation", 40);
+        oxygenPerOperation = Math.min(1, aConfig.get(ConfigCategories.machineconfig, "LargeBoiler.TungstenSteel.oxygenPerOperation", 40));
     }
     public GT_MetaTileEntity_LargeBoiler_TungstenSteel(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
