@@ -1,14 +1,18 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.ConfigCategories;
+import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
+import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,6 +22,9 @@ import java.util.Collection;
 
 public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeTurbine {
 
+    private float oxygenFactor = 28f;
+    private boolean isBoosted = false;
+
     public GT_MetaTileEntity_LargeTurbine_Gas(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
@@ -26,24 +33,31 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
         super(aName);
     }
 
+    public void onConfigLoad(GT_Config aConfig) {
+        super.onConfigLoad(aConfig);
+        oxygenFactor = (float)Math.min(10,Math.max(1000, aConfig.get(ConfigCategories.machineconfig, "LargeTurbineGas.oxygenPerTick", 28)));
+    }
+
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][aColorIndex + 1], aFacing == aSide ? aActive ? new GT_RenderedTexture(Textures.BlockIcons.LARGETURBINE_SS_ACTIVE5) : new GT_RenderedTexture(Textures.BlockIcons.LARGETURBINE_SS5) : Textures.BlockIcons.CASING_BLOCKS[58]};
     }
 
-
     public String[] getDescription() {
         return new String[]{
-                "Controller Block for the Large Gas Turbine",
-                "Size(WxHxD): 3x3x4 (Hollow), Controller (Front centered)",
-                "1x Gas Input Hatch (Side centered)",
-                "1x Maintenance Hatch (Side centered)",
-                "1x Muffler Hatch (Side centered)",
-                "1x Dynamo Hatch (Back centered)",
-                "Stainless Steel Turbine Casings for the rest (24 at least!)",
-                "Needs a Turbine Item (Inside controller GUI)",
-                "Energy Output depending on Rotor: 102-6720EU/t",
-                "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"};
+            "Controller Block for the Large Gas Turbine",
+            "Size(WxHxD): 3x3x4 (Hollow), Controller (Front centered)",
+            "1x Gas Input Hatch (Side centered)",
+            "1x Maintenance Hatch (Side centered)",
+            "1x Muffler Hatch (Side centered)",
+            "1x Dynamo Hatch (Back centered)",
+            "Stainless Steel Turbine Casings for the rest (24 at least!)",
+            "Needs a Turbine Item (Inside controller GUI)",
+            "Energy Output depending on Rotor: 102-6720EU/t",
+            "Oxygen can boost output x3 but fuel consume x2",
+            "Oxygen consuming depends on generating EU/t",
+            "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"
+        };
     }
 
     public int getFuelValue(FluidStack aLiquid) {
@@ -82,14 +96,40 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     }
 
     @Override
+    public int getMaxEfficiency(ItemStack aStack) {
+        if (GT_Utility.isStackInvalid(aStack)) {
+            isBoosted = false;
+            return 0;
+        }
+        if (aStack.getItem() instanceof GT_MetaGenerated_Tool_01) {
+            return isBoosted ? 15000 : 10000;
+        }
+        return 0;
+    }
+
+    @Override
     int fluidIntoPower(ArrayList<FluidStack> aFluids, int aOptFlow, int aBaseEff) {
         int tEU = 0;
 
         int actualOptimalFlow = 0;
 
         if (aFluids.size() >= 1) {
-            FluidStack firstFuelType = new FluidStack(aFluids.get(0), 0); // Identify a SINGLE type of fluid to process.  Doesn't matter which one. Ignore the rest!
+            FluidStack firstFuelType = null;
+            boolean foundFuel = false;
+            for (FluidStack fs : aFluids) {
+                if(!foundFuel) {
+                    firstFuelType = new FluidStack(fs, 0);
+                    foundFuel = getFuelValue(firstFuelType) != 0;
+                }
+            }
+            if(!foundFuel) {
+                return 0;
+            }
+            //FluidStack firstFuelType = new FluidStack(aFluids.get(0), 0); // Identify a SINGLE type of fluid to process.  Doesn't matter which one. Ignore the rest!
             int fuelValue = getFuelValue(firstFuelType);
+            if(isBoosted) {
+                aOptFlow *= 2;
+            }
             actualOptimalFlow = (int) (aOptFlow / fuelValue);
             this.realOptFlow = actualOptimalFlow;
 
@@ -110,6 +150,14 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             }
 
             tEU = (int) (Math.min((float) actualOptimalFlow, totalFlow) * fuelValue);
+
+            if(mEfficiency >= 10000) {
+                int oxygenConsume = Math.max(1, (int)(tEU / ((oxygenFactor * 15000f) / mEfficiency)));
+                this.isBoosted = depleteInput(Materials.Oxygen.getGas(oxygenConsume));
+                if(this.isBoosted) {
+                    tEU = (int)((tEU * mEfficiency) / 10000f);
+                }
+            }
 
             if (totalFlow != actualOptimalFlow) {
                 float efficiency = 1.0f - Math.abs(((totalFlow - (float) actualOptimalFlow) / actualOptimalFlow));

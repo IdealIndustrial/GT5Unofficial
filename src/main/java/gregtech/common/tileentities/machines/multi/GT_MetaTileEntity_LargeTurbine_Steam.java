@@ -23,7 +23,6 @@ public class GT_MetaTileEntity_LargeTurbine_Steam extends GT_MetaTileEntity_Larg
         super(aID, aName, aNameRegional);
     }
 
-
     public GT_MetaTileEntity_LargeTurbine_Steam(String aName) {
         super(aName);
     }
