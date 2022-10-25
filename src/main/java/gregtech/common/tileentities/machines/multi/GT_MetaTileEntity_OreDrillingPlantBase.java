@@ -35,10 +35,12 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
     public static int dFluidPerOperation; // an amount of drilling fluid that miner consumes each operation in normal mode
 
     // under-bedrock params:
-    public static int dFluidUnderBredrock; // an amount of drilling fluid that miner consumes each operation in under-bedrock mode if found an ore
+    public static int dFluidUnderBedrock; // an amount of drilling fluid that miner consumes each operation in under-bedrock mode if found an ore
+    public static int dFluidUnderBedrockIfEmpty; // an amount of drilling fluid that miner consumes each operation in under-bedrock mode if NOT found an ore
     public static int consumeMiningPipeAfterCycles; // after each count of cycles miner will consume 1 mining pipe
     public static int optimizationRate; // decrease in times value of working speed for under-bedrock mode
     public static int[] origOreFactors; // the bigger value will more reduce chance to get an ore
+    public boolean isInCycleFoundStone = false; // the bigger value will more reduce chance to get an ore
     public int oreFactor; // the bigger value will more reduce chance to get an ore
 
     int currentOreFactor;
@@ -144,9 +146,10 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
         optimizationRate = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.optimizationRate", 1);
-        optimizationRate = optimizationRate < 1 ? 1 : Math.min(optimizationRate, 4);
+        optimizationRate = Math.max(1, Math.min(optimizationRate, 4));
         dFluidPerOperation = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidPerOperation", 2000);
-        dFluidUnderBredrock = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidUnderBredrock", 1000) * optimizationRate;
+        dFluidUnderBedrock = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidUnderBedrock", 1000) * optimizationRate;
+        dFluidUnderBedrockIfEmpty = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.dFluidUnderBedrockIfEmpty", 1000) * optimizationRate;
         consumeMiningPipeAfterCycles = aConfig.get(ConfigCategories.machineconfig, "OreDrillingPlant.consumeMiningPipeAfterCycles", 1000) / optimizationRate;
         boolean isFactorsConfigInvalid;
         try { // protection from fools
@@ -342,7 +345,10 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
             if(output == null) output = hash.tryGetItem(randVal);
         }
         if(output == null) {
+            isInCycleFoundStone = true;
             output = GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1L);
+        } else {
+            isInCycleFoundStone = false;
         }
         if(moreCyclesTimes > 1) {
             output.stackSize *= moreCyclesTimes;
@@ -446,7 +452,8 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
                 getBaseMetaTileEntity().decrStackSize(1, 1);
                 underBrOperationsCount = 0;
             }
-            isSuccess = tryConsumeDrillingFluid(dFluidUnderBredrock);
+            isSuccess = tryConsumeDrillingFluid(isInCycleFoundStone ? dFluidUnderBedrockIfEmpty : dFluidUnderBedrock);
+            // ... by default them are equal (Sapient ask for this), but it is possible to edit config of consuming
         } else {
             isSuccess = false;
         }
