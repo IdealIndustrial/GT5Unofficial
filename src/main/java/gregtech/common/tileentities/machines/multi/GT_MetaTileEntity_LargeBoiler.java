@@ -15,6 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -30,6 +31,8 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     private int progressTimeStash = 0;
     private int defaultProgressChunk = 20;
     private int lastFuelEfficiencyIncrease = 0;
+
+    private int tGeneratedEU = 0;
     private boolean solidSuperFuel = false;
     private float water;
     protected boolean oxygenBoost = false;
@@ -113,6 +116,8 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         aNBT.setInteger("excessProjectedEU", excessProjectedEU);
         aNBT.setInteger("progressTimeStash", progressTimeStash);
         aNBT.setInteger("excessFuel", excessFuel);
+        aNBT.setBoolean("oxygenBoost", oxygenBoost);
+        aNBT.setBoolean("solidSuperFuel", solidSuperFuel);
     }
 
     @Override
@@ -122,6 +127,8 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         excessProjectedEU = aNBT.getInteger("excessProjectedEU");
         progressTimeStash = aNBT.getInteger("progressTimeStash");
         excessFuel = aNBT.getInteger("excessFuel");
+        oxygenBoost = aNBT.getBoolean("oxygenBoost");
+        solidSuperFuel = aNBT.getBoolean("solidSuperFuel");
     }
 
     public boolean isCorrectMachinePart(ItemStack aStack) {
@@ -240,7 +247,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     public boolean onRunningTick(ItemStack aStack) {
         if (this.mEUt > 0) {
             mEfficiency = Math.max(0, Math.min(mEfficiency, getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
-            int tGeneratedEU = (int) (this.mEUt * 2L * this.mEfficiency / 10000L);
+            tGeneratedEU = (int) (this.mEUt * 2L * this.mEfficiency / 10000L);
             if (tGeneratedEU > 0) {
                 water = water + tGeneratedEU/160f;
                 int amount = (int) water;
@@ -332,6 +339,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
 
     public int getPollutionPerTick(ItemStack aStack) {
         int adjustedEUOutput = Math.max(25, getEUt() - 25 * integratedCircuitConfig);
+        adjustedEUOutput *= oxygenBoost ? 3 : 1;
         return Math.max(1, 12 * adjustedEUOutput / getEUt());
     }
 
@@ -366,4 +374,22 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         this.excessProjectedEU %= adjustedEUt;
         return adjustedBurnTime;
     }
+
+    @Override
+    public String[] getInfoData() {
+        String tRunning = mMaxProgresstime > 0 ? "Running" : "Stopped";
+        return new String[] {
+            getCasingMaterial() + " Boiler",
+            tRunning,
+            "Producing: ",
+            (oxygenBoost ? "SH Steam" : "Steam "),
+            "Amount: ",
+            (mEUt > 0 ? tGeneratedEU : 0)+" L/t",
+            "Efficiency: ",
+            (mEfficiency / 100) + "%",
+            StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
+            "" + (getIdealStatus() - getRepairStatus())
+        };
+    }
+
 }

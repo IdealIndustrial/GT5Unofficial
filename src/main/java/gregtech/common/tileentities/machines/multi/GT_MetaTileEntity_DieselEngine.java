@@ -234,7 +234,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
 
     @Override
     public int getPollutionPerTick(ItemStack aStack) {
-        return 16;
+        return boostEu ? 32 : 16;
     }
 
     @Override
@@ -244,9 +244,13 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
 
     @Override
     public String[] getInfoData() {
+        String tRunning = mMaxProgresstime>0 ? "Running":"Stopped";
         return new String[]{
                 "Diesel Engine",
-                "Current Output: ",
+                tRunning,
+                "Mode: ",
+                (boostEu ? "Boosted" : "Normal"),
+                "Output: ",
                 mEUt * mEfficiency / 10000 + " EU/t",
                 "Fuel Consumption: ",
                 fuelConsumption + "L/t",
@@ -254,7 +258,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                 fuelValue + " EU/L",
                 "Fuel Remaining: ",
                 fuelRemaining + " Litres",
-                "Current Efficiency: ",
+                "Efficiency: ",
                 (mEfficiency / 100) + "%",
                 StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
                 "" + (getIdealStatus() - getRepairStatus())};

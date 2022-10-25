@@ -7,6 +7,7 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Recipe;
@@ -15,6 +16,7 @@ import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -92,7 +94,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
     @Override
     public int getPollutionPerTick(ItemStack aStack) {
-        return 8;
+        return isBoosted ? 16 : 8;
     }
 
     @Override
@@ -127,10 +129,10 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             }
             //FluidStack firstFuelType = new FluidStack(aFluids.get(0), 0); // Identify a SINGLE type of fluid to process.  Doesn't matter which one. Ignore the rest!
             int fuelValue = getFuelValue(firstFuelType);
-            if(isBoosted) {
-                aOptFlow *= 2;
-            }
             actualOptimalFlow = (int) (aOptFlow / fuelValue);
+            if(isBoosted) {
+                actualOptimalFlow *= 2;
+            }
             this.realOptFlow = actualOptimalFlow;
 
             int remainingFlow = (int) (actualOptimalFlow * 1.25f); // Allowed to use up to 125% of optimal flow.  Variable required outside of loop for multi-hatch scenarios.
@@ -174,6 +176,33 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
         }
         return 0;
+    }
+
+    @Override
+    public String[] getInfoData() {
+        String tRunning = mMaxProgresstime>0 ? "Running":"Stopped";
+        int tDura = 0;
+
+        if (mInventory[1] != null && mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01) {
+            tDura = (int) ((100.0f / GT_MetaGenerated_Tool.getToolMaxDamage(mInventory[1]) * (GT_MetaGenerated_Tool.getToolDamage(mInventory[1]))+1));
+        }
+
+        return new String[]{
+                "Gas Turbine",
+                tRunning,
+                "Mode: ",
+                (isBoosted ? "Boosted" : "Normal"),
+                mEUt+" EU/t",
+                "Optimal Flow: ",
+                (int)realOptFlow+" L/t",
+                "Fuel: ",
+                storedFluid+"L",
+                "Speed: ",
+                (mEfficiency/100)+"%",
+                "Damage: ",
+                tDura+"%",
+                StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
+                "" + (getIdealStatus() - getRepairStatus())};
     }
 
 
