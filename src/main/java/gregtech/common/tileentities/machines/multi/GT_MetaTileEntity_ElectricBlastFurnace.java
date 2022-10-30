@@ -8,9 +8,7 @@ import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Recipe;
@@ -232,6 +230,19 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                             return false;
                         }
                         if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j) != 11) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                if ((i != 0) || (j != 0)) {
+                    IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 3, zDir + j);
+                    if(tTileEntity != null) {
+                        IMetaTileEntity aMetaTileEntity = tTileEntity.getMetaTileEntity();
+                        if(aMetaTileEntity != null && aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_OutputBus){
                             return false;
                         }
                     }
