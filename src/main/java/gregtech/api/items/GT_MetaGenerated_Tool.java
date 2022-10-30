@@ -16,10 +16,10 @@ import gregtech.api.enums.TC_Aspects.TC_AspectStack;
 import gregtech.api.interfaces.IDamagableItem;
 import gregtech.api.interfaces.IToolStats;
 import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.common.tools.GT_Tool_Wrench_HV;
 import ic2.api.item.IBoxable;
 import mods.railcraft.api.core.items.IToolCrowbar;
 import net.minecraft.block.Block;
@@ -33,6 +33,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -44,6 +45,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -239,32 +241,38 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
     @Override
     public boolean onBlockStartBreak(ItemStack aStack, int aX, int aY, int aZ, EntityPlayer aPlayer)
     {
-    	if(aPlayer.worldObj.isRemote){
-    		return false;
-    	}
-    	IToolStats tStats = getToolStats(aStack);
-      Block aBlock = aPlayer.worldObj.getBlock(aX, aY, aZ);
-      if (tStats.isChainsaw()&&(aBlock instanceof IShearable))
-      {
-        IShearable target = (IShearable)aBlock;
-        if ((target.isShearable(aStack, aPlayer.worldObj, aX, aY, aZ)))
-        {
-          ArrayList<ItemStack> drops = target.onSheared(aStack, aPlayer.worldObj, aX, aY, aZ, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, aStack));
-          for (ItemStack stack : drops)
-          {
-            float f = 0.7F;
-            double d = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-            double d1 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-            double d2 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-            EntityItem entityitem = new EntityItem(aPlayer.worldObj, aX + d, aY + d1, aZ + d2, stack);
-            entityitem.delayBeforeCanPickup = 10;
-            aPlayer.worldObj.spawnEntityInWorld(entityitem);
-          }
-          aPlayer.addStat(net.minecraft.stats.StatList.mineBlockStatArray[Block.getIdFromBlock(aBlock)], 1);
-          onBlockDestroyed(aStack, aPlayer.worldObj, aBlock, aX, aY, aZ, aPlayer);
+        if(aPlayer.worldObj.isRemote){
+            return false;
         }
-        return false;
-      }
+        IToolStats tStats = getToolStats(aStack);
+        Block aBlock = aPlayer.worldObj.getBlock(aX, aY, aZ);
+        if (tStats.isChainsaw()&&(aBlock instanceof IShearable))
+        {
+            IShearable target = (IShearable)aBlock;
+            if ((target.isShearable(aStack, aPlayer.worldObj, aX, aY, aZ)))
+            {
+                ArrayList<ItemStack> drops = target.onSheared(aStack, aPlayer.worldObj, aX, aY, aZ, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, aStack));
+                for (ItemStack stack : drops)
+                {
+                    float f = 0.7F;
+                    double d = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
+                    double d1 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
+                    double d2 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
+                    EntityItem entityitem = new EntityItem(aPlayer.worldObj, aX + d, aY + d1, aZ + d2, stack);
+                    entityitem.delayBeforeCanPickup = 10;
+                    aPlayer.worldObj.spawnEntityInWorld(entityitem);
+                }
+                aPlayer.addStat(net.minecraft.stats.StatList.mineBlockStatArray[Block.getIdFromBlock(aBlock)], 1);
+                onBlockDestroyed(aStack, aPlayer.worldObj, aBlock, aX, aY, aZ, aPlayer);
+            }
+            return false;
+        }
+        if(tStats.isWrench()) {
+            NBTTagCompound nbtTagCompound = aStack.getTagCompound();
+            if(nbtTagCompound != null && nbtTagCompound.getInteger("wrenchHvMode") > 1) {
+                breakMachineBlocksAround(aStack, aPlayer.worldObj, aX, aY, aZ, aPlayer);
+            }
+        }
       return super.onBlockStartBreak(aStack, aX, aY, aZ, aPlayer);
     }
 
@@ -311,9 +319,27 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
 
     @Override
     public ItemStack onItemRightClick(ItemStack aStack, World aWorld, EntityPlayer aPlayer) {
+        tryToChangeMode(aStack, aWorld, aPlayer);
         IToolStats tStats = getToolStats(aStack);
         if (tStats != null && tStats.canBlock()) aPlayer.setItemInUse(aStack, 72000);
         return super.onItemRightClick(aStack, aWorld, aPlayer);
+    }
+
+    public void tryToChangeMode(ItemStack aStack, World aWorld, EntityPlayer aPlayer){
+        if (aPlayer.isSneaking() && getMovingObjectPositionFromPlayer(aWorld, aPlayer, true) == null) {
+            NBTTagCompound nbtTagCompound = aStack.getTagCompound();
+            if (nbtTagCompound != null) {
+                int mode = nbtTagCompound.getInteger("wrenchHvMode");
+                if (mode > 0) {
+                    mode = mode == 1 ? 2 : 1;
+                    nbtTagCompound.setInteger("wrenchHvMode", mode);
+                    aStack.setTagCompound(nbtTagCompound);
+                    if (!aWorld.isRemote) {
+                        GT_Utility.sendChatToPlayer(aPlayer, "3x3 mode: " + (mode == 2 ? "ON" : "OFF"));
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -444,7 +470,6 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
                 if (tStats == null || GT_Utility.setStack(aStack, tStats.getBrokenItem(aStack)) == null) {
                     if (tStats != null) GT_Utility.doSoundAtClient(tStats.getBreakingSound(), 1, 1.0F);
                     if (aStack.stackSize > 0) aStack.stackSize--;
-
                 }
             }
             return true;
@@ -485,14 +510,34 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
         return tStats == null ? -1 : tStats.getBaseQuality() + getPrimaryMaterial(aStack).mToolQuality;
     }
 
-    @Override
-    public boolean onBlockDestroyed(ItemStack aStack, World aWorld, Block aBlock, int aX, int aY, int aZ, EntityLivingBase aPlayer) {
+    public boolean onBlockDestroyed(ItemStack aStack, World aWorld, Block aBlock, int aX, int aY, int aZ, EntityLivingBase aPlayer, boolean isPlaySound) {
         if (!isItemStackUsable(aStack)) return false;
         IToolStats tStats = getToolStats(aStack);
         if (tStats == null) return false;
-        GT_Utility.doSoundAtClient(tStats.getMiningSound(), 1, 1.0F);
+        if(isPlaySound) {
+            GT_Utility.doSoundAtClient(tStats.getMiningSound(), 1, 1.0F);
+        }
         doDamage(aStack, (int) Math.max(1, aBlock.getBlockHardness(aWorld, aX, aY, aZ) * tStats.getToolDamagePerBlockBreak()));
         return getDigSpeed(aStack, aBlock, aWorld.getBlockMetadata(aX, aY, aZ)) > 0.0F;
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack aStack, World aWorld, Block aBlock, int aX, int aY, int aZ, EntityLivingBase aPlayer) {
+        return onBlockDestroyed(aStack, aWorld, aBlock, aX, aY, aZ, aPlayer, true);
+    }
+
+    private void breakMachineBlocksAround(ItemStack aStack, World aWorld, int aX, int aY, int aZ, EntityPlayer aPlayer){
+        //ArrayList<ChunkPosition> blocks = GT_Utility.getBlocksAroundRadius(aX, aY, aZ, 1, aWorld);
+        ArrayList<ChunkPosition> blocks = GT_Utility.getBlocksPlaneLookAt(getMovingObjectPositionFromPlayer(aPlayer.worldObj, aPlayer, true));
+        for (ChunkPosition pos : blocks) {
+            Block block = aWorld.getBlock(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ);
+            int tMeta = aWorld.getBlockMetadata(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ);
+            if(block != Blocks.air && GT_Tool_Wrench_HV.canBreakBlock(block, tMeta)) {
+                onBlockDestroyed(aStack, aPlayer.worldObj, block, aX, aY, aZ, aPlayer, false);
+                block.dropBlockAsItem(aWorld, pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ, tMeta,0);
+                aWorld.setBlockToAir(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ);
+            }
+        }
     }
 
     @Override

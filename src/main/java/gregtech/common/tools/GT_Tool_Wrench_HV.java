@@ -3,7 +3,12 @@ package gregtech.common.tools;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.items.GT_MetaGenerated_Tool;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class GT_Tool_Wrench_HV
         extends GT_Tool_Wrench_LV {
@@ -41,6 +46,22 @@ public class GT_Tool_Wrench_HV
 
     public boolean canBlock() {
         return false;
+    }
+
+    public static boolean canBreakBlock(Block aBlock, int aMetaData) {
+        String tTool = aBlock.getHarvestTool(aMetaData);
+        return ((tTool != null) && (tTool.equals("wrench"))) || (aBlock.getMaterial() == Material.piston) || (aBlock == Blocks.hopper) || (aBlock == Blocks.dispenser) || (aBlock == Blocks.dropper);
+    }
+
+    @Override
+    public void onToolCrafted(ItemStack aStack, EntityPlayer aPlayer) {
+        super.onToolCrafted(aStack, aPlayer);
+        NBTTagCompound nbtTagCompound = aStack.getTagCompound();
+        if(nbtTagCompound == null) {
+            nbtTagCompound =  new NBTTagCompound();
+        }
+        nbtTagCompound.setInteger("wrenchHvMode", 1);
+        aStack.setTagCompound(nbtTagCompound);
     }
 
     public IIconContainer getIcon(boolean aIsToolHead, ItemStack aStack) {

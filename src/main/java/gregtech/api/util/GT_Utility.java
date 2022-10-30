@@ -2,27 +2,20 @@ package gregtech.api.util;
 
 import cofh.api.transport.IItemDuct;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
 import gregtech.api.damagesources.GT_DamageSources;
 import gregtech.api.enchants.Enchantment_Radioactivity;
 import gregtech.api.enums.*;
-import gregtech.api.events.BlockScanningEvent;
-import gregtech.api.interfaces.IDebugableBlock;
 import gregtech.api.interfaces.IProjectileItem;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.*;
 import gregtech.api.items.GT_EnergyArmor_Item;
 import gregtech.api.items.GT_Generic_Item;
-import gregtech.api.items.GT_MetaGenerated_Item;
-import gregtech.api.items.GT_MetaGenerated_Tool;
-import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
 import gregtech.api.net.GT_Packet_Sound;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
 import gregtech.api.threads.GT_Runnable_Sound;
-import gregtech.common.GT_Proxy;
 import gregtech.common.items.GT_FluidDisplayItem;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeInputItemStack;
@@ -50,10 +43,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.*;
+import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -80,8 +71,6 @@ import java.util.function.Function;
 import com.mojang.authlib.GameProfile;
 
 import static gregtech.api.enums.GT_Values.*;
-import static gregtech.common.GT_Proxy.GTPOLLUTION;
-import static gregtech.common.GT_UndergroundOil.undergroundOilReadInformation;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
@@ -1105,6 +1094,47 @@ public class GT_Utility {
 
     public static boolean arrayContains(Object aObject, Object... aObjects) {
         return listContains(aObject, Arrays.asList(aObjects));
+    }
+
+    public static ArrayList<ChunkPosition> getBlocksAroundRadius(int aX, int aY, int aZ, int radius, World w){
+        ArrayList<ChunkPosition> blockPositions = new ArrayList<ChunkPosition>();
+        int baseX = aX - radius;
+        int baseY = aY - radius;
+        int baseZ = aZ - radius;
+        int finalX = aX + radius;
+        int finalY = aY + radius;
+        int finalZ = aZ + radius;
+        for(int x = baseX; x <= finalX; x ++){
+            for(int y = baseY; y <= finalY; y ++){
+                for(int z = baseZ; z <= finalZ; z ++){
+                    ChunkPosition chPos = new ChunkPosition(x,y,z);
+                    blockPositions.add(chPos);
+                }
+            }
+        }
+        return blockPositions;
+    }
+
+    public static ArrayList<ChunkPosition> getBlocksPlaneLookAt(MovingObjectPosition pos){
+        ArrayList<ChunkPosition> blockPositions = new ArrayList<ChunkPosition>();
+        boolean xShift = pos.sideHit != 4 && pos.sideHit != 5;
+        boolean zShift = pos.sideHit != 2 && pos.sideHit != 3;
+        boolean yShift = pos.sideHit != 0 && pos.sideHit != 1;
+        int baseX = pos.blockX - (xShift ? 1 : 0);
+        int baseY = pos.blockY - (yShift ? 1 : 0);
+        int baseZ = pos.blockZ - (zShift ? 1 : 0);
+        int finalX = pos.blockX + (xShift ? 1 : 0);
+        int finalY = pos.blockY + (yShift ? 1 : 0);
+        int finalZ = pos.blockZ + (zShift ? 1 : 0);
+        for(int x = baseX; x <= finalX; x ++){
+            for(int y = baseY; y <= finalY; y ++){
+                for(int z = baseZ; z <= finalZ; z ++){
+                    ChunkPosition chPos = new ChunkPosition(x,y,z);
+                    blockPositions.add(chPos);
+                }
+            }
+        }
+        return blockPositions;
     }
 
     public static boolean listContains(Object aObject, Collection aObjects) {
