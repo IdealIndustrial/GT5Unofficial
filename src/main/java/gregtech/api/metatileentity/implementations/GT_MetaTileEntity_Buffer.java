@@ -8,6 +8,7 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 
 import static gregtech.api.enums.GT_Values.V;
 
@@ -216,9 +217,9 @@ public abstract class GT_MetaTileEntity_Buffer extends GT_MetaTileEntity_TieredM
             mTargetStackSize = (byte) ((mTargetStackSize + (aPlayer.isSneaking()? -1 : 1)) % 65);
             if(mTargetStackSize <0){mTargetStackSize = 64;}
             if (mTargetStackSize == 0) {
-                GT_Utility.sendChatToPlayer(aPlayer, trans("098","Do not regulate Item Stack Size"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_098"));
             } else {
-                GT_Utility.sendChatToPlayer(aPlayer, trans("099","Regulate Item Stack Size to: ") + mTargetStackSize);
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_099", mTargetStackSize));
             }
         }
     }
