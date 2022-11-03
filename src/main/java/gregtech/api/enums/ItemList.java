@@ -644,7 +644,7 @@ public enum ItemList implements IItemContainer {
     Casing_Coil_Cupronickel, Casing_Coil_Kanthal, Casing_Coil_Nichrome, Casing_Coil_TungstenSteel, Casing_Coil_HSSG, Casing_Coil_Naquadah, Casing_Coil_NaquadahAlloy,
     MobRep_LV, MobRep_MV, MobRep_HV, MobRep_EV, MobRep_IV, MobRep_LuV, MobRep_ZPM, MobRep_UV, Cover_PlayerDetector, Machine_Multi_HeatExchanger,
     Block_BronzePlate, Block_IridiumTungstensteel, Block_Plascrete, Block_Plascrete_Window, Block_TungstenSteelReinforced,
-    Honeycomb, Charcoal_Pile, Block_BrittleCharcoal, Seismic_Prospector, Seismic_Prospector_Adv, OilDrill1, OilDrill2, OilDrill3, ConcreteBackfiller1, ConcreteBackfiller2, OreDrill1, OreDrill2, OreDrill3, OreDrill4, PyrolyseOven, OilCracker, Crop_Drop_UUMBerry, Crop_Drop_UUABerry, Empty_Board_Basic, Empty_Board_Elite,
+    Honeycomb, Charcoal_Pile, PrimitiveMiner, Block_BrittleCharcoal, Seismic_Prospector, Seismic_Prospector_Adv, OilDrill1, OilDrill2, OilDrill3, ConcreteBackfiller1, ConcreteBackfiller2, OreDrill1, OreDrill2, OreDrill3, OreDrill4, PyrolyseOven, OilCracker, Crop_Drop_UUMBerry, Crop_Drop_UUABerry, Empty_Board_Basic, Empty_Board_Elite,
     Battery_Charger_4by4_ULV, Battery_Charger_4by4_LV, Battery_Charger_4by4_MV, Battery_Charger_4by4_HV, Battery_Charger_4by4_EV, Battery_Charger_4by4_IV, Battery_Charger_4by4_LuV, Battery_Charger_4by4_ZPM, Battery_Charger_4by4_UV, Battery_Charger_4by4_MAX,
     MicroTransmitter_HV, MicroTransmitter_EV, MicroTransmitter_IV, MicroTransmitter_LUV, MicroTransmitter_ZPM,
     Crop_Drop_Bauxite, Crop_Drop_Ilmenite, Crop_Drop_Pitchblende, Crop_Drop_Uraninite, Crop_Drop_Thorium, Crop_Drop_Nickel, Crop_Drop_Zinc, Crop_Drop_Manganese, Crop_Drop_Scheelite, Crop_Drop_Platinum, Crop_Drop_Iridium, Crop_Drop_Osmium, Crop_Drop_Naquadah, Uraniumcell_1, Uraniumcell_2, Uraniumcell_4, Moxcell_1, Moxcell_2, Moxcell_4,
@@ -663,6 +663,7 @@ public enum ItemList implements IItemContainer {
     Machine_LV_CircuitAssembler, Machine_MV_CircuitAssembler, Machine_HV_CircuitAssembler, Machine_EV_CircuitAssembler, Machine_IV_CircuitAssembler, Machine_LuV_CircuitAssembler, Machine_ZPM_CircuitAssembler, Machine_UV_CircuitAssembler, Circuit_Integrated_Good, Machine_IV_LightningRod, Machine_HV_LightningRod, Machine_EV_LightningRod,
     VOLUMETRIC_FLASK, Machine_DigitalTransformer_EV, Machine_DigitalTransformer_IV, Machine_DigitalTransformer_LuV, Machine_DigitalTransformer_ZPM, Machine_DigitalTransformer_UV, Machine_DigitalTransformer_MAX,
     Solvent_Spray, Solvent_Spray_Used, ProspectorsBook, ProspectorsBookCreative, Machine_Well, FluidFilterItem, SimpleFluidFilterItem, PrimitiveFluidFilterItem, ItemWaterProofUpgrade, Machine_WaterPump_UVL, Machine_WaterPump_LV, Machine_WaterPump_MV, Machine_WaterPump_HV, Machine_WaterPump_EV, Machine_WaterPump_IV, Casing_Filter_ULV, Casing_Filter_LV, Casing_Filter_MV, Casing_Filter_HV, Casing_Filter_EV, Casing_Filter_IV,
+    Flint_Drill_Head,
     Tool_DataReader_MV, Tool_DataReader_EV, Tool_CD, Machine_Debug_LagCreator,
     Casing_Pyrolyse, AutoRepairKit;
 

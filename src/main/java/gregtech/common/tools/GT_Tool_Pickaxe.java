@@ -77,6 +77,11 @@ public class GT_Tool_Pickaxe
         return ((tTool != null) && (tTool.equals("pickaxe"))) || (aBlock.getMaterial() == Material.rock) || (aBlock.getMaterial() == Material.iron) || (aBlock.getMaterial() == Material.anvil) || (aBlock.getMaterial() == Material.glass);
     }
 
+    public static boolean canMineBlock(Block aBlock, byte aMetaData) {
+        String tTool = aBlock.getHarvestTool(aMetaData);
+        return ((tTool != null) && (tTool.equals("pickaxe"))) || (aBlock.getMaterial() == Material.rock) || (aBlock.getMaterial() == Material.iron) || (aBlock.getMaterial() == Material.anvil) || (aBlock.getMaterial() == Material.glass);
+    }
+
     public ItemStack getBrokenItem(ItemStack aStack) {
         return null;
     }

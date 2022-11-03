@@ -732,6 +732,34 @@ public class GT_Utility {
         }
         return moveStackIntoPipe(fromTile, toTile, new int[]{aGrabFrom}, (byte) 6, aPutTo, aFilter, aInvertFilter, aMaxTargetStackSize, aMinTargetStackSize, aMaxMoveAtOnce, aMinMoveAtOnce, aDoCheckChests);
     }
+    public static void pushToChest(TileEntityChest aChest, ItemStack iStack){
+        pushToChest(aChest, new ArrayList<ItemStack>(Collections.singletonList(iStack)));
+    }
+
+    public static void pushToChest(TileEntityChest aChest, ArrayList<ItemStack> iStacks){
+        for(ItemStack iStack : iStacks) {
+            boolean ItemStackPushed = false;
+            for (int i = 0; i < aChest.getSizeInventory(); i++) {
+                ItemStack chestStack = aChest.getStackInSlot(i);
+                if(!ItemStackPushed) {
+                    if (chestStack != null && chestStack.getItem().equals(iStack.getItem())) {
+                        if (chestStack.getMaxStackSize() >= chestStack.stackSize + iStack.stackSize) {
+                            chestStack.stackSize += iStack.stackSize;
+                            ItemStackPushed = true;
+                            aChest.setInventorySlotContents(i, chestStack);
+                        } else {
+                            iStack.stackSize -= chestStack.getMaxStackSize() - chestStack.stackSize;
+                            chestStack.stackSize = chestStack.getMaxStackSize();
+                            aChest.setInventorySlotContents(i, chestStack);
+                        }
+                    } else if (chestStack == null) {
+                        aChest.setInventorySlotContents(i, iStack.copy());
+                        ItemStackPushed = true;
+                    }
+                }
+            }
+        }
+    }
 
     public static byte moveFromSlotToSide(IInventory fromTile, Object toTile, int aGrabFrom, byte aPutTo, List<ItemStack> aFilter, boolean aInvertFilter, byte aMaxTargetStackSize, byte aMinTargetStackSize, byte aMaxMoveAtOnce, byte aMinMoveAtOnce) {
         return moveFromSlotToSide(fromTile, toTile, aGrabFrom, aPutTo, aFilter, aInvertFilter, aMaxTargetStackSize, aMinTargetStackSize, aMaxMoveAtOnce, aMinMoveAtOnce, true);
