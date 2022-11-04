@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -358,21 +359,21 @@ public class GT_MetaPipeEntity_Fluid extends MetaPipeEntity {
     		if (aPlayer.isSneaking()) {
     			if (isInputDisabledAtSide(tSide)) {
     				mDisableInput &= ~tMask;
-    				GT_Utility.sendChatToPlayer(aPlayer, trans("212", "Input enabled"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_212"));
     				if (!isConnectedAtSide(tSide))
             			connect(tSide);
     			} else {
     				mDisableInput |= tMask;
-    				GT_Utility.sendChatToPlayer(aPlayer, trans("213", "Input disabled"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_213"));
     			}
     		} else {
     			if (!isConnectedAtSide(tSide)) {
     				if (connect(tSide) > 0)
-    				GT_Utility.sendChatToPlayer(aPlayer, trans("214", "Connected"));
+                        aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_214"));
     			}
         		else {
         			disconnect(tSide);
-        			GT_Utility.sendChatToPlayer(aPlayer, trans("215", "Disconnected"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_215"));
         		}
     		}
             GregTech_API.causeMachineUpdate(getBaseMetaTileEntity().getWorld(), getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getYCoord(), getBaseMetaTileEntity().getZCoord());
