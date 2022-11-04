@@ -13,17 +13,13 @@ public class GT_Cover_CreativeWaterLoader extends GT_CoverBehavior {
     public int doCoverThings(byte aSide, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity, long aTimer) {
         IFluidHandler tTank = (IFluidHandler) aTileEntity;
         FluidStack tLiquid = getWater(8000);
-        try {
-            FluidTankInfo[] fInfoList = tTank.getTankInfo(ForgeDirection.UNKNOWN);
-            if(fInfoList.length > 0) {
-                FluidStack tankFluid = fInfoList[0].fluid;
-                if(tankFluid != null && tankFluid.amount > 0) {
-                    tLiquid = tankFluid.copy();
-                    tLiquid.amount = 8000;
-                }
+        FluidTankInfo[] fInfoList = tTank.getTankInfo(ForgeDirection.UNKNOWN);
+        if(fInfoList.length > 0) {
+            FluidStack tankFluid = fInfoList[0].fluid;
+            if(tankFluid != null && tankFluid.amount > 0) {
+                tLiquid = tankFluid.copy();
+                tLiquid.amount = 8000;
             }
-        } catch (Throwable e) {
-            tLiquid = getWater(8000);
         }
         tTank.fill(ForgeDirection.getOrientation(aSide), tLiquid, true);
         return aCoverVariable;
