@@ -8,6 +8,7 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -61,12 +62,12 @@ public class GT_Cover_Drain
         aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % 6;
         if(aCoverVariable <0){aCoverVariable = 5;}
         switch(aCoverVariable) {
-            case 0: GT_Utility.sendChatToPlayer(aPlayer, trans("022", "Import")); break;
-            case 1: GT_Utility.sendChatToPlayer(aPlayer, trans("023", "Import (conditional)")); break;
-            case 2: GT_Utility.sendChatToPlayer(aPlayer, trans("024", "Import (invert cond)")); break;
-            case 3: GT_Utility.sendChatToPlayer(aPlayer, trans("025", "Keep Liquids Away")); break;
-            case 4: GT_Utility.sendChatToPlayer(aPlayer, trans("026", "Keep Liquids Away (conditional)")); break;
-            case 5: GT_Utility.sendChatToPlayer(aPlayer, trans("027", "Keep Liquids Away (invert cond)")); break;
+            case 0: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_022")); break;
+            case 1: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_023")); break;
+            case 2: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_024")); break;
+            case 3: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_025")); break;
+            case 4: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_026")); break;
+            case 5: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_027")); break;
         }
         return aCoverVariable;
     }

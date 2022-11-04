@@ -1826,6 +1826,15 @@ public class GT_Utility {
         symbols.setGroupingSeparator(' ');
         return formatter.format(aNumber);
     }
+    public static  String formatNumbersShort(long num) {
+        if (num >= 1000000) {
+            return num / 1000000 + "M";
+        }
+        if (num >= 1000) {
+            return num / 1000 + "K";
+        }
+        return num + "";
+    }
 
     /*
      * Check if stack has enough items of given type and subtract from stack, if there's no creative or 111 stack.

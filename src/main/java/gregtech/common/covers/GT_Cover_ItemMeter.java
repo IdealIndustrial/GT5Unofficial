@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_ItemMeter extends GT_CoverBehavior {
@@ -64,11 +65,11 @@ public class GT_Cover_ItemMeter extends GT_CoverBehavior {
         if (aPlayer.isSneaking()) {
             if ((aCoverVariable & INVERT_BIT) == INVERT_BIT) {
                 aCoverVariable = aCoverVariable & ~INVERT_BIT;
-                GT_Utility.sendChatToPlayer(aPlayer, trans("NORMAL","Normal"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_051"));
             }
             else {
                 aCoverVariable = aCoverVariable | INVERT_BIT;
-                GT_Utility.sendChatToPlayer(aPlayer, trans("INVERTED","Inverted"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_052"));
             }
             return aCoverVariable;
         }
@@ -78,9 +79,9 @@ public class GT_Cover_ItemMeter extends GT_CoverBehavior {
             slot = 0;
 
         if (slot == 0)
-            GT_Utility.sendChatToPlayer(aPlayer, trans("053", "Slot: ") + trans("ALL", "All"));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_053","all"));
         else
-            GT_Utility.sendChatToPlayer(aPlayer, trans("053", "Slot: ") + (slot - 1));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_053",(slot - 1)));
 
         //aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % (aTileEntity.getSizeInventory() + 2);
         //switch(aCoverVariable) {

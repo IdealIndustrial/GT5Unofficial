@@ -1,6 +1,5 @@
 package gregtech.api.metatileentity.implementations;
 
-import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -15,17 +14,33 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
     public GT_Recipe_Map mRecipeMap = null;
+    private boolean isCreative = false;
 
     public GT_MetaTileEntity_Hatch_Input(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 3, new String[]{"Fluid Input for Multiblocks",  "Capacity: "+ countCapacity(aTier) + "L"});
+    }
+
+    public GT_MetaTileEntity_Hatch_Input(int aID, String aName, String aNameRegional, int aTier, boolean isHatchCreative) {
+        super(aID, aName, aNameRegional, aTier, 3, new String[]{"Fluid Input for Multiblocks",  "Capacity: "+ countCapacity(aTier) + "L"});
+        isCreative = isHatchCreative;
     }
 
     public GT_MetaTileEntity_Hatch_Input(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, 3, aDescription, aTextures);
     }
 
+    public GT_MetaTileEntity_Hatch_Input(String aName, int aTier, String aDescription, ITexture[][][] aTextures, boolean isHatchCreative) {
+        super(aName, aTier, 3, aDescription, aTextures);
+        isCreative = isHatchCreative;
+    }
+
     public GT_MetaTileEntity_Hatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, 3, aDescription, aTextures);
+    }
+
+    public GT_MetaTileEntity_Hatch_Input(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, boolean isHatchCreative) {
+        super(aName, aTier, 3, aDescription, aTextures);
+        isCreative = isHatchCreative;
     }
 
     @Override
@@ -36,6 +51,17 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
     @Override
     public ITexture[] getTexturesInactive(ITexture aBaseTexture) {
         return new ITexture[]{aBaseTexture, new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_IN)};
+    }
+
+    @Override
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        if(isCreative) {
+            FluidStack fs = getFluid();
+            if(fs != null && fs.amount > 0 && fs.amount < 512000) {
+                fs.amount = 512000;
+                setFillableStack(fs);
+            }
+        }
     }
 
     @Override
@@ -55,7 +81,7 @@ public class GT_MetaTileEntity_Hatch_Input extends GT_MetaTileEntity_Hatch {
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_Hatch_Input(mName, mTier, mDescriptionArray, mTextures);
+        return new GT_MetaTileEntity_Hatch_Input(mName, mTier, mDescriptionArray, mTextures, isCreative);
     }
 
     @Override

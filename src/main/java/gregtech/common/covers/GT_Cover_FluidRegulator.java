@@ -11,6 +11,7 @@ import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -79,8 +80,7 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 		if (aCoverVariable < (0 - mTransferRate)) {
 			aCoverVariable = (0 - mTransferRate);
 		}
-		GT_Utility.sendChatToPlayer(aPlayer,
-				trans("048", "Pump speed: ") + aCoverVariable + trans("049", "L/tick ") + aCoverVariable * 20 + trans("050", "L/sec"));
+		aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_048",aCoverVariable).appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_049",aCoverVariable * 20).appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_050"))));
 		return aCoverVariable;
 	}
 
@@ -97,8 +97,7 @@ public class GT_Cover_FluidRegulator extends GT_CoverBehavior {
 		if (aCoverVariable < (0 - mTransferRate)) {
 			aCoverVariable = (0 - mTransferRate);
 		}
-		GT_Utility.sendChatToPlayer(aPlayer,
-				trans("048", "Pump speed: ") + aCoverVariable + trans("049", "L/tick ") + aCoverVariable * 20 + trans("050", "L/sec"));
+		aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_048",aCoverVariable).appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_049",aCoverVariable * 20).appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_050"))));
 		aTileEntity.setCoverDataAtSide(aSide, aCoverVariable);
 		return true;
 	}
