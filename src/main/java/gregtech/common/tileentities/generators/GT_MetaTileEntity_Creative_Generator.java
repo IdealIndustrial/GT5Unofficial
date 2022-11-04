@@ -21,7 +21,6 @@ public class GT_MetaTileEntity_Creative_Generator extends GT_MetaTileEntity_Basi
 
     public int aTier = 0;
     public int ampers = 1;
-    public int mEfficiency = 100;
 
     public GT_MetaTileEntity_Creative_Generator(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, 0, new String[]{"Creative energy source"});
