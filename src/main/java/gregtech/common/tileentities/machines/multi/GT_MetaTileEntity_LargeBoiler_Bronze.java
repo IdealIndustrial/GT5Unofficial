@@ -72,4 +72,8 @@ public class GT_MetaTileEntity_LargeBoiler_Bronze
     int runtimeBoost(int mTime) {
         return mTime * 2;
     }
+
+    public long getOxygenPerOperation(){
+        return 0;
+    }
 }

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class GT_Container_ChestBuffer
         extends GT_ContainerMetaTile_Machine {
@@ -39,27 +40,27 @@ public class GT_Container_ChestBuffer
             if (aSlotIndex == 27) {
                 ((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bOutput = (!((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bOutput);
                 if (((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bOutput) {
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("116","Emit Energy to Outputside"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_116"));
                 } else {
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("117","Don't emit Energy"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_117"));
                 }
                 return null;
             }
             if (aSlotIndex == 28) {
                 ((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bRedstoneIfFull = (!((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bRedstoneIfFull);
                 if (((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bRedstoneIfFull) {
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("118","Emit Redstone if no Slot is free"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_118"));
                 } else {
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("119","Don't emit Redstone"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_119"));
                 }
                 return null;
             }
             if (aSlotIndex == 29) {
                 ((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bInvert = (!((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bInvert);
                 if (((GT_MetaTileEntity_ChestBuffer) this.mTileEntity.getMetaTileEntity()).bInvert) {
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("120","Invert Redstone"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_120"));
                 } else {
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("121","Don't invert Redstone"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_121"));
                 }
                 return null;
             }

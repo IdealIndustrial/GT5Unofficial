@@ -89,7 +89,8 @@ public class GT_Worldgenloader
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.jasper", true, 5, 250, 1, !tPFAA, true, false, false, true, true, Materials.Jasper);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.bluetopaz", true, 5, 250, 1, !tPFAA, true, false, false, true, true, Materials.BlueTopaz);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.amber", true, 5, 250, 1, !tPFAA, true, false, false, true, true, Materials.Amber);
-        new GT_Worldgen_GT_Ore_SmallPieces("ore.small.foolsruby", true, 5, 250, 1, !tPFAA, true, false, false, true, true, Materials.FoolsRuby);
+        //prevent generating fake ruby ore
+        //new GT_Worldgen_GT_Ore_SmallPieces("ore.small.foolsruby", true, 5, 250, 1, !tPFAA, true, false, false, true, true, Materials.FoolsRuby);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.garnetred", true, 5, 250, 1, !tPFAA, true, false, false, true, true, Materials.GarnetRed);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.garnetyellow", true, 5, 250, 1, !tPFAA, true, false, false, true, true, Materials.GarnetYellow);
         new GT_Worldgen_GT_Ore_SmallPieces("ore.small.redstone", true, 5, 20, 8, !tPFAA, true, false, true, true, true, Materials.Redstone);

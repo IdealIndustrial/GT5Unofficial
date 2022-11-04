@@ -4,7 +4,7 @@ import gregtech.GT_Mod;
 import gregtech.api.enums.Dyes;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Textures;
-import gregtech.api.gui.GT_Container_MultiMachine;
+import gregtech.api.gui.GT_Container_Fusion;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -46,7 +46,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
 
     @Override
     public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_Container_MultiMachine(aPlayerInventory, aBaseMetaTileEntity);
+        return new GT_Container_Fusion(aPlayerInventory, aBaseMetaTileEntity);
     }
 
     @Override

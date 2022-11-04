@@ -12,6 +12,7 @@ import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_DoesWork extends GT_CoverBehavior {
@@ -38,10 +39,10 @@ public class GT_Cover_DoesWork extends GT_CoverBehavior {
         aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % 4;
         if(aCoverVariable <0){aCoverVariable = 3;}
         switch(aCoverVariable) {
-            case 0: GT_Utility.sendChatToPlayer(aPlayer, trans("018", "Normal")); break; // Progress scaled
-            case 1: GT_Utility.sendChatToPlayer(aPlayer, trans("019", "Inverted")); break; // ^ inverted
-            case 2: GT_Utility.sendChatToPlayer(aPlayer, trans("020", "Ready to work")); break; // Not Running
-            case 3: GT_Utility.sendChatToPlayer(aPlayer, trans("021", "Not ready to work")); break; // Running
+            case 0: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_018")); break; // Progress scaled
+            case 1: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_019")); break; // ^ inverted
+            case 2: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_020")); break; // Not Running
+            case 3: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_021")); break; // Running
         }
         return aCoverVariable;
     }
