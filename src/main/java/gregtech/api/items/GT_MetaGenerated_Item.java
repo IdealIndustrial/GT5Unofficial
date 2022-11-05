@@ -79,7 +79,7 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
      */
     public GT_MetaGenerated_Item(String aUnlocalized, short aOffset, short aItemAmount) {
         super(aUnlocalized);
-        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS);
+        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS.get());
         setHasSubtypes(true);
         setMaxDamage(0);
         mEnabledItems = new BitSet(aItemAmount);

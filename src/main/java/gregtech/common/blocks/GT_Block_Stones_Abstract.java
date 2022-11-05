@@ -31,7 +31,7 @@ public class GT_Block_Stones_Abstract
         super(aItemClass, aName, Material.rock);
         OrePrefixes.crafting.add(this);
         setStepSound(soundTypeStone);
-        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS);
+        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS.get());
         GT_ModHandler.addSmeltingRecipe(new ItemStack(this, 1, 0), new ItemStack(this, 1, 7));
         GT_ModHandler.addSmeltingRecipe(new ItemStack(this, 1, 1), new ItemStack(this, 1, 0));
         GT_ModHandler.addSmeltingRecipe(new ItemStack(this, 1, 2), new ItemStack(this, 1, 0));
