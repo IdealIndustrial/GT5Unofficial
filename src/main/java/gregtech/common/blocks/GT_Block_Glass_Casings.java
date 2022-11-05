@@ -89,8 +89,7 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess aWorld, int aX, int aY, int aZ, int aSide)
     {
-        Block block = aWorld.getBlock(aX, aY, aZ);
-        return !block.isBlockSolid(aWorld, aX, aY, aZ, aSide);
+        return aWorld.getBlock(aX, aY, aZ) != this && super.shouldSideBeRendered(aWorld, aX, aY, aZ, aSide);
     }
 
 }
