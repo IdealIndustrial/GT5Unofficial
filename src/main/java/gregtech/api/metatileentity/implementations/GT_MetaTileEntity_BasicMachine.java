@@ -63,13 +63,6 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
     public FluidStack mFluidOut;
     public FluidStack mFluid1, mFluid2;
 
-    public static final String labelInToOut = wTrans("inToOutStatus", "Input from Output Side for");
-    public static final String labelItems = wTrans("items", "Items");
-    public static final String labelFluids = wTrans("fluids", "Fluids");
-    public static final String labelAndFor = wTrans("andFor", "and for");
-    public static final String labelAllowed = EnumChatFormatting.DARK_GREEN + wTrans("allowed", "Allowed") + EnumChatFormatting.RESET;
-    public static final String labelForbidden = EnumChatFormatting.RED + wTrans("forbidden", "Forbidden") + EnumChatFormatting.RESET;
-
     /**
      * @param aOverlays 0 = SideFacingActive
      *                  1 = SideFacingInactive
@@ -785,18 +778,19 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
             inputFromOutputCounter++;
             mAllowInputFromOutputSide = inputFromOutputCounter % 2 == 1;
             mAllowFluidInputFromOutputSide = inputFromOutputCounter % 4 > 1;
-            GT_Utility.sendChatToPlayer(aPlayer, labelInToOut + " " + labelItems
-                    + " " + (mAllowInputFromOutputSide ? labelAllowed : labelForbidden) + " " + labelAndFor
-                    + " " + labelFluids + " " + (mAllowFluidInputFromOutputSide ? labelAllowed : labelForbidden));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation(mAllowInputFromOutputSide ?
+                    "Interaction_DESCRIPTION_Index_095" : "Interaction_DESCRIPTION_Index_096"));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation(mAllowFluidInputFromOutputSide ?
+                    "Interaction_DESCRIPTION_Index_226" : "Interaction_DESCRIPTION_Index_227"));
         } else if(aSide == te.getFrontFacing()){
-            // aPlayer.addChatComponentMessage(new ChatComponentTranslation(mAllowInputFromOutputSide ? "Interaction_DESCRIPTION_Index_095" : "Interaction_DESCRIPTION_Index_096"));
             mAllowInputFromOutputSide = !mAllowInputFromOutputSide;
-            GT_Utility.sendChatToPlayer(aPlayer, labelInToOut + " " + labelItems
-                    + " " + (mAllowInputFromOutputSide ? labelAllowed : labelForbidden));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation(mAllowInputFromOutputSide ?
+                    "Interaction_DESCRIPTION_Index_095" : "Interaction_DESCRIPTION_Index_096"));
         } else if(aSide == te.getFluidFacing()){
             mAllowFluidInputFromOutputSide = !mAllowFluidInputFromOutputSide;
-            GT_Utility.sendChatToPlayer(aPlayer, labelInToOut + " " + labelFluids
-                    + " " + (mAllowFluidInputFromOutputSide ? labelAllowed : labelForbidden));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation(mAllowFluidInputFromOutputSide ?
+                    "Interaction_DESCRIPTION_Index_226" : "Interaction_DESCRIPTION_Index_227"));
+
         }
     }
 
