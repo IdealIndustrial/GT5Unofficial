@@ -42,6 +42,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
@@ -334,7 +335,7 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
                 nbtTagCompound.setBoolean("mode3by3", mode3by3);
                 aStack.setTagCompound(nbtTagCompound);
                 if (!aWorld.isRemote) {
-                    GT_Utility.sendChatToPlayer(aPlayer, "3x3 mode: " + (mode3by3 ? "ON" : "OFF"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation(mode3by3 ? "Interaction_DESCRIPTION_Index_224" : "Interaction_DESCRIPTION_Index_225"));
                 }
             }
         }
