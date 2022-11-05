@@ -54,7 +54,7 @@ public class GT_Block_Machines
         setHardness(1.0F);
         setResistance(10.0F);
         setStepSound(soundTypeMetal);
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
         this.isBlockContainer = true;
     }
 

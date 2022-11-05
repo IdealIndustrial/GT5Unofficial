@@ -1,21 +1,27 @@
 buildscript {
-    repositories {
+ repositories {
         mavenCentral()
+
         maven {
-            name = "gt"
-            url = "https://gregtech.overminddl1.com/"
+            name 'forge'
+            url 'https://maven.minecraftforge.net'
         }
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            // GTNH ForgeGradle Fork
+            name = "GTNH Maven"
+            url = "http://jenkins.usrv.eu:8081/nexus/content/groups/public/"
         }
         maven {
-            name = "jitpack.io"
-            url = "https://jitpack.io"
+            name 'sonatype'
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        maven {
+            name 'Scala CI dependencies'
+            url 'https://repo1.maven.org/maven2/'
         }
     }
     dependencies {
-        classpath 'com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT'
+         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2.11'
     }
 }
 

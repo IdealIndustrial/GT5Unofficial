@@ -50,7 +50,7 @@ public class GT_EnergyArmor_Item extends ItemArmor implements ISpecialArmor {
         mDamageEnergyCost = Math.max(0, aDamageEnergyCost);
         mArmorAbsorbtionPercentage = aArmorAbsorbtionPercentage;
 
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
 
         MinecraftForge.EVENT_BUS.register(this);
 

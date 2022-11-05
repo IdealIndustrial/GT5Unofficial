@@ -26,7 +26,7 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
         for (byte i = 16; i < 32; i = (byte) (i + 1)) {
             Textures.BlockIcons.casingTexturePages[1][i] = new GT_CopiedBlockTexture(this, 6, i);
         }
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Plascrete Window"); // for Cleanroom
         ItemList.Block_Plascrete_Window.set(new ItemStack(this.setHardness(40.0f).setResistance(100.0f), 1, 0));
     }

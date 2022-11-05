@@ -46,7 +46,7 @@ public abstract class GT_Block_Ores_Abstract extends GT_Generic_Block implements
         super(GT_Item_Ores.class, aUnlocalizedName, aMaterial);
         this.isBlockContainer = true;
         setStepSound(soundTypeStone);
-        setCreativeTab(GregTech_API.TAB_GREGTECH_ORES);
+        setCreativeTab(GregTech_API.TAB_GREGTECH_ORES.get());
         tHideOres = Loader.isModLoaded("NotEnoughItems") && GT_Mod.gregtechproxy.mHideUnusedOres;
         if(aOreMetaCount > 8 || aOreMetaCount < 0) aOreMetaCount = 8;
 

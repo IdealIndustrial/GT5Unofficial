@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -788,6 +789,7 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
                     + " " + (mAllowInputFromOutputSide ? labelAllowed : labelForbidden) + " " + labelAndFor
                     + " " + labelFluids + " " + (mAllowFluidInputFromOutputSide ? labelAllowed : labelForbidden));
         } else if(aSide == te.getFrontFacing()){
+            // aPlayer.addChatComponentMessage(new ChatComponentTranslation(mAllowInputFromOutputSide ? "Interaction_DESCRIPTION_Index_095" : "Interaction_DESCRIPTION_Index_096"));
             mAllowInputFromOutputSide = !mAllowInputFromOutputSide;
             GT_Utility.sendChatToPlayer(aPlayer, labelInToOut + " " + labelItems
                     + " " + (mAllowInputFromOutputSide ? labelAllowed : labelForbidden));
