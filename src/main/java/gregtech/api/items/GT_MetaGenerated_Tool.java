@@ -269,7 +269,7 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
         }
         if(tStats.isWrench()) {
             NBTTagCompound nbtTagCompound = aStack.getTagCompound();
-            if(nbtTagCompound != null && nbtTagCompound.getInteger("wrenchHvMode") > 1) {
+            if(nbtTagCompound != null && nbtTagCompound.getBoolean("mode3by3")) {
                 breakMachineBlocksAround(aStack, aPlayer.worldObj, aX, aY, aZ, aPlayer);
             }
         }
@@ -328,15 +328,13 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
     public void tryToChangeMode(ItemStack aStack, World aWorld, EntityPlayer aPlayer){
         if (aPlayer.isSneaking() && getMovingObjectPositionFromPlayer(aWorld, aPlayer, true) == null) {
             NBTTagCompound nbtTagCompound = aStack.getTagCompound();
-            if (nbtTagCompound != null) {
-                int mode = nbtTagCompound.getInteger("wrenchHvMode");
-                if (mode > 0) {
-                    mode = mode == 1 ? 2 : 1;
-                    nbtTagCompound.setInteger("wrenchHvMode", mode);
-                    aStack.setTagCompound(nbtTagCompound);
-                    if (!aWorld.isRemote) {
-                        GT_Utility.sendChatToPlayer(aPlayer, "3x3 mode: " + (mode == 2 ? "ON" : "OFF"));
-                    }
+            if (nbtTagCompound != null && (aStack.getItemDamage() == 124 || aStack.getItemDamage() == 125)) { // 124 and 125 is HV wrench
+                boolean mode3by3 = nbtTagCompound.getBoolean("mode3by3");
+                mode3by3 = !mode3by3;
+                nbtTagCompound.setBoolean("mode3by3", mode3by3);
+                aStack.setTagCompound(nbtTagCompound);
+                if (!aWorld.isRemote) {
+                    GT_Utility.sendChatToPlayer(aPlayer, "3x3 mode: " + (mode3by3 ? "ON" : "OFF"));
                 }
             }
         }

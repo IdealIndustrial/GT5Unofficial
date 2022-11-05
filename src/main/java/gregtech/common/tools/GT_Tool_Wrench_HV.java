@@ -53,17 +53,6 @@ public class GT_Tool_Wrench_HV
         return ((tTool != null) && (tTool.equals("wrench"))) || (aBlock.getMaterial() == Material.piston) || (aBlock == Blocks.hopper) || (aBlock == Blocks.dispenser) || (aBlock == Blocks.dropper);
     }
 
-    @Override
-    public void onToolCrafted(ItemStack aStack, EntityPlayer aPlayer) {
-        super.onToolCrafted(aStack, aPlayer);
-        NBTTagCompound nbtTagCompound = aStack.getTagCompound();
-        if(nbtTagCompound == null) {
-            nbtTagCompound =  new NBTTagCompound();
-        }
-        nbtTagCompound.setInteger("wrenchHvMode", 1);
-        aStack.setTagCompound(nbtTagCompound);
-    }
-
     public IIconContainer getIcon(boolean aIsToolHead, ItemStack aStack) {
         return aIsToolHead ? GT_MetaGenerated_Tool.getPrimaryMaterial(aStack).mIconSet.mTextures[gregtech.api.enums.OrePrefixes.toolHeadWrench.mTextureIndex] : Textures.ItemIcons.POWER_UNIT_HV;
     }
