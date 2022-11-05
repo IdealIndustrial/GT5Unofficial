@@ -12,6 +12,7 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_PlayerDetector extends GT_CoverBehavior {
@@ -62,9 +63,9 @@ public class GT_Cover_PlayerDetector extends GT_CoverBehavior {
         aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % 3;
         if(aCoverVariable <0){aCoverVariable = 2;}
         switch(aCoverVariable) {
-            case 0: GT_Utility.sendChatToPlayer(aPlayer, trans("068", "Emit if any Player is close")); break;
-            case 1: GT_Utility.sendChatToPlayer(aPlayer, trans("070", "Emit if you are close")); break;
-            case 2: GT_Utility.sendChatToPlayer(aPlayer, trans("069", "Emit if other Player is close")); break;
+            case 0: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_068")); break;
+            case 1: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_070")); break;
+            case 2: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_069")); break;
         }
         return aCoverVariable;
     }

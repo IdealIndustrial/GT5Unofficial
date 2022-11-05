@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_Arm extends GT_CoverBehavior {
@@ -126,9 +127,9 @@ public class GT_Cover_Arm extends GT_CoverBehavior {
 
     private void sendMessageToPlayer(EntityPlayer aPlayer, int var) {
         if ((var & EXPORT_MASK) != 0)
-            GT_Utility.sendChatToPlayer(aPlayer, trans("001","Puts out into adjacent Slot #") + (((var >> 14) & SLOT_ID_MASK) - 1));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_001", (((var >> 14) & SLOT_ID_MASK) - 1)));
         else
-            GT_Utility.sendChatToPlayer(aPlayer, trans("002","Grabs in for own Slot #") + ((var & SLOT_ID_MASK) - 1));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_002", ((var & SLOT_ID_MASK) - 1)));
     }
 
     private int getNewVar(int var, int step) {

@@ -30,6 +30,7 @@ import net.minecraftforge.fluids.Fluid;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import static gregtech.api.enums.GT_Values.*;
 
@@ -64,9 +65,11 @@ public class GregTech_API {
     /**
      * My Creative Tab
      */
-    public static final CreativeTabs TAB_GREGTECH = new GT_CreativeTab("Main", "Main"),
-            TAB_GREGTECH_MATERIALS = new GT_CreativeTab("Materials", "Materials"),
-            TAB_GREGTECH_ORES = new GT_CreativeTab("Ores", "Ores");
+    //due to GT_CreativeTab constructor calls localization, these constants cannot be initialized on <cinit>
+    //so converting these constants to lazy initialized
+    public static final Supplier<GT_CreativeTab> TAB_GREGTECH = GT_Utility.lazy(() -> new GT_CreativeTab("Main", "Main"));
+    public static final Supplier<GT_CreativeTab> TAB_GREGTECH_MATERIALS = GT_Utility.lazy(() -> new GT_CreativeTab("Materials", "Materials"));
+    public static final Supplier<GT_CreativeTab> TAB_GREGTECH_ORES =  GT_Utility.lazy(() -> new GT_CreativeTab("Ores", "Ores"));
     /**
      * A List of all registered MetaTileEntities
      * <p/>

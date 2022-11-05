@@ -94,7 +94,7 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
     public GT_MetaGenerated_Tool(String aUnlocalized) {
         super(aUnlocalized);
         //GT_ModHandler.registerBoxableItemToToolBox(this); //Кажется это не работает
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
         setMaxStackSize(1);
         sInstances.put(getUnlocalizedName(), this);
     }
