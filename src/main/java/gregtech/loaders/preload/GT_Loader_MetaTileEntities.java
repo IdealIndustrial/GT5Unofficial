@@ -245,6 +245,27 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Hatch_Energy_UV.set(new GT_MetaTileEntity_Hatch_Energy(48, "hatch.energy.tier.08", "UV Energy Hatch", 8).getStackForm(1L));
         ItemList.Hatch_Energy_MAX.set(new GT_MetaTileEntity_Hatch_Energy(49, "hatch.energy.tier.09", "Max Energy Hatch", 9).getStackForm(1L));
 
+        ItemList.Hatch_Energy_Creative_ULV.set(new GT_MetaTileEntity_Hatch_Energy(1050, "hatch.energy.creative.tier.00",
+                "ULV Creative Energy Hatch", 0, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_LV.set(new GT_MetaTileEntity_Hatch_Energy(1051, "hatch.energy.creative.tier.01",
+                "LV Creative Energy Hatch", 1, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_MV.set(new GT_MetaTileEntity_Hatch_Energy(1052, "hatch.energy.creative.tier.02",
+                "MV Creative Energy Hatch", 2, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_HV.set(new GT_MetaTileEntity_Hatch_Energy(1053, "hatch.energy.creative.tier.03",
+                "HV Creative Energy Hatch", 3, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_EV.set(new GT_MetaTileEntity_Hatch_Energy(1054, "hatch.energy.creative.tier.04",
+                "EV Creative Energy Hatch", 4, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_IV.set(new GT_MetaTileEntity_Hatch_Energy(1055, "hatch.energy.creative.tier.05",
+                "IV Creative Energy Hatch", 5, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_LuV.set(new GT_MetaTileEntity_Hatch_Energy(1056, "hatch.energy.creative.tier.06",
+                "LuV Creative Energy Hatch", 6, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_ZPM.set(new GT_MetaTileEntity_Hatch_Energy(1057, "hatch.energy.creative.tier.07",
+                "ZPM Creative Energy Hatch", 7, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_UV.set(new GT_MetaTileEntity_Hatch_Energy(1058, "hatch.energy.creative.tier.08",
+                "UV Creative Energy Hatch", 8, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_MAX.set(new GT_MetaTileEntity_Hatch_Energy(1059, "hatch.energy.creative.tier.09",
+                "Max Creative Energy Hatch", 9, true).getStackForm(1L));
+
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Energy_ULV.get(1L), bitsd, new Object[]{"CM ", 'M', ItemList.Hull_ULV, 'C', OrePrefixes.cableGt01.get(Materials.Lead)});
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Energy_LV.get(1L), bitsd, new Object[]{"CM ", 'M', ItemList.Hull_LV, 'C', OrePrefixes.cableGt01.get(Materials.Tin)});
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Energy_MV.get(1L), bitsd, new Object[]{"CM ", 'M', ItemList.Hull_MV, 'C', OrePrefixes.cableGt01.get(Materials.Copper)});
