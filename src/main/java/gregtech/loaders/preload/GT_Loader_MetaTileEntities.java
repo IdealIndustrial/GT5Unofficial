@@ -190,8 +190,8 @@ public class GT_Loader_MetaTileEntities implements Runnable {
             GT_ModHandler.addCraftingRecipe(ItemList.Hull_ZPM.get(1L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.BUFFERED, new Object[]{aTextCableHull, 'M', ItemList.Casing_ZPM, 'C', OrePrefixes.cableGt01.get(Materials.Naquadah)});
             GT_ModHandler.addCraftingRecipe(ItemList.Hull_UV.get(1L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.BUFFERED, new Object[]{aTextCableHull, 'M', ItemList.Casing_UV, 'C', OrePrefixes.wireGt04.get(Materials.NaquadahAlloy)});
             GT_ModHandler.addCraftingRecipe(ItemList.Hull_MAX.get(1L), GT_ModHandler.RecipeBits.NOT_REMOVABLE | GT_ModHandler.RecipeBits.BUFFERED, new Object[]{aTextCableHull, 'M', ItemList.Casing_MAX, 'C', OrePrefixes.wireGt01.get(Materials.Superconductor)});
-
         }
+
         ItemList.Transformer_LV_ULV.set(new GT_MetaTileEntity_Transformer(20, "transformer.tier.00", "ULV Transformer", 0, "LV -> ULV (Use Soft Hammer to invert)").getStackForm(1L));
         ItemList.Transformer_MV_LV.set(new GT_MetaTileEntity_Transformer(21, "transformer.tier.01", "LV Transformer", 1, "MV -> LV (Use Soft Hammer to invert)").getStackForm(1L));
         ItemList.Transformer_HV_MV.set(new GT_MetaTileEntity_Transformer(22, "transformer.tier.02", "MV Transformer", 2, "HV -> MV (Use Soft Hammer to invert)").getStackForm(1L));
@@ -201,7 +201,6 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Transformer_ZPM_LuV.set(new GT_MetaTileEntity_Transformer(26, "transformer.tier.06", "LuV Transformer", 6, "ZPM -> LuV (Use Soft Hammer to invert)").getStackForm(1L));
         ItemList.Transformer_UV_ZPM.set(new GT_MetaTileEntity_Transformer(27, "transformer.tier.07", "ZPM Transformer", 7, "UV -> ZPM (Use Soft Hammer to invert)").getStackForm(1L));
         ItemList.Transformer_MAX_UV.set(new GT_MetaTileEntity_Transformer(28, "transformer.tier.08", "UV Transformer", 8, "Any Voltage -> UV (Use Soft Hammer to invert)").getStackForm(1L));
-
 
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_LV_ULV.get(1L), bitsd, new Object[]{" BB", "CM ", " BB", 'M', ItemList.Hull_ULV, 'C', OrePrefixes.cableGt01.get(Materials.Tin), 'B', OrePrefixes.cableGt01.get(Materials.Lead)});
         GT_ModHandler.addCraftingRecipe(ItemList.Transformer_MV_LV.get(1L), bitsd, new Object[]{" BB", "CM ", " BB", 'M', ItemList.Hull_LV, 'C', OrePrefixes.cableGt01.get(Materials.Copper), 'B', OrePrefixes.cableGt01.get(Materials.Tin)});
@@ -245,6 +244,27 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Hatch_Energy_ZPM.set(new GT_MetaTileEntity_Hatch_Energy(47, "hatch.energy.tier.07", "ZPM Energy Hatch", 7).getStackForm(1L));
         ItemList.Hatch_Energy_UV.set(new GT_MetaTileEntity_Hatch_Energy(48, "hatch.energy.tier.08", "UV Energy Hatch", 8).getStackForm(1L));
         ItemList.Hatch_Energy_MAX.set(new GT_MetaTileEntity_Hatch_Energy(49, "hatch.energy.tier.09", "Max Energy Hatch", 9).getStackForm(1L));
+
+        ItemList.Hatch_Energy_Creative_ULV.set(new GT_MetaTileEntity_Hatch_Energy(1050, "hatch.energy.creative.tier.00",
+                "ULV Creative Energy Hatch", 0, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_LV.set(new GT_MetaTileEntity_Hatch_Energy(1051, "hatch.energy.creative.tier.01",
+                "LV Creative Energy Hatch", 1, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_MV.set(new GT_MetaTileEntity_Hatch_Energy(1052, "hatch.energy.creative.tier.02",
+                "MV Creative Energy Hatch", 2, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_HV.set(new GT_MetaTileEntity_Hatch_Energy(1053, "hatch.energy.creative.tier.03",
+                "HV Creative Energy Hatch", 3, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_EV.set(new GT_MetaTileEntity_Hatch_Energy(1054, "hatch.energy.creative.tier.04",
+                "EV Creative Energy Hatch", 4, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_IV.set(new GT_MetaTileEntity_Hatch_Energy(1055, "hatch.energy.creative.tier.05",
+                "IV Creative Energy Hatch", 5, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_LuV.set(new GT_MetaTileEntity_Hatch_Energy(1056, "hatch.energy.creative.tier.06",
+                "LuV Creative Energy Hatch", 6, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_ZPM.set(new GT_MetaTileEntity_Hatch_Energy(1057, "hatch.energy.creative.tier.07",
+                "ZPM Creative Energy Hatch", 7, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_UV.set(new GT_MetaTileEntity_Hatch_Energy(1058, "hatch.energy.creative.tier.08",
+                "UV Creative Energy Hatch", 8, true).getStackForm(1L));
+        ItemList.Hatch_Energy_Creative_MAX.set(new GT_MetaTileEntity_Hatch_Energy(1059, "hatch.energy.creative.tier.09",
+                "Max Creative Energy Hatch", 9, true).getStackForm(1L));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Energy_ULV.get(1L), bitsd, new Object[]{"CM ", 'M', ItemList.Hull_ULV, 'C', OrePrefixes.cableGt01.get(Materials.Lead)});
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Energy_LV.get(1L), bitsd, new Object[]{"CM ", 'M', ItemList.Hull_LV, 'C', OrePrefixes.cableGt01.get(Materials.Tin)});
@@ -1148,6 +1168,8 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Generator_Diesel_LV.get(1L), bitsd, new Object[]{"PCP", "EME", "GWG", 'M', ItemList.Hull_LV, 'P', ItemList.Electric_Piston_LV, 'E', ItemList.Electric_Motor_LV, 'C', OrePrefixes.circuit.get(Materials.Basic), 'W', OrePrefixes.cableGt01.get(Materials.Tin), 'G', OrePrefixes.gearGt.get(Materials.Steel)});
         GT_ModHandler.addCraftingRecipe(ItemList.Generator_Diesel_MV.get(1L), bitsd, new Object[]{"PCP", "EME", "GWG", 'M', ItemList.Hull_MV, 'P', ItemList.Electric_Piston_MV, 'E', ItemList.Electric_Motor_MV, 'C', OrePrefixes.circuit.get(Materials.Good), 'W', OrePrefixes.cableGt01.get(Materials.Copper), 'G', OrePrefixes.gearGt.get(Materials.Aluminium)});
         GT_ModHandler.addCraftingRecipe(ItemList.Generator_Diesel_HV.get(1L), bitsd, new Object[]{"PCP", "EME", "GWG", 'M', ItemList.Hull_HV, 'P', ItemList.Electric_Piston_HV, 'E', ItemList.Electric_Motor_HV, 'C', OrePrefixes.circuit.get(Materials.Advanced), 'W', OrePrefixes.cableGt01.get(Materials.Gold), 'G', OrePrefixes.gearGt.get(Materials.StainlessSteel)});
+
+        ItemList.Creative_Generator.set(new GT_MetaTileEntity_Creative_Generator(1118, "creative.generator", "Creative Generator").getStackForm(1L));
 
         ItemList.Generator_Gas_Turbine_LV.set(new GT_MetaTileEntity_GasTurbine(1115, "basicgenerator.gasturbine.tier.01", "LV Gas Turbine", 1).getStackForm(1L));
         ItemList.Generator_Gas_Turbine_MV.set(new GT_MetaTileEntity_GasTurbine(1116, "basicgenerator.gasturbine.tier.02", "MV Gas Turbine", 2).getStackForm(1L));

@@ -25,7 +25,7 @@ public class GT_Block_Storage extends GT_Generic_Block {
     protected GT_Block_Storage(Class<? extends ItemBlock> aItemClass, String aName, Material aMaterial) {
         super(aItemClass, aName, aMaterial);
         setStepSound(soundTypeMetal);
-        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS);
+        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS.get());
     }
 
     public String getHarvestTool(int aMeta) {

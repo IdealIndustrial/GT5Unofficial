@@ -504,6 +504,7 @@ public enum ItemList implements IItemContainer {
     Generator_Diesel_LV,
     Generator_Diesel_MV,
     Generator_Diesel_HV,
+    Creative_Generator,
     Generator_Gas_Turbine_LV,
     Generator_Gas_Turbine_MV,
     Generator_Gas_Turbine_HV,
@@ -553,7 +554,8 @@ public enum ItemList implements IItemContainer {
     Automation_ItemDistributor_ULV, Automation_ItemDistributor_LV, Automation_ItemDistributor_MV, Automation_ItemDistributor_HV, Automation_ItemDistributor_EV, Automation_ItemDistributor_IV, Automation_ItemDistributor_LuV, Automation_ItemDistributor_ZPM, Automation_ItemDistributor_UV, Automation_ItemDistributor_MAX,
 
     Hatch_Dynamo_ULV, Hatch_Dynamo_LV, Hatch_Dynamo_MV, Hatch_Dynamo_HV, Hatch_Dynamo_EV, Hatch_Dynamo_IV, Hatch_Dynamo_LuV, Hatch_Dynamo_ZPM, Hatch_Dynamo_UV, Hatch_Dynamo_MAX,
-    Hatch_Energy_ULV, Hatch_Energy_LV, Hatch_Energy_MV, Hatch_Energy_HV, Hatch_Energy_EV, Hatch_Energy_IV, Hatch_Energy_LuV, Hatch_Energy_ZPM, Hatch_Energy_UV, Hatch_Energy_MAX,
+    Hatch_Energy_ULV, Hatch_Energy_Creative_ULV, Hatch_Energy_LV, Hatch_Energy_Creative_LV, Hatch_Energy_MV, Hatch_Energy_Creative_MV, Hatch_Energy_HV, Hatch_Energy_Creative_HV, Hatch_Energy_EV, Hatch_Energy_Creative_EV, Hatch_Energy_IV, Hatch_Energy_Creative_IV,
+    Hatch_Energy_LuV, Hatch_Energy_Creative_LuV, Hatch_Energy_ZPM, Hatch_Energy_Creative_ZPM, Hatch_Energy_UV, Hatch_Energy_Creative_UV, Hatch_Energy_MAX, Hatch_Energy_Creative_MAX,
     Hatch_Input_ULV, Hatch_Input_LV, Hatch_Input_MV, Hatch_Input_HV, Hatch_Input_EV, Hatch_Input_IV, Hatch_Input_LuV, Hatch_Input_ZPM, Hatch_Input_UV, Hatch_Input_MAX, Hatch_Input_Creative,
     Hatch_Input_Bus_ULV, Hatch_Input_Bus_LV, Hatch_Input_Bus_MV, Hatch_Input_Bus_HV, Hatch_Input_Bus_EV, Hatch_Input_Bus_IV, Hatch_Input_Bus_LuV, Hatch_Input_Bus_ZPM, Hatch_Input_Bus_UV, Hatch_Input_Bus_MAX,
     Hatch_Output_ULV, Hatch_Output_LV, Hatch_Output_MV, Hatch_Output_HV, Hatch_Output_EV, Hatch_Output_IV, Hatch_Output_LuV, Hatch_Output_ZPM, Hatch_Output_UV, Hatch_Output_MAX, Hatch_Output_Creative,

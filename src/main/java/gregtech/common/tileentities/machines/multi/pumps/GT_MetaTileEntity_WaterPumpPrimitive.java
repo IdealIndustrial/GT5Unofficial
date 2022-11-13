@@ -87,6 +87,7 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
     @Override
     public boolean onRunningTick(ItemStack aStack) {
         double tOut = getOutputRate() * (mPumpingEfficiency / 10000) + waterToOutput;
+        tOut *= mEfficiencyRate;
         int rOut = (int) tOut;
         waterToOutput = tOut - rOut;
         addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
