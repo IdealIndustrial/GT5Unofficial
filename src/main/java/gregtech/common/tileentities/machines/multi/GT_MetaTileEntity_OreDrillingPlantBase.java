@@ -14,6 +14,7 @@ import gregtech.api.objects.ItemData;
 import gregtech.api.util.*;
 import gregtech.common.blocks.GT_Block_Ores_Abstract;
 import gregtech.common.blocks.GT_TileEntity_Ores;
+import gregtech.common.tileentities.storage.OreCollection;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -52,26 +53,11 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
     float operationsCountPerCalcPeriod = -1f;
     ArrayList<OreHash> oreHashes; // it used to keep ore blocks that miner can find under bedrock
 
-    private static final String underBrOresFlowLabel1 = EnumChatFormatting.GRAY + GT_LanguageManager.addStringLocalization("underBrOresFlowLabel1",
-            "Use Data Reader to get more info") + EnumChatFormatting.RESET;
-    private static final String underBrOresMainTitle = EnumChatFormatting.WHITE + GT_LanguageManager.addStringLocalization("underBrOresMainTitle",
-            "     Data about under-bedrock ores\n     based on collected ores") + EnumChatFormatting.RESET;
+/*    private static final String underBrOresFlowLabel1 = EnumChatFormatting.GRAY + GT_LanguageManager.addStringLocalization("underBrOresFlowLabel1",
+            "Use Data Reader to get more info") + EnumChatFormatting.RESET;*/
 
-    private static final String warningLabel = EnumChatFormatting.RED + GT_LanguageManager.addStringLocalization("warningLabel",
-            "     Warning! ") + EnumChatFormatting.RESET;
 
-    private static final String underBrWarningLabel = EnumChatFormatting.GOLD + GT_LanguageManager.addStringLocalization("underBrWarningLabel",
-            "Do not use this data orb in other miners, or at least, the position of controller should be same "
-                    +"by x, y, z as in this data orb sub title. Otherwise you will overwrite collected data, that will "
-                    +"block an ability to mine under-bedrock ores in previous place because of miner can not mine "
-                    +"under-bedrock without data orb or with empty data orb. ") + EnumChatFormatting.RESET;
-    private static final String underBrOresFlowLabel2 = EnumChatFormatting.DARK_GRAY + GT_LanguageManager.addStringLocalization("underBrOresFlowLabel2",
-            "   Middle under-bedrock flow for 1 tier\n   miner and MV energy hatch.\n   Ore blocks count each hour:") + EnumChatFormatting.RESET;
 
-    private static final String minedOresCountLabel = GT_LanguageManager.addStringLocalization("minedOresCount", "Mined Ores Count");
-    private static final String minedOreTypesCountLabel = GT_LanguageManager.addStringLocalization("minedOreTypesCount", "Mined Ore Types Count");
-    private static final String underBrModeEnabledLabel = EnumChatFormatting.YELLOW + GT_LanguageManager.addStringLocalization(
-            "underBrModeEnabledLabel", "Mining under bedrock") + EnumChatFormatting.RESET;
 
     class OreHash{
         OreHash(ItemStack itst, int i, int a){
@@ -86,60 +72,19 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         }
     }
 
-    class OreCollection implements Comparator<OreCollection>{
-        OreCollection(){}
-        OreCollection(String oreName, int oreCount){
-            this.oreName = oreName;
-            this.oreCount = oreCount;
-        }
-        String oreName;
-        int oreCount;
-        public int compare(OreCollection a, OreCollection b)
-        {
-            return b.oreCount - a.oreCount;
-        }
-        public NBTTagList getTooltipLines(ArrayList<OreCollection> aList, int totalBlocksCount, int oreTypesCount){
-            String bookTitle = underBrOresMainTitle + "\n\n";
-
-            bookTitle += warningLabel;
-            bookTitle += underBrWarningLabel + "\n\n";
-
-            bookTitle += "     " + EnumChatFormatting.DARK_GREEN + minedOresCountLabel + " " + EnumChatFormatting.AQUA + totalBlocksCount + "\n\n     "
-                + EnumChatFormatting.DARK_GREEN + minedOreTypesCountLabel + " " + EnumChatFormatting.AQUA + oreTypesCount + EnumChatFormatting.RESET;
-
-            NBTTagList tTagList = new NBTTagList();
-            Collections.sort(aList, this);
-            String line = "";
-            ArrayList<String> pages = new ArrayList<>();
-            pages.add(bookTitle);
-            for (int i = 0; i < aList.size(); i++){
-                String tempLine = EnumChatFormatting.GRAY + aList.get(i).oreName + " " + EnumChatFormatting.AQUA + calcOreFlow(aList.get(i).oreCount);
-                if(line == "") {
-                    line = underBrOresFlowLabel2 + "\n\n";
-                    line += "  "+tempLine;
-                }
-                else {
-                    if(i % 7 == 6) {
-                        line += "\n\n  " + tempLine;
-                        pages.add(line);
-                        line = "";
-                    } else {
-                        line += "\n\n  " + tempLine;
-                        if(i == aList.size()-1) {
-                            pages.add(line);
-                        }
-                    }
-                }
-            }
-            int idx = 0;
-            for (String str : pages){
-                str = EnumChatFormatting.GRAY + "                         " + (idx+1) + " / " + pages.size()
-                        +EnumChatFormatting.RESET + "\n\n" + str;
-                tTagList.appendTag(new NBTTagString(str));
-                idx++;
-            }
-            return tTagList;
-        }
+    public static NBTTagCompound getTranslatedDataOrbNbtPages(NBTTagCompound origNbt) {
+        NBTTagCompound trNbt = new NBTTagCompound();
+        trNbt.setInteger("coordX", origNbt.getInteger("coordX"));
+        trNbt.setInteger("coordY", origNbt.getInteger("coordY"));
+        trNbt.setInteger("coordZ", origNbt.getInteger("coordZ"));
+        trNbt.setInteger("dimensionId", origNbt.getInteger("dimensionId"));
+        int minerTotalBlocksCount = origNbt.getInteger("minerTotalBlocksCount");
+        int minerOreTypesCount = origNbt.getInteger("minerOreTypesCount");
+        ArrayList<OreCollection> aList = OreCollection.getCollectionFromNbt(origNbt);
+        NBTTagList tTagList = OreCollection.getTooltipLines(aList, minerTotalBlocksCount, minerOreTypesCount);
+        trNbt.setTag("pages", tTagList);
+        origNbt.setTag("pages", tTagList);
+        return trNbt;
     }
 
     @Override
@@ -163,9 +108,10 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
                     if(origOreFactors[i] < 10000) origOreFactors[i] = 10000;
                 }
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             isFactorsConfigInvalid = true;
-            System.out.println("ERROR - OreDrillingPlant.oreFactors config is invalid, it should be 4 numbers separated by comma without spaces");
+            System.out.println(e.getMessage());
+            System.out.println("ERROR - (may be because of) OreDrillingPlant.oreFactors config is invalid, it should be 4 numbers separated by comma without spaces");
             e.printStackTrace(GT_Log.err);
         }
         if(isFactorsConfigInvalid) origOreFactors = new int[]{70000,120000,263000,575000};
@@ -194,9 +140,21 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         return isAllowPutPipesToController;
     }
 
-    private String prepareDataOrbTitle(IGregTechTileEntity te){
-        return EnumChatFormatting.DARK_GREEN + te.getWorld().provider.getDimensionName() + EnumChatFormatting.RESET
-                + EnumChatFormatting.GOLD + " (x " + te.getXCoord() + ", y " + te.getYCoord() + ", z " + te.getZCoord()+ ")";
+    private void prepareDataOrbTitle(IGregTechTileEntity te, NBTTagCompound nbt){
+        StringBuffer coords = new StringBuffer();
+        coords.append(EnumChatFormatting.GOLD);
+        coords.append("(x ");
+        coords.append(te.getXCoord());
+        coords.append(", y ");
+        coords.append(te.getYCoord());
+        coords.append(", z ");
+        coords.append(te.getZCoord());
+        coords.append(")");
+        coords.append(EnumChatFormatting.RESET);
+        nbt.setInteger("subTitleLinesCount", 3);
+        nbt.setString("subTitleLine0", ("DataOrb.Miner.dimension_id_" + te.getWorld().provider.dimensionId));
+        nbt.setString("subTitleLine1", coords.toString());
+        nbt.setString("subTitleLine2", "DataOrb.Miner.use_data_reader");
     }
 
     private void updateDataOrbNbt(GT_ItemStack gtStack){
@@ -243,14 +201,13 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         int[] blocksCounts = new int[gtStackMap.keySet().size()];
         int currentIdx = 0;
         int totalBlocksCount = 0;
-        int oreTypesCount = 0;
         ArrayList<OreCollection> oreCollection = new ArrayList<>();
         HashMap<String, Integer> oresMap = new HashMap<>();
         for(GT_ItemStack gts : gtStackMap.keySet()){
             ItemStack itst = gts.toStack();
             blocksCounts[currentIdx] = gtStackMap.get(gts);
-            oresMap.putIfAbsent(itst.getDisplayName(), 0);
-            oresMap.put(itst.getDisplayName(), oresMap.get(itst.getDisplayName()) + blocksCounts[currentIdx]);
+            oresMap.putIfAbsent(itst.getUnlocalizedName(), 0);
+            oresMap.put(itst.getUnlocalizedName(), oresMap.get(itst.getUnlocalizedName()) + blocksCounts[currentIdx]);
             totalBlocksCount += blocksCounts[currentIdx];
             NBTTagCompound sNbt = new NBTTagCompound();
             itst.writeToNBT(sNbt);
@@ -258,14 +215,18 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
             currentIdx++;
         }
         for (String oreName : oresMap.keySet()) {
-            oreCollection.add(new OreCollection(oreName, oresMap.get(oreName)));
-            oreTypesCount++;
+            oreCollection.add(new OreCollection(oreName, oresMap.get(oreName), calcOreFlow(oresMap.get(oreName))));
         }
+        int oreTypesCount = oresMap.size();
         orbNbt.setIntArray("blocksCounts", blocksCounts);
-        orbNbt.setString("mDataTitle", prepareDataOrbTitle(te));
-        orbNbt.setString("mDataName", underBrOresFlowLabel1);
-        NBTTagList tTagList = new OreCollection().getTooltipLines(oreCollection, totalBlocksCount, oreTypesCount);
-        orbNbt.setTag("pages", tTagList);
+        prepareDataOrbTitle(te, orbNbt);
+        NBTTagCompound rawOresData = OreCollection.getRawOresData(oreCollection);
+//        NBTTagList tTagList = new OreCollection().getTooltipLines(oreCollection, totalBlocksCount, oreTypesCount);
+//        orbNbt.setTag("pages", tTagList);//underBrWarningLabel
+        orbNbt.setTag("rawOresData", rawOresData);
+        NBTTagCompound minerDataTag = new NBTTagCompound();
+        orbNbt.setInteger("minerTotalBlocksCount", totalBlocksCount);
+        orbNbt.setInteger("minerOreTypesCount", oreTypesCount);
         orb.setTagCompound(orbNbt);
     }
 

@@ -2,6 +2,7 @@ package gregtech.common.gui;
 
 import gregtech.api.enums.ItemList;
 import gregtech.api.items.GT_MetaBase_Item;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_OreDrillingPlantBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +20,7 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
     public ResourceLocation mBackground, mProgress;
     ItemStack mTool;
     EntityPlayer mPlayer;
+
     public GT_GUIContainer_DataReader(ItemStack aTool, EntityPlayer aPlayer) {
         super(new GT_Container_DataReader(aPlayer.inventory, aTool));
         mTool = aTool;
@@ -26,6 +28,23 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
         ySize = 256;
         mBackground = new ResourceLocation(RES_PATH_GUI +"DataReader.png");
         mProgress = new ResourceLocation(RES_PATH_GUI + "multimachines/" + "Progress.png");;
+    }
+
+    NBTTagCompound localNbtWithPagesData;
+    public NBTTagCompound getTranslatedNbt(NBTTagCompound origOrbNbt){
+        if(localNbtWithPagesData != null && isDataOrbsNbtEqual(localNbtWithPagesData, origOrbNbt)) {
+            return localNbtWithPagesData;
+        } else {
+            localNbtWithPagesData = GT_MetaTileEntity_OreDrillingPlantBase.getTranslatedDataOrbNbtPages(origOrbNbt);
+            return localNbtWithPagesData;
+        }
+    }
+
+    public boolean isDataOrbsNbtEqual(NBTTagCompound nbt1, NBTTagCompound nbt2){
+        return nbt1.getInteger("coordX") == nbt2.getInteger("coordX")
+            && nbt1.getInteger("coordY") == nbt2.getInteger("coordY")
+            && nbt1.getInteger("coordZ") == nbt2.getInteger("coordZ")
+            && nbt1.getInteger("dimensionId") == nbt2.getInteger("dimensionId");
     }
 
     @Override
@@ -39,19 +58,22 @@ public class GT_GUIContainer_DataReader extends GuiContainer {
         if (!(ItemList.Tool_DataReader_MV.isStackEqual(mTool, false, true) || ItemList.Tool_DataReader_EV.isStackEqual(mTool, false, true)))
             return;
         ItemStack aStick = ((GT_Container_DataReader)inventorySlots).mInventory.getStackInSlot(0);
-        if(aStick == null)
+        if(aStick == null) {
+            localNbtWithPagesData = null;
             return;
+        }
         NBTTagCompound tNBT = aStick.getTagCompound();
-        if (tNBT == null)
+        if (tNBT == null) {
+            localNbtWithPagesData = null;
             return;
-
+        }
+        if(ItemList.Tool_DataOrb.isStackEqual(aStick, false, true)) {
+            drawPages(getTranslatedNbt(tNBT));
+            return;
+        }
         int tProgress = mTool.getTagCompound().getInteger("prog");
         if (!tNBT.hasKey("pages") && tProgress == 0)
             return;
-        if(ItemList.Tool_DataOrb.isStackEqual(aStick, false, true)) {
-            drawPages(tNBT);
-            return;
-        }
         if (!ItemList.Tool_DataStick.isStackEqual(aStick, false, true)
                 && !ItemList.Tool_CD.isStackEqual(aStick, false, true))
             return;

@@ -7,9 +7,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 public class GT_GUIContainer_DrillerBase extends GT_GUIContainer_MultiMachine {
 
     // labels:
-    String labelPickingUpPipes = trans("labelPickingUpPipes", "Picking up pipes");
-    String labelMiningUnderBedrock = trans("labelMiningUnderBedrock", "Mining under bedrock");
-    String labelDrillHeadHeight = trans("labelDrillHeadHeight", "Drill head height ");
+    String labelPickingUpPipes = transGui("146");
+    String labelMiningUnderBedrock = transGui("147");
+    String labelDrillHeadHeight = transGui("148");
 
     public GT_GUIContainer_DrillerBase(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, String aTextureFile){
         super(aInventoryPlayer, aTileEntity, aName, aTextureFile);
@@ -27,13 +27,9 @@ public class GT_GUIContainer_DrillerBase extends GT_GUIContainer_MultiMachine {
                     fontRendererObj.drawString(labelMiningUnderBedrock, 10, 40, 16448255);
                     break;
                 default:
-                    fontRendererObj.drawString(labelDrillHeadHeight + mContainer.mShowExtraGuiInfo, 10, 40, 16448255);
+                    fontRendererObj.drawString(labelDrillHeadHeight +' '+ mContainer.mShowExtraGuiInfo, 10, 40, 16448255);
             }
         }
     }
 
-    @Override
-    public String trans(String aKey, String aText){
-        return GT_LanguageManager.addStringLocalization("Gui_" + aKey, aText, true);
-    }
 }

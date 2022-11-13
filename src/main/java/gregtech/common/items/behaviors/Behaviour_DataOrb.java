@@ -1,6 +1,7 @@
 package gregtech.common.items.behaviors;
 
 import gregtech.api.items.GT_MetaBase_Item;
+import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -45,13 +46,18 @@ public class Behaviour_DataOrb
         return tNBT.getString("mDataTitle");
     }
 
+    public static boolean hasSubLines(ItemStack aStack) {
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        return tNBT != null && tNBT.getByte("subTitleLinesCount") > 0;
+    }
+
     public static String[] getSubTitleLines(ItemStack aStack) {
         NBTTagCompound tNBT = aStack.getTagCompound();
         if (tNBT == null) return new String[0];
         byte subTitleLinesCount = tNBT.getByte("subTitleLinesCount");
         String[] lines = new String[subTitleLinesCount];
         for (byte i = 0; i < subTitleLinesCount; i++) {
-            lines[i] = tNBT.getString("subTitleLine"+i);
+            lines[i] = GT_LanguageManager.getTranslation(tNBT.getString("subTitleLine"+i));
         }
         return lines;
     }
@@ -150,6 +156,8 @@ public class Behaviour_DataOrb
         if (!(getDataTitle(aStack).length() == 0)) {
             aList.add(getDataTitle(aStack));
             aList.add(getDataName(aStack));
+            aList.addAll(Arrays.asList(getSubTitleLines(aStack)));
+        } else if (hasSubLines(aStack)){
             aList.addAll(Arrays.asList(getSubTitleLines(aStack)));
         }
         return aList;
