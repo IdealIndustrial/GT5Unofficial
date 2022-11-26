@@ -11,8 +11,12 @@ import gregtech.api.objects.GT_HashSet;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
 import gregtech.api.objects.MaterialStack;
+import gregtech.common.blocks.GT_Item_Ores;
+import net.minecraft.block.Block;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -153,6 +157,15 @@ public class GT_OreDictUnificator {
         aStack.func_150996_a(tStack.getItem());
         Items.feather.setDamage(aStack, Items.feather.getDamage(tStack));
         return aStack;
+    }
+
+    public static boolean isSmallOre(World aWorld, Block aBlock, int x, int  y, int  z, int  meta){
+        ArrayList<ItemStack> l =  aBlock.getDrops(aWorld, x, y, z, meta, 1);
+        return isGtOre(aBlock) && !(l.get(0).getItem() instanceof GT_Item_Ores);
+    }
+
+    public static boolean isGtOre(Block aBlock){
+        return GT_Item_Ores.getItemFromBlock(aBlock) instanceof GT_Item_Ores;
     }
 
     public static ItemStack get(ItemStack aStack) {

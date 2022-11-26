@@ -50,10 +50,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.*;
+import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -757,6 +755,30 @@ public class GT_Utility {
                         }
                     } else if (chestStack == null) {
                         aChest.setInventorySlotContents(i, iStack.copy());
+                        ItemStackPushed = true;
+                    }
+                }
+            }
+        }
+    }
+
+    public static void pushToOutputSlots(ItemStack[] teInventory, ArrayList<ItemStack> iStacks, int startFromIdx){
+        for (int s = 0; s < iStacks.toArray().length; s++) {
+            ItemStack iStack = iStacks.get(s);
+            boolean ItemStackPushed = false;
+            for (int i = startFromIdx; i < teInventory.length; i++) {
+                ItemStack invStack = teInventory[i];
+                if(!ItemStackPushed) {
+                    if (invStack != null && invStack.getItem().equals(iStack.getItem()) && invStack.getItemDamage() == iStack.getItemDamage()) {
+                        if (invStack.getMaxStackSize() >= invStack.stackSize + iStack.stackSize) {
+                            invStack.stackSize += iStack.stackSize;
+                            ItemStackPushed = true;
+                        } else {
+                            iStack.stackSize -= invStack.getMaxStackSize() - invStack.stackSize;
+                            invStack.stackSize = invStack.getMaxStackSize();
+                        }
+                    } else if (invStack == null) {
+                        teInventory[i] = iStack.copy();
                         ItemStackPushed = true;
                     }
                 }
@@ -1842,6 +1864,71 @@ public class GT_Utility {
         return -1;
     }
 
+    public static Block decreaseInvItemAndGetBlock(ItemStack[] mInventory, int idx){
+        Block aBlock = null;
+        if(mInventory[idx] != null) {
+            aBlock = Block.getBlockFromItem(mInventory[idx].getItem());
+        }
+        decreaseInventoryItem(mInventory, idx);
+        return aBlock;
+    }
+
+    public static boolean decreaseInventoryItem(ItemStack[] mInventory, int idx) {
+        return decreaseInventoryItem(mInventory, idx, 1);
+    }
+
+    public static boolean decreaseInventoryItem(ItemStack[] mInventory,int idx, int count) {
+        boolean success = false;
+        if(idx > -1 && mInventory[idx] != null) {
+            success = true;
+            if (mInventory[idx].stackSize > count){
+                mInventory[idx].stackSize -= count;
+            } else {
+                mInventory[idx] = null;
+            }
+        }
+        return success;
+    }
+
+    public static ArrayList<ChunkPosition> getBlocksAtLayer(IGregTechTileEntity aBaseMetaTileEntity, int aY, int radius){
+        ArrayList<ChunkPosition> blockPositions = new ArrayList<>();
+        int baseX = aBaseMetaTileEntity.getXCoord() - radius;
+        int baseZ = aBaseMetaTileEntity.getZCoord() - radius;
+        int finalX = aBaseMetaTileEntity.getXCoord() + radius;
+        int finalZ = aBaseMetaTileEntity.getZCoord() + radius;
+        for(int x = baseX; x <= finalX; x ++){
+            for(int z = baseZ; z <= finalZ; z ++){
+                ChunkPosition chPos = new ChunkPosition(x,aY,z);
+                blockPositions.add(chPos);
+            }
+        }
+        return blockPositions;
+    }
+
+    public static void drainMusclePlayerPower(EntityPlayer aPlayer, int hungryDurationPerOperation){
+        int hangryDuration = hungryDurationPerOperation;
+        PotionEffect hunger = aPlayer.getActivePotionEffect(Potion.hunger);
+        if(hunger != null) {
+            hangryDuration += hunger.getDuration();
+        }
+        aPlayer.addPotionEffect(new PotionEffect(Potion.hunger.id, hangryDuration));
+        FoodStats fs = aPlayer.getFoodStats();
+        if(fs.getFoodLevel() < 1) {
+            aPlayer.attackEntityFrom(DamageSource.starve,1f + (1f * upWorkWhileHungry(aPlayer, false)));
+        } else {
+            fs.setFoodLevel(Math.max(0, fs.getFoodLevel()-1));
+            upWorkWhileHungry(aPlayer, true);
+        }
+    }
+
+    private static int upWorkWhileHungry(EntityPlayer aPlayer, boolean isReset){
+        int workWhileHungry = aPlayer.getEntityData().getInteger("workWhileHungry");
+        if(!isReset) workWhileHungry++;
+        else workWhileHungry = 0;
+        aPlayer.getEntityData().setInteger("workWhileHungry", workWhileHungry);
+        return workWhileHungry;
+    }
+
     public static String formatNumbers(long aNumber) {
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
@@ -1955,6 +2042,36 @@ public class GT_Utility {
             return true;
         }
         return false;
+    }
+
+    public static ChunkPosition getFrontRelativeOffset(IGregTechTileEntity te, RelativeOffset ro, int offset) {
+        return getFrontRelativeOffset(te, ro, offset, te.getYCoord());
+    }
+
+    public static ChunkPosition getFrontRelativeOffset(IGregTechTileEntity te, RelativeOffset ro, int offset, int aY){
+        ChunkPosition chPos;
+        if(ro == RelativeOffset.FORWARD || ro == RelativeOffset.BACK) { // 5 = x+; 4 = x-; 3 = z+; 2 = z-;
+            if(te.getFrontFacing() == 2 || te.getFrontFacing() == 3) {
+                offset = offset * (te.getFrontFacing() == 2 ? -1 : 1);
+                offset = offset * (ro == RelativeOffset.FORWARD ? 1 : -1);
+                chPos = new ChunkPosition(te.getXCoord(), aY, te.getZCoord() + offset);
+            } else {
+                offset = offset * (te.getFrontFacing() == 4 ? -1 : 1);
+                offset = offset * (ro == RelativeOffset.FORWARD ? 1 : -1);
+                chPos = new ChunkPosition(te.getXCoord() + offset, aY, te.getZCoord());
+            }
+        } else {
+            if(te.getFrontFacing() == 2 || te.getFrontFacing() == 3) {
+                offset = offset * (te.getFrontFacing() == 2 ? -1 : 1);
+                offset = offset * (ro == RelativeOffset.LEFT ? 1 : -1);
+                chPos = new ChunkPosition(te.getXCoord() + offset, aY, te.getZCoord());
+            } else {
+                offset = offset * (te.getFrontFacing() == 4 ? -1 : 1);
+                offset = offset * (ro == RelativeOffset.RIGHT ? 1 : -1);
+                chPos = new ChunkPosition(te.getXCoord(), aY, te.getZCoord() + offset);
+            }
+        }
+        return chPos;
     }
 
     public static <T> void addAllToAll(Collection<T> toAdd, Collection<? extends Collection<T>> addTo) {

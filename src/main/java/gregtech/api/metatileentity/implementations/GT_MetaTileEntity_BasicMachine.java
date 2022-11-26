@@ -587,6 +587,10 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         return mInventory[3];
     }
 
+    protected ItemStack setSpecialSlot(ItemStack iStack) {
+        return mInventory[3] = iStack;
+    }
+
     protected ItemStack getOutputAt(int aIndex) {
         return mInventory[getOutputSlot() + aIndex];
     }

@@ -59,9 +59,22 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
         this.mNEI = "";
     }
+    public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional, int aInvSlotCount) {
+        super(aID, aName, aNameRegional, aInvSlotCount);
+        GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
+        this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
+        this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
+        this.mNEI = "";
+    }
 
     public GT_MetaTileEntity_MultiBlockBase(String aName) {
         super(aName, 2);
+        GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
+        this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
+        this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
+    }
+    public GT_MetaTileEntity_MultiBlockBase(String aName, int aInvSlotCount) {
+        super(aName, aInvSlotCount);
         GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
         this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
         this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);

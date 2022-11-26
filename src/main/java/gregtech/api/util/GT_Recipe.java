@@ -1459,7 +1459,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                     rRecipe.mOutputs[0].setItemDamage(tNBT.getShort("map_id"));
                     return rRecipe;
                 }
-                if (ItemList.Paper_Punch_Card_Empty.isStackEqual(aInputs[0], false, true)) {
+                /*if (ItemList.Paper_Punch_Card_Empty.isStackEqual(aInputs[0], false, true)) {
                     if (!ItemList.Tool_DataStick.isStackEqual(aSpecialSlot, false, true)) return null;
                     NBTTagCompound tNBT = aSpecialSlot.getTagCompound();
                     if (tNBT == null || !tNBT.hasKey("GT.PunchCardData")) return null;
@@ -1468,7 +1468,7 @@ public class GT_Recipe implements Comparable<GT_Recipe> {
                     rRecipe.mCanBeBuffered = false;
                     rRecipe.mOutputs[0].setTagCompound(GT_Utility.getNBTContainingString(new NBTTagCompound(), "GT.PunchCardData", tNBT.getString("GT.PunchCardData")));
                     return rRecipe;
-                }
+                }*/
             }
             return rRecipe;
         }

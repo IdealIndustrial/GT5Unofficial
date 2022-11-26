@@ -83,7 +83,6 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Tool_CD.set(addItem(tLastID = 20, "Compact Disc", "Used for reading prospector info (single use)"));
         addItemBehavior(32000+tLastID, new Behaviour_CD());
         ItemList.AutoRepairKit.set(addItem(tLastID = 21, "Auto Repair Kit", "Use in automaintenance hatch"));
-        ItemList.Flint_Drill_Head.set(addItem(tLastID = 22, "Flint Drill Head", "Consumable Item for Primitive Miner"));
 
         GT_ModHandler.addShapelessCraftingRecipe(ItemList.Coin_Chocolate.get(1L, new Object[0]), new Object[]{OrePrefixes.dust.get(Materials.Cocoa), OrePrefixes.dust.get(Materials.Milk), OrePrefixes.dust.get(Materials.Sugar), OrePrefixes.foil.get(Materials.Gold)});
 
@@ -314,6 +313,8 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
 
         ItemList.Solvent_Spray.set(addItem(tLastID = 407, "Solvent Spray", "Full", new Object[0]));
         ItemList.Solvent_Spray_Used.set(addItem(tLastID = 408, "Solvent Spray", "Used", new Object[]{SubTag.INVISIBLE}));
+        ItemList.Small_Gunpowder_Bundle.set(addItem(tLastID = 409, "Small Gunpowder Bundle", "Consumable item for superficial scanning", new Object[0]));
+
         IItemBehaviour<GT_MetaBase_Item> sBehaviour = new Behaviour_Spray_Solvent(ItemList.Spray_Empty.get(1L, new Object[0]), ItemList.Solvent_Spray_Used.get(1L, new Object[0]), ItemList.Solvent_Spray.get(1L, new Object[0]), 128L);
         addItemBehavior(32407, sBehaviour);
         addItemBehavior(32408, sBehaviour);
@@ -369,8 +370,9 @@ public class GT_MetaGenerated_Item_01 extends GT_MetaGenerated_Item_X32 {
         ItemList.Paper_Magic_Empty.set(addItem(tLastID = 482, "Magic Paper", "", new Object[]{SubTag.INVISIBLE, new ItemData(Materials.Paper, 3628800L, new MaterialStack[0]), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.PRAECANTATIO, 1L)}));
         ItemList.Paper_Magic_Page.set(addItem(tLastID = 483, "Enchanted Page", "", new Object[]{SubTag.INVISIBLE, new ItemData(Materials.Paper, 3628800L, new MaterialStack[0]), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 1L), new TC_Aspects.TC_AspectStack(TC_Aspects.PRAECANTATIO, 2L)}));
         ItemList.Paper_Magic_Pages.set(addItem(tLastID = 484, "Enchanted Pages", "", new Object[]{SubTag.INVISIBLE, new ItemData(Materials.Paper, 10886400L, new MaterialStack[0]), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 2L), new TC_Aspects.TC_AspectStack(TC_Aspects.PRAECANTATIO, 4L)}));
-        ItemList.Paper_Punch_Card_Empty.set(addItem(tLastID = 485, "Punch Card", "", new Object[]{SubTag.INVISIBLE, new ItemData(Materials.Paper, 7257600L, new MaterialStack[0]), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 1L)}));
+        ItemList.Paper_Punch_Card_Empty.set(addItem(tLastID = 485, "Punch Card", "", new Object[]{new ItemData(Materials.Paper, 7257600L, new MaterialStack[0]), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 1L)}));
         ItemList.Paper_Punch_Card_Encoded.set(addItem(tLastID = 486, "Punched Card", "", new Object[]{SubTag.INVISIBLE, new ItemData(Materials.Paper, 7257600L, new MaterialStack[0]), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 2L)}));
+        addItemBehavior(32000+tLastID, new Behaviour_Punched_Card());
         ItemList.Book_Written_01.set(addItem(tLastID = 487, "Book", "", new Object[]{new ItemData(Materials.Paper, 10886400L, new MaterialStack[0]), "bookWritten", OreDictNames.craftingBook, new Behaviour_WrittenBook(), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 2L)}));
         ItemList.Book_Written_02.set(addItem(tLastID = 488, "Book", "", new Object[]{new ItemData(Materials.Paper, 10886400L, new MaterialStack[0]), "bookWritten", OreDictNames.craftingBook, new Behaviour_WrittenBook(), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 2L)}));
         ItemList.Book_Written_03.set(addItem(tLastID = 489, "Book", "", new Object[]{new ItemData(Materials.Paper, 10886400L, new MaterialStack[0]), "bookWritten", OreDictNames.craftingBook, new Behaviour_WrittenBook(), new TC_Aspects.TC_AspectStack(TC_Aspects.COGNITIO, 2L)}));
