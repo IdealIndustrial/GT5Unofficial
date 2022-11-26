@@ -3201,7 +3201,7 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.Oxygen.getCells(1),      Materials.Empty.getCells(2),        Materials.NitricOxide.getGas(2000), GT_Values.NF,                           Materials.NitrogenDioxide.getCells(3), GT_Values.NI, 160, 30);
         GT_Values.RA.addChemicalRecipeForBasicMachineOnly(Materials.NitricOxide.getCells(2), Materials.Oxygen.getCells(1),       GT_Values.NF,                       GT_Values.NF,                           Materials.NitrogenDioxide.getCells(3), GT_Values.NI, 160, 30);
 
-        GT_Values.RA.addChemicalRecipe(Materials.Epichlorohydrin.getCells(10), Materials.SodiumHydroxide.getDust(3), Materials.Water.getFluid(3000), GT_Values.NF, Materials.Glycerol.getCells(14), Materials.Salt.getDust(2), 640, 30);
+        GT_Values.RA.addChemicalRecipe(Materials.Epichlorohydrin.getCells(10), Materials.SodiumHydroxide.getDust(3), GT_Utility.getIntegratedCircuit(3), Materials.Water.getFluid(3000), GT_Values.NF, Materials.Glycerol.getCells(14), Materials.Salt.getDust(2), 640, 30);
 
         GT_Values.RA.addChemicalRecipe(                   Materials.Water.getCells(3),           GT_Utility.getIntegratedCircuit(1),  Materials.NitrogenDioxide.getGas(9000), Materials.NitricAcid.getFluid(10000), Materials.NitricOxide.getCells(2), Materials.Empty.getCells(1), 240);
         GT_Values.RA.addChemicalRecipe(                   Materials.NitrogenDioxide.getCells(9), GT_Utility.getIntegratedCircuit(1),  Materials.Water.getFluid(3000),         Materials.NitricAcid.getFluid(10000), Materials.NitricOxide.getCells(2), Materials.Empty.getCells(7), 240);
