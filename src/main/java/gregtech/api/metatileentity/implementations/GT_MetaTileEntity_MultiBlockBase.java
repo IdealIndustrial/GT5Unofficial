@@ -1015,9 +1015,18 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         return false;
     }
 
+    protected boolean checkCasingsCount(int expectedAtLeast, int got) {
+        if (expectedAtLeast < got) {
+            setConstructionError(new GT_MultiBlockConstructionError.NotEnoughCasings(expectedAtLeast, got));
+            return false;
+        }
+        return true;
+    }
+
     protected boolean checkNotAirOffset(int x, int y, int z) {
         if (!getBaseMetaTileEntity().getAirOffset(x, y, z)) {
-            sendBlockError(Blocks.air, 0, x, y, z, false);
+            IGregTechTileEntity te = getBaseMetaTileEntity();
+            setConstructionError(new GT_MultiBlockConstructionError.WrongBlock(Blocks.air.getUnlocalizedName() + ".name", te.getXCoord() + x, te.getYCoord() + y, te.getZCoord() + z, false));
             return true;
         }
         return false;

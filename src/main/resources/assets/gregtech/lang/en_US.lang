@@ -846,6 +846,7 @@ multiblock.error.at=At
 multiblock.error.founderror=Found Construction Error:
 multiblock.error.casingsatleast=Not Enough Casings, Expected:
 multiblock.error.casingsgot=,but Found Only:
+tile.air.name=Air
 
 Item_DESCRIPTION_Index_000=Stored Heat: %s
 Item_DESCRIPTION_Index_001=Durability: %s/%s

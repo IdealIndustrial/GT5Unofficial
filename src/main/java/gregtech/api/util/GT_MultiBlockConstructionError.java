@@ -25,6 +25,7 @@ public interface GT_MultiBlockConstructionError {
 
     static void registerErrors() {
         GT_Packet_MultiBlockError.registerNewErrorType(WrongBlock.class);
+        GT_Packet_MultiBlockError.registerNewErrorType(NotEnoughCasings.class);
     }
 
     static void sendToClients(GT_MultiBlockConstructionError error, IGregTechTileEntity te) {
@@ -106,17 +107,23 @@ public interface GT_MultiBlockConstructionError {
             if (expectedUnlocalName.equals("")) {
                 return StatCollector.translateToLocal("multiblock.error.expected.hatch") + " " + at();
             }
-            String expected = expectedAsStack == null ? StatCollector.translateToLocal(expectedUnlocalName) : expectedAsStack.getDisplayName();
             String orHatch = canBeHatch ?
                     StatCollector.translateToLocal("multiblock.error.orHatch") + " "
                     : "";
             return StatCollector.translateToLocal("multiblock.error.expected") +
                     " " +
-                    expected +
+                    getExpected() +
                     orHatch +
                     " " +
                     at();
 
+        }
+
+        private String getExpected() {
+            if (expectedAsStack == null) {
+                return StatCollector.translateToLocal(expectedUnlocalName);
+            }
+            return expectedAsStack.getDisplayName();
         }
 
         @Override
