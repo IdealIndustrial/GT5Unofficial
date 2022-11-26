@@ -1,11 +1,13 @@
 package gregtech.common.items.behaviors;
 
 import gregtech.api.items.GT_MetaBase_Item;
+import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Behaviour_DataOrb
@@ -42,6 +44,45 @@ public class Behaviour_DataOrb
             return "";
         }
         return tNBT.getString("mDataTitle");
+    }
+
+    public static boolean hasSubLines(ItemStack aStack) {
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        return tNBT != null && tNBT.getByte("subTitleLinesCount") > 0;
+    }
+
+    public static String[] getSubTitleLines(ItemStack aStack) {
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        if (tNBT == null) return new String[0];
+        byte subTitleLinesCount = tNBT.getByte("subTitleLinesCount");
+        String[] lines = new String[subTitleLinesCount];
+        for (byte i = 0; i < subTitleLinesCount; i++) {
+            lines[i] = GT_LanguageManager.getTranslation(tNBT.getString("subTitleLine"+i));
+        }
+        return lines;
+    }
+
+    public static void cleanSubTitleLines(NBTTagCompound tNBT){
+        byte subTitleLinesCount = tNBT.getByte("subTitleLinesCount");
+        for (byte i = 0; i < subTitleLinesCount; i++) {
+            tNBT.setString("subTitleLine"+i, "");
+        }
+    }
+
+    public static NBTTagCompound setSubTitleLines(ItemStack aStack, String[] lines) {
+        NBTTagCompound tNBT = aStack.getTagCompound();
+        if (tNBT == null) {
+            tNBT = new NBTTagCompound();
+        } else {
+            cleanSubTitleLines(tNBT);
+        }
+        if(lines == null) return tNBT;
+        tNBT.setByte("subTitleLinesCount", (byte)lines.length);
+        for (byte i = 0; i < lines.length; i++){
+            tNBT.setString("subTitleLine"+i, lines[i]);
+        }
+        aStack.setTagCompound(tNBT);
+        return tNBT;
     }
 
     public static NBTTagCompound setDataName(ItemStack aStack, String aDataName) {
@@ -115,6 +156,9 @@ public class Behaviour_DataOrb
         if (!(getDataTitle(aStack).length() == 0)) {
             aList.add(getDataTitle(aStack));
             aList.add(getDataName(aStack));
+            aList.addAll(Arrays.asList(getSubTitleLines(aStack)));
+        } else if (hasSubLines(aStack)){
+            aList.addAll(Arrays.asList(getSubTitleLines(aStack)));
         }
         return aList;
     }

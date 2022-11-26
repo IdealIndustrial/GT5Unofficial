@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTileEntity_DrillerBase {
 	
 	private int mLastXOff = 0, mLastZOff = 0;
+	protected boolean isAllowPutPipesToController = true;
 	
 	public GT_MetaTileEntity_ConcreteBackfillerBase(int aID, String aName, String aNameRegional) {
 		super(aID, aName, aNameRegional);
@@ -39,6 +40,10 @@ public abstract class GT_MetaTileEntity_ConcreteBackfillerBase extends GT_MetaTi
 	@Override
 	public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
 		return new GT_GUIContainer_MultiMachine(aPlayerInventory, aBaseMetaTileEntity, getLocalName(), "DrillingRig.png");
+	}
+
+	protected boolean allowPutPipesToController() {
+		return isAllowPutPipesToController;
 	}
 	
 	protected abstract int getRadius();
