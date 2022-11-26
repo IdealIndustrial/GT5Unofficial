@@ -834,8 +834,11 @@ Interaction_DESCRIPTION_Index_220=Output Bus
 Interaction_DESCRIPTION_Index_221=Maintenance Hatch
 Interaction_DESCRIPTION_Index_222=Click with Tool to repair.
 Interaction_DESCRIPTION_Index_223=Scanning mode changed to: %s
+Interaction_DESCRIPTION_Index_224=Mode 3 by 3: ON
+Interaction_DESCRIPTION_Index_225=Mode 3 by 3: OFF
 Interaction_DESCRIPTION_Index_226=Input from Output Fluid Side §2allowed§r
 Interaction_DESCRIPTION_Index_227=Input from Output Fluid Side §cforbidden§r
+
 Item_DESCRIPTION_Index_000=Stored Heat: %s
 Item_DESCRIPTION_Index_001=Durability: %s/%s
 Item_DESCRIPTION_Index_002=%s lvl %s
