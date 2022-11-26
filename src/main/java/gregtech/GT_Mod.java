@@ -600,6 +600,7 @@ public class GT_Mod implements IGT_Mod {
         }
         if (FMLCommonHandler.instance().getEffectiveSide().isServer())
             GT_Assemblyline_Server.fillMap(aEvent);
+        GT_MultiBlockConstructionError.registerErrors();
     }
 
     @Mod.EventHandler

@@ -8,6 +8,7 @@ import gregtech.api.interfaces.IItemBehaviour;
 import gregtech.api.interfaces.tileentity.*;
 import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Cable;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_Utility;
@@ -21,6 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -246,6 +248,13 @@ public class Behaviour_Scanner
                 }
             } catch (Throwable e) {
                 if (D1) e.printStackTrace(GT_Log.err);
+            }
+            if (tTileEntity instanceof IGregTechTileEntity && ((IGregTechTileEntity) tTileEntity).getMetaTileEntity() instanceof GT_MetaTileEntity_MultiBlockBase) {
+                GT_MetaTileEntity_MultiBlockBase multiBlock = (GT_MetaTileEntity_MultiBlockBase) ((IGregTechTileEntity)tTileEntity).getMetaTileEntity();
+                if (multiBlock.mLastError != null) {
+                    tList.add(StatCollector.translateToLocal("multiblock.error.founderror"));
+                    tList.addAll(Arrays.asList(multiBlock.mLastError.toLocalString().split("\n")));
+                }
             }
             try {
                 if (tTileEntity instanceof ic2.api.crops.ICropTile) {
