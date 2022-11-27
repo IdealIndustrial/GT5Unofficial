@@ -76,10 +76,10 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
         int xCenter = getBaseMetaTileEntity().getXCoord() + ForgeDirection.getOrientation(getBaseMetaTileEntity().getFrontFacing()).offsetX * 5;
         int yCenter = getBaseMetaTileEntity().getYCoord();
         int zCenter = getBaseMetaTileEntity().getZCoord() + ForgeDirection.getOrientation(getBaseMetaTileEntity().getFrontFacing()).offsetZ * 5;
-        if (((isAdvancedMachineCasing(xCenter + 5, yCenter, zCenter)) || (xCenter + 5 == getBaseMetaTileEntity().getXCoord()))
-                && ((isAdvancedMachineCasing(xCenter - 5, yCenter, zCenter)) || (xCenter - 5 == getBaseMetaTileEntity().getXCoord()))
-                && ((isAdvancedMachineCasing(xCenter, yCenter, zCenter + 5)) || (zCenter + 5 == getBaseMetaTileEntity().getZCoord()))
-                && ((isAdvancedMachineCasing(xCenter, yCenter, zCenter - 5)) || (zCenter - 5 == getBaseMetaTileEntity().getZCoord())) && (checkCoils(xCenter, yCenter, zCenter))
+        if (((xCenter + 5 == getBaseMetaTileEntity().getXCoord()) || (isAdvancedMachineCasing(xCenter + 5, yCenter, zCenter)))
+                && ((xCenter - 5 == getBaseMetaTileEntity().getXCoord()) || (isAdvancedMachineCasing(xCenter - 5, yCenter, zCenter)))
+                && ((zCenter + 5 == getBaseMetaTileEntity().getZCoord()) || (isAdvancedMachineCasing(xCenter, yCenter, zCenter + 5)))
+                && ((zCenter - 5 == getBaseMetaTileEntity().getZCoord()) || (isAdvancedMachineCasing(xCenter, yCenter, zCenter - 5))) && (checkCoils(xCenter, yCenter, zCenter))
                 && (checkHulls(xCenter, yCenter, zCenter)) && (checkUpperOrLowerHulls(xCenter, yCenter + 1, zCenter)) && (checkUpperOrLowerHulls(xCenter, yCenter - 1, zCenter))
                 && (addIfEnergyInjector(xCenter + 4, yCenter, zCenter + 3, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter + 4, yCenter, zCenter - 3, aBaseMetaTileEntity))
                 && (addIfEnergyInjector(xCenter + 4, yCenter, zCenter + 5, aBaseMetaTileEntity)) && (addIfEnergyInjector(xCenter + 4, yCenter, zCenter - 5, aBaseMetaTileEntity))
