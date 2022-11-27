@@ -98,7 +98,7 @@ public class GT_MetaTileEntity_MultiFurnace
             }
 
             tCurrentParallel *= tOutputStack.stackSize;
-            this.mOutputItems = new ItemStack[ divisionUp( tCurrentParallel, 64 ) ];
+            this.mOutputItems = new ItemStack[divisionUp(tCurrentParallel, 64)];
             for (int i = 0; i < this.mOutputItems.length; i++) {
                 ItemStack tNewStack = tOutputStack.copy();
                 int size = Math.min(tCurrentParallel, 64);
@@ -120,19 +120,20 @@ public class GT_MetaTileEntity_MultiFurnace
         return false;
     }
 
-    private static int divisionUp (int a, int b) {
+    private static int divisionUp(int a, int b) {
         return a / b + ((a % b == 0) ? 0 : 1);
-    }        
-        
+    }
+
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
         int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
 
         this.mLevel = 0;
         this.mCostDiscount = 1;
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, 1, zDir)) {
+        if (checkNotAirOffset(xDir, 1, zDir)) {
             return false;
         }
+
         addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, 2, zDir), 11);
         replaceDeprecatedCoils(aBaseMetaTileEntity);
         byte tUsedMeta = aBaseMetaTileEntity.getMetaIDOffset(xDir + 1, 1, zDir);
@@ -166,23 +167,19 @@ public class GT_MetaTileEntity_MultiFurnace
                 this.mCostDiscount = 8;
                 break;
             default:
+                sendBlockErrorOffset(GregTech_API.sBlockCasings5, 0, xDir + 1, 1, zDir, false);
                 return false;
         }
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 if ((i != 0) || (j != 0)) {
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 1, zDir + j) != GregTech_API.sBlockCasings5) {
+                    if (checkNotBlockOffset(GregTech_API.sBlockCasings5, tUsedMeta, xDir + i, 1, zDir + j, false)) {
                         return false;
                     }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 1, zDir + j) != tUsedMeta) {
+                    if (checkNotBlockOffset(GregTech_API.sBlockCasings1, 11, xDir + i, 2, zDir + j, false)) {
                         return false;
                     }
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 2, zDir + j) != GregTech_API.sBlockCasings1) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 2, zDir + j) != 11) {
-                        return false;
-                    }
+
                 }
             }
         }
@@ -191,10 +188,7 @@ public class GT_MetaTileEntity_MultiFurnace
                 if ((xDir + i != 0) || (zDir + j != 0)) {
                     IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j);
                     if ((!addMaintenanceToMachineList(tTileEntity, 11)) && (!addInputToMachineList(tTileEntity, 11)) && (!addOutputToMachineList(tTileEntity, 11)) && (!addEnergyInputToMachineList(tTileEntity, 11))) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != GregTech_API.sBlockCasings1) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j) != 11) {
+                        if (checkNotBlockOffset(GregTech_API.sBlockCasings1, 11, xDir + i, 0, zDir + j, true)) {
                             return false;
                         }
                     }

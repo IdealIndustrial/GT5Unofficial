@@ -26,11 +26,40 @@ public interface GT_MultiBlockConstructionError {
     static void registerErrors() {
         GT_Packet_MultiBlockError.registerNewErrorType(WrongBlock.class);
         GT_Packet_MultiBlockError.registerNewErrorType(NotEnoughCasings.class);
+        GT_Packet_MultiBlockError.registerNewErrorType(LangString.class);
     }
 
     static void sendToClients(GT_MultiBlockConstructionError error, IGregTechTileEntity te) {
         GT_Packet packet = new GT_Packet_MultiBlockError(te.getXCoord(), te.getYCoord(), te.getZCoord(), error);
         GT_Values.NW.sendPacketToAllPlayersInRange(te.getWorld(), packet, te.getXCoord(), te.getZCoord());
+    }
+
+    class LangString implements GT_MultiBlockConstructionError {
+
+        private String unlocal;
+
+        public LangString(String unlocal) {
+            this.unlocal = unlocal;
+        }
+
+        public LangString() {
+
+        }
+
+        @Override
+        public String toLocalString() {
+            return StatCollector.translateToLocal(unlocal);
+        }
+
+        @Override
+        public void save(ByteArrayDataOutput to) {
+            to.writeUTF(unlocal);
+        }
+
+        @Override
+        public void load(ByteArrayDataInput from) {
+            unlocal = from.readUTF();
+        }
     }
 
     class NotEnoughCasings implements GT_MultiBlockConstructionError {
@@ -106,6 +135,9 @@ public interface GT_MultiBlockConstructionError {
         public String toLocalString() {
             if (expectedUnlocalName.equals("")) {
                 return StatCollector.translateToLocal("multiblock.error.expected.hatch") + " " + at();
+            }
+            if (expectedUnlocalName.equals("invalidHatch")) {
+                return StatCollector.translateToLocal("multiblock.error.invalid.hatch") + " " + at();
             }
             String orHatch = canBeHatch ?
                     StatCollector.translateToLocal("multiblock.error.orHatch") + " "

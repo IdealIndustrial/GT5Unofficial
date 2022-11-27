@@ -56,6 +56,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 }
             }
             if (tAirCount != 10) {
+                sendErrorLocalString("multiblock.error.turbine.airfront");
                 return false;
             }
             for (byte i = 2; i < 6; i = (byte) (i + 1)) {
@@ -63,6 +64,7 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 if ((null != (tTileEntity = getBaseMetaTileEntity().getIGregTechTileEntityAtSideAndDistance(i, 2))) &&
                         (tTileEntity.getFrontFacing() == getBaseMetaTileEntity().getFrontFacing()) && (tTileEntity.getMetaTileEntity() != null) &&
                         ((tTileEntity.getMetaTileEntity() instanceof GT_MetaTileEntity_LargeTurbine))) {
+                    sendErrorLocalString("multiblock.error.turbine.adjacent");
                     return false;
                 }
             }
@@ -73,14 +75,18 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                 for (byte j = -1; j < 2; j = (byte) (j + 1)) {
                     if ((i != 0) || (j != 0)) {
                         for (byte k = 0; k < 4; k = (byte) (k + 1)) {
+                            int mX = tX + (tSide == 5 ? k : tSide == 4 ? -k : i);
+                            int mZ = tZ + (tSide == 2 ? -k : tSide == 3 ? k : i);
                             if (((i == 0) || (j == 0)) && ((k == 1) || (k == 2))) {
-                                if (getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingMeta()) {
-                                } else if (!addToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)))) {
+                                if (!addToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(mX, tY + j, mZ))) {
+                                    if (checkNotBlock(getCasingBlock(), getCasingMeta(), mX, tY + j, mZ, true)) {
+                                        return false;
+                                    }
+                                }
+                            } else {
+                                if (checkNotBlock(getCasingBlock(), getCasingMeta(), mX, tY + j, mZ, false)) {
                                     return false;
                                 }
-                            } else if (getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingMeta()) {
-                            } else {
-                                return false;
                             }
                         }
                     }
@@ -93,12 +99,15 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
                     this.mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) tTileEntity.getMetaTileEntity());
                     ((GT_MetaTileEntity_Hatch) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
                 } else {
+                    sendErrorExpectedHatchDistance(getBaseMetaTileEntity().getBackFacing(), 3);
                     return false;
                 }
             } else {
+                sendErrorExpectedHatchDistance(getBaseMetaTileEntity().getBackFacing(), 3);
                 return false;
             }
         } else {
+            sendErrorLocalString("multiblock.error.turbine.airinside");
             return false;
         }
         return true;

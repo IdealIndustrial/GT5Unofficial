@@ -25,6 +25,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -988,28 +989,81 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         GT_MultiBlockConstructionError.sendToClients(error, getBaseMetaTileEntity());
     }
 
-    public void sendBlockError(Block expected, int expectedMeta, int x, int y, int z, boolean hatch) {
-        Item item = Item.getItemFromBlock(expected);
-        //definitely non totally generic, but works for simple blocks as casings
+    public void sendBlockErrorOffset(Block expected, int expectedMeta, int x, int y, int z, boolean hatch) {
         IGregTechTileEntity te = getBaseMetaTileEntity();
+        sendBlockError(expected, expectedMeta, te.getXCoord() + x, te.getYCoord() + y, te.getZCoord() + z, hatch);
+    }
+
+    public void sendBlockError(Block expected, int expectedMeta, int x, int y, int z, boolean hatch) {
+        //definitely non totally generic, but works for simple blocks as casings
         setConstructionError(new GT_MultiBlockConstructionError.WrongBlock(new ItemStack(expected, 1, expectedMeta),
-                te.getXCoord() + x, te.getYCoord() + y, te.getZCoord() + z, hatch));
+                x, y, z, hatch));
+    }
+
+    public void sendErrorExpectedHatch(int x, int y, int z) {
+        setConstructionError(new GT_MultiBlockConstructionError.WrongBlock("", x, y, z, false));
     }
 
     public void sendErrorExpectedHatchOffset(int x, int y, int z) {
         IGregTechTileEntity te = getBaseMetaTileEntity();
-        setConstructionError(new GT_MultiBlockConstructionError.WrongBlock("", te.getXCoord() + x, te.getYCoord() + y, te.getZCoord() + z, false));
+        sendErrorExpectedHatch(te.getXCoord() + x, te.getYCoord() + y, te.getZCoord() + z);
     }
 
+    public void sendErrorExpectedHatchDistance(byte side, int distance) {
+        IGregTechTileEntity te = getBaseMetaTileEntity();
+        int x = te.getOffsetX(side, distance);
+        int y = te.getOffsetY(side, distance);
+        int z = te.getOffsetZ(side, distance);
+        sendErrorExpectedHatch(x, y, z);
+    }
+
+
+    public void sendErrorInvalidHatch(MetaTileEntity tile) {
+        IGregTechTileEntity hatch = tile.getBaseMetaTileEntity();
+        setConstructionError(new GT_MultiBlockConstructionError.WrongBlock("invalidHatch", hatch.getXCoord(), hatch.getYCoord(), hatch.getZCoord(), false));
+    }
+
+    protected void sendErrorLocalString(String unlocal) {
+        setConstructionError(new GT_MultiBlockConstructionError.LangString(unlocal));
+    }
+
+    protected boolean checkNotBlockDistance(Block b, int meta, byte side, int distance, boolean hatch) {
+        IGregTechTileEntity te = getBaseMetaTileEntity();
+        int x = te.getOffsetX(side, distance);
+        int y = te.getOffsetY(side, distance);
+        int z = te.getOffsetZ(side, distance);
+        if (te.getBlock(x, y, z) != b) {
+            sendBlockErrorOffset(b, meta, x, y, z, hatch);
+            return true;
+        }
+        if (te.getMetaID(x, y, z) != meta) {
+            sendBlockErrorOffset(b, meta, x, y, z, hatch);
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean checkNotBlock(Block b, int meta, int x, int y, int z, boolean hatch) {
+        IGregTechTileEntity aBaseMetaTileEntity = getBaseMetaTileEntity();
+        if (aBaseMetaTileEntity.getBlock(x, y, z) != b) {
+            sendBlockError(b, meta, x, y, z, hatch);
+            return true;
+        }
+        if (aBaseMetaTileEntity.getMetaID(x, y, z) != meta) {
+            sendBlockError(b, meta, x, y, z, hatch);
+            return true;
+        }
+        return false;
+    }
 
     protected boolean checkNotBlockOffset(Block b, int meta, int x, int y, int z, boolean hatch) {
         IGregTechTileEntity aBaseMetaTileEntity = getBaseMetaTileEntity();
         if (aBaseMetaTileEntity.getBlockOffset(x, y, z) != b) {
-            sendBlockError(b, meta, x, y, z, hatch);
+            sendBlockErrorOffset(b, meta, x, y, z, hatch);
             return true;
         }
         if (aBaseMetaTileEntity.getMetaIDOffset(x, y, z) != meta) {
-            sendBlockError(b, meta, x, y, z, hatch);
+            sendBlockErrorOffset(b, meta, x, y, z, hatch);
             return true;
         }
         return false;

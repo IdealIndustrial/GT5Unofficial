@@ -159,13 +159,14 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
         int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
 
         this.mHeatingCapacity = 0;
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, 1, zDir)) {
+        if (checkNotAirOffset(xDir, 1, zDir)) {
             return false;
         }
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, 2, zDir)) {
+        if (checkNotAirOffset(xDir, 2, zDir)) {
             return false;
         }
         if (!addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, 3, zDir), 11)) {
+            sendErrorExpectedHatchOffset(xDir, 3, zDir);
             return false;
         }
         replaceDeprecatedCoils(aBaseMetaTileEntity);
@@ -193,30 +194,22 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                 this.mHeatingCapacity = 9001;
                 break;
             default:
+                sendBlockErrorOffset(GregTech_API.sBlockCasings5, 0, xDir + 1, 2, zDir, false);
                 return false;
         }
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 if ((i != 0) || (j != 0)) {
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 2, zDir + j) != GregTech_API.sBlockCasings5) {
+                    if (checkNotBlockOffset(GregTech_API.sBlockCasings5, tUsedMeta,xDir + i, 2, zDir + j, false)) {
                         return false;
                     }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 2, zDir + j) != tUsedMeta) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 1, zDir + j) != GregTech_API.sBlockCasings5) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 1, zDir + j) != tUsedMeta) {
+                    if (checkNotBlockOffset(GregTech_API.sBlockCasings5, tUsedMeta,xDir + i, 1, zDir + j, false)) {
                         return false;
                     }
                     if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 3, zDir + j), 11)) {
-                    	if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 3, zDir + j) != GregTech_API.sBlockCasings1) {
-                    		return false;
-                    	}
-                    	if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 3, zDir + j) != 11) {
-                    		return false;
-                    	}
+                        if (checkNotBlockOffset(GregTech_API.sBlockCasings1, 11,xDir + i, 3, zDir + j, true)) {
+                            return false;
+                        }
                     }
                 }
             }
@@ -226,10 +219,7 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                 if ((xDir + i != 0) || (zDir + j != 0)) {
                     IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j);
                     if ((!addMaintenanceToMachineList(tTileEntity, 11)) && (!addInputToMachineList(tTileEntity, 11)) && (!addOutputToMachineList(tTileEntity, 11)) && (!addEnergyInputToMachineList(tTileEntity, 11))) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != GregTech_API.sBlockCasings1) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j) != 11) {
+                        if (checkNotBlockOffset(GregTech_API.sBlockCasings1, 11,xDir + i, 0, zDir + j, true)) {
                             return false;
                         }
                     }
@@ -242,7 +232,8 @@ public class GT_MetaTileEntity_ElectricBlastFurnace
                     IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 3, zDir + j);
                     if(tTileEntity != null) {
                         IMetaTileEntity aMetaTileEntity = tTileEntity.getMetaTileEntity();
-                        if(aMetaTileEntity != null && aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_OutputBus){
+                        if(aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_OutputBus){
+                            sendBlockErrorOffset(GregTech_API.sBlockCasings1, 11,xDir + i, 3, zDir + j, false);
                             return false;
                         }
                     }

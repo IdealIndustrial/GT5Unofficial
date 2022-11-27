@@ -183,10 +183,7 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
                                 && !addInputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex())
                                 && !addMaintenanceToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex())
                                 && !ignoreController(aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j))) {
-                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j) != getCasingBlock()) {
-                                return false;
-                            }
-                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, k, zDir + j) != getCasingMeta()) {
+                            if (checkNotBlockOffset(getCasingBlock(), getCasingMeta(), xDir + i, k, zDir + j, true)) {
                                 return false;
                             }
                             tCasingAmount++;
@@ -194,28 +191,24 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
                     }
                 } else {
                     if (!addHotFluidInputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j), getCasingTextureIndex())) {
+                        sendErrorExpectedHatchOffset(xDir + i, 0, zDir + j);
                         return false;
                     }
                     if (!addColdFluidOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 3, zDir + j), getCasingTextureIndex())) {
+                        sendErrorExpectedHatchOffset(xDir + i, 0, zDir + j);
                         return false;
                     }
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 1, zDir + j) != getPipeBlock()) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 1, zDir + j) != getPipeMeta()) {
+                    if (checkNotBlockOffset(getPipeBlock(), getPipeMeta(), xDir + i, 1, zDir + j, false)) {
                         return false;
                     }
 
-                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 2, zDir + j) != getPipeBlock()) {
-                        return false;
-                    }
-                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 2, zDir + j) != getPipeMeta()) {
+                    if (checkNotBlockOffset(getPipeBlock(), getPipeMeta(), xDir + i, 2, zDir + j, false)) {
                         return false;
                     }
                 }
             }
         }
-        return (tCasingAmount >= 24);
+        return checkCasingsCount(24, tCasingAmount);
     }
 
     public boolean ignoreController(Block tTileEntity) {

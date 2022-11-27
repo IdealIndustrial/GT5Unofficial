@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class GT_MetaTileEntity_DistillationTower
         extends GT_MetaTileEntity_MultiBlockBase {
-	private static final int CASING_INDEX = 49;
+    private static final int CASING_INDEX = 49;
     private short controllerY;
 
     public GT_MetaTileEntity_DistillationTower(int aID, String aName, String aNameRegional) {
@@ -96,32 +96,32 @@ public class GT_MetaTileEntity_DistillationTower
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
         FluidStack[] tFluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
         if (tFluids.length > 0) {
-        	for(int i = 0;i<tFluids.length;i++){
-            GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sDistillationRecipes.findRecipe(getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], new FluidStack[]{tFluids[i]}, new ItemStack[]{});
-            if (tRecipe != null) {
-                if (tRecipe.isRecipeInputEqual(true, tFluids, new ItemStack[]{})) {
-                    this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-                    this.mEfficiencyIncrease = 10000;
-                    if (tRecipe.mEUt <= 16) {
-                        this.mEUt = (tRecipe.mEUt * (1 << tTier - 1) * (1 << tTier - 1));
-                        this.mMaxProgresstime = (tRecipe.mDuration / (1 << tTier - 1));
-                    } else {
-                        this.mEUt = tRecipe.mEUt;
-                        this.mMaxProgresstime = tRecipe.mDuration;
-                        while (this.mEUt <= gregtech.api.enums.GT_Values.V[(tTier - 1)]) {
-                            this.mEUt *= 4;
-                            this.mMaxProgresstime /= 2;
+            for (int i = 0; i < tFluids.length; i++) {
+                GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sDistillationRecipes.findRecipe(getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], new FluidStack[]{tFluids[i]}, new ItemStack[]{});
+                if (tRecipe != null) {
+                    if (tRecipe.isRecipeInputEqual(true, tFluids, new ItemStack[]{})) {
+                        this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+                        this.mEfficiencyIncrease = 10000;
+                        if (tRecipe.mEUt <= 16) {
+                            this.mEUt = (tRecipe.mEUt * (1 << tTier - 1) * (1 << tTier - 1));
+                            this.mMaxProgresstime = (tRecipe.mDuration / (1 << tTier - 1));
+                        } else {
+                            this.mEUt = tRecipe.mEUt;
+                            this.mMaxProgresstime = tRecipe.mDuration;
+                            while (this.mEUt <= gregtech.api.enums.GT_Values.V[(tTier - 1)]) {
+                                this.mEUt *= 4;
+                                this.mMaxProgresstime /= 2;
+                            }
                         }
+                        if (this.mEUt > 0) {
+                            this.mEUt = (-this.mEUt);
+                        }
+                        this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+                        this.mOutputItems = new ItemStack[]{tRecipe.getOutput(0)};
+                        this.mOutputFluids = tRecipe.mFluidOutputs.clone();
+                        updateSlots();
+                        return true;
                     }
-                    if (this.mEUt > 0) {
-                        this.mEUt = (-this.mEUt);
-                    }
-                    this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
-                    this.mOutputItems = new ItemStack[]{tRecipe.getOutput(0)};
-                    this.mOutputFluids = tRecipe.mFluidOutputs.clone();
-                    updateSlots();
-                    return true;
-                	}
                 }
             }
         }
@@ -130,7 +130,7 @@ public class GT_MetaTileEntity_DistillationTower
     }
 
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-    	controllerY = aBaseMetaTileEntity.getYCoord();
+        controllerY = aBaseMetaTileEntity.getYCoord();
         int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
         int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
         int y = 0; //height
@@ -138,56 +138,61 @@ public class GT_MetaTileEntity_DistillationTower
         boolean reachedTop = false;
 
         for (int x = xDir - 1; x <= xDir + 1; x++) { //x=width
-			for (int z = zDir - 1; z <= zDir + 1; z++) { //z=depth
-				if (x != 0 || z != 0) {
-					IGregTechTileEntity tileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(x, y, z);
-					Block block = aBaseMetaTileEntity.getBlockOffset(x, y, z);
-					if (!addInputToMachineList(tileEntity, CASING_INDEX) 
-							&& !addOutputToMachineList(tileEntity, CASING_INDEX) 
-							&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX) 
-							&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
-						if (block == GregTech_API.sBlockCasings4 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 1) {
-							casingAmount++;
-						} else {
-							return false;
-						}        						
-					}
-				}
-			}
-		}
-        y++;
-        
-        while (y < 12 && !reachedTop) {
-       		for (int x = xDir - 1; x <= xDir + 1; x++) { //x=width
-       			for (int z = zDir - 1; z <= zDir + 1; z++) { //z=depth
-   					IGregTechTileEntity tileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(x, y, z);
-   					Block block = aBaseMetaTileEntity.getBlockOffset(x, y, z);
-   					if (aBaseMetaTileEntity.getAirOffset(x, y, z)) {
-   						if (x != xDir || z != zDir) {
-   							return false;
-   						}
-   					} else {
-   						if (x == xDir && z == zDir) {
-       						reachedTop = true;
-       					}
-   						if (!addOutputToMachineList(tileEntity, CASING_INDEX) 
-   								&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX) 
-   								&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
-   							if (block == GregTech_API.sBlockCasings4 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 1) {
-       							casingAmount++;
-       						} else {
-       							return false;
-       						}
-   						}
-   					}
-       			}
-       		}
-        	y++;
+            for (int z = zDir - 1; z <= zDir + 1; z++) { //z=depth
+                if (x != 0 || z != 0) {
+                    IGregTechTileEntity tileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(x, y, z);
+                    if (!addInputToMachineList(tileEntity, CASING_INDEX)
+                            && !addOutputToMachineList(tileEntity, CASING_INDEX)
+                            && !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
+                            && !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
+                        if (checkNotBlockOffset(GregTech_API.sBlockCasings4, 1, x, y, z, true)) {
+                            return false;
+                        }
+                        casingAmount++;
+                    }
+                }
+            }
         }
-        
-        return casingAmount >= 7 * y - 5 && y >= 3 && y <= 12 && reachedTop;
+        y++;
+
+        while (y < 12 && !reachedTop) {
+            for (int x = xDir - 1; x <= xDir + 1; x++) { //x=width
+                for (int z = zDir - 1; z <= zDir + 1; z++) { //z=depth
+                    IGregTechTileEntity tileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(x, y, z);
+                    if (aBaseMetaTileEntity.getAirOffset(x, y, z)) {
+                        if (x != xDir || z != zDir) {
+                            checkNotAirOffset(x, y, z);
+                            return false;
+                        }
+                    } else {
+                        if (x == xDir && z == zDir) {
+                            reachedTop = true;
+                        }
+                        if (!addOutputToMachineList(tileEntity, CASING_INDEX)
+                                && !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
+                                && !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
+                            if (checkNotBlockOffset(GregTech_API.sBlockCasings4, 1, x, y, z, true)) {
+                                return false;
+                            }
+                            casingAmount++;
+                        }
+                    }
+                }
+            }
+            y++;
+        }
+
+        if (!reachedTop) {
+            sendErrorLocalString("multiblock.error.refinery.unknown");
+            return false;
+        }
+        if (! (y >= 3 && y <= 12)) {
+            sendErrorLocalString("multiblock.error.refinery.height");
+            return false;
+        }
+        return checkCasingsCount(7 * y - 5, casingAmount);
     }
-    
+
     public int getMaxEfficiency(ItemStack aStack) {
         return 10000;
     }
@@ -203,21 +208,21 @@ public class GT_MetaTileEntity_DistillationTower
     public boolean explodesOnComponentBreak(ItemStack aStack) {
         return false;
     }
-    
+
     @Override
     public boolean addOutput(FluidStack aLiquid) {
         if (aLiquid == null) return false;
         FluidStack tLiquid = aLiquid.copy();
         for (GT_MetaTileEntity_Hatch_Output tHatch : mOutputHatches) {
             if (isValidMetaTileEntity(tHatch) && GT_ModHandler.isSteam(aLiquid) ? tHatch.outputsSteam() : tHatch.outputsLiquids()) {
-            	if (tHatch.getBaseMetaTileEntity().getYCoord() == this.controllerY + 1) {
-            		int tAmount = tHatch.fill(tLiquid, false);
-                	if (tAmount >= tLiquid.amount) {
-                    	return tHatch.fill(tLiquid, true) >= tLiquid.amount;
-                	} else if (tAmount > 0) {
-                    	tLiquid.amount = tLiquid.amount - tHatch.fill(tLiquid, true);
-                	}
-            	}
+                if (tHatch.getBaseMetaTileEntity().getYCoord() == this.controllerY + 1) {
+                    int tAmount = tHatch.fill(tLiquid, false);
+                    if (tAmount >= tLiquid.amount) {
+                        return tHatch.fill(tLiquid, true) >= tLiquid.amount;
+                    } else if (tAmount > 0) {
+                        tLiquid.amount = tLiquid.amount - tHatch.fill(tLiquid, true);
+                    }
+                }
             }
         }
         return false;
@@ -227,12 +232,12 @@ public class GT_MetaTileEntity_DistillationTower
     protected void addFluidOutputs(FluidStack[] mOutputFluids2) {
         for (int i = 0; i < mOutputFluids2.length; i++) {
             if (mOutputHatches.size() > i && mOutputHatches.get(i) != null && mOutputFluids2[i] != null && isValidMetaTileEntity(mOutputHatches.get(i))) {
-            	if (mOutputHatches.get(i).getBaseMetaTileEntity().getYCoord() == this.controllerY + 1 + i) {
-            		mOutputHatches.get(i).fill(mOutputFluids2[i], true);
-            	}
+                if (mOutputHatches.get(i).getBaseMetaTileEntity().getYCoord() == this.controllerY + 1 + i) {
+                    mOutputHatches.get(i).fill(mOutputFluids2[i], true);
+                }
             }
         }
 
     }
-    
+
 }

@@ -130,34 +130,38 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
         int tY = getBaseMetaTileEntity().getYCoord();
         int tZ = getBaseMetaTileEntity().getZCoord();
 
-        if(getBaseMetaTileEntity().getBlockAtSideAndDistance(tSide, 1) != getGearboxBlock() && getBaseMetaTileEntity().getBlockAtSideAndDistance(tSide, 2) != getGearboxBlock()) {
-            return false;
-        }
-        if(getBaseMetaTileEntity().getMetaIDAtSideAndDistance(tSide, 1) != getGearboxMeta() && getBaseMetaTileEntity().getMetaIDAtSideAndDistance(tSide, 2) != getGearboxMeta()) {
+        if (checkNotBlockDistance(getGearboxBlock(), getGearboxMeta(), tSide, 2, false)) {
             return false;
         }
         for (byte i = -1; i < 2; i = (byte) (i + 1)) {
             for (byte j = -1; j < 2; j = (byte) (j + 1)) {
                 if ((i != 0) || (j != 0)) {
                     for (byte k = 0; k < 4; k = (byte) (k + 1)) {
-                        Block frontAir = getBaseMetaTileEntity().getBlock(tX - (tSide == 5 ? 1 : tSide == 4 ? -1 : i), tY + j, tZ - (tSide == 2 ? -1 : tSide == 3 ? 1 : i));
-                        if(!(frontAir.getUnlocalizedName().equalsIgnoreCase("tile.air") || frontAir.getUnlocalizedName().equalsIgnoreCase("tile.railcraft.residual.heat"))) {
-                            return false; //Fail if vent blocks are obstructed
+                        if (checkNotAirOffset(- (tSide == 5 ? 1 : tSide == 4 ? -1 : i), j, - (tSide == 2 ? -1 : tSide == 3 ? 1 : i))) {
+                            return false;
                         }
+                        int xOff = tSide == 5 ? k : tSide == 4 ? -k : i;
+                        int zOff = tSide == 2 ? -k : tSide == 3 ? k : i;
                         if (((i == 0) || (j == 0)) && ((k == 1) || (k == 2))) {
-                            if (getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingMeta()) {
-                            } else if (!addMufflerToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? 2 : tSide == 4 ? -2 : 0), tY + 1, tZ + (tSide == 3 ? 2 : tSide == 2 ? -2 : 0)), getCasingTextureIndex())) {
-                                return false; //Fail if no muffler top middle back
-                            } else if (!addToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)))) {
-                                return false;
+                            if (getBaseMetaTileEntity().getBlock(tX + xOff, tY + j, tZ + zOff) != getCasingBlock() || getBaseMetaTileEntity().getMetaID(tX + xOff, tY + j, tZ + zOff) != getCasingMeta()) {
+                                int mZ = tZ + (tSide == 3 ? 2 : tSide == 2 ? -2 : 0);
+                                int mX = tX + (tSide == 5 ? 2 : tSide == 4 ? -2 : 0);
+                                if (!addMufflerToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(mX, tY + 1, mZ), getCasingTextureIndex())) {
+                                    sendErrorExpectedHatchOffset(mX, tY + 1, mZ);
+                                    return false; //Fail if no muffler top middle back
+                                } else if (!addToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(tX + xOff, tY + j, tZ + zOff))) {
+                                    sendErrorExpectedHatchOffset(tX + xOff, tY + j, tZ + zOff);
+                                    return false;
+                                }
                             }
                         } else if (k == 0) {
-                          if(!(getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getIntakeBlock() && getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getIntakeMeta())) {
-                              return false;
-                          }
-                        } else if (getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == getCasingMeta()) {
+                            if(checkNotBlockOffset(getIntakeBlock(), getIntakeMeta(), tX + xOff, tY + j, tZ + zOff, false)) {
+                                return false;
+                            }
                         } else {
-                            return false;
+                            if (checkNotBlockOffset(getCasingBlock(), getCasingMeta(), tX + xOff, tY + j, tZ + zOff, false)) {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -170,6 +174,9 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                 this.mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) tTileEntity.getMetaTileEntity());
                 ((GT_MetaTileEntity_Hatch) tTileEntity.getMetaTileEntity()).updateTexture(getCasingTextureIndex());
             } else {
+                IGregTechTileEntity te = getBaseMetaTileEntity();
+                byte side = te.getBackFacing();
+                sendErrorExpectedHatchOffset(te.getOffsetX(side, 3), te.getOffsetY(side, 3), te.getOffsetZ(side, 3));
                 return false;
             }
         }

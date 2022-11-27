@@ -120,9 +120,10 @@ public class GT_MetaTileEntity_ImplosionCompressor
                     if ((h != 0) || (((xDir + i != 0) || (zDir + j != 0)) && ((i != 0) || (j != 0)))) {
                         IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, h, zDir + j);
                         if ((!addMaintenanceToMachineList(tTileEntity, 16)) && (!addMufflerToMachineList(tTileEntity, 16)) && (!addInputToMachineList(tTileEntity, 16)) && (!addOutputToMachineList(tTileEntity, 16)) && (!addEnergyInputToMachineList(tTileEntity, 16))) {
-                            Block tBlock = aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j);
-                            byte tMeta = aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j);
-                            if (((tBlock != GregTech_API.sBlockCasings2) || (tMeta != 0)) && ((tBlock != GregTech_API.sBlockCasings3) || (tMeta != 4))) {
+                           if (checkNotBlockOffset(GregTech_API.sBlockCasings2, 0, xDir + i, h, zDir + j, true)) {
+                                return false;
+                            }
+                            if (checkNotBlockOffset(GregTech_API.sBlockCasings3, 4, xDir + i, h, zDir + j, true)) {
                                 return false;
                             }
                             tAmount++;
@@ -131,7 +132,7 @@ public class GT_MetaTileEntity_ImplosionCompressor
                 }
             }
         }
-        return tAmount >= 16;
+        return checkCasingsCount(16, tAmount);
     }
 
     public int getMaxEfficiency(ItemStack aStack) {

@@ -172,11 +172,10 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 						centerCoords++;
 					}
 					if (centerCoords == 3) {
-						if (block == GregTech_API.sBlockCasings8 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 1) {
-							continue;
-						} else {
+						if (checkNotBlock(GregTech_API.sBlockCasings8, 1, x, y, z, false)) {
 							return false;
 						}
+						continue;
 					}
 					if (centerCoords == 2 && block == GregTech_API.sBlockCasings5 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 0) {
 						hasHeatingCoil = true;
@@ -185,18 +184,25 @@ public class GT_MetaTileEntity_LargeChemicalReactor extends GT_MetaTileEntity_Mu
 					if (!addInputToMachineList(tileEntity, CASING_INDEX) && !addOutputToMachineList(tileEntity, CASING_INDEX)
 							&& !addMaintenanceToMachineList(tileEntity, CASING_INDEX)
 							&& !addEnergyInputToMachineList(tileEntity, CASING_INDEX)) {
-						if (block == GregTech_API.sBlockCasings8 && aBaseMetaTileEntity.getMetaIDOffset(x, y, z) == 0) {
-							casingAmount++;
-						} else {
+						if (checkNotBlock(GregTech_API.sBlockCasings8, 0, x, y, z, true)) {
 							return false;
 						}
+						casingAmount++;
 					}
 
 				}
 			}
 
 		}
-		return casingAmount >= 8 && hasHeatingCoil && !mEnergyHatches.isEmpty() && !mMaintenanceHatches.isEmpty();
+		if (!hasHeatingCoil) {
+			sendErrorLocalString("multiblock.error.chem.hasheat");
+			return false;
+		}
+		if (mEnergyHatches.isEmpty() || mMaintenanceHatches.isEmpty()) {
+			sendErrorLocalString("multiblock.error.chem.hashatches");
+			return false;
+		}
+		return checkCasingsCount(8, casingAmount);
 	}
 
 	@Override

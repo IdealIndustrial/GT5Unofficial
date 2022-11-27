@@ -284,10 +284,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 if (i != 0 || j != 0) {
                     for (int k = 1; k <= 4; k++) {
                         if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, k, zDir + j), getCasingTextureIndex())) {
-                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j) != getCasingBlock()) {
-                                return false;
-                            }
-                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, k, zDir + j) != getCasingMeta()) {
+                            if (checkNotBlockOffset(getCasingBlock(), getCasingMeta(),xDir + i, k, zDir + j, true )) {
                                 return false;
                             }
                             tCasingAmount++;
@@ -295,18 +292,12 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                     }
                 } else {
                     for (int k = 1; k <= 3; k++) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, k, zDir + j) != getPipeBlock()) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, k, zDir + j) != getPipeMeta()) {
+                        if (checkNotBlockOffset(getPipeBlock(), getPipeMeta(),xDir + i, k, zDir + j, false )) {
                             return false;
                         }
                     }
                     if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 4, zDir + j), getCasingTextureIndex())) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 4, zDir + j) != getCasingBlock()) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 4, zDir + j) != getCasingMeta()) {
+                        if (checkNotBlockOffset(getCasingBlock(), getCasingMeta(),xDir + i, 4, zDir + j, true )) {
                             return false;
                         }
                         tCasingAmount++;
@@ -319,10 +310,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 if (xDir + i != 0 || zDir + j != 0) {
                     IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j);
                     if (!addMaintenanceToMachineList(tTileEntity, getFireboxTextureIndex()) && !addInputToMachineList(tTileEntity, getFireboxTextureIndex()) && !addMufflerToMachineList(tTileEntity, getFireboxTextureIndex())) {
-                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != getFireboxBlock()) {
-                            return false;
-                        }
-                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j) != getFireboxMeta()) {
+                        if (checkNotBlockOffset(getFireboxBlock(), getFireboxMeta(),xDir + i, 0, zDir + j, true )) {
                             return false;
                         }
                         tFireboxAmount++;
@@ -330,7 +318,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
                 }
             }
         }
-        return tCasingAmount >= 24 && tFireboxAmount >= 3;
+        return checkCasingsCount(24, tCasingAmount) && checkCasingsCount(3, tFireboxAmount);
     }
 
     public int getMaxEfficiency(ItemStack aStack) {

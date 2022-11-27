@@ -423,17 +423,14 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                     if (i != 2 && i != -2 && j != 2 && j != -2) {
                         if(h == -1||h==3){
                             if ((!addMaintenanceToMachineList(tTileEntity, 178)) && (!addInputToMachineList(tTileEntity, 178)) && (!addOutputToMachineList(tTileEntity, 178)) && (!addEnergyInputToMachineList(tTileEntity, 178))) {
-                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings8) {
-                                    return false;
-                                }
-                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 2) {
+                                if (checkNotBlockOffset(GregTech_API.sBlockCasings8, 2,xDir + i, h, zDir + j, true )) {
                                     return false;
                                 }
                                 tAmount++;
                             }
                         }
                         else{
-                            if (!aBaseMetaTileEntity.getAirOffset(xDir + i, h, zDir + j)) {
+                            if (checkNotAirOffset(xDir + i, h, zDir + j)) {
                                 return false;
                             }
                         }
@@ -441,10 +438,7 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                     else {
                         if(!(i+xDir==0&&j+zDir==0&&h==0)){
                             if ((!addMaintenanceToMachineList(tTileEntity, 178)) && (!addInputToMachineList(tTileEntity, 178)) && (!addOutputToMachineList(tTileEntity, 178)) && (!addEnergyInputToMachineList(tTileEntity, 178))) {
-                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings8) {
-                                    return false;
-                                }
-                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 2) {
+                                if (checkNotBlockOffset(GregTech_API.sBlockCasings8, 2,xDir + i, h, zDir + j, true )) {
                                     return false;
                                 }
                                 tAmount++;
@@ -455,7 +449,7 @@ public class GT_MetaTileEntity_AdvancedProcessingArray extends GT_MetaTileEntity
                 }
             }
         }
-        return tAmount >=70;
+        return checkCasingsCount(70, tAmount);
     }
 
     public int getMaxEfficiency(ItemStack aStack) {

@@ -105,21 +105,33 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                 && (addIfInjector(xCenter - 1, yCenter - 1, zCenter - 6, aBaseMetaTileEntity)) && (addIfInjector(xCenter - 1, yCenter - 1, zCenter + 6, aBaseMetaTileEntity))
                 && (addIfInjector(xCenter - 6, yCenter - 1, zCenter + 1, aBaseMetaTileEntity)) && (addIfInjector(xCenter + 6, yCenter - 1, zCenter + 1, aBaseMetaTileEntity))
                 && (addIfInjector(xCenter - 6, yCenter - 1, zCenter - 1, aBaseMetaTileEntity)) && (addIfInjector(xCenter + 6, yCenter - 1, zCenter - 1, aBaseMetaTileEntity))
-                && (this.mEnergyHatches.size() >= 1) && (this.mOutputHatches.size() >= 1) && (this.mInputHatches.size() >= 2)) {
+                ) {
+            if (!(this.mEnergyHatches.size() >= 1) && (this.mOutputHatches.size() >= 1) && (this.mInputHatches.size() >= 2)) {
+                sendErrorLocalString("multiblock.error.fusion.invalidhatches");
+                return false;
+            }
             int mEnergyHatches_sS = this.mEnergyHatches.size();
             for (int i = 0; i < mEnergyHatches_sS; i++) {
-                if (this.mEnergyHatches.get(i).mTier < tier())
+                if (this.mEnergyHatches.get(i).mTier < tier()){
+                    sendErrorInvalidHatch(mEnergyHatches.get(i));
                     return false;
+                }
+
             }
             int mOutputHatches_sS = this.mOutputHatches.size();
             for (int i = 0; i < mOutputHatches_sS; i++) {
-                if (this.mOutputHatches.get(i).mTier < tier())
+                if (this.mOutputHatches.get(i).mTier < tier()){
+                    sendErrorInvalidHatch(mOutputHatches.get(i));
                     return false;
+                }
+
             }
             int mInputHatches_sS = this.mInputHatches.size();
             for (int i = 0; i < mInputHatches_sS; i++) {
-                if (this.mInputHatches.get(i).mTier < tier())
+                if (this.mInputHatches.get(i).mTier < tier()) {
+                    sendErrorInvalidHatch(mInputHatches.get(i));
                     return false;
+                }
             }
             mWrench = true;
             mScrewdriver = true;
@@ -170,25 +182,28 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
         if (addEnergyInputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntity(aX, aY, aZ), 53)) {
             return true;
         }
-        return isAdvancedMachineCasing(aX, aY, aZ);
+        return isAdvancedMachineCasing(aX, aY, aZ, true);
     }
 
     private boolean addIfInjector(int aX, int aY, int aZ, IGregTechTileEntity aTileEntity) {
         if (addInputToMachineList(aTileEntity.getIGregTechTileEntity(aX, aY, aZ), 53)) {
             return true;
         }
-        return isAdvancedMachineCasing(aX, aY, aZ);
+        return isAdvancedMachineCasing(aX, aY, aZ, true);
     }
 
     private boolean addIfExtractor(int aX, int aY, int aZ, IGregTechTileEntity aTileEntity) {
         if (addOutputToMachineList(aTileEntity.getIGregTechTileEntity(aX, aY, aZ), 53)) {
             return true;
         }
-        return isAdvancedMachineCasing(aX, aY, aZ);
+        return isAdvancedMachineCasing(aX, aY, aZ, true);
     }
 
     private boolean isAdvancedMachineCasing(int aX, int aY, int aZ) {
-        return (getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getCasing()) && (getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getCasingMeta());
+        return isAdvancedMachineCasing(aX, aY, aZ, false);
+    }
+    private boolean isAdvancedMachineCasing(int aX, int aY, int aZ, boolean hatch) {
+        return !checkNotBlock(getCasing(), getCasingMeta(), aX, aY, aZ, hatch);
     }
 
     public abstract Block getCasing();
@@ -196,7 +211,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
     public abstract int getCasingMeta();
 
     private boolean isFusionCoil(int aX, int aY, int aZ) {
-        return (getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getFusionCoil() && (getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getFusionCoilMeta()));
+        return !checkNotBlock(getFusionCoil(), getFusionCoilMeta(), aX, aY, aZ, false);
     }
 
     public abstract Block getFusionCoil();
@@ -239,14 +254,16 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
     @Override
     public boolean checkRecipe(ItemStack aStack) {
         ArrayList<FluidStack> tFluidList = getStoredFluids();
-        int tFluidList_sS=tFluidList.size();
+        int tFluidList_sS = tFluidList.size();
         for (int i = 0; i < tFluidList_sS - 1; i++) {
             for (int j = i + 1; j < tFluidList_sS; j++) {
                 if (GT_Utility.areFluidsEqual((FluidStack) tFluidList.get(i), (FluidStack) tFluidList.get(j))) {
                     if (((FluidStack) tFluidList.get(i)).amount >= ((FluidStack) tFluidList.get(j)).amount) {
-                        tFluidList.remove(j--); tFluidList_sS=tFluidList.size();
+                        tFluidList.remove(j--);
+                        tFluidList_sS = tFluidList.size();
                     } else {
-                        tFluidList.remove(i--); tFluidList_sS=tFluidList.size();
+                        tFluidList.remove(i--);
+                        tFluidList_sS = tFluidList.size();
                         break;
                     }
                 }
@@ -261,14 +278,14 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
                 return false;
             }
             if (mRunningOnLoad || tRecipe.isRecipeInputEqual(true, tFluids, new ItemStack[]{})) {
-            this.mLastRecipe = tRecipe;
-            this.mEUt = (this.mLastRecipe.mEUt * overclock(this.mLastRecipe.mSpecialValue));
-            this.mMaxProgresstime = this.mLastRecipe.mDuration / overclock(this.mLastRecipe.mSpecialValue);
-            this.mEfficiencyIncrease = 10000;
-            this.mOutputFluids = this.mLastRecipe.mFluidOutputs;
-            turnCasingActive(true);
-            mRunningOnLoad = false;
-            return true;
+                this.mLastRecipe = tRecipe;
+                this.mEUt = (this.mLastRecipe.mEUt * overclock(this.mLastRecipe.mSpecialValue));
+                this.mMaxProgresstime = this.mLastRecipe.mDuration / overclock(this.mLastRecipe.mSpecialValue);
+                this.mEfficiencyIncrease = 10000;
+                this.mOutputFluids = this.mLastRecipe.mFluidOutputs;
+                turnCasingActive(true);
+                mRunningOnLoad = false;
+                return true;
             }
         }
         return false;
@@ -420,6 +437,7 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
     public int getDamageToComponent(ItemStack aStack) {
         return 0;
     }
+
     @Override
     public boolean explodesOnComponentBreak(ItemStack aStack) {
         return false;
@@ -433,15 +451,15 @@ public abstract class GT_MetaTileEntity_FusionComputer extends GT_MetaTileEntity
         if (this.mLastRecipe != null) {
             powerRequired = this.mLastRecipe.mEUt;
             if (this.mLastRecipe.getFluidOutput(0) != null) {
-                plasmaOut = (float)this.mLastRecipe.getFluidOutput(0).amount / (float)this.mLastRecipe.mDuration;
+                plasmaOut = (float) this.mLastRecipe.getFluidOutput(0).amount / (float) this.mLastRecipe.mDuration;
             }
         }
 
         return new String[]{
-                "Fusion Reactor MK "+tier,
-                "EU Required: "+powerRequired+"EU/t",
-                "Stored EU: "+mEUStore+" / "+maxEUStore(),
-                "Plasma Output: "+plasmaOut+"L/t"};
+                "Fusion Reactor MK " + tier,
+                "EU Required: " + powerRequired + "EU/t",
+                "Stored EU: " + mEUStore + " / " + maxEUStore(),
+                "Plasma Output: " + plasmaOut + "L/t"};
     }
 
     @Override

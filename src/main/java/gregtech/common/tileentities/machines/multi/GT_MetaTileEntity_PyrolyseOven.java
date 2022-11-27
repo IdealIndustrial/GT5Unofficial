@@ -25,24 +25,24 @@ import java.util.ArrayList;
 
 public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlockBase {
 
-	private int coilMetaID;
-	private static final int CASING_INDEX = 128 + 64;
-	private CasingType casingType = CasingType.UNDEFINED;
+    private int coilMetaID;
+    private static final int CASING_INDEX = 128 + 64;
+    private CasingType casingType = CasingType.UNDEFINED;
 
-	private enum CasingType {
-	    OLD(GregTech_API.sBlockCasings1), NEW(GregTech_API.sBlockCasings6), UNDEFINED(null);
+    private enum CasingType {
+        OLD(GregTech_API.sBlockCasings1), NEW(GregTech_API.sBlockCasings6), UNDEFINED(null);
 
-	    private final Block block;
+        private final Block block;
 
         CasingType(Block block) {
             this.block = block;
         }
 
         public boolean check(Block block) {
-	        return block == this.block;
+            return block == this.block;
         }
     }
-	
+
     public GT_MetaTileEntity_PyrolyseOven(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
@@ -124,7 +124,7 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
 
     @Override
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-	    casingType = CasingType.UNDEFINED;
+        casingType = CasingType.UNDEFINED;
         int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX * 2;
         int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ * 2;
         replaceDeprecatedCoils(aBaseMetaTileEntity);
@@ -136,22 +136,25 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                     if ((i != -2 && i != 2) && (j != -2 && j != 2)) {// innerer 3x3 ohne hoehe
                         if (h == 0) {// innen boden (kanthal coils)
                             if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings5) {
+                                checkNotBlockOffset(GregTech_API.sBlockCasings5, 0, xDir + i, h, zDir + j, false);
                                 return false;
                             }
                             int metaID = aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j);
                             if (metaID > 6) {
+                                checkNotBlockOffset(GregTech_API.sBlockCasings5, 0, xDir + i, h, zDir + j, false);
                                 return false;
                             } else {
-                            	if (firstCoil) {
-                            		this.coilMetaID = metaID;
-                            		firstCoil = false;
-                            	} else if (metaID != this.coilMetaID) {
-                            		return false;
-                            	}
+                                if (firstCoil) {
+                                    this.coilMetaID = metaID;
+                                    firstCoil = false;
+                                } else if (metaID != this.coilMetaID) {
+                                    checkNotBlockOffset(GregTech_API.sBlockCasings5, coilMetaID, xDir + i, h, zDir + j, false);
+                                    return false;
+                                }
                             }
                         } else if (h == 3) {// innen decke (ulv casings + input + muffler)
                             if ((!addInputToMachineList(tTileEntity, CASING_INDEX)) && (!addMufflerToMachineList(tTileEntity, CASING_INDEX))) {
-                                if (wrongCasing(aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j), aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j))){
+                                if (wrongCasing(xDir + i, h, zDir + j, true)) {
                                     return false;
                                 }
                             }
@@ -164,13 +167,13 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
                         if (h == 0) {// aussen boden (controller, output, energy, maintainance, rest ulv casings)
                             if ((!addMaintenanceToMachineList(tTileEntity, CASING_INDEX)) && (!addOutputToMachineList(tTileEntity, CASING_INDEX)) && (!addEnergyInputToMachineList(tTileEntity, CASING_INDEX))) {
                                 if ((xDir + i != 0) || (zDir + j != 0)) {//no controller
-                                    if (wrongCasing(aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j), aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j))) {
+                                    if (wrongCasing(xDir + i, h, zDir + j, true)) {
                                         return false;
                                     }
                                 }
                             }
                         } else {// aussen ueber boden (ulv casings)
-                            if (wrongCasing(aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j), aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j))) {
+                            if (wrongCasing(xDir + i, h, zDir + j, false)) {
                                 return false;
                             }
                         }
@@ -181,22 +184,30 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
         return true;
     }
 
-    private boolean wrongCasing(Block aBlock, int aMeta) {
-	    if (aMeta != 0) {
-	        return true;
+    private boolean wrongCasing(int x, int y, int z, boolean hatch) {
+        Block aBlock = getBaseMetaTileEntity().getBlockOffset(x, y, z);
+        int aMeta = getBaseMetaTileEntity().getMetaIDOffset(x, y, z);
+        if (aMeta != 0) {
+            checkNotBlockOffset(CasingType.NEW.block, 0, x, y, z, hatch);
+            return true;
         }
-	    if (casingType == CasingType.UNDEFINED) {
-	        if (CasingType.OLD.check(aBlock)) {
-	            casingType = CasingType.OLD;
-	            return false;
+        if (casingType == CasingType.UNDEFINED) {
+            if (CasingType.OLD.check(aBlock)) {
+                casingType = CasingType.OLD;
+                return false;
             }
             if (CasingType.NEW.check(aBlock)) {
                 casingType = CasingType.NEW;
                 return false;
             }
+            checkNotBlockOffset(CasingType.NEW.block, 0, x, y, z, hatch);
             return true;
         }
-	    return !casingType.check(aBlock);
+        if (!casingType.check(aBlock)) {
+            checkNotBlockOffset(casingType.block, 0, x, y, z, hatch);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -237,8 +248,7 @@ public class GT_MetaTileEntity_PyrolyseOven extends GT_MetaTileEntity_MultiBlock
         for (int xPos = tX - 1; xPos <= tX + 1; xPos++) {
             for (int zPos = tZ - 1; zPos <= tZ + 1; zPos++) {
                 if (aBaseMetaTileEntity.getBlock(xPos, tY, zPos) == GregTech_API.sBlockCasings1 &&
-                    aBaseMetaTileEntity.getMetaID(xPos, tY, zPos) == 13)
-                {
+                        aBaseMetaTileEntity.getMetaID(xPos, tY, zPos) == 13) {
                     aBaseMetaTileEntity.getWorld().setBlock(xPos, tY, zPos, GregTech_API.sBlockCasings5, 1, 3);
                 }
             }

@@ -103,7 +103,7 @@ public class GT_MetaTileEntity_VacuumFreezer
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
         int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
-        if (!aBaseMetaTileEntity.getAirOffset(xDir, 0, zDir)) {
+        if (checkNotAirOffset(xDir, 0, zDir)) {
             return false;
         }
         int tAmount = 0;
@@ -113,10 +113,7 @@ public class GT_MetaTileEntity_VacuumFreezer
                     if ((h != 0) || (((xDir + i != 0) || (zDir + j != 0)) && ((i != 0) || (j != 0)))) {
                         IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, h, zDir + j);
                         if ((!addMaintenanceToMachineList(tTileEntity, 17)) && (!addInputToMachineList(tTileEntity, 17)) && (!addOutputToMachineList(tTileEntity, 17)) && (!addEnergyInputToMachineList(tTileEntity, 17))) {
-                            if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j) != GregTech_API.sBlockCasings2) {
-                                return false;
-                            }
-                            if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 1) {
+                            if (checkNotBlockOffset(GregTech_API.sBlockCasings2, 1,xDir + i, h, zDir + j, true )) {
                                 return false;
                             }
                             tAmount++;
@@ -125,7 +122,7 @@ public class GT_MetaTileEntity_VacuumFreezer
                 }
             }
         }
-        return tAmount >= 16;
+        return checkCasingsCount(16, tAmount);
     }
 
     public int getMaxEfficiency(ItemStack aStack) {

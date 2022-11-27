@@ -842,11 +842,28 @@ Interaction_DESCRIPTION_Index_227=Input from Output Fluid Side §cforbidden§r
 multiblock.error.expected=Expected
 multiblock.error.orHatch=Or Hatch
 multiblock.error.expected.hatch=Expected Hatch
+multiblock.error.invalid.hatch=Invalid Hatch Found
 multiblock.error.at=At
 multiblock.error.founderror=Found Construction Error:
 multiblock.error.casingsatleast=Not Enough Casings, Expected:
 multiblock.error.casingsgot=,but Found Only:
 tile.air.name=Air
+multiblock.error.al.tooshort=Too Short Assembly Line
+multiblock.error.al.unknown=Unable To Determine Error
+multiblock.error.refinery.unknown=Unable To Determine Error
+multiblock.error.refinery.height=MultiBlock Height Must be Between 3 and 12
+multiblock.error.driller.invalidvoltage=Invalid Input Voltage
+multiblock.error.driller.invalidhatches=Invalid Hatches In Structure
+multiblock.error.fusion.invalidhatches=Not Enough Hatches In Structure
+multiblock.error.chem.hasheat=Machine Must Have Heating Coil
+multiblock.error.chem.hashatches=Machine Must Have At Least One Energy And One Maintenance Hatch
+multiblock.error.turbine.airinside=Machine Must Have Two Air Blocks Inside
+multiblock.error.turbine.airfront=Machine Must Have Air In-front of it
+multiblock.error.turbine.adjacent=Two Machines Are Too Close
+multiblock.error.cracker.hatches=Invalid Input and Output Hatches Configuration
+
+multiblock.error.noenergyh=No Energy Hatch Found
+
 
 Item_DESCRIPTION_Index_000=Stored Heat: %s
 Item_DESCRIPTION_Index_001=Durability: %s/%s

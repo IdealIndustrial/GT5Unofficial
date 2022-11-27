@@ -103,10 +103,7 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
                     for (int h = -2; h < 3; h++) {
                         if (!(j == 0 && i == 0 && (h == -1 || h == 0 || h == 1))) {
                             if (h == 1 || h == -1) {
-                                if (aBaseMetaTileEntity.getBlockOffset(xDir + i, j, h + zDir) != GregTech_API.sBlockCasings5) {
-                                    return false;
-                                }
-                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, j, h + zDir) != 0) {
+                                if (checkNotBlockOffset(GregTech_API.sBlockCasings5, 0, xDir + i, j, h + zDir, false)) {
                                     return false;
                                 }
                             }
@@ -125,10 +122,7 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
                                 		posSideOutput = true;
                                 	}                                	
                                 } else if (!addEnergyInputToMachineList(tTileEntity, 49) && !addMaintenanceToMachineList(tTileEntity, 49)){
-                                    if (aBaseMetaTileEntity.getBlockOffset(xDir + i, j, h + zDir) != GregTech_API.sBlockCasings4) {
-                                        return false;
-                                    }
-                                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, j, h + zDir) != 1) {
+                                    if (checkNotBlockOffset(GregTech_API.sBlockCasings4, 1,xDir + i, j, h + zDir, true )) {
                                         return false;
                                     }
                                     amount++;
@@ -139,10 +133,7 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
                                 if ((!addMaintenanceToMachineList(tTileEntity, 49)) && (!addInputToMachineList(tTileEntity, 49))
                                         && (!addEnergyInputToMachineList(tTileEntity, 49))) {
                                     if (!((xDir + i) == 0 && j == 0 && (h + zDir) == 0)) {
-                                        if (aBaseMetaTileEntity.getBlockOffset(xDir + i, j, h + zDir) != GregTech_API.sBlockCasings4) {
-                                            return false;
-                                        }
-                                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, j, h + zDir) != 1) {
+                                        if (checkNotBlockOffset( GregTech_API.sBlockCasings4, 1, xDir + i, j, h + zDir, false)) {
                                             return false;
                                         }
                                         amount++;
@@ -160,10 +151,7 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
                     for (int h = -2; h < 3; h++) {
                         if (!(j == 0 && i == 0 && (h == -1 || h == 0 || h == 1))) {
                             if (h == 1 || h == -1) {
-                                if (aBaseMetaTileEntity.getBlockOffset(xDir + h, j, i + zDir) != GregTech_API.sBlockCasings5) {
-                                    return false;
-                                }
-                                if (aBaseMetaTileEntity.getMetaIDOffset(xDir + h, j, i + zDir) != 0) {
+                                if (checkNotBlockOffset(GregTech_API.sBlockCasings5, 0, xDir + h, j, i + zDir, false)) {
                                     return false;
                                 }
                             }
@@ -182,10 +170,7 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
                                 		posSideOutput = true;
                                 	}                                	
                                 } else if (!addEnergyInputToMachineList(tTileEntity, 49) && !addMaintenanceToMachineList(tTileEntity, 49)){
-                                    if (aBaseMetaTileEntity.getBlockOffset(xDir + h, j, i + zDir) != GregTech_API.sBlockCasings4) {
-                                        return false;
-                                    }
-                                    if (aBaseMetaTileEntity.getMetaIDOffset(xDir + h, j, i + zDir) != 1) {
+                                    if (checkNotBlockOffset(GregTech_API.sBlockCasings4, 1,xDir + h, j, i + zDir, true )) {
                                         return false;
                                     }
                                     amount++;
@@ -196,10 +181,7 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
                                 if ((!addMaintenanceToMachineList(tTileEntity, 49)) && (!addInputToMachineList(tTileEntity, 49))
                                         && (!addEnergyInputToMachineList(tTileEntity, 49))) {
                                     if (!((xDir + h) == 0 && j == 0 && (i + zDir) == 0)) {
-                                        if (aBaseMetaTileEntity.getBlockOffset(xDir + h, j, i + zDir) != GregTech_API.sBlockCasings4) {
-                                            return false;
-                                        }
-                                        if (aBaseMetaTileEntity.getMetaIDOffset(xDir + h, j, i + zDir) != 1) {
+                                        if (checkNotBlockOffset( GregTech_API.sBlockCasings4, 1, xDir + h, j, i + zDir, false)) {
                                             return false;
                                         }
                                         amount++;
@@ -214,10 +196,10 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
         }
         if ((negSideInput && negSideOutput) || (posSideInput && posSideOutput) 
         		|| (negSideInput && posSideInput) || (negSideOutput && posSideOutput)) {
+            sendErrorLocalString("multiblock.error.cracker.hatches");
         	return false;
         }
-        if (amount < 18) return false;
-        return true;
+        return checkCasingsCount(18, amount);
     }
 
     @Override
