@@ -140,6 +140,7 @@ public interface GT_MultiBlockConstructionError {
                 return StatCollector.translateToLocal("multiblock.error.invalid.hatch") + " " + at();
             }
             String orHatch = canBeHatch ?
+                    " " +
                     StatCollector.translateToLocal("multiblock.error.orHatch") + " "
                     : "";
             return StatCollector.translateToLocal("multiblock.error.expected") +

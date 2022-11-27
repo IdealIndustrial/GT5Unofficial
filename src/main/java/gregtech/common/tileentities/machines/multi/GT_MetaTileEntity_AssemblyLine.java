@@ -222,6 +222,9 @@ public class GT_MetaTileEntity_AssemblyLine
                     if(r == 1 && !addDataAccessToMachineList(tTileEntity, 16)){
                         return false;
                     }
+                    if (r != 1) {
+                        return false;
+                    }
                 }
 
                 if (checkNotBlockOffset(blockAlloyGlass, 0, 0, -1, i, false)) {
