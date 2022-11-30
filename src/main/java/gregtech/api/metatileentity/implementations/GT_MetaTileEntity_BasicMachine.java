@@ -114,6 +114,15 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         mNEIName = aNEIName;
     }
 
+    public GT_MetaTileEntity_BasicMachine(String aName, int aInputSlotCount, int aOutputSlotCount) {
+        super(aName, 1, (aInputSlotCount + aOutputSlotCount), "", null);
+        mInputSlotCount = Math.max(0, aInputSlotCount);
+        mOutputItems = new ItemStack[Math.max(0, aOutputSlotCount)];
+        mAmperage = 1;
+        mGUIName = null;
+        mNEIName = "";
+    }
+
     protected boolean isValidMainFacing(byte aSide) {
     	return aSide > 1;
     }
@@ -299,10 +308,19 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
         return mMaxProgresstime;
     }
 
+    public void setMaxProgresstime(int aProgress) {
+        mMaxProgresstime = aProgress;
+    }
+
     @Override
     public int increaseProgress(int aProgress) {
         mProgresstime += aProgress;
         return mMaxProgresstime - mProgresstime;
+    }
+
+    public void resetProgress() {
+        mProgresstime = 0;
+        mMaxProgresstime = 0;
     }
 
     @Override

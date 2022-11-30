@@ -733,34 +733,6 @@ public class GT_Utility {
         }
         return moveStackIntoPipe(fromTile, toTile, new int[]{aGrabFrom}, (byte) 6, aPutTo, aFilter, aInvertFilter, aMaxTargetStackSize, aMinTargetStackSize, aMaxMoveAtOnce, aMinMoveAtOnce, aDoCheckChests);
     }
-    public static void pushToChest(TileEntityChest aChest, ItemStack iStack){
-        pushToChest(aChest, new ArrayList<ItemStack>(Collections.singletonList(iStack)));
-    }
-
-    public static void pushToChest(TileEntityChest aChest, ArrayList<ItemStack> iStacks){
-        for(ItemStack iStack : iStacks) {
-            boolean ItemStackPushed = false;
-            for (int i = 0; i < aChest.getSizeInventory(); i++) {
-                ItemStack chestStack = aChest.getStackInSlot(i);
-                if(!ItemStackPushed) {
-                    if (chestStack != null && chestStack.getItem().equals(iStack.getItem())) {
-                        if (chestStack.getMaxStackSize() >= chestStack.stackSize + iStack.stackSize) {
-                            chestStack.stackSize += iStack.stackSize;
-                            ItemStackPushed = true;
-                            aChest.setInventorySlotContents(i, chestStack);
-                        } else {
-                            iStack.stackSize -= chestStack.getMaxStackSize() - chestStack.stackSize;
-                            chestStack.stackSize = chestStack.getMaxStackSize();
-                            aChest.setInventorySlotContents(i, chestStack);
-                        }
-                    } else if (chestStack == null) {
-                        aChest.setInventorySlotContents(i, iStack.copy());
-                        ItemStackPushed = true;
-                    }
-                }
-            }
-        }
-    }
 
     public static void pushToOutputSlots(ItemStack[] teInventory, ArrayList<ItemStack> iStacks, int startFromIdx){
         for (int s = 0; s < iStacks.toArray().length; s++) {
@@ -1906,6 +1878,10 @@ public class GT_Utility {
     }
 
     public static void drainMusclePlayerPower(EntityPlayer aPlayer, int hungryDurationPerOperation){
+        drainMusclePlayerPower(aPlayer, hungryDurationPerOperation, 1);
+    }
+
+    public static void drainMusclePlayerPower(EntityPlayer aPlayer, int hungryDurationPerOperation, int foodPerClick){
         int hangryDuration = hungryDurationPerOperation;
         PotionEffect hunger = aPlayer.getActivePotionEffect(Potion.hunger);
         if(hunger != null) {
@@ -1913,10 +1889,11 @@ public class GT_Utility {
         }
         aPlayer.addPotionEffect(new PotionEffect(Potion.hunger.id, hangryDuration));
         FoodStats fs = aPlayer.getFoodStats();
-        if(fs.getFoodLevel() < 1) {
+        if(fs.getFoodLevel() < foodPerClick) {
+            fs.setFoodLevel(0);
             aPlayer.attackEntityFrom(DamageSource.starve,1f + (1f * upWorkWhileHungry(aPlayer, false)));
         } else {
-            fs.setFoodLevel(Math.max(0, fs.getFoodLevel()-1));
+            fs.setFoodLevel(Math.max(0, fs.getFoodLevel()-foodPerClick));
             upWorkWhileHungry(aPlayer, true);
         }
     }

@@ -1,4 +1,4 @@
-package gregtech.common.tileentities.machines.multi;
+package gregtech.common.tileentities.machines.basic;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.RelativeOffset;
@@ -24,28 +24,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
-import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 
-public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_MultiBlockBase {
+public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_PrimitiveMuscleMachine {
 
     private boolean hasHead = false;
     private int digHeight = 0;
     private int digsCount = 0;
-    private int powerPerClick = 8;
-    private int hungryDurationPerOperation = 320;
-    private int decreaseFoodLevelAfterOperations = 8;
-    private int damagePerOperation = 10;
-    private int setTorchEachBlocks = 16;
+    private final int setTorchEachBlocks = 16;
     private boolean finalStop = false;
     private boolean isPickupLadders = false;
-
-    private int checkForOreInRadius = 2;
-    private int timePerOperation = 10;
-    private int pickupCheeperInTimes = 8;
-    private int pickupSpeed = 8;
-    private int drillIdx = -1;
     private int ladderIdx = -1;
     private int cobblestoneIdx = -1;
     private int torchIdx = -1;
@@ -53,12 +42,7 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
     private boolean meetNotHarvestableLayer = false;
 
     public GT_MetaTileEntity_PrimitiveMineDigger(int aID, String aName, String aNameRegional) {
-        super(aID, aName, aNameRegional, 28);
-    }
-
-    @Override
-    public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
-        return false;
+        super(aID, aName, aNameRegional);
     }
 
     @Override
@@ -81,23 +65,38 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
         meetNotHarvestableLayer = aNBT.getBoolean("meetNotHarvestableLayer");
     }
 
-    @Override
-    public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_Container_PrimitiveMiner(aPlayerInventory, aBaseMetaTileEntity, powerPerClick, hungryDurationPerOperation);
-    }
-
-    @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        return new GT_GUIContainer_PrimitiveMiner(aPlayerInventory, aBaseMetaTileEntity, getLocalName(),
-                "PrimitiveMiner.png", powerPerClick, hungryDurationPerOperation);
-    }
-
     public GT_MetaTileEntity_PrimitiveMineDigger(String aName) {
-        super(aName, 28);
+        super(aName);
     }
 
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_PrimitiveMineDigger(this.mName);
+    }
+    @Override
+    public int getHungryDurationPerOperation(){
+        return 320;
+    }
+    @Override
+    public int getDamagePerOperation(){
+        return 10;
+    }
+    @Override
+    public int getProgresstimePerOre(){
+        return isPickupLadders ? 2 : 10;
+    }
+    @Override
+    public boolean isDrillRequiredToWork(){
+        return !isPickupLadders;
+    }
+    @Override
+    public int getDecreaseSteamPerOperation(){
+        int steamPerOperation = 1;
+        if(isPickupLadders) {
+            digsCount++;
+            int pickupCheeperInTimes = 8;
+            steamPerOperation = (digsCount % pickupCheeperInTimes == 0) ? 1 : 0;
+        }
+        return steamPerOperation;
     }
 
     public String[] getDescription() {
@@ -123,22 +122,14 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
         }
     }
 
-    public GT_Recipe.GT_Recipe_Map getRecipeMap() {
-        return null;
-    }
-
-    public boolean validate(IGregTechTileEntity aBaseMetaTileEntity){
+    public boolean validate(){
         boolean isValid = true;
-        drillIdx = -1;
         ladderIdx = -1;
         cobblestoneIdx = -1;
         torchIdx = -1;
         for(int i = 0; i < 5; i++) {
             ItemStack its = mInventory[i];
             if(its != null){
-                if(drillIdx == -1 && its.getItemDamage() == 180) {
-                    drillIdx = i;
-                }
                 if(ladderIdx == -1 && its.getItem().equals(Item.getItemFromBlock(Blocks.ladder))) {
                     ladderIdx = i;
                 }
@@ -150,15 +141,14 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
                 }
             }
         }
-        if(drillIdx == -1 || ladderIdx == -1 || cobblestoneIdx == -1) {
+        if(ladderIdx == -1 || cobblestoneIdx == -1) {
             isValid = false;
         }
         return isValid;
     }
 
-    public boolean validateForPickUp(IGregTechTileEntity aBaseMetaTileEntity){
-        boolean isValid = true;
-        drillIdx = -1;
+    public boolean validateForPickUp(){
+        int drillIdx = -1;
         ladderIdx = -1;
         cobblestoneIdx = -1;
         torchIdx = -1;
@@ -183,19 +173,19 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
     }
 
     @Override
-    public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-        return super.onRightclick(aBaseMetaTileEntity, aPlayer);
-    }
-
-    private void pushToOutputSlots(ArrayList<ItemStack> drops){
-        GT_Utility.pushToOutputSlots(mInventory, drops, 5);
+    protected void endProcess(IGregTechTileEntity aBaseMetaTileEntity) {
+        digNextLayer(aBaseMetaTileEntity);
     }
 
     private boolean digNextLayer(IGregTechTileEntity aBaseMetaTileEntity){
+        if(!validate()) {
+            return false;
+        }
         if(digHeight == 0) {
             digHeight = aBaseMetaTileEntity.getYCoord();
         }
         World aWorld = aBaseMetaTileEntity.getWorld();
+        int checkForOreInRadius = 2;
         ArrayList<ChunkPosition> blocksPos = GT_Utility.getBlocksAtLayer(aBaseMetaTileEntity, digHeight-1, checkForOreInRadius);
         for (ChunkPosition pos : blocksPos) {
             Block aBlock = aWorld.getBlock(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ);
@@ -220,28 +210,11 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
         return !meetNotHarvestableLayer;
     }
 
-    private boolean decreaseInventoryItem(int idx) {
-        return decreaseInventoryItem(idx, 1);
-    }
-
-    private boolean decreaseInventoryItem(int idx, int count) {
-        boolean success = false;
-        if(idx > -1 && mInventory[idx] != null) {
-            success = true;
-            if (mInventory[idx].stackSize > count){
-                mInventory[idx].stackSize -= count;
-            } else {
-                mInventory[idx] = null;
-            }
-        }
-        return success;
-    }
-
     private void setTorches(IGregTechTileEntity te){
         World aWorld = te.getWorld();
         int aY = digHeight;
         boolean placeToSetTorch = true;
-        if(isAirWaterLava(aWorld.getBlock(te.getXCoord(), aY-1, te.getZCoord()))) { // checking a flor to be a block
+        if(isUnstableBlock(aWorld.getBlock(te.getXCoord(), aY-1, te.getZCoord()))) { // checking a flor to be a block
             if(decreaseInventoryItem(cobblestoneIdx)) {
                 aWorld.setBlock(te.getXCoord(), aY-1, te.getZCoord(), Blocks.cobblestone);
             } else {
@@ -261,7 +234,7 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
         World aWorld = te.getWorld();
         ChunkPosition chPos = GT_Utility.getFrontRelativeOffset(te, RelativeOffset.BACK, 1, aY);
         boolean placeToSetTorch = true;
-        if(isAirWaterLava(aWorld.getBlock(chPos.chunkPosX, chPos.chunkPosY, chPos.chunkPosZ))) { // checking is a solid wall
+        if(isUnstableBlock(aWorld.getBlock(chPos.chunkPosX, chPos.chunkPosY, chPos.chunkPosZ))) { // checking is a solid wall
             if(decreaseInventoryItem(cobblestoneIdx)) {
                 aWorld.setBlock(chPos.chunkPosX, chPos.chunkPosY, chPos.chunkPosZ, Blocks.cobblestone);
             } else {
@@ -288,11 +261,6 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
             GT_Utility.sendSoundToPlayers(aBaseMetaTileEntity.getWorld(),
                     (String) GregTech_API.sSoundList.get(Integer.valueOf(isSuccess ? 101 : 6)), isSuccess? 1.0f : 0.8f, -1.0F,
                     aBaseMetaTileEntity.getXCoord(), aBaseMetaTileEntity.getYCoord(), aBaseMetaTileEntity.getZCoord());
-    }
-
-    public boolean isAirWaterLava(Block aBlock){
-        return Blocks.air.equals(aBlock) || Blocks.water.equals(aBlock) || Blocks.flowing_water.equals(aBlock)
-                || Blocks.lava.equals(aBlock) || Blocks.flowing_lava.equals(aBlock);
     }
 
     private boolean checkIsPriorityGrass(IGregTechTileEntity te){
@@ -351,8 +319,6 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
         if(mInventory[maxPriorityIdx] != null) {
             aBlock = Block.getBlockFromItem(mInventory[maxPriorityIdx].getItem());
             decreaseInventoryItem(maxPriorityIdx);
-        } else {
-            int debug = maxPriorityIdx;
         }
         return aBlock;
     }
@@ -386,6 +352,7 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
             if(te.getYCoord() == digHeight) {
                 finalStop = true;
             }
+            doWorkSoundPickUp(te);
         }
         return success;
     }
@@ -408,7 +375,7 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
             pushToOutputSlots(layerDrop);
         }
         ChunkPosition chPos = GT_Utility.getFrontRelativeOffset(te, RelativeOffset.FORWARD, 2, digHeight);
-        if(isAirWaterLava(aWorld.getBlock(chPos.chunkPosX, chPos.chunkPosY, chPos.chunkPosZ))){
+        if(isUnstableBlock(aWorld.getBlock(chPos.chunkPosX, chPos.chunkPosY, chPos.chunkPosZ))){
             if(decreaseInventoryItem(cobblestoneIdx)) {
                 aWorld.setBlock(chPos.chunkPosX, chPos.chunkPosY, chPos.chunkPosZ, Blocks.cobblestone);
             }
@@ -416,9 +383,6 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
         chPos = GT_Utility.getFrontRelativeOffset(te, RelativeOffset.FORWARD, 1, digHeight);
         if(decreaseInventoryItem(ladderIdx)){
             aWorld.setBlock(chPos.chunkPosX, chPos.chunkPosY, chPos.chunkPosZ, Blocks.ladder, getTorchLadderMetaByFrontSize(te, true),3);
-        }
-        if(GT_MetaGenerated_Tool.addDmgAndCheckIsDestroy(mInventory[drillIdx], damagePerOperation)) {
-            mInventory[drillIdx] = null;
         }
     }
 
@@ -429,83 +393,17 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Mul
         return isLadder ? 4 : 1;
     }
 
-    @Override
-    public long maxEUStore() {
-        return 0;
-    }
-
-    @Override
-    public long maxSteamStore() {
-        return 64;
-    }
-
-    @Override
-    public boolean isElectric() {
-        return false;
-    }
-
-    public boolean isCorrectMachinePart(ItemStack aStack) {
-        return true;
-    }
-
-    public boolean isFacingValid(byte aFacing) {
-        return aFacing > 1;
-    }
-
-    private int calcProgTimeOnEnergyAmount(BaseMetaTileEntity te){
-        return timePerOperation - Math.round((te.getStoredSteam() * timePerOperation / 2f) / maxSteamStore());
-    }
-
-    public boolean checkRecipe(ItemStack aStack) {
+    public boolean isReadyToDig() {
         if(finalStop) return false;
         BaseMetaTileEntity te = (BaseMetaTileEntity)getBaseMetaTileEntity();
-        if(!meetNotHarvestableLayer && te.getStoredSteam() > 0 && validate(te)) {
-            if(digNextLayer(te)){
-                te.decreaseStoredSteam(1, false);
-            }
-            mMaxProgresstime = calcProgTimeOnEnergyAmount(te);
+        if(!meetNotHarvestableLayer && validate()) {
             return true;
-        } else if(meetNotHarvestableLayer && te.getStoredSteam() > 0) {
+        } else if(meetNotHarvestableLayer) {
             if(!isPickupLadders){
-                isPickupLadders = validateForPickUp(te);
+                isPickupLadders = validateForPickUp();
             }
-            if(isPickupLadders) {
-                digsCount++;
-                if(!pickUpLadder(te)) return false;
-                if(digsCount % pickupCheeperInTimes == 0) {
-                    te.decreaseStoredSteam(1, false);
-                }
-                doWorkSoundPickUp(te);
-                mMaxProgresstime = pickupSpeed;
-                return true;
-            }
+            return isPickupLadders && pickUpLadder(te);
         }
-        return false;
-    }
-
-    public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
-        mWrench = true;
-        mScrewdriver = true;
-        mSoftHammer = true;
-        mHardHammer = true;
-        mSolderingTool = true;
-        mCrowbar = true;
-        return true;
-    }
-
-    public int getMaxEfficiency(ItemStack aStack) {
-        return 10000;
-    }
-
-    public int getPollutionPerTick(ItemStack aStack) {
-        return 0;
-    }
-
-    public int getDamageToComponent(ItemStack aStack) {
-        return 0;
-    }
-
-    public boolean explodesOnComponentBreak(ItemStack aStack) {
         return false;
     }
 }

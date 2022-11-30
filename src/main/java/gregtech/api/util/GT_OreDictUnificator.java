@@ -16,6 +16,8 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -160,8 +162,15 @@ public class GT_OreDictUnificator {
     }
 
     public static boolean isSmallOre(World aWorld, Block aBlock, int x, int  y, int  z, int  meta){
-        ArrayList<ItemStack> l =  aBlock.getDrops(aWorld, x, y, z, meta, 1);
-        return isGtOre(aBlock) && !(l.get(0).getItem() instanceof GT_Item_Ores);
+        boolean isSmallOre = false;
+        if(isGtOre(aBlock)) {
+            TileEntity te = aWorld.getTileEntity(x,y,z);
+            NBTTagCompound nbt = new NBTTagCompound();
+            te.writeToNBT(nbt);
+            nbt.getInteger("m");
+            isSmallOre = nbt.getInteger("m") >= 16000;
+        }
+        return isSmallOre;
     }
 
     public static boolean isGtOre(Block aBlock){

@@ -2,15 +2,8 @@ package gregtech.api.gui;
 
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_Utility;
-import gregtech.common.items.GT_MetaGenerated_Tool_01;
-import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_DrillerBase;
-import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_LargeTurbine;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
@@ -26,13 +19,11 @@ import static gregtech.api.enums.GT_Values.RES_PATH_GUI;
  */
 public class GT_GUIContainer_PrimitiveMiner extends GT_GUIContainerMetaTile_Machine {
 
-    String mName = "";
-    int[] dbg = new int[]{35,69,35,67};
+    int[] screenCoordinates = new int[]{35,69,35,67};
     ResourceLocation mProgressIcon = new ResourceLocation(RES_PATH_GUI + "multimachines/" + "ProgressPrimitiveMiner.png");
 
-    public GT_GUIContainer_PrimitiveMiner(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, String aTextureFile, int powerPerClick, int hungryDurationPerOperation) {
-        super(new GT_Container_PrimitiveMiner(aInventoryPlayer, aTileEntity, powerPerClick, hungryDurationPerOperation), RES_PATH_GUI + "multimachines/" + (aTextureFile == null ? "MultiblockDisplay" : aTextureFile));
-        mName = aName;
+    public GT_GUIContainer_PrimitiveMiner(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, String aName, String aTextureFile, int powerPerClick, int hungryDurationPerOperation, int foodPerOperation) {
+        super(new GT_Container_PrimitiveMiner(aInventoryPlayer, aTileEntity, powerPerClick, hungryDurationPerOperation, foodPerOperation), RES_PATH_GUI + "multimachines/" + (aTextureFile == null ? "MultiblockDisplay" : aTextureFile));
     }
 
     @Override
@@ -72,12 +63,12 @@ public class GT_GUIContainer_PrimitiveMiner extends GT_GUIContainerMetaTile_Mach
             if (mContainer.mMaxProgressTime != 0) {
                 drawTexturedModalRect(x + 35, y + 42, 0, 0, Math.min(16, (int) (tBarLength * 16)), 2);
             }
-            if (mContainer.mSteam > 0) { // TODO
+            if (mContainer.mSteam > 0) {
                 int tBarLengthOne = mContainer.mSteam / 8;
                 int tBarLengthTwo = mContainer.mSteam % 8;
-                drawTexturedModalRect(x + dbg[0], y + dbg[1] - tBarLengthOne*2, 0, 0, 16, tBarLengthOne*2);
+                drawTexturedModalRect(x + screenCoordinates[0], y + screenCoordinates[1] - tBarLengthOne*2, 0, 0, 16, tBarLengthOne*2);
                 if(tBarLengthTwo > 0) {
-                    drawTexturedModalRect(x + dbg[2] + (16 - tBarLengthTwo * 2), y + dbg[3] - tBarLengthOne * 2, 0, 0, tBarLengthTwo * 2, 2);
+                    drawTexturedModalRect(x + screenCoordinates[2] + (16 - tBarLengthTwo * 2), y + screenCoordinates[3] - tBarLengthOne * 2, 0, 0, tBarLengthTwo * 2, 2);
                 }
                 //fontRendererObj.drawString(String.valueOf(mContainer.mSteam), x + 9, y - 12, 16448255);
             }

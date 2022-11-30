@@ -21,10 +21,12 @@ public class GT_Container_PrimitiveMiner extends GT_ContainerMetaTile_Machine {
     private int btnSize;
     private int powerPerClick;
     private int hungryDurationPerOperation;
-    public GT_Container_PrimitiveMiner(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int powerPerClick, int hungryDurationPerOperation) {
+    private int foodPerOperation;
+    public GT_Container_PrimitiveMiner(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, int powerPerClick, int hungryDurationPerOperation, int foodPerOperation) {
         super(aInventoryPlayer, aTileEntity);
         this.powerPerClick = powerPerClick;
         this.hungryDurationPerOperation = hungryDurationPerOperation;
+        this.foodPerOperation = foodPerOperation;
     }
 
     public GT_Container_PrimitiveMiner(InventoryPlayer aInventoryPlayer, IGregTechTileEntity aTileEntity, boolean bindInventory) {
@@ -66,7 +68,8 @@ public class GT_Container_PrimitiveMiner extends GT_ContainerMetaTile_Machine {
             BaseMetaTileEntity te = (BaseMetaTileEntity) mTileEntity;
             if(te.getStoredSteam() + powerPerClick <= te.getSteamCapacity()){
                 te.increaseStoredSteam(powerPerClick, false);
-                GT_Utility.drainMusclePlayerPower(aPlayer, hungryDurationPerOperation);
+                GT_Utility.drainMusclePlayerPower(aPlayer, hungryDurationPerOperation, foodPerOperation);
+                if(mProgressTime < 0) mProgressTime = 0;
             }
         }
         return super.slotClick(aSlotIndex, aMouseclick, aShifthold, aPlayer);
