@@ -157,7 +157,7 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     @Override
     public boolean onWrenchRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         if (getBaseMetaTileEntity().isValidFacing(aWrenchingSide)) {
-            getBaseMetaTileEntity().setFrontFacing(aWrenchingSide);
+            getBaseMetaTileEntity().setFrontFacingByWrench(aWrenchingSide, aPlayer);
             return true;
         }
         return false;
@@ -901,9 +901,12 @@ public abstract class MetaTileEntity implements IMetaTileEntity {
     public boolean allowGeneralRedstoneOutput(){
     	return false;
     }
-    
+
     public String trans(String aKey, String aEnglish){
-    	return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_"+aKey, aEnglish, false);
+        return GT_LanguageManager.addStringLocalization("Interaction_DESCRIPTION_Index_"+aKey, aEnglish, false);
+    }
+    public static String wTrans(String aKey, String aEnglish){
+        return GT_LanguageManager.addStringLocalization(aKey, aEnglish, true);
     }
     
     @Override

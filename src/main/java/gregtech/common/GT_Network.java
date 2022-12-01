@@ -35,7 +35,7 @@ public class GT_Network
         this.mChannel = NetworkRegistry.INSTANCE.newChannel("GregTech", new ChannelHandler[]{this, new HandlerShared()});
         this.mSubChannels = new GT_Packet[]{new GT_Packet_TileEntity(), new GT_Packet_Sound(), new GT_Packet_Block_Event(),
                 new GT_Packet_Ores(), new GT_Packet_Pollution(), new MessageSetFlaskCapacity(),
-                new GT_Packet_ExtendedBlockEvent(), new GT_Packet_TileEntityCoverGUI(), new GT_Packet_TileEntityCover()};
+                new GT_Packet_ExtendedBlockEvent(), new GT_Packet_TileEntityCoverGUI(), new GT_Packet_TileEntityCover(), new GT_Packet_Key()};
     }
 
     protected void encode(ChannelHandlerContext aContext, GT_Packet aPacket, List<Object> aOutput)

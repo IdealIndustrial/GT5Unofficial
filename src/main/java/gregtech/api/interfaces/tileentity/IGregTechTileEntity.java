@@ -32,6 +32,9 @@ public interface IGregTechTileEntity extends ITexturedTileEntity, IGearEnergyTil
      */
     public void setErrorDisplayID(int aErrorID);
 
+    public int getExtraInfo();
+    public void setExtraInfo(int eInfo);
+
     /**
      * @return the MetaID of the Block or the MetaTileEntity ID.
      */

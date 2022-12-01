@@ -1,6 +1,7 @@
 package gregtech.api.metatileentity.implementations;
 
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 
 import static gregtech.api.enums.GT_Values.GT;
@@ -81,6 +82,10 @@ public abstract class GT_MetaTileEntity_TieredMachineBlock extends MetaTileEntit
         return mDescriptionArray;
     }
 
+    @Override
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone, byte aFluidFacing) {
+        return getTexture(aBaseMetaTileEntity, aSide, aFacing, aColorIndex, aActive, aRedstone);
+    }
     /**
      * Used Client Side to get a Texture Set for this Block.
      * Called after setting the Tier and the Description so that those two are accessible.

@@ -27,7 +27,10 @@ public class GT_Container_DataReader extends Container {
         mInventory = new GT_ItemInventory(3, false, "Data Reader", () -> saveToNBT(aInventoryPlayer.getCurrentItem()));
         if (aTool.getTagCompound() != null && GT_Mod.gregtechproxy.isServerSide())
             mInventory.loadFromNBT(aTool.getTagCompound());
-        addSlotToContainer(new GT_Slot_RestrictedContents(mInventory, 0, 80, 84 + 68, aStack -> ItemList.Tool_DataStick.isStackEqual(aStack, false, true) || ItemList.Tool_CD.isStackEqual(aStack, false, true)));
+        addSlotToContainer(new GT_Slot_RestrictedContents(mInventory, 0, 80, 84 + 68,
+                aStack -> (ItemList.Tool_DataStick.isStackEqual(aStack, false, true)
+                        || ItemList.Tool_CD.isStackEqual(aStack, false, true)
+                        || ItemList.Tool_DataOrb.isStackEqual(aStack, false, true))));
         mRestrictedSlot = aInventoryPlayer.currentItem;
 
         addSlotToContainer(new GT_Slot_Holo(mInventory, 1, 2 * 18 + 8, 84 + 68, false, false, 0));

@@ -6,7 +6,7 @@ public interface IFastRenderedTileEntity {
 
     ITexture[][] getTextures();
 
-    ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers);
+    ITexture[][] getTextures(ItemStack aStack, byte aFacing, boolean aActive, boolean aRedstone, boolean placeCovers, byte aFluidFacing);
 
     ITexture[][] getTextures(boolean tCovered);
 

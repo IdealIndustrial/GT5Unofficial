@@ -25,6 +25,7 @@ import net.minecraft.util.StatCollector;
 public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_DrillerBase {
 
     private boolean completedCycle = false;
+    protected boolean isAllowPutPipesToController = true;
 
     private ArrayList<Chunk> mOilFieldChunks = new ArrayList<Chunk>();
     private int mOilId = 0;
@@ -41,6 +42,10 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
         aNBT.setInteger("mOilId", mOilId);
+    }
+
+    protected boolean allowPutPipesToController() {
+        return isAllowPutPipesToController;
     }
 
     @Override
@@ -94,7 +99,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     protected boolean workingAtBottom(ItemStack aStack, int xDrill, int yDrill, int zDrill, int xPipe, int zPipe, int yHead, int oldYHead) {
         switch (tryLowerPipe(true)) {
             case 0: workState = STATE_DOWNWARD; setElectricityStats(); return true;
-            case 3: workState = STATE_UPWARD; return true;
+            //case 3: workState = STATE_UPWARD; return true; // is it realy need here?
         }
         
         if (reachingVoidOrBedrock() && tryFillChunkList()) {
@@ -105,7 +110,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
                 return true;
             }
         }
-        workState = STATE_UPWARD;
+        //workState = STATE_UPWARD; // is it realy need here?
         return true;
     }
 
@@ -135,7 +140,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
                 }
             }
 		}
-        return !mOilFieldChunks.isEmpty();		
+        return !mOilFieldChunks.isEmpty();
     }
 
     private FluidStack pumpOil(float speed) {
