@@ -16,6 +16,7 @@ import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -44,6 +45,19 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][aColorIndex + 1], aFacing == aSide ? aActive ? new GT_RenderedTexture(Textures.BlockIcons.LARGETURBINE_SS_ACTIVE5) : new GT_RenderedTexture(Textures.BlockIcons.LARGETURBINE_SS5) : Textures.BlockIcons.CASING_BLOCKS[58]};
     }
+
+    @Override
+    public void saveNBTData(NBTTagCompound aNBT) {
+        super.saveNBTData(aNBT);
+        aNBT.setBoolean("isBoosted", isBoosted);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound aNBT) {
+        super.loadNBTData(aNBT);
+        isBoosted = aNBT.getBoolean("isBoosted");
+    }
+
 
     public String[] getDescription() {
         return new String[]{
@@ -127,7 +141,6 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             if(!foundFuel) {
                 return 0;
             }
-            //FluidStack firstFuelType = new FluidStack(aFluids.get(0), 0); // Identify a SINGLE type of fluid to process.  Doesn't matter which one. Ignore the rest!
             int fuelValue = getFuelValue(firstFuelType);
             actualOptimalFlow = (int) (aOptFlow / fuelValue);
             if(isBoosted) {
@@ -156,9 +169,6 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             if(mEfficiency >= 10000) {
                 int oxygenConsume = Math.max(1, (int)(tEU / ((oxygenFactor * 15000f) / mEfficiency)));
                 this.isBoosted = depleteInput(Materials.Oxygen.getGas(oxygenConsume));
-                if(this.isBoosted) {
-                    tEU = (int)((tEU * mEfficiency) / 10000f);
-                }
             }
 
             if (totalFlow != actualOptimalFlow) {
@@ -178,6 +188,10 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
         return 0;
     }
 
+    public int getRealOutEu(){
+        return (int)(mEUt * mEfficiency / 10000f);
+    }
+
     @Override
     public String[] getInfoData() {
         String tRunning = mMaxProgresstime>0 ? "Running":"Stopped";
@@ -192,7 +206,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
                 tRunning,
                 "Mode: ",
                 (isBoosted ? "Boosted" : "Normal"),
-                mEUt+" EU/t",
+                getRealOutEu()+" EU/t",
                 "Optimal Flow: ",
                 (int)realOptFlow+" L/t",
                 "Fuel: ",
