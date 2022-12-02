@@ -133,15 +133,23 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
         if (aFluids.size() >= 1) {
             float overload = 0;
+            float fuelOverload = 0;
             if(mEfficiency >= 10000) {
-                overload = (mEfficiency - 10000) / 5000f;
+                fuelOverload = (mEfficiency - 10000) / 5000f;
+                overload = (float)Math.sqrt(fuelOverload);
                 oxygenConsume = Math.max(1, (int)(((mEUt*mEfficiency)/10000f) / oxygenFactor));
                 oxygenConsume *= overload;
+                oxygenConsume = Math.max(1, oxygenConsume);
                 isBoosted = depleteInput(Materials.Oxygen.getGas(oxygenConsume));
-                if(!isBoosted) oxygenConsume = 0;
+                if(!isBoosted) {
+                    oxygenConsume = 0;
+                }
             } else {
-                this.isBoosted = false;
+                isBoosted = false;
                 oxygenConsume = 0;
+            }
+            if(!isBoosted && mEfficiency > 10000) {
+                mEfficiency -= Math.max(1, (5000 - (15000 - mEfficiency)) / 100);
             }
 
             FluidStack firstFuelType = null;
@@ -157,12 +165,12 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             }
             int fuelValue = getFuelValue(firstFuelType);
             actualOptimalFlow = (int) (aOptFlow / fuelValue);
-            if(isBoosted) {
-                actualOptimalFlow += Math.round(actualOptimalFlow * overload);
+            if(fuelOverload > 0) {
+                actualOptimalFlow += Math.round(actualOptimalFlow * fuelOverload);
             }
             this.realOptFlow = actualOptimalFlow;
 
-            float remainingFlowFactor = (overload > 0.01f || overload < 0.99f) ? 1 : 1.25f; // do not consume extra fuel while growing efficient from 100% to 150%
+            float remainingFlowFactor = /*(isBoosted && (overload > 0.01f || overload < 0.99f)) ? 1 :*/ 1.25f; // do not consume extra fuel while growing efficient from 100% to 150%
             int remainingFlow = (int) (actualOptimalFlow * remainingFlowFactor); // Allowed to use up to 125% of optimal flow.  Variable required outside of loop for multi-hatch scenarios.
             int flow = 0;
             int totalFlow = 0;
