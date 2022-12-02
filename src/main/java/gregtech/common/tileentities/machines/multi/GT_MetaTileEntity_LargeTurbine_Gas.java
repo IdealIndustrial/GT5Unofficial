@@ -25,7 +25,8 @@ import java.util.Collection;
 
 public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeTurbine {
 
-    private float oxygenFactor = 28f;
+    private static float oxygenFactor = 28f;
+    private int oxygenConsume = 0;
     private boolean isBoosted = false;
 
     public GT_MetaTileEntity_LargeTurbine_Gas(int aID, String aName, String aNameRegional) {
@@ -38,7 +39,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
-        oxygenFactor = (float)Math.min(10,Math.max(1000, aConfig.get(ConfigCategories.machineconfig, "LargeTurbineGas.oxygenPerTick", 28)));
+        oxygenFactor = (float)Math.max(1,Math.min(1000, aConfig.get(ConfigCategories.machineconfig, "LargeTurbineGas.oxygenFactor", 28f)));
     }
 
     @Override
@@ -115,10 +116,11 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     public int getMaxEfficiency(ItemStack aStack) {
         if (GT_Utility.isStackInvalid(aStack)) {
             isBoosted = false;
+            oxygenConsume = 0;
             return 0;
         }
         if (aStack.getItem() instanceof GT_MetaGenerated_Tool_01) {
-            return isBoosted ? 15000 : 10000;
+            return isBoosted ? 15000 : (Math.max(mEfficiency, 10000));
         }
         return 0;
     }
@@ -130,6 +132,18 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
         int actualOptimalFlow = 0;
 
         if (aFluids.size() >= 1) {
+            float overload = 0;
+            if(mEfficiency >= 10000) {
+                overload = (mEfficiency - 10000) / 5000f;
+                oxygenConsume = Math.max(1, (int)(((mEUt*mEfficiency)/10000f) / oxygenFactor));
+                oxygenConsume *= overload;
+                isBoosted = depleteInput(Materials.Oxygen.getGas(oxygenConsume));
+                if(!isBoosted) oxygenConsume = 0;
+            } else {
+                this.isBoosted = false;
+                oxygenConsume = 0;
+            }
+
             FluidStack firstFuelType = null;
             boolean foundFuel = false;
             for (FluidStack fs : aFluids) {
@@ -144,11 +158,12 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             int fuelValue = getFuelValue(firstFuelType);
             actualOptimalFlow = (int) (aOptFlow / fuelValue);
             if(isBoosted) {
-                actualOptimalFlow *= 2;
+                actualOptimalFlow += Math.round(actualOptimalFlow * overload);
             }
             this.realOptFlow = actualOptimalFlow;
 
-            int remainingFlow = (int) (actualOptimalFlow * 1.25f); // Allowed to use up to 125% of optimal flow.  Variable required outside of loop for multi-hatch scenarios.
+            float remainingFlowFactor = (overload > 0.01f || overload < 0.99f) ? 1 : 1.25f; // do not consume extra fuel while growing efficient from 100% to 150%
+            int remainingFlow = (int) (actualOptimalFlow * remainingFlowFactor); // Allowed to use up to 125% of optimal flow.  Variable required outside of loop for multi-hatch scenarios.
             int flow = 0;
             int totalFlow = 0;
 
@@ -166,11 +181,6 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
             tEU = (int) (Math.min((float) actualOptimalFlow, totalFlow) * fuelValue);
 
-            if(mEfficiency >= 10000) {
-                int oxygenConsume = Math.max(1, (int)(tEU / ((oxygenFactor * 15000f) / mEfficiency)));
-                this.isBoosted = depleteInput(Materials.Oxygen.getGas(oxygenConsume));
-            }
-
             if (totalFlow != actualOptimalFlow) {
                 float efficiency = 1.0f - Math.abs(((totalFlow - (float) actualOptimalFlow) / actualOptimalFlow));
                 if(totalFlow>actualOptimalFlow){efficiency = 1.0f;}
@@ -186,6 +196,15 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
         }
         return 0;
+    }
+
+    @Override
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        if(!aBaseMetaTileEntity.isAllowedToWork()){
+            isBoosted = false;
+            oxygenConsume = 0;
+        }
+        super.onPostTick(aBaseMetaTileEntity, aTick);
     }
 
     public int getRealOutEu(){
@@ -207,6 +226,8 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
                 "Mode: ",
                 (isBoosted ? "Boosted" : "Normal"),
                 getRealOutEu()+" EU/t",
+                "Oxygen Flow: ",
+                oxygenConsume+" L/t",
                 "Optimal Flow: ",
                 (int)realOptFlow+" L/t",
                 "Fuel: ",

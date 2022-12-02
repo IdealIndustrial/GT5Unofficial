@@ -9,10 +9,10 @@ import net.minecraft.block.Block;
 
 public class GT_MetaTileEntity_LargeBoiler_Titanium
         extends GT_MetaTileEntity_LargeBoiler {
-    private long oxygenPerOperation = 40;
+    private static long oxygenPerOperation = 40;
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
-        oxygenPerOperation = Math.min(1, aConfig.get(ConfigCategories.machineconfig, "LargeBoiler.Titanium.oxygenPerOperation", 32));
+        oxygenPerOperation = Math.max(1, Math.min(500, aConfig.get(ConfigCategories.machineconfig, "LargeBoiler.Titanium.oxygenPerOperation", 32)));
     }
 
     public GT_MetaTileEntity_LargeBoiler_Titanium(int aID, String aName, String aNameRegional) {

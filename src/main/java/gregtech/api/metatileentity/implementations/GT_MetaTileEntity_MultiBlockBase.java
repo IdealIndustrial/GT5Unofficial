@@ -318,6 +318,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         }
     }
 
+    public void onIdle(){/*do nothing*/}
+
     public boolean polluteEnvironment(int aPollutionLevel) {
         mPollution += aPollutionLevel;
         for (GT_MetaTileEntity_Hatch_Muffler tHatch : mMufflerHatches) {
