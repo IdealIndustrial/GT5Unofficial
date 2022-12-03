@@ -2,6 +2,7 @@ package gregtech.common.tileentities.machines.multi.pumps;
 
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
@@ -37,9 +38,9 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
                 "Controller Block for the Electric Water Pump",
                 "Structure 2x2x1",
                 "Controller (any down corner)",
-                "Energy hatch (down layer near controller)",
+                "Energy " + GT_Values.VN[getTier()] + " hatch (down layer near controller)",
                 getFrameMaterial().mLocalizedName + " fluid pipe (on top of the controller)",
-                "Output hatch for water (next to " + getFrameMaterial().mLocalizedName + " pipe)",
+                "Output " + GT_Values.VN[getTier()] + " hatch for water (next to " + getFrameMaterial().mLocalizedName + " pipe)",
                 "Input side of controller connects to pipe",
                 "Pipe (up to " + getPipeLength() + " blocks length) connects to Intake",
                 "Uses " + Math.pow(4, getTier()) + " EU/t",
