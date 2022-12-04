@@ -681,6 +681,34 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         return false;
     }
 
+    /**
+     * try to consume a liquid with max amount, but if it is not enough,
+     * it consumes all what is there was
+    */
+    public int depleteInputUpTo(FluidStack aLiquid) {
+        int consumedAmount = 0;
+        if (aLiquid == null) return consumedAmount;
+        for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
+            tHatch.mRecipeMap = getRecipeMap();
+            if (isValidMetaTileEntity(tHatch)) {
+                FluidStack tLiquid = tHatch.getFluid();
+                if (tLiquid != null && tLiquid.isFluidEqual(aLiquid)) {
+                    tLiquid = tHatch.drain(aLiquid.amount, false);
+                    if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
+                        tLiquid = tHatch.drain(aLiquid.amount, true);
+                        if(tLiquid != null && tLiquid.amount >= aLiquid.amount){
+                            return aLiquid.amount;
+                        }
+                    } else if(tLiquid != null && tLiquid.amount >= 0){
+                        tLiquid = tHatch.drain(tLiquid.amount, true);
+                        consumedAmount = (tLiquid != null) ? tLiquid.amount : 0;
+                    }
+                }
+            }
+        }
+        return consumedAmount;
+    }
+
     public boolean addOutput(ItemStack aStack) {
         if (GT_Utility.isStackInvalid(aStack)) return false;
         aStack = GT_Utility.copy(aStack);
