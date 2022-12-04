@@ -156,7 +156,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
                     oxygenConsume *= overload;
                 }
                 oxygenConsume = Math.max(1, oxygenConsume);
-                if(prevOxygenConsume < oxygenConsume) {
+                if(prevOxygenConsume <= oxygenConsume) {
                     prevOxygenConsume = oxygenConsume;
                 } else {
                     prevOxygenConsume--;
