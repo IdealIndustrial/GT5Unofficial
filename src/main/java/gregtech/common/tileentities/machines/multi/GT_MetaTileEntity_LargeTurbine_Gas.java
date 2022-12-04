@@ -27,6 +27,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
     private static float oxygenFactor = 28f;
     private int oxygenConsume = 0;
+    private int prevOxygenConsume = 0;
     private boolean isBoosted = false;
 
     public GT_MetaTileEntity_LargeTurbine_Gas(int aID, String aName, String aNameRegional) {
@@ -51,12 +52,16 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
         aNBT.setBoolean("isBoosted", isBoosted);
+        aNBT.setInteger("oxygenConsume", oxygenConsume);
+        aNBT.setInteger("prevOxygenConsume", prevOxygenConsume);
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
         isBoosted = aNBT.getBoolean("isBoosted");
+        oxygenConsume = aNBT.getInteger("oxygenConsume");
+        prevOxygenConsume = aNBT.getInteger("prevOxygenConsume");
     }
 
 
@@ -128,10 +133,9 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     private int calcBoostDelta(int maxOxygenConsume, int currentOxygenConsume){
         int res = 5;
         if(maxOxygenConsume > currentOxygenConsume){
-            if(mEfficiency < 12500) {
-                res *= -1;
-            } else {
-                res = -Math.round((float)Math.sqrt(mEfficiency - 12500)) * 3;
+            res = -6;
+            if(mEfficiency > 12550) {
+                res -= (mEfficiency - 12550) / 10; // extra penalty for high turbine efficient
             }
         }
         return res;
@@ -146,12 +150,18 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             if(mEfficiency >= 10000) {
                 fuelOverload = (mEfficiency - 10000) / 5000f;
                 oxygenConsume = Math.max(1, (int)(((mEUt*mEfficiency)/10000f) / oxygenFactor));
-                if(mEfficiency < 12500) {
+                if(mEfficiency < 12550) {
                     float overload = 0;
                     overload = (float)Math.sqrt(fuelOverload);
                     oxygenConsume *= overload;
                 }
                 oxygenConsume = Math.max(1, oxygenConsume);
+                if(prevOxygenConsume < oxygenConsume) {
+                    prevOxygenConsume = oxygenConsume;
+                } else {
+                    prevOxygenConsume--;
+                    oxygenConsume = prevOxygenConsume;
+                }
                 int realOxygenConsumed = depleteInputUpTo(Materials.Oxygen.getGas(oxygenConsume));
                 isBoosted = realOxygenConsumed > 0 || mEfficiency > 10000;
                 if(!isBoosted) {
