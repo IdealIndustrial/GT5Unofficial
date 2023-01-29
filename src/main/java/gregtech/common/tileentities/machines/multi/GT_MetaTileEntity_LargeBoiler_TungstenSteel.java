@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 
 public class GT_MetaTileEntity_LargeBoiler_TungstenSteel
         extends GT_MetaTileEntity_LargeBoiler {
-    private static long oxygenPerOperation = 40;
+    public static long oxygenPerOperation = 40;
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
         oxygenPerOperation = Math.max(1, Math.min(500, aConfig.get(ConfigCategories.machineconfig, "LargeBoiler.TungstenSteel.oxygenPerOperation", 40)));
