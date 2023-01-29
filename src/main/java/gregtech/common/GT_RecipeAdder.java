@@ -268,6 +268,12 @@ public class GT_RecipeAdder
         addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(2)}, 
         		new FluidStack[]{new GT_FluidStack(aBasicMaterial, 2160), Materials.Oxygen.getGas(7500), Materials.Titaniumtetrachloride.getFluid(100)}, 
         		new FluidStack[]{new GT_FluidStack(aPolymer, 4320)}, null, 800, 30);
+        addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(5)}, 
+        		new FluidStack[]{new GT_FluidStack(aBasicMaterial, 1000), Materials.Air.getGas(14000)}, 
+        		new FluidStack[]{new GT_FluidStack(aPolymer, 1000)}, null, 1120, 30);
+        addMultiblockChemicalRecipe(new ItemStack[]{GT_Utility.getIntegratedCircuit(5)}, 
+        		new FluidStack[]{new GT_FluidStack(aBasicMaterial, 1000), Materials.Oxygen.getGas(7000)}, 
+        		new FluidStack[]{new GT_FluidStack(aPolymer, 1500)}, null, 1120, 30);		    
     }
 
 	public boolean addBlastRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput1, ItemStack aOutput2, int aDuration, int aEUt, int aLevel) {
