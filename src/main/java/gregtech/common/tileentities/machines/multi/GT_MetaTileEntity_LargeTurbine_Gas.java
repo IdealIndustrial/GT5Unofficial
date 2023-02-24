@@ -16,6 +16,7 @@ import gregtech.api.util.GT_Utility;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -24,7 +25,9 @@ import java.util.Collection;
 
 public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeTurbine {
 
-    private float oxygenFactor = 28f;
+    private static float oxygenFactor = 28f;
+    private int oxygenConsume = 0;
+    private int prevOxygenConsume = 0;
     private boolean isBoosted = false;
 
     public GT_MetaTileEntity_LargeTurbine_Gas(int aID, String aName, String aNameRegional) {
@@ -37,13 +40,30 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
-        oxygenFactor = (float)Math.min(10,Math.max(1000, aConfig.get(ConfigCategories.machineconfig, "LargeTurbineGas.oxygenPerTick", 28)));
+        oxygenFactor = (float)Math.max(1,Math.min(1000, aConfig.get(ConfigCategories.machineconfig, "LargeTurbineGas.oxygenFactor", 28f)));
     }
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         return new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[1][aColorIndex + 1], aFacing == aSide ? aActive ? new GT_RenderedTexture(Textures.BlockIcons.LARGETURBINE_SS_ACTIVE5) : new GT_RenderedTexture(Textures.BlockIcons.LARGETURBINE_SS5) : Textures.BlockIcons.CASING_BLOCKS[58]};
     }
+
+    @Override
+    public void saveNBTData(NBTTagCompound aNBT) {
+        super.saveNBTData(aNBT);
+        aNBT.setBoolean("isBoosted", isBoosted);
+        aNBT.setInteger("oxygenConsume", oxygenConsume);
+        aNBT.setInteger("prevOxygenConsume", prevOxygenConsume);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound aNBT) {
+        super.loadNBTData(aNBT);
+        isBoosted = aNBT.getBoolean("isBoosted");
+        oxygenConsume = aNBT.getInteger("oxygenConsume");
+        prevOxygenConsume = aNBT.getInteger("prevOxygenConsume");
+    }
+
 
     public String[] getDescription() {
         return new String[]{
@@ -101,21 +121,61 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     public int getMaxEfficiency(ItemStack aStack) {
         if (GT_Utility.isStackInvalid(aStack)) {
             isBoosted = false;
+            oxygenConsume = 0;
             return 0;
         }
         if (aStack.getItem() instanceof GT_MetaGenerated_Tool_01) {
-            return isBoosted ? 15000 : 10000;
+            return Math.max(mEfficiency, 10000);
         }
         return 0;
+    }
+
+    private int calcBoostDelta(int maxOxygenConsume, int currentOxygenConsume){
+        int res = 5;
+        if(maxOxygenConsume > currentOxygenConsume){
+            res = -6;
+            if(mEfficiency > 12550) {
+                res -= (mEfficiency - 12550) / 10; // extra penalty for high turbine efficient
+            }
+        }
+        return res;
     }
 
     @Override
     int fluidIntoPower(ArrayList<FluidStack> aFluids, int aOptFlow, int aBaseEff) {
         int tEU = 0;
-
         int actualOptimalFlow = 0;
-
         if (aFluids.size() >= 1) {
+            float fuelOverload = 0;
+            if(mEfficiency >= 10000) {
+                fuelOverload = (mEfficiency - 10000) / 5000f;
+                oxygenConsume = Math.max(1, (int)(((mEUt*mEfficiency)/10000f) / oxygenFactor));
+                if(mEfficiency < 12550) {
+                    float overload = 0;
+                    overload = (float)Math.sqrt(fuelOverload);
+                    oxygenConsume *= overload;
+                }
+                oxygenConsume = Math.max(1, oxygenConsume);
+                if(prevOxygenConsume <= oxygenConsume) {
+                    prevOxygenConsume = oxygenConsume;
+                } else {
+                    prevOxygenConsume--;
+                    oxygenConsume = prevOxygenConsume;
+                }
+                int realOxygenConsumed = depleteInputUpTo(Materials.Oxygen.getGas(oxygenConsume));
+                isBoosted = realOxygenConsumed > 0 || mEfficiency > 10000;
+                if(!isBoosted) {
+                    oxygenConsume = 0;
+                } else {
+                    int deltaEfficient = calcBoostDelta(oxygenConsume, realOxygenConsumed);
+                    mEfficiency = Math.min(mEfficiency + deltaEfficient, 15000);
+                    oxygenConsume = realOxygenConsumed;
+                }
+            } else {
+                isBoosted = false;
+                oxygenConsume = 0;
+            }
+
             FluidStack firstFuelType = null;
             boolean foundFuel = false;
             for (FluidStack fs : aFluids) {
@@ -127,15 +187,15 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             if(!foundFuel) {
                 return 0;
             }
-            //FluidStack firstFuelType = new FluidStack(aFluids.get(0), 0); // Identify a SINGLE type of fluid to process.  Doesn't matter which one. Ignore the rest!
             int fuelValue = getFuelValue(firstFuelType);
             actualOptimalFlow = (int) (aOptFlow / fuelValue);
-            if(isBoosted) {
-                actualOptimalFlow *= 2;
+            if(fuelOverload > 0) {
+                actualOptimalFlow += Math.round(actualOptimalFlow * fuelOverload);
             }
             this.realOptFlow = actualOptimalFlow;
 
-            int remainingFlow = (int) (actualOptimalFlow * 1.25f); // Allowed to use up to 125% of optimal flow.  Variable required outside of loop for multi-hatch scenarios.
+            float remainingFlowFactor = 1.25f;
+            int remainingFlow = (int) (actualOptimalFlow * remainingFlowFactor); // Allowed to use up to 125% of optimal flow.  Variable required outside of loop for multi-hatch scenarios.
             int flow = 0;
             int totalFlow = 0;
 
@@ -152,14 +212,6 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             }
 
             tEU = (int) (Math.min((float) actualOptimalFlow, totalFlow) * fuelValue);
-
-            if(mEfficiency >= 10000) {
-                int oxygenConsume = Math.max(1, (int)(tEU / ((oxygenFactor * 15000f) / mEfficiency)));
-                this.isBoosted = depleteInput(Materials.Oxygen.getGas(oxygenConsume));
-                if(this.isBoosted) {
-                    tEU = (int)((tEU * mEfficiency) / 10000f);
-                }
-            }
 
             if (totalFlow != actualOptimalFlow) {
                 float efficiency = 1.0f - Math.abs(((totalFlow - (float) actualOptimalFlow) / actualOptimalFlow));
@@ -179,6 +231,19 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     }
 
     @Override
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        if(!aBaseMetaTileEntity.isAllowedToWork()){
+            isBoosted = false;
+            oxygenConsume = 0;
+        }
+        super.onPostTick(aBaseMetaTileEntity, aTick);
+    }
+
+    public int getRealOutEu(){
+        return (int)(mEUt * mEfficiency / 10000f);
+    }
+
+    @Override
     public String[] getInfoData() {
         String tRunning = mMaxProgresstime>0 ? "Running":"Stopped";
         int tDura = 0;
@@ -190,10 +255,11 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
         return new String[]{
                 "Gas Turbine",
                 tRunning,
-                "Mode: ",
-                (isBoosted ? "Boosted" : "Normal"),
-                mEUt+" EU/t",
-                "Optimal Flow: ",
+                "Mode: "+(isBoosted ? "Boosted" : "Normal"),
+                getRealOutEu()+" EU/t",
+                "Oxygen Consuming: ",
+                oxygenConsume+" L/t",
+                "Optimal Fuel Flow: ",
                 (int)realOptFlow+" L/t",
                 "Fuel: ",
                 storedFluid+"L",
