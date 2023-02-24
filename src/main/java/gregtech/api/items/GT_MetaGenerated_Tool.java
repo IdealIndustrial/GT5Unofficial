@@ -140,6 +140,12 @@ public abstract class GT_MetaGenerated_Tool extends GT_MetaBase_Item implements 
         return 0;
     }
 
+    public static final boolean addDmgAndCheckIsDestroy(ItemStack aStack, long aDamage) {
+        long dmg = getToolDamage(aStack) + aDamage;
+        GT_MetaGenerated_Tool.setToolDamage(aStack, dmg);
+        return GT_MetaGenerated_Tool.getToolMaxDamage(aStack) <= dmg;
+    }
+
     public static final boolean setToolDamage(ItemStack aStack, long aDamage) {
         NBTTagCompound aNBT = aStack.getTagCompound();
         if (aNBT != null) {

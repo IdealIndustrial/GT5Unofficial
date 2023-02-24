@@ -12,6 +12,7 @@ public enum ToolDictNames {
     craftingToolKnife,
     craftingToolBlade,
     craftingToolMortar,
+    craftingToolPrimitiveDrill,
     craftingToolShovel,
     craftingToolWrench,
     craftingToolPlunger,

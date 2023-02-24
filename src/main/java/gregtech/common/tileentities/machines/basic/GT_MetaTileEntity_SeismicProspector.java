@@ -11,6 +11,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.objects.ItemData;
+import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_UndergroundOil;
@@ -26,6 +27,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -75,6 +77,15 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
     public int checkRecipe() {
         ItemStack aStack = getInputAt(0);
         ItemStack tStack = getSpecialSlot();
+        if(tStack != null && tStack.stackSize == 1 && tStack.getItem().equals(ItemList.Paper_Punch_Card_Empty.getItem())
+                && aStack != null && ItemList.Small_Gunpowder_Bundle.getItem().equals(aStack.getItem())) {
+            aStack.stackSize -= 1;
+            if (aStack.stackSize == 0) {
+                mInventory[getInputSlot()] = null;
+            }
+            mMaxProgresstime = 50;
+            return 2;
+        }
         if ((aStack != null) && (
                 (aStack.getItem() == Item.getItemFromBlock(Blocks.tnt) && aStack.stackSize > 3) ||
                         (aStack.getItem() == ItemList.Block_Powderbarrel.getItem() && aStack.stackSize > 7) ||
@@ -103,9 +114,49 @@ public class GT_MetaTileEntity_SeismicProspector extends GT_MetaTileEntity_Basic
         return 0;
     }
 
+    private void makePunchedCard(ItemStack aStack){
+        String stringCode = "";
+        String enName = "";
+        for (int i = this.getBaseMetaTileEntity().getYCoord(); i > 0 && stringCode.length() == 0; i--) {
+            for (int f = -2; f < 3 && stringCode.length() == 0; f++) {
+                for (int g = -2; g < 3 && stringCode.length() == 0; g++) {
+                    Block tBlock = this.getBaseMetaTileEntity().getBlockOffset(f, -i, g);
+                    if ((tBlock instanceof GT_Block_Ores_Abstract)) {
+                        TileEntity tTileEntity = getBaseMetaTileEntity().getWorld().getTileEntity(getBaseMetaTileEntity().getXCoord() + f, getBaseMetaTileEntity().getYCoord() + (-i), getBaseMetaTileEntity().getZCoord() + g);
+                        if ((tTileEntity instanceof GT_TileEntity_Ores)) {
+                            int aMeta = ((GT_TileEntity_Ores) tTileEntity).mMetaData;
+                            if (aMeta < 16000) {
+                                Materials tMaterial = GregTech_API.sGeneratedMaterials[(aMeta % 1000)];
+                                if ((tMaterial != null) && (tMaterial != Materials._NULL)) {
+                                    stringCode = String.valueOf(tMaterial.mMetaItemSubID);
+                                    enName = tMaterial.mDefaultLocalName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ItemStack pStack = ItemList.Paper_Punch_Card_Encoded.get(1);
+        setSpecialSlot(pStack);
+        NBTTagCompound tNBT = new NBTTagCompound();
+        pStack.writeToNBT(tNBT);
+        if (!stringCode.equals("")) {
+            tNBT.setString("oreName", "gt.blockores."+stringCode+".name" );
+            tNBT.setString("enOreName", enName );
+        } else {
+            tNBT.setBoolean("oresNotFound", true );
+        }
+        pStack.setTagCompound(tNBT);
+    }
+
     @Override
     public void endProcess() {
         ItemStack aStack = getSpecialSlot();
+        if (aStack != null && aStack.stackSize == 1 && ItemList.Paper_Punch_Card_Empty.isStackEqual(aStack, false, true)){
+            makePunchedCard(aStack);
+            return;
+        }
         if (aStack == null || aStack.stackSize != 1 || (!ItemList.Tool_DataStick.isStackEqual(aStack, false, true) && !ItemList.Tool_CD.isStackEqual(aStack, false, false))) {
             return;
         }

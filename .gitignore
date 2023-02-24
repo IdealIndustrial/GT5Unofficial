@@ -78,3 +78,5 @@ temp_scripts/
 # Libs
 !/libs/*
 /libs/runtimeMods/*
+/.shelf/Uncommitted_changes_before_Update_at_04_11_2022_1_47_[Default_Changelist]/shelved.patch
+/.shelf/Uncommitted_changes_before_Update_at_04_11_2022_1_47__Default_Changelist_.xml
