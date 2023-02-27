@@ -527,6 +527,7 @@ public enum ItemList implements IItemContainer {
     Machine_Bronze_BlastFurnace,
     Machine_Bricked_BlastFurnace,
     Machine_Steel_Boiler_Lava,
+    Machine_Steel_Boiler_SemiFluid,	    
     Machine_Steel_Boiler,
     Machine_Steel_Furnace,
     Machine_Steel_Macerator,
