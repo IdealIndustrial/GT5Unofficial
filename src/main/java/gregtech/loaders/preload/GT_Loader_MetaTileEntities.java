@@ -17,6 +17,7 @@ import gregtech.common.tileentities.boilers.GT_MetaTileEntity_Boiler_Bronze;
 import gregtech.common.tileentities.boilers.GT_MetaTileEntity_Boiler_Lava;
 import gregtech.common.tileentities.boilers.GT_MetaTileEntity_Boiler_Solar;
 import gregtech.common.tileentities.boilers.GT_MetaTileEntity_Boiler_Steel;
+import gregtech.common.tileentities.boilers.GT_MetaTileEntity_Boiler_Semi;
 import gregtech.common.tileentities.generators.*;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_BasicHull_Bronze;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_BasicHull_BronzeBricks;
@@ -395,10 +396,10 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Hatch_Maintenance.set(GT_MetaTileEntity_Hatch_Maintenance.Manual(90, "hatch.maintenance", "Maintenance Hatch", 1).getStackForm(1L));
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_Maintenance.get(1L), bitsd, new Object[]{"dwx", "hMc", "fsr", 'M', ItemList.Hull_LV});
 
-        ItemList.Hatch_AutoMaintenance.set(GT_MetaTileEntity_Hatch_Maintenance.AutoKit(111, "hatch.maintenance.semiauto", "Semi-Auto Maintenance Hatch", 5).getStackForm(1L));
+        ItemList.Hatch_AutoMaintenance.set(GT_MetaTileEntity_Hatch_Maintenance.AutoKit(148, "hatch.maintenance.semiauto", "Semi-Auto Maintenance Hatch", 5).getStackForm(1L));
         GT_ModHandler.addCraftingRecipe(ItemList.Hatch_AutoMaintenance.get(1L), bitsd, new Object[]{"CHC", "AMA", "CHC", 'M', ItemList.Hull_IV,'H',ItemList.Hatch_Maintenance,'A',ItemList.Robot_Arm_IV,'C',OrePrefixes.circuit.get(Materials.Elite)});
 
-        ItemList.Hatch_FullAutoMaintenance.set(GT_MetaTileEntity_Hatch_Maintenance.FullAuto(114, "hatch.maintenance.auto", "Auto Maintenance Hatch", 9).getStackForm(1L));
+        ItemList.Hatch_FullAutoMaintenance.set(GT_MetaTileEntity_Hatch_Maintenance.FullAuto(149, "hatch.maintenance.auto", "Auto Maintenance Hatch", 9).getStackForm(1L));
 
         ItemList.Hatch_DataAccess_EV.set(new GT_MetaTileEntity_Hatch_DataAccess(131, "hatch.dataaccess", "Data Access Hatch", 4).getStackForm(1L));
         ItemList.Hatch_DataAccess_LuV.set(new GT_MetaTileEntity_Hatch_DataAccess(132, "hatch.dataaccess.adv", "Advanced Data Access Hatch", 6).getStackForm(1L));
@@ -431,11 +432,13 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         ItemList.Machine_Steel_Boiler.set(new GT_MetaTileEntity_Boiler_Steel(101, "boiler.steel", "High Pressure Coal Boiler").getStackForm(1L));
         ItemList.Machine_Steel_Boiler_Lava.set(new GT_MetaTileEntity_Boiler_Lava(102, "boiler.lava", "High Pressure Lava Boiler").getStackForm(1L));
         ItemList.Machine_Bronze_Boiler_Solar.set(new GT_MetaTileEntity_Boiler_Solar(105, "boiler.solar", "Simple Solar Boiler").getStackForm(1L));
+        ItemList.Machine_Steel_Boiler_SemiFluid.set(new GT_MetaTileEntity_Boiler_Semi(111,"boiler.semi","High Pressure SemiFluid Boiler").getStackForm(1));
 
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Bronze_Boiler.get(1L), bits, new Object[]{aTextPlate, "P P", "BFB", 'F', OreDictNames.craftingFurnace, 'P', OrePrefixes.plate.get(Materials.Bronze), 'B', new ItemStack(Blocks.brick_block, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Steel_Boiler.get(1L), bits, new Object[]{aTextPlate, "P P", "BFB", 'F', OreDictNames.craftingFurnace, 'P', OrePrefixes.plate.get(Materials.Steel), 'B', new ItemStack(Blocks.brick_block, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Steel_Boiler_Lava.get(1L), bits, new Object[]{aTextPlate, "GGG", aTextPlateMotor, 'M', ItemList.Hull_Steel_Bricks, 'P', OrePrefixes.plate.get(Materials.Steel), 'G', new ItemStack(Blocks.glass, 1)});
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Bronze_Boiler_Solar.get(1L), bits, new Object[]{"GGG", "SSS", aTextPlateMotor, 'M', ItemList.Hull_Bronze_Bricks, 'P', OrePrefixes.pipeSmall.get(Materials.Bronze), 'S', OrePrefixes.plate.get(Materials.Silver), 'G', new ItemStack(Blocks.glass, 1)});
+        GT_ModHandler.addCraftingRecipe(ItemList.Machine_Steel_Boiler_SemiFluid.get(1L), bits, new Object[]{aTextPlate, "GGG", aTextPlateMotor, 'M', ItemList.Hull_Bronze_Bricks, 'P', OrePrefixes.plate.get(Materials.Bronze), 'G', new ItemStack(Blocks.glass, 1)});
 
         ItemList.Machine_Bronze_BlastFurnace.set(new GT_MetaTileEntity_BronzeBlastFurnace(108, "bronzemachine.blastfurnace", "Primitive Bronze Plated Blast Furnace").getStackForm(1L));
         if (!Loader.isModLoaded("terrafirmacraft")) {
