@@ -1944,10 +1944,10 @@ public class GT_Utility {
         aPlayer.addPotionEffect(new PotionEffect(Potion.hunger.id, hangryDuration));
         FoodStats fs = aPlayer.getFoodStats();
         if(fs.getFoodLevel() < foodPerClick) {
-            fs.setFoodLevel(0);
+            fs.addStats(-foodPerClick, 0.0f);
             aPlayer.attackEntityFrom(DamageSource.starve,1f + (1f * upWorkWhileHungry(aPlayer, false)));
         } else {
-            fs.setFoodLevel(Math.max(0, fs.getFoodLevel()-foodPerClick));
+            fs.addStats(-foodPerClick, 0.0f);
             upWorkWhileHungry(aPlayer, true);
         }
     }

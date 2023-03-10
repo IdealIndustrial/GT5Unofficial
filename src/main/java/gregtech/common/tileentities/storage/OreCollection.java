@@ -95,7 +95,7 @@ public class OreCollection implements Comparator<OreCollection> {
     }
     public static String getTranslatedOreName(String unlockOreName){
         if(unlockOreName.indexOf("gt.blockores.") == 0) {
-            String gtOreId = unlockOreName.replace("gt.blockores.","");
+            String gtOreId = unlockOreName.replaceAll(".+\\.","");
             return new ItemStack(GT_Item_Ores.getItemById(/*576*/1095), 1, Integer.valueOf(gtOreId)).getDisplayName();
         } else {
             return GT_LanguageManager.getTranslation(unlockOreName);
