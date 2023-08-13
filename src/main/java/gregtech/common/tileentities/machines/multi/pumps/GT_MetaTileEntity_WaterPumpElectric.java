@@ -54,7 +54,7 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
                 "Also efficiency slowly decrease as intake gets clogged",
                 "Plunger sneaky right click on the controller clears it",
                 "Some pipes may connect only after all structure is assembled",
-                "River and Ocean are Minecraft Biomes"
+                "River and Ocean and Swampland are Minecraft Biomes"
         };
     }
 
