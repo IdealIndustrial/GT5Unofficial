@@ -48,6 +48,7 @@ public class GT_MetaTileEntity_WaterPumpElectric extends GT_MetaTileEntity_Water
                 "Pipe fluid capacity must be enough to transfer " + getOutputRate() * 20 + " l per second",
                 "Intake placed in top water block of river (or Ocean, then outputs salt water)",
                 "In case pump is situated in ocean it will output salt water",
+                "In case pump is situated in swamp it will output dirty water",            
                 "Must cover " + getSurfaceBlocksCount() + " blocks of water surface in radius of " + getRadius(),
                 "For each other pump in work radius will decrease efficiency",
                 "Also efficiency slowly decrease as intake gets clogged",
