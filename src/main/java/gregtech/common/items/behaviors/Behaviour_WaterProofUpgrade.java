@@ -24,11 +24,12 @@ public class Behaviour_WaterProofUpgrade
             TileEntity tile = aWorld.getTileEntity(aX, aY, aZ);
             if(tile instanceof BaseMetaTileEntity){
                 BaseMetaTileEntity t = (BaseMetaTileEntity)tile;
+                if (!t.mWaterProof) {
                 t.mWaterProof = true;
                 t.sendBlockEvent((byte)8,(byte)1);
                 if (!aPlayer.capabilities.isCreativeMode) {
                    aStack.stackSize--;
-                }
+                }}
                 return true;
             }
         }
