@@ -88,7 +88,7 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
     @Override
     public boolean onRunningTick(ItemStack aStack) {
         double tOut = getOutputRate() * (mPumpingEfficiency / 10000) + waterToOutput;
-        tOut *= mEfficiencyRate;		
+        tOut *= mEfficiencyRate;
         int rOut = (int) tOut;
         waterToOutput = tOut - rOut;
         if (mRiver) {
@@ -97,7 +97,7 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
             addOutput(Materials.SaltWater.getFluid(rOut));
         } else if (mSwamp) {
             addOutput(Materials.DirtyWater.getFluid(rOut));
-        }		
+        }
         return true;
     }
 
