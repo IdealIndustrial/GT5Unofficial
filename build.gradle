@@ -122,6 +122,8 @@ dependencies {
     // provided name: 'ImmersiveEngineering', version: config.immeng.version, ext: 'jar'
     // provided name: 'magneticraft', version: config.magneticraft.version, ext: 'jar'nonRuntimeLibs
     provided fileTree(dir: 'libs', include: '*.jar')
+    compile files("libs/AppleCore-1.7.10-1.2.1+107.59407-api.jar")
+    compile files("libs/forestry_1.7.10-4.2.10.58-dev.jar")	
     compileOnly fileTree(dir: 'nonRuntimeLibs', include: '*.jar')
 }
 
