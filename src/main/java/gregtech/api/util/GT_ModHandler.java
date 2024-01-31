@@ -789,16 +789,16 @@ public class GT_ModHandler {
                             if (aExcludeGTIC2Items && ((tStack.getUnlocalizedName().contains("gt.metaitem.01") || tStack.getUnlocalizedName().contains("gt.blockores") || tStack.getUnlocalizedName().contains("ic2.itemCrushed") || tStack.getUnlocalizedName().contains("ic2.itemPurifiedCrushed")))) continue;
                             switch (aGTRecipeMap.mUnlocalizedName) {
                                 case "gt.recipe.macerator":
-                                    aGTRecipeMap.addRecipe(true, new ItemStack[]{GT_Utility.copyAmount(((IRecipeInput) tRecipe.getKey()).getAmount(), tStack)}, (ItemStack[]) ((RecipeOutput) tRecipe.getValue()).items.toArray(), null, null, null, null, 300, 2, 0);
+                                    aGTRecipeMap.addRecipe(true, new ItemStack[]{GT_Utility.copyAmount(((IRecipeInput) tRecipe.getKey()).getAmount(), tStack)}, ((RecipeOutput) tRecipe.getValue()).items.toArray(new ItemStack[0]), null, null, null, null, 300, 2, 0);
                                     break;
                                 case "gt.recipe.compressor":
-                                    aGTRecipeMap.addRecipe(true, new ItemStack[]{GT_Utility.copyAmount(((IRecipeInput) tRecipe.getKey()).getAmount(), tStack)}, (ItemStack[]) ((RecipeOutput) tRecipe.getValue()).items.toArray(), null, null, null, null, 300, 2, 0);
+                                    aGTRecipeMap.addRecipe(true, new ItemStack[]{GT_Utility.copyAmount(((IRecipeInput) tRecipe.getKey()).getAmount(), tStack)}, ((RecipeOutput) tRecipe.getValue()).items.toArray(new ItemStack[0]), null, null, null, null, 300, 2, 0);
                                     break;
                                 case "gt.recipe.extractor":
-                                    aGTRecipeMap.addRecipe(true, new ItemStack[]{GT_Utility.copyAmount(((IRecipeInput) tRecipe.getKey()).getAmount(), tStack)}, (ItemStack[]) ((RecipeOutput) tRecipe.getValue()).items.toArray(), null, null, null, null, 300, 2, 0);
+                                    aGTRecipeMap.addRecipe(true, new ItemStack[]{GT_Utility.copyAmount(((IRecipeInput) tRecipe.getKey()).getAmount(), tStack)}, ((RecipeOutput) tRecipe.getValue()).items.toArray(new ItemStack[0]), null, null, null, null, 300, 2, 0);
                                     break;
                                 case "gt.recipe.thermalcentrifuge":
-                                    aGTRecipeMap.addRecipe(true, new ItemStack[]{GT_Utility.copyAmount(((IRecipeInput) tRecipe.getKey()).getAmount(), tStack)}, (ItemStack[]) ((RecipeOutput) tRecipe.getValue()).items.toArray(), null, null, null, null, 500, 48, 0);
+                                    aGTRecipeMap.addRecipe(true, new ItemStack[]{GT_Utility.copyAmount(((IRecipeInput) tRecipe.getKey()).getAmount(), tStack)}, ((RecipeOutput) tRecipe.getValue()).items.toArray(new ItemStack[0]), null, null, null, null, 500, 48, 0);
                                     break;
                             }
                             }catch(Exception e){System.err.println(e);}
