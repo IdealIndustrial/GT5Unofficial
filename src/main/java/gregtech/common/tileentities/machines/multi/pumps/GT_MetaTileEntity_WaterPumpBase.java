@@ -122,12 +122,14 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     public boolean checkBiome(BiomeGenBase aBiome) {
         if (aBiome instanceof BiomeGenRiver && mRiver) {
             return true;
-        } else if (aBiome instanceof BiomeGenOcean && mOcean && !mRiver && !mSwamp) {
-            return true;
-        } else if (aBiome instanceof BiomeGenSwamp && mSwamp && !mRiver && !mOcean) {
+        } 
+        if (aBiome instanceof BiomeGenOcean && mOcean) {
             return true;
         }
-        return true;		
+        if (aBiome instanceof BiomeGenSwamp && mSwamp) {
+            return true;
+        }
+        return false;		
     }
 
     @Override
@@ -165,6 +167,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
 
     public abstract boolean addToStructure(TileEntity aTileEntityInput, TileEntity aTileEntityPipe, TileEntity aTileEntityOutput, boolean aDoAdd);
 
+    @Override
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         mScrewdriver = mWrench = mCrowbar = mHardHammer = mSoftHammer = mSolderingTool = true;
 
