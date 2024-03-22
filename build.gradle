@@ -72,7 +72,7 @@ repositories {
     }
     maven {
         name = "ic2, forestry"
-        url = "https://maven.ic2.player.to/"
+        url = "https://maven2.ic2.player.to/"
     }
     maven { // EnderIO & EnderCore
         name = 'tterrag Repo'
