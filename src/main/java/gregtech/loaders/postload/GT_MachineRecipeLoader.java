@@ -3274,10 +3274,10 @@ if(Loader.isModLoaded("Railcraft")){
         GT_Values.RA.addChemicalRecipe(Materials.NitricAcid.getCells(8), GT_Utility.getIntegratedCircuit(1),  Materials.Ethenone.getGas(1000),     Materials.Tetranitromethane.getFluid(9000), Materials.Empty.getCells(8), 480, 16);
 
         GT_Values.RA.addMixerRecipe(Materials.LightFuel.getCells(1),         GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Tetranitromethane.getFluid(250),  Materials.NitroFuel.getFluid(1000),  Materials.Empty.getCells(1), 80,  8);
-        GT_Values.RA.addMixerRecipe(Materials.Fuel.getCells(2),              GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Tetranitromethane.getFluid(250),  Materials.NitroFuel.getFluid(1000),  Materials.Empty.getCells(2), 80,  8);
+        GT_Values.RA.addMixerRecipe(Materials.Fuel.getCells(1),              GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Tetranitromethane.getFluid(250),  Materials.NitroFuel.getFluid(1000),  Materials.Empty.getCells(1), 80,  8);
         GT_Values.RA.addMixerRecipe(Materials.BioDiesel.getCells(4),         GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Tetranitromethane.getFluid(1000), Materials.NitroFuel.getFluid(3000),  Materials.Empty.getCells(4), 320, 8);
         GT_Values.RA.addMixerRecipe(Materials.Tetranitromethane.getCells(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.LightFuel.getFluid(4000),         Materials.NitroFuel.getFluid(4000),  Materials.Empty.getCells(1), 320, 8);
-        GT_Values.RA.addMixerRecipe(Materials.Tetranitromethane.getCells(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Fuel.getFluid(8000),              Materials.NitroFuel.getFluid(4000),  Materials.Empty.getCells(1), 320, 8);
+        GT_Values.RA.addMixerRecipe(Materials.Tetranitromethane.getCells(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.Fuel.getFluid(4000),              Materials.NitroFuel.getFluid(4000),  Materials.Empty.getCells(1), 320, 8);
         GT_Values.RA.addMixerRecipe(Materials.Tetranitromethane.getCells(1), GT_Values.NI, GT_Values.NI, GT_Values.NI, Materials.BioDiesel.getFluid(4000),         Materials.NitroFuel.getFluid(3000),  Materials.Empty.getCells(1), 320, 8);
 
         GT_Values.RA.addChemicalRecipe(                   Materials.Benzene.getCells(3),  GT_Utility.getIntegratedCircuit(1),  Materials.Chlorine.getGas(1000),  Materials.Dichlorobenzene.getFluid(3000),  Materials.HydrochloricAcid.getCells(1), Materials.Empty.getCells(2), 240);
