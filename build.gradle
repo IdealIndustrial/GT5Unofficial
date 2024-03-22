@@ -70,10 +70,10 @@ repositories {
         name = "chickenbones"
         url = "http://chickenbones.net/maven/"
     }
-    maven {
-        name = "ic2, forestry"
-        url = "https://maven2.ic2.player.to/"
-    }
+//    maven {
+//        name = "ic2, forestry"
+//        url = "https://maven2.ic2.player.to/"
+//    }
     maven { // EnderIO & EnderCore
         name = 'tterrag Repo'
         url = "http://maven.tterrag.com"
@@ -82,9 +82,9 @@ repositories {
         name = 'DVS1 Maven FS'
         url = 'http://dvs1.progwml6.com/files/maven'
     }
-    maven { // AppleCore
-        url = "https://www.ryanliptak.com/maven/"
-    }
+//    maven { // AppleCore
+//        url = "https://www.ryanliptak.com/maven/"
+//    }
     maven { // GalacticGreg, YAMCore,..
         name = 'UsrvDE'
         url = "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases/"
