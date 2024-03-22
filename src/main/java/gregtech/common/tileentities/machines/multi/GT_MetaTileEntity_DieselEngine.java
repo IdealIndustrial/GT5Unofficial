@@ -31,7 +31,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
     protected int fuelRemaining = 0;
     protected boolean boostEu = false;
 
-    private int oxygenPerTick = 50;
+    private static int oxygenPerTick = 50;
 
     public GT_MetaTileEntity_DieselEngine(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -43,7 +43,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
 
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
-        oxygenPerTick =  Math.min(1,Math.max(100, aConfig.get(ConfigCategories.machineconfig, "DieselEngine.oxygenPerTick", 50)));
+        oxygenPerTick =  Math.max(1,Math.min(100, aConfig.get(ConfigCategories.machineconfig, "DieselEngine.oxygenPerTick", 50)));
     }
 
     public String[] getDescription() {
