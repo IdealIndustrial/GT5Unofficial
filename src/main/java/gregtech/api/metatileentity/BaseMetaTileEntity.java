@@ -51,6 +51,7 @@ import java.util.Random;
 
 import static gregtech.api.enums.GT_Values.NW;
 import static gregtech.api.enums.GT_Values.V;
+import net.minecraft.world.biome.BiomeGenBase;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
@@ -282,6 +283,12 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
     public void dischargeItem(ItemStack aStack) {
         increaseStoredEnergyUnits(GT_ModHandler.dischargeElectricItem(aStack, (int) Math.min(Integer.MAX_VALUE, getEUCapacity() - getStoredEU()), (int) Math.min(Integer.MAX_VALUE, mMetaTileEntity.getInputTier()), false, false, false), true);
     }
+    
+    private boolean isRainPossible() {
+        BiomeGenBase biome = getBiome();
+        // see net.minecraft.client.renderer.EntityRenderer.renderRainSnow
+        return biome.rainfall > 0 && (biome.canSpawnLightningBolt() || biome.getEnableSnow());
+    }
 
     @Override
     public void updateEntity() {
@@ -463,7 +470,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                             || worldObj.getPrecipitationHeight(xCoord, zCoord + 1) - 1 < yCoord
                                             || worldObj.getPrecipitationHeight(xCoord - 1, zCoord) - 1 < yCoord
                                             || worldObj.getPrecipitationHeight(xCoord + 1, zCoord) - 1 < yCoord) {
-                                        if (GregTech_API.sMachineRainExplosions && worldObj.isRaining() && getBiome().rainfall > 0) {
+                                        if (GregTech_API.sMachineRainExplosions && worldObj.isRaining() && isRainPossible()) {
                                             if (getRandomNumber(10) == 0) {
                                                 try{GT_Mod.instance.achievements.issueAchievement(this.getWorldObj().getPlayerEntityByName(mOwnerName), "badweather");}catch(Exception e){}
                                                 doEnergyExplosion();
@@ -475,7 +482,7 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
                                             mRunningThroughTick = false;
                                             return;
                                         }
-                                        if (GregTech_API.sMachineThunderExplosions && worldObj.isThundering() && getBiome().rainfall > 0 && getRandomNumber(3) == 0) {
+                                        if (GregTech_API.sMachineThunderExplosions && worldObj.isThundering() && isRainPossible() && getRandomNumber(3) == 0) {
                                         	try{GT_Mod.instance.achievements.issueAchievement(this.getWorldObj().getPlayerEntityByName(mOwnerName), "badweather");}catch(Exception e){}
                                             doEnergyExplosion();
                                         }
