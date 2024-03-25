@@ -28,10 +28,14 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
     private static int idleEnergyReduceMultiplier;
     private static int cleanBlockTimeByVentTicks;
     private static int mHullsLessInTimesThanWallsSquare;
+    private int progressMultiplier = 1;
+    private int mMaxDoorBlocksAllowed = 2;
+    private int mMaxDoorBlocksUsed = 0;
     // data for scanner:
     private int energyConsumptionMin = 0;
     private int energyConsumptionMax = 0;
     private int mHullsAllowed = 0;
+    private int mHullsUsed = 0;
 
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
@@ -78,12 +82,10 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         mMaxProgresstime = 100;
         int ceilingSquare = (sizeX - 2) * (sizeZ - 2);
         mEUt = euPerVent * ceilingSquare;
-        energyConsumptionMax = mEUt;
-        energyConsumptionMin = mEUt / idleEnergyReduceMultiplier;
         long tVoltage = getMaxInputVoltage();
         byte currentTier = (byte) Math.max(0, GT_Utility.getTier(tVoltage));
         byte requiredTier = (byte) Math.max(0, GT_Utility.getTier(mEUt));
-        int progressMultiplier = currentTier <= requiredTier ? 1 : 1 << (currentTier - requiredTier);
+        progressMultiplier = currentTier <= requiredTier ? 1 : 1 << (currentTier - requiredTier);
         int reduceEfficiencyGrowing = cleanBlockTimeByVentTicks * (sizeY - 2);
         int maxEfficiencyGrowing = 1000000;
         if (progressMultiplier > 1) {
@@ -92,6 +94,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         } else {
             mEfficiencyIncrease = maxEfficiencyGrowing / reduceEfficiencyGrowing;
         }
+        energyConsumptionMax = mEUt;
+        energyConsumptionMin = mEUt / idleEnergyReduceMultiplier;
         if (mEfficiency >= 10000) {
             mEUt /= idleEnergyReduceMultiplier;
         }
@@ -103,6 +107,32 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         return true;
     }
 
+    @Override
+    public String[] getInfoData() {
+        if (!mMachine) {
+            return new String[]{
+                    "Cleanroom",
+                    "Incomplete Structure",
+            };
+        } else {
+            int totalCleanTimeSec = ((sizeY - 2) * (cleanBlockTimeByVentTicks / 20)) / progressMultiplier;
+            float currentCleanTimeSec = (float) totalCleanTimeSec * (mEfficiency / 10000f);
+            int problemsCount = getIdealStatus() - getRepairStatus();
+            return new String[]{
+                    "Cleaning time: ",
+                    Math.round(currentCleanTimeSec) + " / " + totalCleanTimeSec + " s",
+                    "Energy consumption while idle/cleaning: ",
+                    energyConsumptionMin + " / " + energyConsumptionMax + " EU/t",
+                    "Efficiency: ",
+                    mEfficiency / 100.0F + " %",
+                    "Machine Hulls (used/allowed): " + mHullsUsed + "/" + mHullsAllowed,
+                    "Doors (used/allowed): " + (mMaxDoorBlocksUsed / 2) + "/" + (mMaxDoorBlocksAllowed / 2),
+                    "Problems" + ": ",
+                    "" + problemsCount,
+            };
+        }
+    }
+
     private int calcMachinesHullAllowed(int x, int y) {
         return ((x - 2) * (y - 2) * 4 - 2) / mHullsLessInTimesThanWallsSquare;
     }
@@ -111,9 +141,9 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
         int x = 1;
         int z = 1;
         int y = 1;
-        int mDoorBlocksCount = 0;
-        int mMaxDoorBlocksCount = 2; // one door contains of two blocks
-        int mHullCount = 0;
+        mMaxDoorBlocksUsed = 0;
+        mMaxDoorBlocksAllowed = 2; // one door contains of two blocks
+        mHullsUsed = 0;
         openDoorsCount = 0;
 
         // detect room both X and Z edge
@@ -154,7 +184,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
 
         // if a base area is at least 49 a second door is allowed
         if (sizeX * sizeZ >= 49) {
-            mMaxDoorBlocksCount = 4;
+            mMaxDoorBlocksAllowed = 4;
         }
 
         for (int dX = -x; dX <= x; dX++) {
@@ -194,7 +224,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                                             openDoorsCount++;
                                         }
                                     }
-                                    mDoorBlocksCount++;
+                                    mMaxDoorBlocksUsed++;
                                 } else if (tBlock == GregTech_API.sBlockGlass && tMeta == 0) {
                                     // do nothing - it is Ok!
                                 } else {
@@ -206,7 +236,7 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                                         return false;
                                     }
                                     if (aMetaTileEntity instanceof GT_MetaTileEntity_BasicHull) {
-                                        mHullCount++;
+                                        mHullsUsed++;
                                     } else {
                                         return false;
                                     }
@@ -217,8 +247,8 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
                 }
             }
         }
-        if (mMaintenanceHatches.size() != 1 || mEnergyHatches.size() != 1 || mDoorBlocksCount < 2
-                || mDoorBlocksCount > mMaxDoorBlocksCount || mHullCount > mHullsAllowed) {
+        if (mMaintenanceHatches.size() != 1 || mEnergyHatches.size() != 1 || mMaxDoorBlocksUsed < 2
+                || mMaxDoorBlocksUsed > mMaxDoorBlocksAllowed || mHullsUsed > mHullsAllowed) {
             return false;
         }
         for (int dX = -x + 1; dX <= x - 1; dX++) {
@@ -242,30 +272,6 @@ public class GT_MetaTileEntity_Cleanroom extends GT_MetaTileEntity_MultiBlockBas
             aBaseMetaTileEntity.setInternalOutputRedstoneSignal(i, t);
         }
         return true;
-    }
-
-    @Override
-    public String[] getInfoData() {
-        if (!mMachine) {
-            return new String[]{
-                    "Cleanroom",
-                    "Incomplete Structure",
-            };
-        } else {
-            int totalCleanTimeSec = (sizeY - 2) * (cleanBlockTimeByVentTicks / 20);
-            float currentCleanTimeSec = (float) totalCleanTimeSec * (mEfficiency / 10000f);
-            int problemsCount = getIdealStatus() - getRepairStatus();
-            return new String[]{
-                    "Cleaning time" + ": ",
-                    currentCleanTimeSec + " / " + totalCleanTimeSec + " s",
-                    "Energy consumption while idle/cleaning" + ": ",
-                    energyConsumptionMin + " / " + energyConsumptionMax + " EU/t",
-                    ("Efficiency") + ": ",
-                    mEfficiency / 100.0F + " %",
-                    "Problems" + ": ",
-                    "" + problemsCount,
-            };
-        }
     }
 
     @Override

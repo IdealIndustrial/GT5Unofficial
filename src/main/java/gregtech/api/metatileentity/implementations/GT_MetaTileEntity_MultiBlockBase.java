@@ -62,9 +62,22 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
         this.mNEI = "";
     }
+    public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional, int aInvSlotCount) {
+        super(aID, aName, aNameRegional, aInvSlotCount);
+        GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
+        this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
+        this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
+        this.mNEI = "";
+    }
 
     public GT_MetaTileEntity_MultiBlockBase(String aName) {
         super(aName, 2);
+        GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
+        this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
+        this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
+    }
+    public GT_MetaTileEntity_MultiBlockBase(String aName, int aInvSlotCount) {
+        super(aName, aInvSlotCount);
         GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
         this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
         this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
@@ -317,6 +330,8 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             aBaseMetaTileEntity.setActive(mMaxProgresstime > 0);
         }
     }
+
+    public void onIdle(){/*do nothing*/}
 
     public boolean polluteEnvironment(int aPollutionLevel) {
         mPollution += aPollutionLevel;
@@ -677,6 +692,34 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             }
         }
         return false;
+    }
+
+    /**
+     * try to consume a liquid with max amount, but if it is not enough,
+     * it consumes all what is there was
+    */
+    public int depleteInputUpTo(FluidStack aLiquid) {
+        int consumedAmount = 0;
+        if (aLiquid == null) return consumedAmount;
+        for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
+            tHatch.mRecipeMap = getRecipeMap();
+            if (isValidMetaTileEntity(tHatch)) {
+                FluidStack tLiquid = tHatch.getFluid();
+                if (tLiquid != null && tLiquid.isFluidEqual(aLiquid)) {
+                    tLiquid = tHatch.drain(aLiquid.amount, false);
+                    if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
+                        tLiquid = tHatch.drain(aLiquid.amount, true);
+                        if(tLiquid != null && tLiquid.amount >= aLiquid.amount){
+                            return aLiquid.amount;
+                        }
+                    } else if(tLiquid != null && tLiquid.amount >= 0){
+                        tLiquid = tHatch.drain(tLiquid.amount, true);
+                        consumedAmount = (tLiquid != null) ? tLiquid.amount : 0;
+                    }
+                }
+            }
+        }
+        return consumedAmount;
     }
 
     public boolean addOutput(ItemStack aStack) {
