@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.function.Function;
+import net.minecraftforge.fluids.FluidStack;
 
 public class GT_ForestryRecipesLoader implements Runnable {
 
@@ -37,6 +38,16 @@ public class GT_ForestryRecipesLoader implements Runnable {
         GT_Values.RA.addAssemblerRecipe(GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 5L, 1), ItemList.Circuit_Integrated.getWithDamage(0L, 5L), GT_Values.NF, GT_OreDictUnificator.get(OrePrefixes.gem, Materials.EnderPearl, 1L), 64, 8);
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_ModHandler.getModItem(aTextForestry, "pollen", 1L, 0), GT_ModHandler.getModItem(aTextForestry, "royalJelly", 1L, 0),GT_ModHandler.getModItem(aTextForestry, "beeswax", 2L, 0), 
 		GT_OreDictUnificator.get(OrePrefixes.plank, Materials.Wood, 3L),}, Materials.Honey.getFluid(500L), GT_ModHandler.getModItem(aTextForestry, "craftingMaterial", 1L, 6), 80, 64);	    
+                
+        GT_Values.RA.addAssemblerRecipe(new ItemStack[]{
+            GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Redstone, 2L),
+            GT_OreDictUnificator.get(OrePrefixes.stick, Materials.Iron, 1L),
+            GT_OreDictUnificator.get(OrePrefixes.bolt, Materials.Copper, 1L), 
+            GT_OreDictUnificator.get(OrePrefixes.wireFine, Materials.SolderingAlloy, 1L),
+            ItemList.Circuit_Integrated.getWithDamage(0L, 5L),
+        }, 
+   Materials.Rubber.getMolten(432L), 
+     GT_ModHandler.getModItem(aTextForestry, "solderingIron", 1L, 0), 100, 32);
     }	
 	
     private void addThermionicTubesRecipes() {
