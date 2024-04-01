@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenRiver;
+import net.minecraft.world.biome.BiomeGenSwamp;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -41,6 +42,8 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
     protected int mFilledPipes = 0;
     public int mMainFacing = 2;
     protected boolean mRiver = false;
+    protected boolean mOcean = false;
+    protected boolean mSwamp = false;
 
     public GT_MetaTileEntity_WaterPumpBase(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -106,15 +109,27 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         tOut *= mEfficiencyRate;
         int rOut = (int) tOut;
         waterToOutput = tOut - rOut;
-        addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
+        if (mRiver) {
+            addOutput(GT_ModHandler.getWater(rOut));
+        } else if (mOcean) {
+            addOutput(Materials.SaltWater.getFluid(rOut));
+        } else if (mSwamp) {
+            addOutput(Materials.DirtyWater.getFluid(rOut));
+        }	
         return true;
     }
 
     public boolean checkBiome(BiomeGenBase aBiome) {
         if (aBiome instanceof BiomeGenRiver && mRiver) {
             return true;
+        } 
+        if (aBiome instanceof BiomeGenOcean && mOcean) {
+            return true;
         }
-        return aBiome instanceof BiomeGenOcean && !mRiver;
+        if (aBiome instanceof BiomeGenSwamp && mSwamp) {
+            return true;
+        }
+        return false;		
     }
 
     @Override
@@ -152,6 +167,7 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
 
     public abstract boolean addToStructure(TileEntity aTileEntityInput, TileEntity aTileEntityPipe, TileEntity aTileEntityOutput, boolean aDoAdd);
 
+    @Override
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         mScrewdriver = mWrench = mCrowbar = mHardHammer = mSoftHammer = mSolderingTool = true;
 
@@ -208,7 +224,9 @@ public abstract class GT_MetaTileEntity_WaterPumpBase extends GT_MetaTileEntity_
         if (tBiome instanceof BiomeGenRiver) {
             mRiver = true;
         } else if (tBiome instanceof BiomeGenOcean) {
-            mRiver = false;
+            mOcean = true;
+        } else if (tBiome instanceof BiomeGenSwamp) {
+            mSwamp = true;			
         } else {
             return false;
         }

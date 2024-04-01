@@ -63,13 +63,14 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
                 "Controller input must be connected to input this pipe",
                 "Uses 200l of steam per second",
                 "Pipe fluid capacity must be enough to transfer " + getOutputRate() * 20 + " l per second",
-                "Intake is situated in top layer of water source (river for water or ocean for salt water)",
+                "Intake is situated in top layer of water source",
+                "River for water or ocean for salt water or swamp for dirty water",            
                 "Must cover 128 blocks of water surface in radius of 16",
                 "For each other pump in work radius will decrease efficiency",
                 "Also efficiency slowly decrease as intake gets clogged",
                 "Plunger sneaky right click on the controller clears it",
                 "Some pipes may connect only after all structure is assembled",
-                "River and Ocean are Minecraft Biomes"
+                "River and Ocean and Swampland are Minecraft Biomes"
         };
     }
 
@@ -90,7 +91,13 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
         tOut *= mEfficiencyRate;
         int rOut = (int) tOut;
         waterToOutput = tOut - rOut;
-        addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
+        if (mRiver) {
+            addOutput(GT_ModHandler.getWater(rOut));
+        } else if (mOcean) {
+            addOutput(Materials.SaltWater.getFluid(rOut));
+        } else if (mSwamp) {
+            addOutput(Materials.DirtyWater.getFluid(rOut));
+        }
         return true;
     }
 
