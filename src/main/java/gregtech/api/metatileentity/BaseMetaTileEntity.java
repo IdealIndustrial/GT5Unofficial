@@ -873,11 +873,18 @@ public class BaseMetaTileEntity extends BaseTileEntity implements IGregTechTileE
         GT_Values.NW.sendToServer(new GT_Packet_Key(aPlayer.getEntityId(), aWorld.provider.dimensionId, isAlt, isCtrl));
     }
 
+    @Override
     public void setFrontFacingByWrench(byte aFacing, EntityPlayer aPlayer) {
         if (isValidFacing(aFacing)) {
-            if(GT_Packet_Key.isCtrlPressed(aPlayer)) {
+            if (mMetaTileEntity.isElectric()){
+                if(GT_Packet_Key.isCtrlPressed(aPlayer)){
+                    mFluidFacing = aFacing;
+                } else {
+                    mFacing = aFacing;
+                }
+                
+            } else{
                 mFluidFacing = aFacing;
-            } else {
                 mFacing = aFacing;
             }
             if(isClientSide())
