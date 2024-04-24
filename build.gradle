@@ -42,9 +42,9 @@ file "build.properties" withReader {
 }
 
 
-version = "${config.gt.version}"
-group = "GT_II-edition"
-archivesBaseName = "GT_II-edition"
+version = "1.19-beta"
+group = "gt_ii-edition"
+archivesBaseName = "gt_ii-edition"
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
