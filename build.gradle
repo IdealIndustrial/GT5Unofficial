@@ -43,7 +43,7 @@ file "build.properties" withReader {
 
 
 version = "1.19-beta"
-group = "gt_ii-edition"
+group = "idealindustrial"
 archivesBaseName = "gt_ii-edition"
 
 compileJava {
@@ -177,6 +177,7 @@ publishing {
   }
   publications {
 	mavenJava(MavenPublication){
+		artifactId archivesBaseName
 		artifact jar
 	}
 }
