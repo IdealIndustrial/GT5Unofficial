@@ -44,7 +44,7 @@ file "build.properties" withReader {
 
 version = "1.19-beta"
 group = "idealindustrial"
-archivesBaseName = "gt_ii-edition"
+archivesBaseName = "gt-ii-edition"
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
