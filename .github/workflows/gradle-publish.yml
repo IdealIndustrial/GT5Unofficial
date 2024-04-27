@@ -12,6 +12,8 @@ on:
     branches:
       - test-build/1-19-0
 
+permissions: write-all
+
 jobs:
   build:
 
