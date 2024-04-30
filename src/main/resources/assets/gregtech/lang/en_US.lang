@@ -838,6 +838,11 @@ Interaction_DESCRIPTION_Index_224=Mode 3 by 3: ON
 Interaction_DESCRIPTION_Index_225=Mode 3 by 3: OFF
 Interaction_DESCRIPTION_Index_226=Input from Output Fluid Side §2allowed§r
 Interaction_DESCRIPTION_Index_227=Input from Output Fluid Side §cforbidden§r
+Interaction_DESCRIPTION_Index_228=Ignore
+Interaction_DESCRIPTION_Index_229=Conditional
+Interaction_DESCRIPTION_Index_230=Invert Condition
+Interaction_DESCRIPTION_Index_231=Allow Input
+Interaction_DESCRIPTION_Index_232=Block Input
 
 Item_DESCRIPTION_Index_000=Stored Heat: %s
 Item_DESCRIPTION_Index_001=Durability: %s/%s
