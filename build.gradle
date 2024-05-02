@@ -164,6 +164,10 @@ artifacts {
     archives devJar
 }
 
+tasks.withType(PublishToMavenRepository) {
+	dependsOn(tasks.assemble)
+}
+
 publishing {
   repositories {
     maven {
