@@ -22,7 +22,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.ChunkPosition;
@@ -137,12 +136,13 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         underBrOperationsCount = aNBT.getInteger("underBrOperationsCount");
     }
 
+    @Override
     protected boolean allowPutPipesToController() {
         return isAllowPutPipesToController;
     }
 
     private void prepareDataOrbTitle(IGregTechTileEntity te, NBTTagCompound nbt) {
-        StringBuffer coords = new StringBuffer();
+        StringBuilder coords = new StringBuilder();
         coords.append(EnumChatFormatting.GOLD);
         coords.append("(x ");
         coords.append(te.getXCoord());
@@ -222,10 +222,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         orbNbt.setIntArray("blocksCounts", blocksCounts);
         prepareDataOrbTitle(te, orbNbt);
         NBTTagCompound rawOresData = OreCollection.getRawOresData(oreCollection);
-//        NBTTagList tTagList = new OreCollection().getTooltipLines(oreCollection, totalBlocksCount, oreTypesCount);
-//        orbNbt.setTag("pages", tTagList);//underBrWarningLabel
         orbNbt.setTag("rawOresData", rawOresData);
-        NBTTagCompound minerDataTag = new NBTTagCompound();
         orbNbt.setInteger("minerTotalBlocksCount", totalBlocksCount);
         orbNbt.setInteger("minerOreTypesCount", oreTypesCount);
         orb.setTagCompound(orbNbt);
@@ -463,12 +460,16 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
         int tier = Math.max(1, GT_Utility.getTier(getMaxInputVoltage()));
         mEUt = -3 * (1 << (tier << 1));
         int mProgTime;
-        if (workState == STATE_DOWNWARD) {
-            mProgTime = getBaseProgressTime();
-        } else if (workState == STATE_AT_BOTTOM) {
-            mProgTime = (getBaseProgressTime() * optimizationRate);
-        } else {
-            mProgTime = 80;
+        switch (workState) {
+            case STATE_DOWNWARD:
+                mProgTime = getBaseProgressTime();
+                break;
+            case STATE_AT_BOTTOM:
+                mProgTime = (getBaseProgressTime() * optimizationRate);
+                break;
+            default:
+                mProgTime = 80;
+                break;
         }
         mMaxProgresstime = mProgTime / (1 << tier);
         mMaxProgresstime = Math.max(1, mMaxProgresstime);
@@ -589,7 +590,7 @@ public abstract class GT_MetaTileEntity_OreDrillingPlantBase extends GT_MetaTile
             "1x Input Bus for mining pipes (Any bottom layer casing; not necessary)",
             "1x Output Bus (Any bottom layer casing)",
             "1x Maintenance Hatch (Any bottom layer casing)",
-            "(Optional) 1x Data Access Hatch with Data Orb for endless mode (Any bottom layer casing)",
+            "1x Data Access Hatch with Data Orb for endless mode(Any bottom layer; optional)",
             "1x " + VN[getMinTier()] + "+ Energy Hatch (Any bottom layer casing)",
             "Radius is " + (getRadiusInChunks() << 4) + " blocks"};
     }

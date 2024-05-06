@@ -4,6 +4,7 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
@@ -15,9 +16,11 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class GT_MetaTileEntity_PrimitiveMiner extends GT_MetaTileEntity_PrimitiveMuscleMachine {
 
+    private int digHeight = 0;
     private int cobblestoneDirtIdx = -1;
 
     public GT_MetaTileEntity_PrimitiveMiner(int aID, String aName, String aNameRegional) {
@@ -26,6 +29,7 @@ public class GT_MetaTileEntity_PrimitiveMiner extends GT_MetaTileEntity_Primitiv
     public GT_MetaTileEntity_PrimitiveMiner(String aName) {
         super(aName);
     }
+    @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_PrimitiveMiner(this.mName);
     }
@@ -47,7 +51,19 @@ public class GT_MetaTileEntity_PrimitiveMiner extends GT_MetaTileEntity_Primitiv
             "Required a lot of muscle power - you will be hungry"
         };
     }
+    
+    @Override
+    public void saveNBTData(NBTTagCompound aNBT) {
+        super.saveNBTData(aNBT);
+        aNBT.setInteger("digHeight", digHeight);
+    }
 
+    @Override
+    public void loadNBTData(NBTTagCompound aNBT) {
+        super.loadNBTData(aNBT);
+        digHeight = aNBT.getInteger("digHeight");
+    }
+    
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         if(aSide == aFacing) {
@@ -108,7 +124,7 @@ public class GT_MetaTileEntity_PrimitiveMiner extends GT_MetaTileEntity_Primitiv
         if(!foundOreInLayer) {
             return digNextOre(aBaseMetaTileEntity);
         }
-        if(layerDrop.size() > 0) {
+        if(!layerDrop.isEmpty()) {
             pushToOutputSlots(layerDrop);
         }
         doWorkSound(aBaseMetaTileEntity);

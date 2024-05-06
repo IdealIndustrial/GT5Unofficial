@@ -21,41 +21,48 @@ import java.util.ArrayList;
 
 public class GT_MetaTileEntity_PrimitiveMuscleMachine extends GT_MetaTileEntity_BasicMachine {
 
-    protected int digHeight = 0;
-
     public GT_MetaTileEntity_PrimitiveMuscleMachine(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, 1, 1, "", 4, 24, null, "");
     }
+
     public GT_MetaTileEntity_PrimitiveMuscleMachine(String aName) {
         super(aName, 4, 24);
     }
+
+    @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_PrimitiveMuscleMachine(this.mName);
     }
 
-   /* private int powerPerClick = 8;
+    /* private int powerPerClick = 8;
     private int hungryDurationPerOperation = 480;
     private int damagePerOperation = 25;
     private int progresstimePerOre = 480;*/
-   public int getPowerPerClick(){
-       return 8;
-   }
-    public int getHungryDurationPerOperation(){
+    public int getPowerPerClick() {
+        return 8;
+    }
+
+    public int getHungryDurationPerOperation() {
         return 480;
     }
-    public int getDamagePerOperation(){
+
+    public int getDamagePerOperation() {
         return 25;
     }
-    public int getProgresstimePerOre(){
+
+    public int getProgresstimePerOre() {
         return 480;
     }
-    public int getDecreaseSteamPerOperation(){
+
+    public int getDecreaseSteamPerOperation() {
         return 1;
     }
-    public int getDecreaseFoodPerOperation(){
+
+    public int getDecreaseFoodPerOperation() {
         return 1;
     }
-    public boolean isDrillRequiredToWork(){
+
+    public boolean isDrillRequiredToWork() {
         return true;
     }
 
@@ -64,31 +71,31 @@ public class GT_MetaTileEntity_PrimitiveMuscleMachine extends GT_MetaTileEntity_
         return false;
     }
 
-    public boolean isUnstableBlock(Block aBlock){
+    public boolean isUnstableBlock(Block aBlock) {
         return !aBlock.isOpaqueCube(); // true - if we cannot place here ladder or torch
     }
 
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         if (aBaseMetaTileEntity.isServerSide()) {
-            if(aBaseMetaTileEntity.hasInventoryBeenModified() && getProgresstime() < 0) {
+            if (aBaseMetaTileEntity.hasInventoryBeenModified() && getProgresstime() < 0) {
                 resetProgress();
                 return;
             }
-            if(getProgresstime() < maxProgresstime()){
+            if (getProgresstime() < maxProgresstime()) {
                 increaseProgress(1);
             } else {
-                if(getProgresstime() > 0 && aBaseMetaTileEntity.getMaxProgress() > 0) {
+                if (getProgresstime() > 0 && aBaseMetaTileEntity.getMaxProgress() > 0) {
                     endProcess(aBaseMetaTileEntity);
                 }
                 resetProgress();
-                if(!isReadyToDig()) {
+                if (!isReadyToDig()) {
                     increaseProgress(-100);
                 } else {
-                    BaseMetaTileEntity te = (BaseMetaTileEntity)getBaseMetaTileEntity();
-                    if(findAndAddDmgToDrill(false) && hasEnoughEnergyToCheckRecipe()
+                    BaseMetaTileEntity te = (BaseMetaTileEntity) getBaseMetaTileEntity();
+                    if (findAndAddDmgToDrill(false) && hasEnoughEnergyToCheckRecipe()
                             && te.decreaseStoredSteam(getDecreaseSteamPerOperation(), false)) {
-                        if(findAndAddDmgToDrill(true)) {
+                        if (findAndAddDmgToDrill(true)) {
                             setMaxProgresstime(calcProgressTimeOnEnergyAmount(te));
                         }
                     }
@@ -98,20 +105,20 @@ public class GT_MetaTileEntity_PrimitiveMuscleMachine extends GT_MetaTileEntity_
         }
     }
 
-    public boolean findAndAddDmgToDrill(boolean addDamage){
-        if(!isDrillRequiredToWork()) {
+    public boolean findAndAddDmgToDrill(boolean addDamage) {
+        if (!isDrillRequiredToWork()) {
             return true;
         }
         int drillIdx = -1;
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             ItemStack its = mInventory[i];
-            if(its != null){
-                if(drillIdx == -1 && its.getItemDamage() == 180) {
+            if (its != null) {
+                if (drillIdx == -1 && its.getItemDamage() == 180) {
                     drillIdx = i;
                 }
             }
         }
-        if(addDamage) {
+        if (addDamage) {
             if (GT_MetaGenerated_Tool.addDmgAndCheckIsDestroy(mInventory[drillIdx], getDamagePerOperation())) {
                 mInventory[drillIdx] = null;
             }
@@ -119,7 +126,7 @@ public class GT_MetaTileEntity_PrimitiveMuscleMachine extends GT_MetaTileEntity_
         return drillIdx != -1;
     }
 
-    private int calcProgressTimeOnEnergyAmount(BaseMetaTileEntity te){
+    private int calcProgressTimeOnEnergyAmount(BaseMetaTileEntity te) {
         return getProgresstimePerOre() - Math.round((te.getStoredSteam() * getProgresstimePerOre() / 2f) / maxSteamStore());
     }
 
@@ -139,16 +146,14 @@ public class GT_MetaTileEntity_PrimitiveMuscleMachine extends GT_MetaTileEntity_
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
-        BaseMetaTileEntity te = (BaseMetaTileEntity)getBaseMetaTileEntity();
-        aNBT.setInteger("digHeight", digHeight);
-        aNBT.setInteger("steamEnergy", (int)te.getStoredSteam());
+        BaseMetaTileEntity te = (BaseMetaTileEntity) getBaseMetaTileEntity();
+        aNBT.setInteger("steamEnergy", (int) te.getStoredSteam());
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
-        BaseMetaTileEntity te = (BaseMetaTileEntity)getBaseMetaTileEntity();
-        digHeight = aNBT.getInteger("digHeight");
+        BaseMetaTileEntity te = (BaseMetaTileEntity) getBaseMetaTileEntity();
         te.setStoredSteam(aNBT.getInteger("steamEnergy"));
     }
 
@@ -187,27 +192,29 @@ public class GT_MetaTileEntity_PrimitiveMuscleMachine extends GT_MetaTileEntity_
         return null;
     }
 
-    protected void pushToOutputSlots(ArrayList<ItemStack> drops){
+    protected void pushToOutputSlots(ArrayList<ItemStack> drops) {
         GT_Utility.pushToOutputSlots(mInventory, drops, 5);
     }
 
-    public void doWorkSound(IGregTechTileEntity aBaseMetaTileEntity){
+    public void doWorkSound(IGregTechTileEntity aBaseMetaTileEntity) {
         doWorkSound(aBaseMetaTileEntity, true);
     }
+
     public void doWorkSound(IGregTechTileEntity aBaseMetaTileEntity, boolean isSuccess) {
         GT_Utility.sendSoundToPlayers(aBaseMetaTileEntity.getWorld(),
-                (String) GregTech_API.sSoundList.get(Integer.valueOf(isSuccess ? 101 : 6)), isSuccess ? 1.0f : 0.8f, -1.0F,
+                (String) GregTech_API.sSoundList.get(isSuccess ? 101 : 6), isSuccess ? 1.0f : 0.8f, -1.0F,
                 aBaseMetaTileEntity.getXCoord(), aBaseMetaTileEntity.getYCoord(), aBaseMetaTileEntity.getZCoord());
     }
+
     protected boolean decreaseInventoryItem(int idx) {
         return decreaseInventoryItem(idx, 1);
     }
 
     protected boolean decreaseInventoryItem(int idx, int count) {
         boolean success = false;
-        if(idx > -1 && mInventory[idx] != null) {
+        if (idx > -1 && mInventory[idx] != null) {
             success = true;
-            if (mInventory[idx].stackSize > count){
+            if (mInventory[idx].stackSize > count) {
                 mInventory[idx].stackSize -= count;
             } else {
                 mInventory[idx] = null;
@@ -216,10 +223,12 @@ public class GT_MetaTileEntity_PrimitiveMuscleMachine extends GT_MetaTileEntity_
         return success;
     }
 
+    @Override
     public long maxEUStore() {
         return 0;
     }
 
+    @Override
     public long maxSteamStore() {
         return 64;
     }
@@ -229,6 +238,7 @@ public class GT_MetaTileEntity_PrimitiveMuscleMachine extends GT_MetaTileEntity_
         return false;
     }
 
+    @Override
     public boolean isFacingValid(byte aFacing) {
         return aFacing > 1;
     }

@@ -196,7 +196,7 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Pri
             Block aBlock = aWorld.getBlock(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ);
             int tMeta = aWorld.getBlockMetadata(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ);
             if (aBlock != Blocks.air) {
-                if (Blocks.bedrock.equals(aBlock) || oreVienHeight <= 0) {
+                if (Blocks.bedrock.equals(aBlock) || oreVienHeight < 0) {
                     meetNotHarvestableLayer = true;
                 } else if (foundOre(aBlock, aWorld, pos, tMeta)) {
                     foundOre = true;
@@ -211,7 +211,7 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Pri
                 oreVienHeight--;
             }
             digHole(aBaseMetaTileEntity);
-            checkVisibleOres(aBaseMetaTileEntity);
+            //checkVisibleOres(aBaseMetaTileEntity);
         } else {
             if (torchIdx > -1 && aBaseMetaTileEntity.isServerSide()) {
                 setTorches(aBaseMetaTileEntity);
