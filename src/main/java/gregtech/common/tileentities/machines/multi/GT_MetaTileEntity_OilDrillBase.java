@@ -25,7 +25,7 @@ import net.minecraft.util.StatCollector;
 public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_DrillerBase {
 
     private boolean completedCycle = false;
-    protected boolean isAllowPutPipesToController = true;
+    protected boolean isAllowPutPipesToController = false;
 
     private ArrayList<Chunk> mOilFieldChunks = new ArrayList<Chunk>();
     private int mOilId = 0;
@@ -44,14 +44,14 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
         aNBT.setInteger("mOilId", mOilId);
     }
 
-    protected boolean allowPutPipesToController() {
-        return isAllowPutPipesToController;
-    }
-
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
         mOilId = aNBT.getInteger("mOilId");
+    }
+
+    protected boolean allowPutPipesToController() {
+        return isAllowPutPipesToController;
     }
 
     protected String[] getDescriptionInternal(String tierSuffix) {
@@ -78,6 +78,26 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
 
     protected int getRangeInChunks(){
         return 0;
+    }
+
+    @Override
+    protected boolean workingUpward(ItemStack aStack, int xDrill, int yDrill, int zDrill, int xPipe, int zPipe, int yHead, int oldYHead) {
+        ItemStack pipesInController = getStackInSlot(1);
+        boolean foundPipesStack = false;
+        for(ItemStack itst : getStoredInputs()) {
+            if(!foundPipesStack && itst.isItemEqual(miningPipe)) {
+                foundPipesStack = true;
+                addOutput(itst.copy());
+                depleteInput(itst);
+            }
+        }
+        if(foundPipesStack) return true; // waiting for next cycle
+        if(pipesInController != null && pipesInController.stackSize > 0){
+            addOutput(pipesInController.copy());
+            setInventorySlotContents(1, null);
+            return true; // waiting for next cycle
+        }
+        return super.workingUpward(aStack, xDrill, yDrill, zDrill, xPipe, zPipe, yHead, oldYHead);
     }
 
     @Override
