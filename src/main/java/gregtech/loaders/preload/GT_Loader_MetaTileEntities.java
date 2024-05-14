@@ -1297,7 +1297,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
 
         //ItemList.PrimitiveMiner.set(new GT_MetaTileEntity_PrimitiveSmallOreMiner(1216, "multimachine.primitive_small_ore_miner", "Primitive Small Ore Miner").getStackForm(1));
         ItemList.PrimitiveMiner.set(new GT_MetaTileEntity_PrimitiveMiner(1216, "multimachine.primitive_small_ore_miner", "Primitive Small Ore Miner").getStackForm(1));
-        GT_ModHandler.addCraftingRecipe(ItemList.PrimitiveMiner.get(1L), bitsd, new Object[]{"PSP", "GHG", "SLS", 'S', GT_OreDictUnificator.get(OrePrefixes.gearGt, Materials.Iron, 1L), 'P', OreDictNames.craftingPiston, 'G', ItemList.Casing_Gearbox_Bronze.get(1L), 'H', ItemList.Hull_Bronze.get(1L), 'L', OrePrefixes.pipeLarge.get(Materials.Bronze)});
+        GT_ModHandler.addCraftingRecipe(ItemList.PrimitiveMiner.get(1L), bitsd, new Object[]{"GBG", "BPB", "IBI", 'G', GT_OreDictUnificator.get(OrePrefixes.gearGt, Materials.Stone, 1L), 'B', OrePrefixes.plate.get(Materials.Bronze), 'P', OreDictNames.craftingPiston, 'I', new ItemStack(Blocks.iron_bars,1)});
 
         ItemList.Charcoal_Pile.set(new GT_MetaTileEntity_Charcoal_Pit(1155, "multimachine.charcoalpile", "Charcoal Pile Igniter").getStackForm(1));
         GT_ModHandler.addCraftingRecipe(ItemList.Charcoal_Pile.get(1L), bitsd, new Object[]{"EME", "CCC", 'M', ItemList.Hull_Bronze_Bricks, 'E', OrePrefixes.nugget.get(Materials.WroughtIron), 'C', new ItemStack(Items.flint, 1)});
