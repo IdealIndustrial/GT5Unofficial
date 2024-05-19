@@ -1293,7 +1293,7 @@ public class GT_Loader_MetaTileEntities implements Runnable {
         GT_ModHandler.addCraftingRecipe(ItemList.Machine_Multi_HeatExchanger.get(1L), bitsd, new Object[]{aTextWireCoil, aTextCableHull, aTextWireCoil, 'M', ItemList.Casing_Pipe_Titanium, 'C', OrePrefixes.pipeMedium.get(Materials.Titanium), 'W', ItemList.Electric_Pump_EV});
 
         ItemList.PrimitiveMineDigger.set(new GT_MetaTileEntity_PrimitiveMineDigger(1215, "multimachine.primitive_mine_digger", "Primitive Mine Digger").getStackForm(1));
-        GT_ModHandler.addCraftingRecipe(ItemList.PrimitiveMineDigger.get(1L), bitsd, new Object[]{"SPS", "GHG", "SLS", 'S', GT_OreDictUnificator.get(OrePrefixes.gearGt, Materials.Stone, 1L), 'P', OreDictNames.craftingPiston, 'G', ItemList.Casing_Gearbox_Bronze.get(1L), 'H', ItemList.Hull_Bronze.get(1L), 'L', OrePrefixes.pipeLarge.get(Materials.Bronze)});
+        GT_ModHandler.addCraftingRecipe(ItemList.PrimitiveMineDigger.get(1L), bitsd, new Object[]{"SPS", "LHL", "SPS", 'S', GT_OreDictUnificator.get(OrePrefixes.gearGt, Materials.Stone, 1L), 'P', OreDictNames.craftingPiston, 'G', ItemList.Casing_Gearbox_Bronze.get(1L), 'H', ItemList.Hull_Bronze.get(1L), 'L', new ItemStack(Blocks.ladder,1)});
 
         //ItemList.PrimitiveMiner.set(new GT_MetaTileEntity_PrimitiveSmallOreMiner(1216, "multimachine.primitive_small_ore_miner", "Primitive Small Ore Miner").getStackForm(1));
         ItemList.PrimitiveMiner.set(new GT_MetaTileEntity_PrimitiveMiner(1216, "multimachine.primitive_small_ore_miner", "Primitive Small Ore Miner").getStackForm(1));
