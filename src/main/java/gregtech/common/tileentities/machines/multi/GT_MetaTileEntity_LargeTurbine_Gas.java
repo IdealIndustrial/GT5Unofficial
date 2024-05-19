@@ -38,6 +38,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
         super(aName);
     }
 
+    @Override
     public void onConfigLoad(GT_Config aConfig) {
         super.onConfigLoad(aConfig);
         oxygenFactor = (float)Math.max(1,Math.min(1000, aConfig.get(ConfigCategories.machineconfig, "LargeTurbineGas.oxygenFactor", 28f)));
@@ -65,6 +66,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
     }
 
 
+    @Override
     public String[] getDescription() {
         return new String[]{
             "Controller Block for the Large Gas Turbine",
@@ -143,16 +145,13 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
     @Override
     int fluidIntoPower(ArrayList<FluidStack> aFluids, int aOptFlow, int aBaseEff) {
-        int tEU = 0;
-        int actualOptimalFlow = 0;
         if (aFluids.size() >= 1) {
             float fuelOverload = 0;
             if(mEfficiency >= 10000) {
                 fuelOverload = (mEfficiency - 10000) / 5000f;
-                oxygenConsume = Math.max(1, (int)(((mEUt*mEfficiency)/10000f) / oxygenFactor));
+                oxygenConsume = Math.max(1, (int)(mEUt / (2 * oxygenFactor))); //base eu/t = mEUt/2
                 if(mEfficiency < 12550) {
-                    float overload = 0;
-                    overload = (float)Math.sqrt(fuelOverload);
+                    float overload = (float)Math.sqrt(fuelOverload);
                     oxygenConsume *= overload;
                 }
                 oxygenConsume = Math.max(1, oxygenConsume);
@@ -188,7 +187,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
                 return 0;
             }
             int fuelValue = getFuelValue(firstFuelType);
-            actualOptimalFlow = (int) (aOptFlow / fuelValue);
+            int actualOptimalFlow = (int) (aOptFlow / fuelValue);
             if(fuelOverload > 0) {
                 actualOptimalFlow += Math.round(actualOptimalFlow * fuelOverload);
             }
@@ -196,13 +195,12 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
 
             float remainingFlowFactor = 1.25f;
             int remainingFlow = (int) (actualOptimalFlow * remainingFlowFactor); // Allowed to use up to 125% of optimal flow.  Variable required outside of loop for multi-hatch scenarios.
-            int flow = 0;
             int totalFlow = 0;
 
             int aFluids_sS=aFluids.size();
             for (int i = 0; i < aFluids_sS; i++) {
                 if (aFluids.get(i).isFluidEqual(firstFuelType)) {
-                    flow = aFluids.get(i).amount; // Get all (steam) in hatch
+                    int flow = aFluids.get(i).amount; // Get all (steam) in hatch
                     flow = Math.min(flow, Math.min(remainingFlow, (int) (actualOptimalFlow * 1.25f))); // try to use up to 125% of optimal flow w/o exceeding remainingFlow
                     depleteInput(new FluidStack(aFluids.get(i), flow)); // deplete that amount
                     this.storedFluid = aFluids.get(i).amount;
@@ -211,7 +209,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
                 }
             }
 
-            tEU = (int) (Math.min((float) actualOptimalFlow, totalFlow) * fuelValue);
+            int tEU = (int) (Math.min((float) actualOptimalFlow, totalFlow) * fuelValue);
 
             if (totalFlow != actualOptimalFlow) {
                 float efficiency = 1.0f - Math.abs(((totalFlow - (float) actualOptimalFlow) / actualOptimalFlow));
@@ -223,9 +221,7 @@ public class GT_MetaTileEntity_LargeTurbine_Gas extends GT_MetaTileEntity_LargeT
             } else {
                 tEU = (int)((long)tEU * (long)aBaseEff / 10000L);
             }
-
             return tEU;
-
         }
         return 0;
     }

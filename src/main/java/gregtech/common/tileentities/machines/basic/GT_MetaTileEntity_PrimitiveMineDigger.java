@@ -379,7 +379,7 @@ public class GT_MetaTileEntity_PrimitiveMineDigger extends GT_MetaTileEntity_Pri
     }
 
     /**
-     * Check blocks for Ore
+     * Check 2 blocks for digging for beign Ore
      *
      * @param te
      * @return

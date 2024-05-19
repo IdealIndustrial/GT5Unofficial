@@ -724,8 +724,8 @@ Mixer.addRecipe(null, <liquid:molten.concrete> * 576, [<gregtech:gt.metaitem.01:
 // Saplings to BioChaff
 //recipes.addShapeless(<minecraft:tallgrass>, [<ore:treeSapling>]);
 
-game.setLocalization("ic2.itemCellBiomass", "Industrial Biomass Cell");
-game.setLocalization("ic2.fluidBiomass", "Industrial Biomass");
+// game.setLocalization("ic2.itemCellBiomass", "Industrial Biomass Cell");
+// game.setLocalization("ic2.fluidBiomass", "Industrial Biomass");
 
 // Construction Foam
 Mixer.addRecipe(null, <liquid:ic2constructionfoam> * 8000, [<gregtech:gt.metaitem.01:2896>], <liquid:molten.concrete> * 576, 20, 16);

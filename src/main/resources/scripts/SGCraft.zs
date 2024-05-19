@@ -99,7 +99,7 @@ recipes.addShaped(stargatePowerIC2, [
     [<ore:batteryMaster>, wireTungsten8x, <ore:batteryMaster>],
     [wireTungsten8x, <gregtech:gt.blockmachines:14>, wireTungsten8x],
     [<ore:batteryMaster>, circuitMaster, <ore:batteryMaster>]]);
-NEI.overrideName(stargatePowerIC2, "EU Stargate Power Unit");
+// NEI.overrideName(stargatePowerIC2, "EU Stargate Power Unit");
 
 recipes.remove(irisBlade);
 recipes.remove(irisUpgrade);
@@ -119,4 +119,4 @@ recipes.remove(<SGCraft:sgChevronUpgrade>);
 //Naq Alloy Block to Oredict
 oreDict.blockNaquadahAlloy.add(blockNaqAlloy);
 
-stargateController.displayName = "DHD (Dial Home Device)";
+// stargateController.displayName = "DHD (Dial Home Device)";
