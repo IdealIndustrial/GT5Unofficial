@@ -1,7 +1,5 @@
 package gregtech.api.interfaces.internal;
 
-import gregtech.api.util.GT_Recipe;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,7 +17,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1                        = first Input (not null, and respects StackSize)
      * @param aInput2                        = second Input (not null, and respects StackSize)
-     * @param aOutput                        = Output of the Fusion (can be null, and respects StackSize)
+     * @param aOutput1                        = Output of the Fusion (can be null, and respects StackSize)
      * @param aFusionDurationInTicks         = How many ticks the Fusion lasts (must be > 0)
      * @param aFusionEnergyPerTick           = The EU generated per Tick (can even be negative!)
      * @param aEnergyNeededForStartingFusion = EU needed for heating the Reactor up (must be >= 0)
@@ -31,7 +29,7 @@ public interface IGT_RecipeAdder {
      * Adds a Centrifuge Recipe
      *
      * @param aInput1    must be != null
-     * @param aCellInput this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
+     * @param aInput2    this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
      * @param aOutput1   must be != null
      * @param aOutput2   can be null
      * @param aOutput3   can be null
@@ -66,7 +64,7 @@ public interface IGT_RecipeAdder {
      * Adds a Electrolyzer Recipe
      *
      * @param aInput1    must be != null
-     * @param aCellInput this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
+     * @param aInput2 this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
      * @param aOutput1   must be != null
      * @param aOutput2   can be null
      * @param aOutput3   can be null
@@ -80,7 +78,7 @@ public interface IGT_RecipeAdder {
      * Adds a Electrolyzer Recipe
      *
      * @param aInput1    must be != null
-     * @param aCellInput this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
+     * @param aInput2 this is for the needed Cells, > 0 for Tincellcount, < 0 for negative Fuelcancount, == 0 for nothing
      * @param aOutput1   must be != null
      * @param aOutput2   can be null
      * @param aOutput3   can be null
@@ -95,7 +93,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1   must be != null
      * @param aInput2   must be != null
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      */
     public boolean addChemicalRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput, int aDuration);
@@ -105,7 +103,7 @@ public interface IGT_RecipeAdder {
      *
      * @param aInput1   must be != null
      * @param aInput2   must be != null
-     * @param aOutput1  must be != null
+     * @param aOutput  must be != null
      * @param aDuration must be > 0
      */
     public boolean addChemicalRecipe(ItemStack aInput1, ItemStack aInput2, FluidStack aFluidInput, FluidStack aFluidOutput, ItemStack aOutput, int aDuration);
@@ -237,7 +235,6 @@ public interface IGT_RecipeAdder {
      * @param aInput1   must be != null
      * @param aInput2   can be null
      * @param aOutput1  must be != null
-     * @param aOutput2  can be null
      * @param aDuration must be > 0
      * @param aEUt      should be > 0
      */
@@ -245,7 +242,9 @@ public interface IGT_RecipeAdder {
 
     public boolean addAlloySmelterRecipe(ItemStack aInput1, ItemStack aInput2, ItemStack aOutput1, int aDuration, int aEUt, boolean hidden);
 
-    
+    public default boolean addAlloySmelterRecipe(ItemStack[] aInputs, ItemStack aOutput, int aDuration, int aEUt){
+        return false;
+    };
     /**
      * Adds a CNC-Machine Recipe
      *
