@@ -54,13 +54,13 @@ public class GT_MetaTileEntity_AssemblyLine extends GT_MetaTileEntity_MultiBlock
     public String[] getDescription() {
         return new String[]{"Assembly Line",
             "Size(WxHxD): (5-16)x4x3, various width",
-            "Bottom: Steel Machine Casing (or Maintenance, Input Hatches,",
+            "Bottom: Solid Steel Machine Casing (or Maintenance, Input Hatches,",
             "Input Buses from left to right,  1x Output Bus any place)",
             "Middle: Reinforced Glass, Assembling Line Casing, Reinforced Glass",
             "UpMiddle:  Grate Machine Casing, Assembler Machine Casing,",
             "           Grate Machine Casing         ",
             "           (or Controller or optional Data Access Hatch)",
-            "Top: Steel Casing, 1-2x Energy Hatch",
+            "Top: Solid Steel Machine Casing, 1-2x Energy Hatch",
             "Up to 16 repeating slices, last is Output Bus"};
     }
 
