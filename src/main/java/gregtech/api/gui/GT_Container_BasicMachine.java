@@ -216,8 +216,7 @@ public class GT_Container_BasicMachine extends GT_Container_BasicTank {
                 ((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer = !((GT_MetaTileEntity_BasicMachine) mTileEntity.getMetaTileEntity()).mItemTransfer;
                 return null;
             case 2:
-                if (aMouseclick > 1)
-                    if (machine.getDrainableStack().amount == 0) {
+                if (aMouseclick > 1) {
                         return null;
                     }
                 tResultStack = pickupFluid(machine.getDrainableStack(), aPlayer, aMouseclick == 0);
