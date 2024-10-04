@@ -25,6 +25,7 @@ import net.minecraft.util.StatCollector;
 public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_DrillerBase {
 
     private boolean completedCycle = false;
+    protected boolean isAllowPutPipesToController = false;
 
     private ArrayList<Chunk> mOilFieldChunks = new ArrayList<Chunk>();
     private int mOilId = 0;
@@ -47,6 +48,10 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
         mOilId = aNBT.getInteger("mOilId");
+    }
+
+    protected boolean allowPutPipesToController() {
+        return isAllowPutPipesToController;
     }
 
     protected String[] getDescriptionInternal(String tierSuffix) {
@@ -76,6 +81,26 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     }
 
     @Override
+    protected boolean workingUpward(ItemStack aStack, int xDrill, int yDrill, int zDrill, int xPipe, int zPipe, int yHead, int oldYHead) {
+        ItemStack pipesInController = getStackInSlot(1);
+        boolean foundPipesStack = false;
+        for(ItemStack itst : getStoredInputs()) {
+            if(!foundPipesStack && itst.isItemEqual(miningPipe)) {
+                foundPipesStack = true;
+                addOutput(itst.copy());
+                depleteInput(itst);
+            }
+        }
+        if(foundPipesStack) return true; // waiting for next cycle
+        if(pipesInController != null && pipesInController.stackSize > 0){
+            addOutput(pipesInController.copy());
+            setInventorySlotContents(1, null);
+            return true; // waiting for next cycle
+        }
+        return super.workingUpward(aStack, xDrill, yDrill, zDrill, xPipe, zPipe, yHead, oldYHead);
+    }
+
+    @Override
     protected boolean checkHatches() {
         return !mMaintenanceHatches.isEmpty() && !mOutputHatches.isEmpty() && !mEnergyHatches.isEmpty();
     }
@@ -94,7 +119,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
     protected boolean workingAtBottom(ItemStack aStack, int xDrill, int yDrill, int zDrill, int xPipe, int zPipe, int yHead, int oldYHead) {
         switch (tryLowerPipe(true)) {
             case 0: workState = STATE_DOWNWARD; setElectricityStats(); return true;
-            case 3: workState = STATE_UPWARD; return true;
+            //case 3: workState = STATE_UPWARD; return true; // is it realy need here?
         }
         
         if (reachingVoidOrBedrock() && tryFillChunkList()) {
@@ -105,7 +130,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
                 return true;
             }
         }
-        workState = STATE_UPWARD;
+        //workState = STATE_UPWARD; // is it realy need here?
         return true;
     }
 
@@ -135,7 +160,7 @@ public abstract class GT_MetaTileEntity_OilDrillBase extends GT_MetaTileEntity_D
                 }
             }
 		}
-        return !mOilFieldChunks.isEmpty();		
+        return !mOilFieldChunks.isEmpty();
     }
 
     private FluidStack pumpOil(float speed) {

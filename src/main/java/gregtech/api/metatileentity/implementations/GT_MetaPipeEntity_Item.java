@@ -23,6 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -194,11 +195,11 @@ public class GT_MetaPipeEntity_Item extends MetaPipeEntity implements IMetaTileE
     		byte tSide = GT_Utility.determineWrenchingSide(aSide, aX, aY, aZ);
     		if (!isConnectedAtSide(tSide)) {
     			if (connect(tSide) > 0)
-    				GT_Utility.sendChatToPlayer(aPlayer, trans("214", "Connected"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_214"));
     		}
     		else {
     			disconnect(tSide);
-    			GT_Utility.sendChatToPlayer(aPlayer, trans("215", "Disconnected"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_215"));
     		}
     		return true;
     	}

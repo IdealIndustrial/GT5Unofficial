@@ -1,7 +1,6 @@
 package gregtech.api.util;
 
 import gregtech.GT_Mod;
-import gregtech.api.enums.GT_Values;
 import gregtech.api.interfaces.internal.IGT_CraftingRecipe;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import net.minecraft.enchantment.Enchantment;
@@ -13,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class GT_Shaped_Recipe extends ShapedOreRecipe implements IGT_CraftingRecipe {
+
     public final boolean mDismantleable, mRemovableByGT, mKeepingNBT;
     private final Enchantment[] mEnchantmentsAdded;
     private final int[] mEnchantmentLevelsAdded;
@@ -24,7 +24,7 @@ public class GT_Shaped_Recipe extends ShapedOreRecipe implements IGT_CraftingRec
         mRemovableByGT = aRemovableByGT;
         mKeepingNBT = aKeepingNBT;
         mDismantleable = aDismantleAble;
-        if(mDismantleable&&GT_Mod.gregtechproxy.disassemblerRecipeMapOn && !(aResult.getItem() instanceof GT_MetaGenerated_Tool)) {
+        if (mDismantleable && GT_Mod.gregtechproxy.disassemblerRecipeMapOn && !(aResult.getItem() instanceof GT_MetaGenerated_Tool)) {
             GT_Recipe.GT_Recipe_Map_Disassembler.cacheRecipe(this);
         }
     }
@@ -36,8 +36,9 @@ public class GT_Shaped_Recipe extends ShapedOreRecipe implements IGT_CraftingRec
             for (int i = 0; i < aGrid.getSizeInventory(); i++) {
                 if (aGrid.getStackInSlot(i) != null) {
                     if (tStack != null) {
-                        if ((tStack.hasTagCompound() != aGrid.getStackInSlot(i).hasTagCompound()) || (tStack.hasTagCompound() && !tStack.getTagCompound().equals(aGrid.getStackInSlot(i).getTagCompound())))
+                        if ((tStack.hasTagCompound() != aGrid.getStackInSlot(i).hasTagCompound()) || (tStack.hasTagCompound() && !tStack.getTagCompound().equals(aGrid.getStackInSlot(i).getTagCompound()))) {
                             return false;
+                        }
                     }
                     tStack = aGrid.getStackInSlot(i);
                 }
@@ -54,10 +55,12 @@ public class GT_Shaped_Recipe extends ShapedOreRecipe implements IGT_CraftingRec
             GT_Utility.updateItemStack(rStack);
 
             // Keeping NBT
-            if (mKeepingNBT) for (int i = 0; i < aGrid.getSizeInventory(); i++) {
-                if (aGrid.getStackInSlot(i) != null && aGrid.getStackInSlot(i).hasTagCompound()) {
-                    rStack.setTagCompound((NBTTagCompound) aGrid.getStackInSlot(i).getTagCompound().copy());
-                    break;
+            if (mKeepingNBT) {
+                for (int i = 0; i < aGrid.getSizeInventory(); i++) {
+                    if (aGrid.getStackInSlot(i) != null && aGrid.getStackInSlot(i).hasTagCompound()) {
+                        rStack.setTagCompound((NBTTagCompound) aGrid.getStackInSlot(i).getTagCompound().copy());
+                        break;
+                    }
                 }
             }
 
@@ -65,16 +68,25 @@ public class GT_Shaped_Recipe extends ShapedOreRecipe implements IGT_CraftingRec
             if (GT_ModHandler.isElectricItem(rStack)) {
                 GT_ModHandler.dischargeElectricItem(rStack, Integer.MAX_VALUE, Integer.MAX_VALUE, true, false, true);
                 int tCharge = 0;
-                for (int i = 0; i < aGrid.getSizeInventory(); i++)
+                for (int i = 0; i < aGrid.getSizeInventory(); i++) {
+                    ItemStack it = aGrid.getStackInSlot(i);
+                    if (it != null && it.getTagCompound() != null && it.getTagCompound().hasKey("GT.ToolStats")) {
+                        continue; //do not get charge from tool used for crafting
+                    }
                     tCharge += GT_ModHandler.dischargeElectricItem(aGrid.getStackInSlot(i), Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, true);
-                if (tCharge > 0) GT_ModHandler.chargeElectricItem(rStack, tCharge, Integer.MAX_VALUE, true, false);
+                }
+                if (tCharge > 0) {
+                    GT_ModHandler.chargeElectricItem(rStack, tCharge, Integer.MAX_VALUE, true, false);
+                }
             }
 
             // Saving Ingredients inside the Item.
             if (mDismantleable) {
-                if(!GT_Mod.gregtechproxy.disassemblerRecipeMapOn || (getRecipeOutput().getItem() instanceof GT_MetaGenerated_Tool)){
+                if (!GT_Mod.gregtechproxy.disassemblerRecipeMapOn || (getRecipeOutput().getItem() instanceof GT_MetaGenerated_Tool)) {
                     NBTTagCompound rNBT = rStack.getTagCompound(), tNBT = new NBTTagCompound();
-                    if (rNBT == null) rNBT = new NBTTagCompound();
+                    if (rNBT == null) {
+                        rNBT = new NBTTagCompound();
+                    }
                     for (int i = 0; i < 9; i++) {
                         ItemStack tStack = aGrid.getStackInSlot(i);
                         if (tStack != null && GT_Utility.getContainerItem(tStack, true) == null && !(tStack.getItem() instanceof GT_MetaGenerated_Tool)) {
@@ -91,8 +103,9 @@ public class GT_Shaped_Recipe extends ShapedOreRecipe implements IGT_CraftingRec
             }
 
             // Add Enchantments
-            for (int i = 0; i < mEnchantmentsAdded.length; i++)
+            for (int i = 0; i < mEnchantmentsAdded.length; i++) {
                 GT_Utility.ItemNBT.addEnchantment(rStack, mEnchantmentsAdded[i], EnchantmentHelper.getEnchantmentLevel(mEnchantmentsAdded[i].effectId, rStack) + mEnchantmentLevelsAdded[i]);
+            }
 
             // Update the Stack again
             GT_Utility.updateItemStack(rStack);

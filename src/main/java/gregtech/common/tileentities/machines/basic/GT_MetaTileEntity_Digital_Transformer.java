@@ -6,6 +6,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Transformer;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_Utility;
 import gregtech.common.gui.GT_Container_DigitalTransformer;
 import gregtech.common.gui.GT_GUIContainer_DigitalTransformer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import static gregtech.api.enums.GT_Values.V;
+import static gregtech.api.enums.GT_Values.VN;
 
 
 public class GT_MetaTileEntity_Digital_Transformer extends GT_MetaTileEntity_Transformer {
@@ -31,6 +33,25 @@ public class GT_MetaTileEntity_Digital_Transformer extends GT_MetaTileEntity_Tra
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_Digital_Transformer(mName, mTier, mDescription, mTextures);
     }
+
+    @Override
+    public boolean isGivingInformation(){
+        return true;
+    }
+
+    @Override
+    public String[] getInfoData() {
+        return new String[]{
+                getLocalName(),
+                "Input Ampers",
+                iAmp+"",
+                "Out Voltage",
+                VN[oTier] + " (" + GT_Utility.formatNumbersShort(V[oTier]) + ")",
+                "Out Ampers",
+                oAmp+"",
+        };
+    }
+
 
     public ITexture[][][] getTextureSet(ITexture[] aTextures) {
         ITexture[][][] rTextures = new ITexture[12][17][];

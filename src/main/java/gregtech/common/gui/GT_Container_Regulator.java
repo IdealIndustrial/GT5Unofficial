@@ -12,6 +12,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
 
 import java.util.Iterator;
 
@@ -73,9 +74,9 @@ public class GT_Container_Regulator
             if (aSlotIndex == 28) {
                 ((GT_MetaTileEntity_Regulator) this.mTileEntity.getMetaTileEntity()).bOutput = (!((GT_MetaTileEntity_Regulator) this.mTileEntity.getMetaTileEntity()).bOutput);
                 if (((GT_MetaTileEntity_Regulator) this.mTileEntity.getMetaTileEntity()).bOutput) {
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("116", "Emit Energy to Outputside"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_116"));
                 } else {
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("117", "Don't emit Energy"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_117"));
                 }
                 return null;
             }

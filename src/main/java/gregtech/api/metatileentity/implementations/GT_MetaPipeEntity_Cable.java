@@ -42,6 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -352,10 +353,10 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
         if (GT_Mod.gregtechproxy.gt6Cable && GT_ModHandler.damageOrDechargeItem(aPlayer.inventory.getCurrentItem(), 1, 500, aPlayer)) {
             if(isConnectedAtSide(aWrenchingSide)) {
                 disconnect(aWrenchingSide);
-                GT_Utility.sendChatToPlayer(aPlayer, trans("215", "Disconnected"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_215"));
             }else if(!GT_Mod.gregtechproxy.costlyCableConnection){
                 if (connect(aWrenchingSide) > 0)
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("214", "Connected"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_214"));
             }
             return true;
         }
@@ -366,10 +367,10 @@ public class GT_MetaPipeEntity_Cable extends MetaPipeEntity implements IMetaTile
         if (GT_Mod.gregtechproxy.gt6Cable && GT_ModHandler.damageOrDechargeItem(aPlayer.inventory.getCurrentItem(), 1, 500, aPlayer)) {
             if (isConnectedAtSide(aWrenchingSide)) {
                 disconnect(aWrenchingSide);
-                GT_Utility.sendChatToPlayer(aPlayer, trans("215", "Disconnected"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_215"));
             } else if (!GT_Mod.gregtechproxy.costlyCableConnection || GT_ModHandler.consumeSolderingMaterial(aPlayer)) {
                 if (connect(aWrenchingSide) > 0)
-                    GT_Utility.sendChatToPlayer(aPlayer, trans("214", "Connected"));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_214"));
             }
             return true;
         }

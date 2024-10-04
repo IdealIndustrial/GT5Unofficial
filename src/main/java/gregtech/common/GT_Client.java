@@ -1,8 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) 
-// Source File Name:   GT_Client.java
-
 package gregtech.common;
 
 import codechicken.lib.vec.Rotation;
@@ -16,7 +11,6 @@ import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.ITurnable;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
-import gregtech.api.metatileentity.BaseTileEntity;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_Log;
 import gregtech.api.util.GT_PlayedSound;
@@ -24,8 +18,23 @@ import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.entities.GT_Entity_Arrow;
 import gregtech.common.entities.GT_Entity_Arrow_Potion;
-import gregtech.common.render.*;
+import gregtech.common.render.GT_CapeRenderer;
+import gregtech.common.render.GT_FlaskRenderer;
+import gregtech.common.render.GT_FluidDisplayStackRenderer;
+import gregtech.common.render.GT_MachineRenderer;
+import gregtech.common.render.GT_MetaGenerated_Item_Renderer;
+import gregtech.common.render.GT_MetaGenerated_Tool_Renderer;
+import gregtech.common.render.GT_Renderer_Block;
+import gregtech.common.render.GT_Renderer_Entity_Arrow;
 import ic2.api.tile.IWrenchable;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,14 +49,10 @@ import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 
-import java.net.URL;
-import java.util.*;
-
 // Referenced classes of package gregtech.common:
 //            GT_Proxy
 
-public class GT_Client extends GT_Proxy
-        implements Runnable {
+public class GT_Client extends GT_Proxy implements Runnable {
 
     private static List ROTATABLE_VANILLA_BLOCKS;
 
@@ -129,7 +134,20 @@ public class GT_Client extends GT_Proxy
         });
     }
 
-    private static void drawGrid(DrawBlockHighlightEvent aEvent) {
+    private static boolean checkedForChicken = false;
+
+    private static void drawGrid(DrawBlockHighlightEvent aEvent, boolean showCoverConnections) {
+        if (!checkedForChicken) {
+            try {
+                Class.forName("codechicken.lib.vec.Rotation");
+            } catch (Throwable e) {
+                if (GT_Values.D1) {
+                    e.printStackTrace(GT_Log.err);
+                }
+                return;
+            }
+            checkedForChicken = true;
+        }
         GL11.glPushMatrix();
         GL11.glTranslated(-(aEvent.player.lastTickPosX + (aEvent.player.posX - aEvent.player.lastTickPosX) * (double) aEvent.partialTicks), -(aEvent.player.lastTickPosY + (aEvent.player.posY - aEvent.player.lastTickPosY) * (double) aEvent.partialTicks), -(aEvent.player.lastTickPosZ + (aEvent.player.posZ - aEvent.player.lastTickPosZ) * (double) aEvent.partialTicks));
         GL11.glTranslated((float) aEvent.target.blockX + 0.5F, (float) aEvent.target.blockY + 0.5F, (float) aEvent.target.blockZ + 0.5F);
@@ -147,7 +165,19 @@ public class GT_Client extends GT_Proxy
         GL11.glVertex3d(-.25D, .0D, -.50D);
         GL11.glVertex3d(-.25D, .0D, +.50D);
         TileEntity tTile = aEvent.player.worldObj.getTileEntity(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
-        if (tTile instanceof BaseMetaPipeEntity) {
+        byte tConnections = 0;
+        if (tTile instanceof ICoverable){
+            if (showCoverConnections) {
+                for (byte i = 0; i < 6; i++) {
+                    if ( ((ICoverable) tTile).getCoverIDAtSide(i) > 0)
+                        tConnections = (byte)(tConnections + (1 << i));
+                }
+            }
+            else if (tTile instanceof BaseMetaPipeEntity)
+                tConnections = ((BaseMetaPipeEntity) tTile).mConnections;
+        }
+
+        if (tConnections>0) {
         	int[][] GridSwitchArr = new int[][]{
             	{0, 5, 3, 1, 2, 4},
             	{5, 0, 1, 3, 2, 4},
@@ -155,8 +185,7 @@ public class GT_Client extends GT_Proxy
             	{3, 1, 5, 0, 2, 4},
             	{4, 2, 3, 1, 0, 5},
             	{2, 4, 3, 1, 5, 0},
-            }; 
-        	int tConnections = ((BaseMetaPipeEntity) tTile).mConnections;
+            };
         	for (byte i = 0; i < 6; i++) {
         		if ((tConnections & (1 << i)) != 0) {
         			switch (GridSwitchArr[aEvent.target.sideHit][i]) {
@@ -215,7 +244,12 @@ public class GT_Client extends GT_Proxy
         GL11.glEnd();
         GL11.glPopMatrix();
     }
-    
+
+    private static void drawGrid(DrawBlockHighlightEvent aEvent) {
+        drawGrid(aEvent, false);
+    }
+
+
     @SubscribeEvent
     public void manipulateDensity(EntityViewRenderEvent.FogDensity event) {
     	if(GT_Pollution.mPlayerPollution > (GT_Mod.gregtechproxy.mPollutionSmogLimit)){    	
@@ -254,22 +288,27 @@ public class GT_Client extends GT_Proxy
     	}
     }
 
+    @Override
     public boolean isServerSide() {
         return true;
     }
 
+    @Override
     public boolean isClientSide() {
         return true;
     }
 
+    @Override
     public boolean isBukkitSide() {
         return false;
     }
 
+    @Override
     public EntityPlayer getThePlayer() {
         return Minecraft.getMinecraft().thePlayer;
     }
 
+    @Override
     public int addArmor(String aPrefix) {
         return RenderingRegistry.addNewArmourRendererPrefix(aPrefix);
     }
@@ -381,10 +420,10 @@ public class GT_Client extends GT_Proxy
             }
             ArrayList<GT_PlayedSound> tList = new ArrayList();
             for (Map.Entry<GT_PlayedSound, Integer> tEntry : GT_Utility.sPlayedSoundMap.entrySet()) {
-                if (tEntry.getValue().intValue() < 0) {//Integer -> Integer -> int? >_<, fix
+                if (tEntry.getValue() < 0) {//Integer -> Integer -> int? >_<, fix
                     tList.add(tEntry.getKey());
                 } else {
-                    tEntry.setValue(Integer.valueOf(tEntry.getValue().intValue() - 1));
+                    tEntry.setValue(tEntry.getValue() - 1);
                 }
             }
             GT_PlayedSound tKey;
@@ -420,28 +459,48 @@ public class GT_Client extends GT_Proxy
 
     @SubscribeEvent
     public void onDrawBlockHighlight(DrawBlockHighlightEvent aEvent) {
-        if (GT_Utility.isStackValid(aEvent.currentItem)) {
-            Block aBlock = aEvent.player.worldObj.getBlock(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
-            TileEntity aTileEntity = aEvent.player.worldObj.getTileEntity(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
-            try {
-                Class.forName("codechicken.lib.vec.Rotation");
-                if (((aTileEntity instanceof BaseMetaPipeEntity)) && (((ICoverable) aTileEntity).getCoverIDAtSide((byte) aEvent.target.sideHit) == 0) && ((GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sCovers.keySet())) || (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sCrowbarList)) || (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sWireCutterList)) || (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sScrewdriverList))|| GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sSolderingToolList))) {
-                    drawGrid(aEvent);
-                    return;
+        Block aBlock = aEvent.player.worldObj.getBlock(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
+        TileEntity aTileEntity = aEvent.player.worldObj.getTileEntity(aEvent.target.blockX, aEvent.target.blockY, aEvent.target.blockZ);
+
+        if (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sWrenchList))
+        {
+            if (aTileEntity instanceof ITurnable || ROTATABLE_VANILLA_BLOCKS.contains(aBlock) || aTileEntity instanceof IWrenchable)
+                drawGrid(aEvent, false);
+            return;
+        }
+
+        if (!(aTileEntity instanceof ICoverable))
+            return;
+
+        if (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sWireCutterList) ||
+                GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sSolderingToolList) )
+        {
+            if (((ICoverable) aTileEntity).getCoverIDAtSide((byte) aEvent.target.sideHit) == 0)
+                drawGrid(aEvent, false);
+            return;
+        }
+
+        if ((aEvent.currentItem == null && aEvent.player.isSneaking()) ||
+                GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sCrowbarList) ||
+                GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sScrewdriverList))
+        {
+            boolean found = false;
+            if (((ICoverable) aTileEntity).getCoverIDAtSide((byte) aEvent.target.sideHit) == 0) {
+                for (byte i = 0; i < 6; i++) {
+                    if (((ICoverable) aTileEntity).getCoverIDAtSide(i) > 0) {
+                        drawGrid(aEvent, true);
+                        found = true;
+                    }
                 }
-                if ((aTileEntity instanceof ITurnable || ROTATABLE_VANILLA_BLOCKS.contains(aBlock) || aTileEntity instanceof IWrenchable) && GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sWrenchList)) {
-                    drawGrid(aEvent);
-                    return;
-                }
-                if (aTileEntity instanceof BaseTileEntity && (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sWireCutterList) || GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sSolderingToolList))) {
-                	drawGrid(aEvent);
-                	return;
-            	}
-            } catch (Throwable e) {
-                if (GT_Values.D1) {
-                    e.printStackTrace(GT_Log.err);
-                }
+                if(!found) drawGrid(aEvent, false);
+                return;
             }
+        }
+
+        if (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sCovers.keySet()) || GT_Utility.isItemCell(aEvent.currentItem))
+        {
+            if (((ICoverable) aTileEntity).getCoverIDAtSide((byte) aEvent.target.sideHit) == 0)
+                drawGrid(aEvent, true);
         }
     }
 
@@ -449,9 +508,6 @@ public class GT_Client extends GT_Proxy
     public void receiveRenderEvent(net.minecraftforge.client.event.RenderPlayerEvent.Pre aEvent) {
         if (GT_Utility.getFullInvisibility(aEvent.entityPlayer)) {
             aEvent.setCanceled(true);
-            return;
-        } else {
-            return;
         }
     }
 
@@ -551,6 +607,7 @@ public class GT_Client extends GT_Proxy
         }
     }
 
+    @Override
     public void doSonictronSound(ItemStack aStack, World aWorld, double aX, double aY, double aZ) {
         if (GT_Utility.isStackInvalid(aStack))
             return;

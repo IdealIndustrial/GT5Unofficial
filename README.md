@@ -11,6 +11,7 @@ GT5-II-edition is modified version of GT5-Unofficial. Ideal Industrial Modpack's
 
 Builds can be found on the [II Modpack's discord testing channel](https://discord.gg/jssMtff)
 and in [II Modpack release](https://yadi.sk/d/y6jW8SH6mjuAV)
+and [directly from git:](https://github.com/IdealIndustrial/GT5Unofficial/releases/download/1.19.0/v1.19.0.zip) 
 
 ## Installation
 

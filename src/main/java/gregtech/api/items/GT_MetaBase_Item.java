@@ -28,8 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static gregtech.api.enums.GT_Values.D1;
-import static gregtech.api.enums.GT_Values.V;
+import static gregtech.api.enums.GT_Values.*;
 
 public abstract class GT_MetaBase_Item extends GT_Generic_Item implements ISpecialElectricItem, IElectricItemManager, IFluidContainerItem {
     /* ---------- CONSTRUCTOR AND MEMBER VARIABLES ---------- */

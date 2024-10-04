@@ -12,6 +12,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
 
@@ -78,9 +79,9 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
         if(getBaseMetaTileEntity().isServerSide()){
             mAutoOutput = !mAutoOutput;
             if(mAutoOutput)
-                GT_Utility.sendChatToPlayer(aPlayer,"Automatic output enabled");
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_089").appendSibling(new ChatComponentTranslation( "Interaction_DESCRIPTION_Index_088")));
             else
-                GT_Utility.sendChatToPlayer(aPlayer,"Automatic output disabled");
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_089").appendSibling(new ChatComponentTranslation( "Interaction_DESCRIPTION_Index_087")));
         }
     }
 
@@ -116,15 +117,15 @@ public class GT_MetaTileEntity_Hatch_OutputBus extends GT_MetaTileEntity_Hatch {
     public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
         switch (mTier) {
             case 0:
-                return new GT_GUIContainer_1by1(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_1by1(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"));
             case 1:
-                return new GT_GUIContainer_2by2(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_2by2(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"));
             case 2:
-                return new GT_GUIContainer_3by3(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_3by3(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"));
             case 3:
-                return new GT_GUIContainer_4by4(aPlayerInventory, aBaseMetaTileEntity, "Output Bus");
+                return new GT_GUIContainer_4by4(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"));
             default:
-                return new GT_GUIContainer_NbyN(aPlayerInventory, aBaseMetaTileEntity, "Output Bus", mTier<=6?mTier+1:8);
+                return new GT_GUIContainer_NbyN(aPlayerInventory, aBaseMetaTileEntity, trans("220","Output Bus"), mTier<=6?mTier+1:8);
         }
     }
 

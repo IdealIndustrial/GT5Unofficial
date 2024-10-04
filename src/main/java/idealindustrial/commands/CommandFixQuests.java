@@ -3,6 +3,7 @@ package idealindustrial.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
@@ -23,7 +24,8 @@ public class CommandFixQuests extends CommandBase implements ICommandSender {
 
     @Override
     public void processCommand(ICommandSender ics, String[] args){
-        MinecraftServer.getServer().getCommandManager().executeCommand(this,"bq_admin default load");
+        int res = MinecraftServer.getServer().getCommandManager().executeCommand(this,"bq_admin default load");
+        ics.addChatMessage(new ChatComponentText("updating complete: " + res));
     }
 
     @Override

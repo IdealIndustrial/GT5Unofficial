@@ -18,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -47,7 +48,7 @@ public class Behaviour_Prospecting
       byte aMeta = (byte) aWorld.getBlockMetadata(aX, aY, aZ);
         ItemData tAssotiation = GT_OreDictUnificator.getAssociation(new ItemStack(aBlock, 1, aMeta));
         if ((tAssotiation != null) && (tAssotiation.mPrefix.toString().startsWith("ore"))){
-        	GT_Utility.sendChatToPlayer(aPlayer, trans("100","This is ") + tAssotiation.mMaterial.mMaterial.mDefaultLocalName + trans("101"," Ore."));
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_100",tAssotiation.mMaterial.mMaterial.mDefaultLocalName).appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_101")));
         	GT_Utility.sendSoundToPlayers(aWorld, (String) GregTech_API.sSoundList.get(Integer.valueOf(1)), 1.0F, -1.0F, aX, aY, aZ);	
         	return true;
 	    	}
@@ -75,19 +76,19 @@ public class Behaviour_Prospecting
 		        	
 					tBlock = aWorld.getBlock(tX, tY, tZ);
 			    	if (tBlock == Blocks.lava || tBlock == Blocks.flowing_lava) {
-			    		GT_Utility.sendChatToPlayer(aPlayer, trans("102","There is Lava behind this Rock."));
+                        aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_102"));
 				    	break;
 			    	}
 			    	if (tBlock instanceof BlockLiquid || tBlock instanceof IFluidBlock) {
-			    		GT_Utility.sendChatToPlayer(aPlayer, trans("103","There is a Liquid behind this Rock."));
+                        aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_103"));
 				    	break;
 					}
 			    	if (tBlock == Blocks.monster_egg || !GT_Utility.hasBlockHitBox(aWorld, tX, tY, tZ)) {
-			    		GT_Utility.sendChatToPlayer(aPlayer, trans("104","There is an Air Pocket behind this Rock."));
+                        aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_104"));
 				    	break;
 			    	}
 			    	if (tBlock != aBlock) {
-			    		if (i < 4) GT_Utility.sendChatToPlayer(aPlayer, trans("105","Material is changing behind this Rock."));
+			    		if (i < 4) aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_105"));
 				    	break;
 			    	}
 			    }
@@ -103,7 +104,7 @@ public class Behaviour_Prospecting
                         if ((tTileEntity instanceof GT_TileEntity_Ores)) {
                             Materials tMaterial = GregTech_API.sGeneratedMaterials[(((GT_TileEntity_Ores) tTileEntity).mMetaData % 1000)];
                             if ((tMaterial != null) && (tMaterial != Materials._NULL)) {
-                                GT_Utility.sendChatToPlayer(aPlayer, trans("106","Found traces of ") + tMaterial.mDefaultLocalName + trans("101"," Ore."));
+                                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_106",tMaterial.mDefaultLocalName).appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_101")));
                                 return true;
                             }
                         }
@@ -111,12 +112,12 @@ public class Behaviour_Prospecting
                         tMetaID = aWorld.getBlockMetadata(tX, tY, tZ);
                         tAssotiation = GT_OreDictUnificator.getAssociation(new ItemStack(tBlock, 1, tMetaID));
                         if ((tAssotiation != null) && (tAssotiation.mPrefix.toString().startsWith("ore"))) {
-                            GT_Utility.sendChatToPlayer(aPlayer, trans("106","Found traces of ") + tAssotiation.mMaterial.mMaterial.mDefaultLocalName + trans("101"," Ore."));
+                            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_106",tAssotiation.mMaterial.mMaterial.mDefaultLocalName).appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_101")));
                             return true;
                         }
                     }
 				}
-				GT_Utility.sendChatToPlayer(aPlayer, trans("107","No Ores found."));
+                    aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_107"));
 	    		return true;
 		    }
         }

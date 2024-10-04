@@ -33,6 +33,14 @@ public class GT_GUIContainer_BasicMachine extends GT_GUIContainerMetaTile_Machin
         mNEI = aNEI;
     }
 
+    public GT_GUIContainer_BasicMachine(GT_Container_BasicMachine aContainer, String aName, String aTextureFile, String aNEI) {
+        super(aContainer, RES_PATH_GUI + "basicmachines/" + aTextureFile);
+        mProgressBarDirection = 0;
+        mProgressBarAmount = 1;
+        mName = aName;
+        mNEI = aNEI;
+    }
+
     @Override
     public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);

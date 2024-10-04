@@ -72,4 +72,8 @@ public class GT_MetaTileEntity_LargeBoiler_Steel
     int runtimeBoost(int mTime) {
         return mTime * 150 / 100;
     }
+
+    public long getOxygenPerOperation(){
+        return 0;
+    }
 }

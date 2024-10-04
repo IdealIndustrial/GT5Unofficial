@@ -49,7 +49,7 @@ public class GT_Generic_Item extends Item implements IProjectileItem {
         if (GT_Utility.isStringValid(aEnglishTooltip))
             GT_LanguageManager.addStringLocalization(mTooltip = mName + ".tooltip_main", aEnglishTooltip, aWriteToolTipIntoLangFile);
         else mTooltip = null;
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
         GameRegistry.registerItem(this, mName, MOD_ID);
         BlockDispenser.dispenseBehaviorRegistry.putObject(this, new GT_Item_Dispense());
     }

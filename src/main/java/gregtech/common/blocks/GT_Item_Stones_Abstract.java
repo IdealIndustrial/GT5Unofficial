@@ -17,7 +17,7 @@ public class GT_Item_Stones_Abstract
         super(par1);
         setMaxDamage(0);
         setHasSubtypes(true);
-        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS);
+        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS.get());
     }
 
     public String getUnlocalizedName(ItemStack aStack) {

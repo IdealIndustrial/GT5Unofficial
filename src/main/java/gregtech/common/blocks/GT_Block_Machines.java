@@ -54,7 +54,7 @@ public class GT_Block_Machines
         setHardness(1.0F);
         setResistance(10.0F);
         setStepSound(soundTypeMetal);
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
         this.isBlockContainer = true;
     }
 
@@ -300,7 +300,7 @@ public class GT_Block_Machines
         		if(!GT_Utility.isStackInList(tCurrentItem, GregTech_API.sScrewdriverList) && !GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWrenchList) && !GT_Utility.isStackInList(tCurrentItem, GregTech_API.sWireCutterList) && !GT_Utility.isStackInList(tCurrentItem, GregTech_API.sSolderingToolList)){
         			return false;
         		}
-        	}else {return false;}
+        	}
         }
         if ((tTileEntity instanceof IGregTechTileEntity)) {
             if (((IGregTechTileEntity) tTileEntity).getTimer() < 50L) {

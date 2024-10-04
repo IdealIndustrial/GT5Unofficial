@@ -2,6 +2,7 @@ package gregtech.common.tileentities.machines.multi;
 
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
@@ -56,8 +57,9 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 "1x Energy Hatch (Any casing)",
                 "Robust Tungstensteel Machine Casings for the rest (16 at least!)",
                 "Place up to 16 Single Block GT Machines into the Controller Inventory",
-                "Screwdriver rightclick to process all buses separately",
-                "Screwdriver rightclick while sneaking enables fluid autocanning"};
+                "Screwdriver right click to process all buses separately",
+                "Screwdriver right click while sneaking enables fluid autocanning",
+                "Right click with wire cutter to toggle recipe conflicts resolving"};
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
@@ -154,12 +156,14 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
             return GT_Recipe.GT_Recipe_Map.sDistilleryRecipes;
         } else if (tmp.startsWith("slicer")) {
             return GT_Recipe.GT_Recipe_Map.sSlicerRecipes;
-        } else if (tmp.startsWith("amplifier")) {
+        } else if (tmp.startsWith("amplifab")) {
             return GT_Recipe.GT_Recipe_Map.sAmplifiers;
         } else if (tmp.startsWith("circuitassembler")) {
             return GT_Recipe.GT_Recipe_Map.sCircuitAssemblerRecipes;
         } else if (tmp.startsWith("filter")) {
-            return GT_Recipe.GT_Recipe_Map.sFilterRecipes;            
+            return GT_Recipe.GT_Recipe_Map.sFilterRecipes;
+        } else if (tmp.startsWith("rockbreaker")) {
+            return GT_Recipe.GT_Recipe_Map.sRockBreakerRecipes;            
         }
         return null;
     }
@@ -226,7 +230,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                     i = 0;
                     tInputs = tBus.mInventory;
                     tInputList = new ArrayList<>(Arrays.asList(tInputs));
-                    tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                    tRecipe = findRecipe(map, mLastRecipe, tInputs, tFluids, GT_Values.V[tTier]);
                     if(tRecipe == null && processFluidCells){
                         for(FluidStack tFluid : tFluids){
                             if(tFluid.amount%1000!=0)
@@ -237,7 +241,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                         for(int q = 0; q < s; q++)
                             tInputList.add(GT_ModHandler.getIC2Item("cell", 64));
                         tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
-                        tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                        tRecipe = findRecipe(map, mLastRecipe, tInputs, tFluids, V[tTier]);
                         if(tRecipe==null||tRecipe.mOutputs.length>0&&GT_Utility.areStacksEqual(tRecipe.mOutputs[0],GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L),true))
                             continue a;
                     }
@@ -260,7 +264,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 if(!tSucceed)
                     return false;
             }else {
-                tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                tRecipe = findRecipe(map, mLastRecipe, tInputs, tFluids, V[tTier]);
                 if(tRecipe == null && processFluidCells) {
                     for (FluidStack tFluid : tFluids) {
                         if (tFluid.amount % 1000 != 0)
@@ -271,7 +275,7 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                     for (int q = 0; q < s; q++)
                         tInputList.add(GT_ModHandler.getIC2Item("cell", 64));
                     tInputs = (ItemStack[]) tInputList.toArray(new ItemStack[tInputList.size()]);
-                    tRecipe = map.findRecipe(getBaseMetaTileEntity(), mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
+                    tRecipe = findRecipe(map, mLastRecipe, tInputs, tFluids, V[tTier]);
                     if (tRecipe == null || tRecipe.mOutputs.length > 0 && GT_Utility.areStacksEqual(tRecipe.mOutputs[0], GT_ModHandler.getIC2Item("electrolyzedWaterCell", 1L), true))
                         return false;
                 }
@@ -370,13 +374,32 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
             tOut = tSList.toArray(new ItemStack[tSList.size()]);
             this.mOutputItems = tOut;
             this.mOutputFluids = tFOuts.toArray(new FluidStack[tFOuts.size()]);
+            if (tRecipe.mSpecialValue == -200) {
+                for (int k = 0; k < mOutputItems.length; k++) {
+                    if (mOutputItems[k] != null && getBaseMetaTileEntity().getRandomNumber(10000) > mCleanroom.mEfficiency) {
+                        mOutputItems[k] = null;
+                    }
+                }
+            }
             updateSlots();
             return true;
 
         }
         return false;
     }
-    
+
+    @Override
+    protected GT_Recipe findRecipe(GT_Recipe.GT_Recipe_Map map, GT_Recipe aLastRecipe, ItemStack[] aInputs, FluidStack[] aFluids, long aVoltage) {
+        GT_Recipe recipe = super.findRecipe(map, aLastRecipe, aInputs, aFluids, aVoltage);
+        if (recipe == null) {
+            return recipe;
+        }
+        if (recipe.mSpecialValue == -200 && (mCleanroom == null || mCleanroom.mEfficiency == 0)) {
+            return null;
+        }
+        return recipe;
+    }
+
     public static ItemStack[] clean(final ItemStack[] v) {
         List<ItemStack> list = new ArrayList<ItemStack>(Arrays.asList(v));
         list.removeAll(Collections.singleton(null));
@@ -445,6 +468,8 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
                 GT_Utility.sendChatToPlayer(aPlayer, "Processing all buses together");
         }
     }
+
+
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
@@ -564,4 +589,8 @@ public class GT_MetaTileEntity_ProcessingArray extends GT_MetaTileEntity_MultiBl
     }
 
 
+    @Override
+    protected boolean canHaveRecipeConflicts() {
+        return true;
+    }
 }

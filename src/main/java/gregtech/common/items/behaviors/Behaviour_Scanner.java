@@ -19,6 +19,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -66,7 +67,7 @@ public class Behaviour_Scanner
         if (nbtTagCompound == null)
             nbtTagCompound = new NBTTagCompound();
         int mode = (nbtTagCompound.getInteger("sMode") + 1) % ScanModes.values().length;
-        GT_Utility.sendChatToPlayer(aPlayer, "Scanning mode changed to " + ScanModes.values()[mode]);
+        aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_223", ScanModes.values()[mode]));
         nbtTagCompound.setInteger("sMode", mode);
         aStack.setTagCompound(nbtTagCompound);
         return aStack;

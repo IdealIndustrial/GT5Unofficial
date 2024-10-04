@@ -43,7 +43,7 @@ public class GT_Block_Reinforced extends GT_Generic_Block {
             Textures.BlockIcons.CASING_BLOCKS[(i + 80)] = new GT_CopiedBlockTexture(this, 6, i);
         }
         setStepSound(soundTypeStone);
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Bronzeplate Reinforced Block");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".1.name", "Iridium-Tungstensteel Reinforced Block");
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".2.name", "Plascrete Block");
@@ -121,7 +121,7 @@ public class GT_Block_Reinforced extends GT_Generic_Block {
             return 200.0F;
         }
         if (tMeta == 2) {
-            return 40.0F;
+            return 10.0F;
         }
         if (tMeta == 3) {
             return 100.0F;

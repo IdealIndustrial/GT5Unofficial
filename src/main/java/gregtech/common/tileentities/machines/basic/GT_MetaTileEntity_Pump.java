@@ -21,7 +21,7 @@ public class GT_MetaTileEntity_Pump extends GT_MetaTileEntity_BasicDrillerBase {
 
 
     public GT_MetaTileEntity_Pump(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID,aName,aNameRegional,aTier,new String[]{"The best way to empty Oceans!",
+        super(aID,aName,aNameRegional,aTier,new String[]{"The best way to empty Oceans of lava!",
                         "Pumping Area: " + (RADIUS[aTier]* 2 + 1) + "x" + (RADIUS[aTier] * 2 + 1),
                 "Uses: "+ENERGY[aTier]+" EU per tick",
                 "Pumps one fluid block each "+SPEED[aTier]+" ticks"}

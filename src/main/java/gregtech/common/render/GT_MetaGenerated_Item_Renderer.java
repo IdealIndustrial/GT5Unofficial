@@ -1,9 +1,14 @@
 package gregtech.common.render;
 
+import gregtech.api.GregTech_API;
+import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.items.GT_MetaGenerated_Item;
 import gregtech.api.util.GT_Utility;
+import java.awt.Color;
+import java.util.Iterator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -15,17 +20,24 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Iterator;
+public class GT_MetaGenerated_Item_Renderer implements IItemRenderer {
+    
+    private static final boolean renderMaterialsIconTextEnabled = GregTech_API.sMaterialProperties.get("general", "MaterialIconTextEnable", true);
+    private static final int renderMaterialsIconTextColor = parseColor(GregTech_API.sMaterialProperties.get("general", "MaterialIconTextColor", "0,0,0"));
 
-public class GT_MetaGenerated_Item_Renderer
-        implements IItemRenderer {
     public GT_MetaGenerated_Item_Renderer() {
         GT_MetaGenerated_Item tItem;
         for (Iterator i$ = GT_MetaGenerated_Item.sInstances.values().iterator(); i$.hasNext(); MinecraftForgeClient.registerItemRenderer(tItem, this)) {
             tItem = (GT_MetaGenerated_Item) i$.next();
         }
     }
+    
+    private static int parseColor(String rgb){
+        String[] c = rgb.split(",");
+        return new Color(Integer.parseInt(c[0]), Integer.parseInt(c[1]), Integer.parseInt(c[2])).getRGB();
+    }
 
+    @Override
     public boolean handleRenderType(ItemStack aStack, IItemRenderer.ItemRenderType aType) {
         if ((GT_Utility.isStackInvalid(aStack)) || (aStack.getItemDamage() < 0)) {
             return false;
@@ -33,6 +45,7 @@ public class GT_MetaGenerated_Item_Renderer
         return (aType == IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON) || (aType == IItemRenderer.ItemRenderType.INVENTORY) || (aType == IItemRenderer.ItemRenderType.EQUIPPED) || (aType == IItemRenderer.ItemRenderType.ENTITY);
     }
 
+    @Override
     public boolean shouldUseRenderHelper(IItemRenderer.ItemRenderType aType, ItemStack aStack, IItemRenderer.ItemRendererHelper aHelper) {
         if (GT_Utility.isStackInvalid(aStack)) {
             return false;
@@ -40,6 +53,7 @@ public class GT_MetaGenerated_Item_Renderer
         return aType == IItemRenderer.ItemRenderType.ENTITY;
     }
 
+    @Override
     public void renderItem(IItemRenderer.ItemRenderType type, ItemStack aStack, Object... data) {
         if (GT_Utility.isStackInvalid(aStack)) {
             return;
@@ -49,7 +63,6 @@ public class GT_MetaGenerated_Item_Renderer
             return;
         }
         GT_MetaGenerated_Item aItem = (GT_MetaGenerated_Item) aStack.getItem();
-
 
         GL11.glEnable(3042);
         if (type == IItemRenderer.ItemRenderType.ENTITY) {
@@ -118,19 +131,19 @@ public class GT_MetaGenerated_Item_Renderer
         } else {
             IIcon tIcon;
             if (aItem.mIconList[(aMetaData - aItem.mOffset)].length > 1) {
-                Long[] tStats = (Long[]) aItem.mElectricStats.get(Short.valueOf(aMetaData));
+                Long[] tStats = (Long[]) aItem.mElectricStats.get(aMetaData);
 
-                if ((tStats != null) && (tStats[3].longValue() < 0L)) {
+                if ((tStats != null) && (tStats[3] < 0L)) {
                     long tCharge = aItem.getRealCharge(aStack);
 
                     if (tCharge <= 0L) {
                         tIcon = aItem.mIconList[(aMetaData - aItem.mOffset)][1];
                     } else {
 
-                        if (tCharge >= tStats[0].longValue()) {
+                        if (tCharge >= tStats[0]) {
                             tIcon = aItem.mIconList[(aMetaData - aItem.mOffset)][8];
                         } else {
-                            tIcon = aItem.mIconList[(aMetaData - aItem.mOffset)][(7 - (int) java.lang.Math.max(0L, java.lang.Math.min(5L, (tStats[0].longValue() - tCharge) * 6L / tStats[0].longValue())))];
+                            tIcon = aItem.mIconList[(aMetaData - aItem.mOffset)][(7 - (int) java.lang.Math.max(0L, java.lang.Math.min(5L, (tStats[0] - tCharge) * 6L / tStats[0])))];
                         }
                     }
                 } else {
@@ -148,5 +161,22 @@ public class GT_MetaGenerated_Item_Renderer
             }
         }
         GL11.glDisable(3042);
+        //render Material info for icons
+        if (!renderMaterialsIconTextEnabled || !type.equals(IItemRenderer.ItemRenderType.INVENTORY)){
+            return;
+        }
+        if (aStack.getIconIndex().getIconName().contains("materialicons")) {
+            String boldFlag = "§l";
+            Materials tMaterial = GregTech_API.sGeneratedMaterials[aStack.getItem().getDamage(aStack) % 1000];
+            String text = "";
+            if (tMaterial != null) {
+                text = tMaterial.name();
+                text = text.substring(0, 2);
+            }
+            GL11.glTranslatef(0, 0, 0.01f);
+            GL11.glScalef(0.7F, 0.7F, 0.7F);
+            FontRenderer fnt = Minecraft.getMinecraft().fontRenderer;
+            fnt.drawString(boldFlag + text, 10, 0, renderMaterialsIconTextColor);
+        }
     }
 }

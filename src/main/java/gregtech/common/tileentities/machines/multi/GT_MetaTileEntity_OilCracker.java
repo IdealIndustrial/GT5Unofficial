@@ -1,6 +1,7 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
@@ -44,7 +45,8 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
                 "1x Maintenance Hatch (Any casing)",
                 "1x Energy Hatch (Any casing)",
                 "Clean Stainless Steel Machine Casings for the rest (18 at least!)",
-                "Input/Output Hatches must be on opposite sides"};
+                "Input/Output Hatches must be on opposite sides",
+                "Right click with wire cutter to toggle recipe conflicts resolving"};
     }
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
@@ -65,10 +67,8 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
         FluidStack[] tFluidInputs = tInputList.toArray(new FluidStack[tInputList.size()]);
         long tVoltage = getMaxInputVoltage();
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-
-        GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sCrakingRecipes.findRecipe(
-        		getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], tFluidInputs ,new ItemStack[]{mInventory[1]});
-        if (tRecipe != null && tRecipe.isRecipeInputEqual(true, tFluidInputs, new ItemStack[]{mInventory[1]})) {
+        GT_Recipe tRecipe = findRecipe(GT_Recipe.GT_Recipe_Map.sCrakingRecipes, null, new ItemStack[]{mInventory[1]}, tFluidInputs, GT_Values.V[tTier]);
+        if (tRecipe != null && tRecipe.isRecipeInputEqual(true, tFluidInputs, mInventory[1])) {
             this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
             this.mEfficiencyIncrease = 10000;
             this.mEUt = tRecipe.mEUt;
@@ -298,5 +298,10 @@ public class GT_MetaTileEntity_OilCracker extends GT_MetaTileEntity_MultiBlockBa
     	} else {
     		return inputHatch.getBaseMetaTileEntity().getZCoord() == this.controllerZ;
     	}
+    }
+
+    @Override
+    protected boolean canHaveRecipeConflicts() {
+        return true;
     }
 }

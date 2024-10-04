@@ -20,7 +20,7 @@ public class GT_CoolantCell_Item
         this.setMaxDamage(100);
         setNoRepair();
         this.heatStorage = aMaxStore;
-        this.setCreativeTab(GregTech_API.TAB_GREGTECH);
+        this.setCreativeTab(GregTech_API.TAB_GREGTECH.get());
     }
 
     protected static int getHeatOfStack(ItemStack aStack) {

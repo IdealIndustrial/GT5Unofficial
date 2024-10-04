@@ -7,6 +7,7 @@ import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.gui.GT_Container_MultiMachine;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
+import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.items.GT_MetaGenerated_Tool;
@@ -14,42 +15,53 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
+import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Pollution;
 import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_Cleanroom;
+import java.util.ArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.ArrayList;
 
 import static gregtech.api.enums.GT_Values.V;
 
 public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
 
     public static boolean disableMaintenance;
-    public boolean mMachine = false, mWrench = false, mScrewdriver = false, mSoftHammer = false, mHardHammer = false, mSolderingTool = false, mCrowbar = false, mRunningOnLoad = false;
+    public boolean mMachine = false, mWrench = false, mScrewdriver = false, mSoftHammer = false, mHardHammer = false, mSolderingTool = false, mCrowbar = false, mRunningOnLoad = false, mResolveRecipeConflicts;
     public int mPollution = 0, mProgresstime = 0, mMaxProgresstime = 0, mEUt = 0, mEfficiencyIncrease = 0, mUpdate = 0, mStartUpCheck = 100, mRuntime = 0, mEfficiency = 0;
     public ItemStack[] mOutputItems = null;
     public FluidStack[] mOutputFluids = null;
     public String mNEI;
-        public int damageFactorLow = 5;
+    public int damageFactorLow = 5;
     public float damageFactorHigh = 0.6f;
+    public GT_MetaTileEntity_Cleanroom mCleanroom = null;
 
-    public ArrayList<GT_MetaTileEntity_Hatch_Input> mInputHatches = new ArrayList<GT_MetaTileEntity_Hatch_Input>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Output> mOutputHatches = new ArrayList<GT_MetaTileEntity_Hatch_Output>();
-    public ArrayList<GT_MetaTileEntity_Hatch_InputBus> mInputBusses = new ArrayList<GT_MetaTileEntity_Hatch_InputBus>();
-    public ArrayList<GT_MetaTileEntity_Hatch_OutputBus> mOutputBusses = new ArrayList<GT_MetaTileEntity_Hatch_OutputBus>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Dynamo> mDynamoHatches = new ArrayList<GT_MetaTileEntity_Hatch_Dynamo>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Muffler> mMufflerHatches = new ArrayList<GT_MetaTileEntity_Hatch_Muffler>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Energy> mEnergyHatches = new ArrayList<GT_MetaTileEntity_Hatch_Energy>();
-    public ArrayList<GT_MetaTileEntity_Hatch_Maintenance> mMaintenanceHatches = new ArrayList<GT_MetaTileEntity_Hatch_Maintenance>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Input> mInputHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Output> mOutputHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_InputBus> mInputBusses = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_OutputBus> mOutputBusses = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Dynamo> mDynamoHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Muffler> mMufflerHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Energy> mEnergyHatches = new ArrayList<>();
+    public ArrayList<GT_MetaTileEntity_Hatch_Maintenance> mMaintenanceHatches = new ArrayList<>();
 
     public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, 2);
+        GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
+        this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
+        this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
+        this.mNEI = "";
+    }
+
+    public GT_MetaTileEntity_MultiBlockBase(int aID, String aName, String aNameRegional, int aInvSlotCount) {
+        super(aID, aName, aNameRegional, aInvSlotCount);
         GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
         this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
         this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
@@ -61,6 +73,18 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
         this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
         this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
+    }
+
+    public GT_MetaTileEntity_MultiBlockBase(String aName, int aInvSlotCount) {
+        super(aName, aInvSlotCount);
+        GT_MetaTileEntity_MultiBlockBase.disableMaintenance = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.disableMaintenance", false);
+        this.damageFactorLow = GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorLow", 5);
+        this.damageFactorHigh = (float) GregTech_API.sMachineFile.get(ConfigCategories.machineconfig, "MultiBlockMachines.damageFactorHigh", 0.6f);
+    }
+
+    @Override
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone, byte aFluidFacing) {
+        return getTexture(aBaseMetaTileEntity, aSide, aFacing, aColorIndex, aActive, aRedstone);
     }
 
     public static boolean isValidMetaTileEntity(MetaTileEntity aMetaTileEntity) {
@@ -119,21 +143,23 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
 
         if (mOutputItems != null) {
             aNBT.setInteger("mOutputItemsLength", mOutputItems.length);
-            for (int i = 0; i < mOutputItems.length; i++)
+            for (int i = 0; i < mOutputItems.length; i++) {
                 if (mOutputItems[i] != null) {
                     NBTTagCompound tNBT = new NBTTagCompound();
                     mOutputItems[i].writeToNBT(tNBT);
                     aNBT.setTag("mOutputItem" + i, tNBT);
                 }
+            }
         }
         if (mOutputFluids != null) {
             aNBT.setInteger("mOutputFluidsLength", mOutputFluids.length);
-            for (int i = 0; i < mOutputFluids.length; i++)
+            for (int i = 0; i < mOutputFluids.length; i++) {
                 if (mOutputFluids[i] != null) {
                     NBTTagCompound tNBT = new NBTTagCompound();
                     mOutputFluids[i].writeToNBT(tNBT);
                     aNBT.setTag("mOutputFluids" + i, tNBT);
                 }
+            }
         }
         aNBT.setBoolean("mWrench", mWrench);
         aNBT.setBoolean("mScrewdriver", mScrewdriver);
@@ -141,6 +167,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         aNBT.setBoolean("mHardHammer", mHardHammer);
         aNBT.setBoolean("mSolderingTool", mSolderingTool);
         aNBT.setBoolean("mCrowbar", mCrowbar);
+        aNBT.setBoolean("mConflicts", mResolveRecipeConflicts);
     }
 
     @Override
@@ -148,7 +175,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         mEUt = aNBT.getInteger("mEUt");
         mProgresstime = aNBT.getInteger("mProgresstime");
         mMaxProgresstime = aNBT.getInteger("mMaxProgresstime");
-        if (mMaxProgresstime > 0) mRunningOnLoad = true;
+        if (mMaxProgresstime > 0) {
+            mRunningOnLoad = true;
+        }
         mEfficiencyIncrease = aNBT.getInteger("mEfficiencyIncrease");
         mEfficiency = aNBT.getInteger("mEfficiency");
         mPollution = aNBT.getInteger("mPollution");
@@ -157,15 +186,17 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         int aOutputItemsLength = aNBT.getInteger("mOutputItemsLength");
         if (aOutputItemsLength > 0) {
             mOutputItems = new ItemStack[aOutputItemsLength];
-            for (int i = 0; i < mOutputItems.length; i++)
+            for (int i = 0; i < mOutputItems.length; i++) {
                 mOutputItems[i] = GT_Utility.loadItem(aNBT, "mOutputItem" + i);
+            }
         }
 
         int aOutputFluidsLength = aNBT.getInteger("mOutputFluidsLength");
         if (aOutputFluidsLength > 0) {
             mOutputFluids = new FluidStack[aOutputFluidsLength];
-            for (int i = 0; i < mOutputFluids.length; i++)
+            for (int i = 0; i < mOutputFluids.length; i++) {
                 mOutputFluids[i] = GT_Utility.loadFluid(aNBT, "mOutputFluids" + i);
+            }
         }
 
         mWrench = aNBT.getBoolean("mWrench");
@@ -174,11 +205,14 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         mHardHammer = aNBT.getBoolean("mHardHammer");
         mSolderingTool = aNBT.getBoolean("mSolderingTool");
         mCrowbar = aNBT.getBoolean("mCrowbar");
+        mResolveRecipeConflicts = aNBT.getBoolean("mConflicts");
     }
 
     @Override
     public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
-        if (aBaseMetaTileEntity.isClientSide()) return true;
+        if (aBaseMetaTileEntity.isClientSide()) {
+            return true;
+        }
         aBaseMetaTileEntity.openGUI(aPlayer);
         return true;
     }
@@ -206,7 +240,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         if (aBaseMetaTileEntity.isServerSide()) {
-            if (mEfficiency < 0) mEfficiency = 0;
+            if (mEfficiency < 0) {
+                mEfficiency = 0;
+            }
             if (--mUpdate == 0 || --mStartUpCheck == 0) {
                 mInputHatches.clear();
                 mInputBusses.clear();
@@ -223,14 +259,27 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                     for (GT_MetaTileEntity_Hatch_Maintenance tHatch : mMaintenanceHatches) {
                         if (isValidMetaTileEntity(tHatch)) {
                             if (!GT_MetaTileEntity_MultiBlockBase.disableMaintenance) {
-                                if (tHatch.mAuto && (!mWrench || !mScrewdriver || !mSoftHammer || !mHardHammer || !mSolderingTool || !mCrowbar))
+                                if (!mWrench || !mScrewdriver || !mSoftHammer || !mHardHammer || !mSolderingTool || !mCrowbar) {
                                     tHatch.autoMaintainance();
-                                if (tHatch.mWrench) mWrench = true;
-                                if (tHatch.mScrewdriver) mScrewdriver = true;
-                                if (tHatch.mSoftHammer) mSoftHammer = true;
-                                if (tHatch.mHardHammer) mHardHammer = true;
-                                if (tHatch.mSolderingTool) mSolderingTool = true;
-                                if (tHatch.mCrowbar) mCrowbar = true;
+                                }
+                                if (tHatch.mWrench) {
+                                    mWrench = true;
+                                }
+                                if (tHatch.mScrewdriver) {
+                                    mScrewdriver = true;
+                                }
+                                if (tHatch.mSoftHammer) {
+                                    mSoftHammer = true;
+                                }
+                                if (tHatch.mHardHammer) {
+                                    mHardHammer = true;
+                                }
+                                if (tHatch.mSolderingTool) {
+                                    mSolderingTool = true;
+                                }
+                                if (tHatch.mCrowbar) {
+                                    mCrowbar = true;
+                                }
                             } else {
                                 mWrench = true;
                                 mScrewdriver = true;
@@ -255,16 +304,19 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                                     stopMachine();
                                 }
                                 if (mMaxProgresstime > 0 && ++mProgresstime >= mMaxProgresstime) {
-                                    if (mOutputItems != null) for (ItemStack tStack : mOutputItems)
-                                        if (tStack != null) {
-                                            try {
-                                                GT_Mod.achievements.issueAchivementHatch(aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()), tStack);
-                                            } catch (Exception ignored) {
+                                    if (mOutputItems != null) {
+                                        for (ItemStack tStack : mOutputItems) {
+                                            if (tStack != null) {
+                                                try {
+                                                    GT_Mod.achievements.issueAchivementHatch(aBaseMetaTileEntity.getWorld().getPlayerEntityByName(aBaseMetaTileEntity.getOwnerName()), tStack);
+                                                } catch (Exception ignored) {
+                                                }
+                                                addOutput(tStack);
                                             }
-                                            addOutput(tStack);
                                         }
+                                    }
                                     if (mOutputFluids != null) {
-                                    	addFluidOutputs(mOutputFluids);
+                                        addFluidOutputs(mOutputFluids);
                                     }
                                     mEfficiency = Math.max(0, Math.min(mEfficiency + mEfficiencyIncrease, getMaxEfficiency(mInventory[1]) - ((getIdealStatus() - getRepairStatus()) * 1000)));
                                     mOutputItems = null;
@@ -272,7 +324,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                                     mMaxProgresstime = 0;
                                     mEfficiencyIncrease = 0;
                                     onProcessEnd();
-                                    if (aBaseMetaTileEntity.isAllowedToWork()) checkRecipe(mInventory[1]);
+                                    if (aBaseMetaTileEntity.isAllowedToWork()) {
+                                        checkRecipe(mInventory[1]);
+                                    }
                                     if (mOutputFluids != null && mOutputFluids.length > 0) {
                                         if (mOutputFluids.length > 1) {
                                             try {
@@ -289,7 +343,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                                 if (aBaseMetaTileEntity.isAllowedToWork()) {
                                     checkRecipe(mInventory[1]);
                                 }
-                                if (mMaxProgresstime <= 0) mEfficiency = Math.max(0, mEfficiency - 1000);
+                                if (mMaxProgresstime <= 0) {
+                                    mEfficiency = Math.max(0, mEfficiency - 1000);
+                                }
                             }
                         }
                     } else {
@@ -302,6 +358,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             aBaseMetaTileEntity.setErrorDisplayID((aBaseMetaTileEntity.getErrorDisplayID() & ~127) | (mWrench ? 0 : 1) | (mScrewdriver ? 0 : 2) | (mSoftHammer ? 0 : 4) | (mHardHammer ? 0 : 8) | (mSolderingTool ? 0 : 16) | (mCrowbar ? 0 : 32) | (mMachine ? 0 : 64));
             aBaseMetaTileEntity.setActive(mMaxProgresstime > 0);
         }
+    }
+
+    public void onIdle() {/*do nothing*/
     }
 
     public boolean polluteEnvironment(int aPollutionLevel) {
@@ -435,63 +494,74 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                 if (mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01) {
                     NBTTagCompound tNBT = mInventory[1].getTagCompound();
                     if (tNBT != null) {
-                        NBTTagCompound tNBT2 = tNBT.getCompoundTag("GT.CraftingComponents");//tNBT2 dont use out if
                         if (!tNBT.getBoolean("mDis")) {
-                            tNBT2 = new NBTTagCompound();
+                            NBTTagCompound tNBT2 = new NBTTagCompound();
                             Materials tMaterial = GT_MetaGenerated_Tool.getPrimaryMaterial(mInventory[1]);
                             ItemStack tTurbine = GT_OreDictUnificator.get(OrePrefixes.turbineBlade, tMaterial, 1);
                             int i = mInventory[1].getItemDamage();
-                            if (i == 170) {
-                                ItemStack tStack = GT_Utility.copyAmount(1, tTurbine);
-                                tNBT2.setTag("Ingredient.0", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.1", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.2", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.3", tStack.writeToNBT(new NBTTagCompound()));
-                                tStack = GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.Magnalium, 1);
-                                tNBT2.setTag("Ingredient.4", tStack.writeToNBT(new NBTTagCompound()));
-                            } else if (i == 172) {
-                                ItemStack tStack = GT_Utility.copyAmount(1, tTurbine);
-                                tNBT2.setTag("Ingredient.0", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.1", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.2", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.3", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.5", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.6", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.7", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.8", tStack.writeToNBT(new NBTTagCompound()));
-                                tStack = GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.Titanium, 1);
-                                tNBT2.setTag("Ingredient.4", tStack.writeToNBT(new NBTTagCompound()));
-                            } else if (i == 174) {
-                                ItemStack tStack = GT_Utility.copyAmount(2, tTurbine);
-                                tNBT2.setTag("Ingredient.0", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.1", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.2", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.3", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.5", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.6", tStack.writeToNBT(new NBTTagCompound()));
-                                tStack = GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.TungstenSteel, 1);
-                                tNBT2.setTag("Ingredient.4", tStack.writeToNBT(new NBTTagCompound()));
-                            } else if (i == 176) {
-                                ItemStack tStack = GT_Utility.copyAmount(2, tTurbine);
-                                tNBT2.setTag("Ingredient.0", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.1", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.2", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.3", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.5", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.6", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.7", tStack.writeToNBT(new NBTTagCompound()));
-                                tNBT2.setTag("Ingredient.8", tStack.writeToNBT(new NBTTagCompound()));
-                                tStack = GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.Americium, 1);
-                                tNBT2.setTag("Ingredient.4", tStack.writeToNBT(new NBTTagCompound()));
+                            switch (i) {
+                                case 170: {
+                                    ItemStack tStack = GT_Utility.copyAmount(1, tTurbine);
+                                    tNBT2.setTag("Ingredient.0", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.1", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.2", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.3", tStack.writeToNBT(new NBTTagCompound()));
+                                    tStack = GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.Magnalium, 1);
+                                    tNBT2.setTag("Ingredient.4", tStack.writeToNBT(new NBTTagCompound()));
+                                    break;
+                                }
+                                case 172: {
+                                    ItemStack tStack = GT_Utility.copyAmount(1, tTurbine);
+                                    tNBT2.setTag("Ingredient.0", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.1", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.2", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.3", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.5", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.6", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.7", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.8", tStack.writeToNBT(new NBTTagCompound()));
+                                    tStack = GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.Titanium, 1);
+                                    tNBT2.setTag("Ingredient.4", tStack.writeToNBT(new NBTTagCompound()));
+                                    break;
+                                }
+                                case 174: {
+                                    ItemStack tStack = GT_Utility.copyAmount(2, tTurbine);
+                                    tNBT2.setTag("Ingredient.0", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.1", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.2", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.3", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.5", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.6", tStack.writeToNBT(new NBTTagCompound()));
+                                    tStack = GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.TungstenSteel, 1);
+                                    tNBT2.setTag("Ingredient.4", tStack.writeToNBT(new NBTTagCompound()));
+                                    break;
+                                }
+                                case 176: {
+                                    ItemStack tStack = GT_Utility.copyAmount(2, tTurbine);
+                                    tNBT2.setTag("Ingredient.0", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.1", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.2", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.3", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.5", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.6", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.7", tStack.writeToNBT(new NBTTagCompound()));
+                                    tNBT2.setTag("Ingredient.8", tStack.writeToNBT(new NBTTagCompound()));
+                                    tStack = GT_OreDictUnificator.get(OrePrefixes.stickLong, Materials.Americium, 1);
+                                    tNBT2.setTag("Ingredient.4", tStack.writeToNBT(new NBTTagCompound()));
+                                    break;
+                                }
+                                default:
+                                    break;
                             }
                             tNBT.setTag("GT.CraftingComponents", tNBT2);
                             tNBT.setBoolean("mDis", true);
                             mInventory[1].setTagCompound(tNBT);
-
                         }
                     }
                     ((GT_MetaGenerated_Tool) mInventory[1].getItem()).doDamage(mInventory[1], (long) Math.min(mEUt / this.damageFactorLow, Math.pow(mEUt, this.damageFactorHigh)));
-                    if (mInventory[1].stackSize == 0) mInventory[1] = null;
+                    if (mInventory[1].stackSize == 0) {
+                        mInventory[1] = null;
+                    }
                 }
             }
         }
@@ -501,33 +571,50 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     public void explodeMultiblock() {
         GT_Pollution.addPollution(getBaseMetaTileEntity(), 300000);
         mInventory[1] = null;
-        for (MetaTileEntity tTileEntity : mInputBusses) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mOutputBusses) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mInputHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mOutputHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mDynamoHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mMufflerHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mEnergyHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
-        for (MetaTileEntity tTileEntity : mMaintenanceHatches) tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        for (MetaTileEntity tTileEntity : mInputBusses) {
+            tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        }
+        for (MetaTileEntity tTileEntity : mOutputBusses) {
+            tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        }
+        for (MetaTileEntity tTileEntity : mInputHatches) {
+            tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        }
+        for (MetaTileEntity tTileEntity : mOutputHatches) {
+            tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        }
+        for (MetaTileEntity tTileEntity : mDynamoHatches) {
+            tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        }
+        for (MetaTileEntity tTileEntity : mMufflerHatches) {
+            tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        }
+        for (MetaTileEntity tTileEntity : mEnergyHatches) {
+            tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        }
+        for (MetaTileEntity tTileEntity : mMaintenanceHatches) {
+            tTileEntity.getBaseMetaTileEntity().doExplosion(V[8]);
+        }
         getBaseMetaTileEntity().doExplosion(V[8]);
     }
 
     public boolean addEnergyOutput(long aEU) {
- if (aEU <= 0) {
+        if (aEU <= 0) {
             return true;
         }
-        if (mDynamoHatches.size() > 0) {
+        if (!mDynamoHatches.isEmpty()) {
             return addEnergyOutputMultipleDynamos(aEU, true);
         }
         return false;
     }
+
     public boolean addEnergyOutputMultipleDynamos(long aEU, boolean aAllowMixedVoltageDynamos) {
         int injected = 0;
         long totalOutput = 0;
         long aFirstVoltageFound = -1;
         boolean aFoundMixedDynamos = false;
         for (GT_MetaTileEntity_Hatch_Dynamo aDynamo : mDynamoHatches) {
-            if( aDynamo == null ) {
+            if (aDynamo == null) {
                 return false;
             }
             if (isValidMetaTileEntity(aDynamo)) {
@@ -536,14 +623,14 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                 // Check against voltage to check when hatch mixing
                 if (aFirstVoltageFound == -1) {
                     aFirstVoltageFound = aVoltage;
-                }
-                else {
+                } else {
                     /**
-                      * Calcualtes overclocked ness using long integers
-                      * @param aEUt          - recipe EUt
-                      * @param aDuration     - recipe Duration
-                      * @param mAmperage     - should be 1 ?
-                      */
+                     * Calcualtes overclocked ness using long integers
+                     *
+                     * @param aEUt - recipe EUt
+                     * @param aDuration - recipe Duration
+                     * @param mAmperage - should be 1 ?
+                     */
                     //Long time calculation
                     if (aFirstVoltageFound != aVoltage) {
                         aFoundMixedDynamos = true;
@@ -571,14 +658,14 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
                 aVoltage = aDynamo.maxEUOutput();
                 aAmpsToInject = (int) (leftToInject / aVoltage);
                 aRemainder = (int) (leftToInject - (aAmpsToInject * aVoltage));
-                ampsOnCurrentHatch= (int) Math.min(aDynamo.maxAmperesOut(), aAmpsToInject);
+                ampsOnCurrentHatch = (int) Math.min(aDynamo.maxAmperesOut(), aAmpsToInject);
                 for (int i = 0; i < ampsOnCurrentHatch; i++) {
                     aDynamo.getBaseMetaTileEntity().increaseStoredEnergyUnits(aVoltage, false);
                 }
-                injected+=aVoltage*ampsOnCurrentHatch;
-                if(aRemainder>0 && ampsOnCurrentHatch<aDynamo.maxAmperesOut()){
+                injected += aVoltage * ampsOnCurrentHatch;
+                if (aRemainder > 0 && ampsOnCurrentHatch < aDynamo.maxAmperesOut()) {
                     aDynamo.getBaseMetaTileEntity().increaseStoredEnergyUnits(aRemainder, false);
-                    injected+=aRemainder;
+                    injected += aRemainder;
                 }
             }
         }
@@ -587,41 +674,52 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
 
     public long getMaxInputVoltage() {
         long rVoltage = 0;
-        for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches)
-            if (isValidMetaTileEntity(tHatch)) rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage();
+        for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) {
+            if (isValidMetaTileEntity(tHatch)) {
+                rVoltage += tHatch.getBaseMetaTileEntity().getInputVoltage();
+            }
+        }
         return rVoltage;
     }
 
     public boolean drainEnergyInput(long aEU) {
-        if (aEU <= 0) return true;
-        for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches)
+        if (aEU <= 0) {
+            return true;
+        }
+        for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) {
             if (isValidMetaTileEntity(tHatch)) {
-                if (tHatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(aEU, false)) return true;
+                if (tHatch.isCreativeHatch()) {
+                    return true;
+                }
+                if (tHatch.getBaseMetaTileEntity().decreaseStoredEnergyUnits(aEU, false)) {
+                    return true;
+                }
             }
+        }
         return false;
     }
 
-    private boolean dumpFluid(FluidStack copiedFluidStack, boolean restrictiveHatchesOnly){
+    private boolean dumpFluid(FluidStack copiedFluidStack, boolean restrictiveHatchesOnly) {
         for (GT_MetaTileEntity_Hatch_Output tHatch : mOutputHatches) {
-        	if (!isValidMetaTileEntity(tHatch) || (restrictiveHatchesOnly && tHatch.mMode == 0)) {
-        		continue;
-        	}
-        	if (GT_ModHandler.isSteam(copiedFluidStack)) {
-        		if (!tHatch.outputsSteam()) {
-        			continue;
-        		}
-        	} else {
-        		if (!tHatch.outputsLiquids()) {
-        			continue;
-        		}
-        		if (tHatch.isFluidLocked() && tHatch.getLockedFluidName() != null && !tHatch.getLockedFluidName().equals(copiedFluidStack.getUnlocalizedName())) {
-        			continue;
-        		}
-        	}
+            if (!isValidMetaTileEntity(tHatch) || (restrictiveHatchesOnly && tHatch.mMode == 0)) {
+                continue;
+            }
+            if (GT_ModHandler.isSteam(copiedFluidStack)) {
+                if (!tHatch.outputsSteam()) {
+                    continue;
+                }
+            } else {
+                if (!tHatch.outputsLiquids()) {
+                    continue;
+                }
+                if (tHatch.isFluidLocked() && tHatch.getLockedFluidName() != null && !tHatch.getLockedFluidName().equals(copiedFluidStack.getUnlocalizedName())) {
+                    continue;
+                }
+            }
             int tAmount = tHatch.fill(copiedFluidStack, false);
             if (tAmount >= copiedFluidStack.amount) {
-            	boolean filled = tHatch.fill(copiedFluidStack, true) >= copiedFluidStack.amount;
-            	tHatch.onEmptyingContainerWhenEmpty();
+                boolean filled = tHatch.fill(copiedFluidStack, true) >= copiedFluidStack.amount;
+                tHatch.onEmptyingContainerWhenEmpty();
                 return filled;
             } else if (tAmount > 0) {
                 copiedFluidStack.amount = copiedFluidStack.amount - tHatch.fill(copiedFluidStack, true);
@@ -630,24 +728,28 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         }
         return false;
     }
-    
+
     public boolean addOutput(FluidStack aLiquid) {
-        if (aLiquid == null) return false;
+        if (aLiquid == null) {
+            return false;
+        }
         FluidStack copiedFluidStack = aLiquid.copy();
-        if (!dumpFluid(copiedFluidStack, true)){
-            dumpFluid(copiedFluidStack, false);        	
+        if (!dumpFluid(copiedFluidStack, true)) {
+            dumpFluid(copiedFluidStack, false);
         }
         return false;
     }
 
     protected void addFluidOutputs(FluidStack[] mOutputFluids2) {
         for (FluidStack outputFluidStack : mOutputFluids2) {
-        	addOutput(outputFluidStack);
+            addOutput(outputFluidStack);
         }
     }
 
     public boolean depleteInput(FluidStack aLiquid) {
-        if (aLiquid == null) return false;
+        if (aLiquid == null) {
+            return false;
+        }
         for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
             tHatch.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatch)) {
@@ -664,8 +766,39 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
         return false;
     }
 
+    /**
+     * try to consume a liquid with max amount, but if it is not enough, it consumes all what is there was
+     */
+    public int depleteInputUpTo(FluidStack aLiquid) {
+        int consumedAmount = 0;
+        if (aLiquid == null) {
+            return consumedAmount;
+        }
+        for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
+            tHatch.mRecipeMap = getRecipeMap();
+            if (isValidMetaTileEntity(tHatch)) {
+                FluidStack tLiquid = tHatch.getFluid();
+                if (tLiquid != null && tLiquid.isFluidEqual(aLiquid)) {
+                    tLiquid = tHatch.drain(aLiquid.amount, false);
+                    if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
+                        tLiquid = tHatch.drain(aLiquid.amount, true);
+                        if (tLiquid != null && tLiquid.amount >= aLiquid.amount) {
+                            return aLiquid.amount;
+                        }
+                    } else if (tLiquid != null && tLiquid.amount >= 0) {
+                        tLiquid = tHatch.drain(tLiquid.amount, true);
+                        consumedAmount = (tLiquid != null) ? tLiquid.amount : 0;
+                    }
+                }
+            }
+        }
+        return consumedAmount;
+    }
+
     public boolean addOutput(ItemStack aStack) {
-        if (GT_Utility.isStackInvalid(aStack)) return false;
+        if (GT_Utility.isStackInvalid(aStack)) {
+            return false;
+        }
         aStack = GT_Utility.copy(aStack);
 //		FluidStack aLiquid = GT_Utility.getFluidForFilledItem(aStack, true);
 //		if (aLiquid == null) {
@@ -676,13 +809,17 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             for (GT_MetaTileEntity_Hatch_OutputBus tHatch : mOutputBusses) {
                 if (!outputSuccess && isValidMetaTileEntity(tHatch)) {
                     for (int i = tHatch.getSizeInventory() - 1; i >= 0 && !outputSuccess; i--) {
-                        if (tHatch.getBaseMetaTileEntity().addStackToSlot(i, single)) outputSuccess = true;
+                        if (tHatch.getBaseMetaTileEntity().addStackToSlot(i, single)) {
+                            outputSuccess = true;
+                        }
                     }
                 }
             }
             for (GT_MetaTileEntity_Hatch_Output tHatch : mOutputHatches) {
                 if (!outputSuccess && isValidMetaTileEntity(tHatch) && tHatch.outputsItems()) {
-                    if (tHatch.getBaseMetaTileEntity().addStackToSlot(1, single)) outputSuccess = true;
+                    if (tHatch.getBaseMetaTileEntity().addStackToSlot(1, single)) {
+                        outputSuccess = true;
+                    }
                 }
             }
         }
@@ -700,9 +837,13 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public boolean depleteInput(ItemStack aStack) {
-        if (GT_Utility.isStackInvalid(aStack)) return false;
+        if (GT_Utility.isStackInvalid(aStack)) {
+            return false;
+        }
         FluidStack aLiquid = GT_Utility.getFluidForFilledItem(aStack, true);
-        if (aLiquid != null) return depleteInput(aLiquid);
+        if (aLiquid != null) {
+            return depleteInput(aLiquid);
+        }
         for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
             tHatch.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatch)) {
@@ -748,7 +889,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public ArrayList<FluidStack> getStoredFluids() {
-        ArrayList<FluidStack> rList = new ArrayList<FluidStack>();
+        ArrayList<FluidStack> rList = new ArrayList<>();
         for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
             tHatch.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatch) && tHatch.getFillableStack() != null) {
@@ -759,7 +900,7 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public ArrayList<ItemStack> getStoredInputs() {
-        ArrayList<ItemStack> rList = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> rList = new ArrayList<>();
 //        for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
 //            tHatch.mRecipeMap = getRecipeMap();
 //            if (isValidMetaTileEntity(tHatch) && tHatch.getBaseMetaTileEntity().getStackInSlot(0) != null) {
@@ -770,8 +911,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             tHatch.mRecipeMap = getRecipeMap();
             if (isValidMetaTileEntity(tHatch)) {
                 for (int i = tHatch.getBaseMetaTileEntity().getSizeInventory() - 1; i >= 0; i--) {
-                    if (tHatch.getBaseMetaTileEntity().getStackInSlot(i) != null)
+                    if (tHatch.getBaseMetaTileEntity().getStackInSlot(i) != null) {
                         rList.add(tHatch.getBaseMetaTileEntity().getStackInSlot(i));
+                    }
                 }
             }
         }
@@ -783,42 +925,64 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public void updateSlots() {
-        for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches)
-            if (isValidMetaTileEntity(tHatch)) tHatch.updateSlots();
-        for (GT_MetaTileEntity_Hatch_InputBus tHatch : mInputBusses)
-            if (isValidMetaTileEntity(tHatch)) tHatch.updateSlots();
+        for (GT_MetaTileEntity_Hatch_Input tHatch : mInputHatches) {
+            if (isValidMetaTileEntity(tHatch)) {
+                tHatch.updateSlots();
+            }
+        }
+        for (GT_MetaTileEntity_Hatch_InputBus tHatch : mInputBusses) {
+            if (isValidMetaTileEntity(tHatch)) {
+                tHatch.updateSlots();
+            }
+        }
     }
 
     public boolean addToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) return false;
+        if (aTileEntity == null) {
+            return false;
+        }
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity == null) {
+            return false;
+        }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
         }
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Input)
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Input) {
             return mInputHatches.add((GT_MetaTileEntity_Hatch_Input) aMetaTileEntity);
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_InputBus)
+        }
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_InputBus) {
             return mInputBusses.add((GT_MetaTileEntity_Hatch_InputBus) aMetaTileEntity);
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Output)
+        }
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Output) {
             return mOutputHatches.add((GT_MetaTileEntity_Hatch_Output) aMetaTileEntity);
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_OutputBus)
+        }
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_OutputBus) {
             return mOutputBusses.add((GT_MetaTileEntity_Hatch_OutputBus) aMetaTileEntity);
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Energy)
+        }
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Energy) {
             return mEnergyHatches.add((GT_MetaTileEntity_Hatch_Energy) aMetaTileEntity);
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Dynamo)
+        }
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Dynamo) {
             return mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) aMetaTileEntity);
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Maintenance)
+        }
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Maintenance) {
             return mMaintenanceHatches.add((GT_MetaTileEntity_Hatch_Maintenance) aMetaTileEntity);
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Muffler)
+        }
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Muffler) {
             return mMufflerHatches.add((GT_MetaTileEntity_Hatch_Muffler) aMetaTileEntity);
+        }
         return false;
     }
 
     public boolean addMaintenanceToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) return false;
+        if (aTileEntity == null) {
+            return false;
+        }
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity == null) {
+            return false;
+        }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Maintenance) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             return mMaintenanceHatches.add((GT_MetaTileEntity_Hatch_Maintenance) aMetaTileEntity);
@@ -831,7 +995,9 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
             return false;
         }
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity == null) {
+            return false;
+        }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Energy) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             return mEnergyHatches.add((GT_MetaTileEntity_Hatch_Energy) aMetaTileEntity);
@@ -840,9 +1006,13 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public boolean addDynamoToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) return false;
+        if (aTileEntity == null) {
+            return false;
+        }
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity == null) {
+            return false;
+        }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Dynamo) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             return mDynamoHatches.add((GT_MetaTileEntity_Hatch_Dynamo) aMetaTileEntity);
@@ -851,9 +1021,13 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public boolean addMufflerToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) return false;
+        if (aTileEntity == null) {
+            return false;
+        }
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity == null) {
+            return false;
+        }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Muffler) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             return mMufflerHatches.add((GT_MetaTileEntity_Hatch_Muffler) aMetaTileEntity);
@@ -862,9 +1036,13 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public boolean addInputToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) return false;
+        if (aTileEntity == null) {
+            return false;
+        }
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity == null) {
+            return false;
+        }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Input) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             ((GT_MetaTileEntity_Hatch_Input) aMetaTileEntity).mRecipeMap = getRecipeMap();
@@ -879,9 +1057,13 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     public boolean addOutputToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) return false;
+        if (aTileEntity == null) {
+            return false;
+        }
         IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity == null) {
+            return false;
+        }
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Output) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             return mOutputHatches.add((GT_MetaTileEntity_Hatch_Output) aMetaTileEntity);
@@ -895,7 +1077,15 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
 
     @Override
     public String[] getInfoData() {
-        return new String[]{"Progress:", (mProgresstime / 20) + "secs", (mMaxProgresstime / 20) + "secs", "Efficiency:", (mEfficiency / 100.0F) + "%", "Problems:", String.valueOf((getIdealStatus() - getRepairStatus()))};
+        return new String[]{
+            "Progress:",
+            (mProgresstime / 20) + "secs",
+            (mMaxProgresstime / 20) + "secs",
+            "Efficiency:",
+            (mEfficiency / 100.0F) + "%",
+            "Problems:",
+            String.valueOf((getIdealStatus() - getRepairStatus()))
+        };
     }
 
     @Override
@@ -914,14 +1104,37 @@ public abstract class GT_MetaTileEntity_MultiBlockBase extends MetaTileEntity {
     }
 
     /**
-     * gets invoked when player closes one of multiblock hatches
-     * works properly only if structure allows only one multiblock per hatch
-     * to get notified set Filed {@link GT_MetaTileEntity_Hatch#mMultiblock} to this
-     * and set Filed {@link GT_MetaTileEntity_Hatch#mNotifyMultiblockOnUpdate} to true
+     * gets invoked when player closes one of multiblock hatches works properly only if structure allows only one multiblock per hatch to get notified
+     * set Filed {@link GT_MetaTileEntity_Hatch#mMultiblock} to this and set Filed {@link GT_MetaTileEntity_Hatch#mNotifyMultiblockOnUpdate} to true
+     *
      * @param aContainer is closed hatch
      */
-
     public void onContainersUpdated(GT_MetaTileEntity_Hatch aContainer) {
         /* */
+    }
+
+    protected GT_Recipe findRecipe(GT_Recipe.GT_Recipe_Map map, GT_Recipe aLastRecipe, ItemStack[] aInputs, FluidStack[] aFluids, long aVoltage) {
+        if (mResolveRecipeConflicts) {
+            return map.findRecipe(getBaseMetaTileEntity(), aLastRecipe, false, false, aVoltage, aFluids, aInputs);
+        }
+        return map.findRecipe(getBaseMetaTileEntity(), aLastRecipe, false, aVoltage, aFluids, aInputs);
+    }
+
+    protected boolean canHaveRecipeConflicts() {
+        return false;
+    }
+
+    @Override
+    public boolean onWireCutterRightClick(byte aSide, byte aWrenchingSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        if (!canHaveRecipeConflicts()) {
+            return super.onWireCutterRightClick(aSide, aWrenchingSide, aPlayer, aX, aY, aZ);
+        }
+        mResolveRecipeConflicts = !mResolveRecipeConflicts;
+        if (mResolveRecipeConflicts) {
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_218").appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_088")));
+        } else {
+            aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_218").appendSibling(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_087")));
+        }
+        return true;
     }
 }

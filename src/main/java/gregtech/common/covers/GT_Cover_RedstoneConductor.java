@@ -4,6 +4,7 @@ import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 
 public class GT_Cover_RedstoneConductor
@@ -21,13 +22,13 @@ public class GT_Cover_RedstoneConductor
         aCoverVariable = (aCoverVariable + (aPlayer.isSneaking()? -1 : 1)) % 7;
         if(aCoverVariable <0){aCoverVariable = 6;}
         switch (aCoverVariable) {
-            case 0: GT_Utility.sendChatToPlayer(aPlayer, trans("071", "Conducts strongest Input")); break;
-            case 1: GT_Utility.sendChatToPlayer(aPlayer, trans("072", "Conducts from bottom Input")); break;
-            case 2: GT_Utility.sendChatToPlayer(aPlayer, trans("073", "Conducts from top Input")); break;
-            case 3: GT_Utility.sendChatToPlayer(aPlayer, trans("074", "Conducts from north Input")); break;
-            case 4: GT_Utility.sendChatToPlayer(aPlayer, trans("075", "Conducts from south Input")); break;
-            case 5: GT_Utility.sendChatToPlayer(aPlayer, trans("076", "Conducts from west Input")); break;
-            case 6: GT_Utility.sendChatToPlayer(aPlayer, trans("077", "Conducts from east Input")); break;
+            case 0: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_071")); break;
+            case 1: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_072")); break;
+            case 2: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_073")); break;
+            case 3: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_074")); break;
+            case 4: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_075")); break;
+            case 5: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_076")); break;
+            case 6: aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_077")); break;
         }
         return aCoverVariable;
     }

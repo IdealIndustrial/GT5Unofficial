@@ -1,22 +1,32 @@
 buildscript {
-    repositories {
+ repositories {
         mavenCentral()
+
         maven {
-            name = "gt"
-            url = "https://gregtech.overminddl1.com/"
+            name 'forge'
+            url 'https://maven.minecraftforge.net'
         }
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            // GTNH ForgeGradle Fork
+            name = "GTNH Maven"
+            url = "https://nexus.gtnewhorizons.com/repository/public/"
         }
         maven {
-            name = "jitpack.io"
-            url = "https://jitpack.io"
+            name 'sonatype'
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        maven {
+            name 'Scala CI dependencies'
+            url 'https://repo1.maven.org/maven2/'
         }
     }
     dependencies {
-        classpath 'com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT'
+         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2.13'
     }
+}
+
+plugins {
+  id 'maven-publish'
 }
 
 apply plugin: 'forge'
@@ -32,9 +42,9 @@ file "build.properties" withReader {
 }
 
 
-version = "${config.gt.version}"
-group = "gregtech"
-archivesBaseName = "gregtech"
+version = "1.19.2b-SNAPSHOT"
+group = "idealindustrial"
+archivesBaseName = "gt-ii-edition"
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -64,10 +74,10 @@ repositories {
         name = "chickenbones"
         url = "http://chickenbones.net/maven/"
     }
-    maven {
-        name = "ic2, forestry"
-        url = "http://maven.ic2.player.to/"
-    }
+//    maven {
+//        name = "ic2, forestry"
+//        url = "https://maven2.ic2.player.to/"
+//    }
     maven { // EnderIO & EnderCore
         name = 'tterrag Repo'
         url = "http://maven.tterrag.com"
@@ -76,9 +86,9 @@ repositories {
         name = 'DVS1 Maven FS'
         url = 'http://dvs1.progwml6.com/files/maven'
     }
-    maven { // AppleCore
-        url = "http://www.ryanliptak.com/maven/"
-    }
+//    maven { // AppleCore
+//        url = "https://www.ryanliptak.com/maven/"
+//    }
     maven { // GalacticGreg, YAMCore,..
         name = 'UsrvDE'
         url = "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases/"
@@ -94,33 +104,17 @@ repositories {
 }
 
 dependencies {
-  //  provided ("appeng:appliedenergistics2:
-//${config.ae2.version}:dev") {
-      //  exclude module: '*'
-  //  }
-   /* provided "codechicken:CodeChickenLib:${config.minecraft.version}-${config.codechickenlib.version}:dev"
-	provided "codechicken:CodeChickenCore:${config.minecraft.version}-${config.codechickencore.version}:dev"
-    provided "codechicken:NotEnoughItems:${config.minecraft.version}-${config.nei.version}:dev"*/
-  //  provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-    provided "net.sengir.forestry:forestry_${config.minecraft.version}:${config.forestry.version}:dev"
-    provided "applecore:AppleCore:${config.applecore.version}:api"
-  //  provided "com.enderio.core:EnderCore:${config.enderiocore.version}:dev"
- /*   provided ("com.enderio:EnderIO:${config.enderio.version}:dev") {
-        transitive = false
-    }*/
-    // provided name: 'buildcraft', version: config.buildcraft.version, classifier: "dev", ext: 'jar'
-    // provided name: 'CoFHLib', version: config.cofhlib.version, ext: 'jar'
-    // provided name: 'CoFHCore', version: config.cofhcore.version, ext: 'jar'
-    // provided name: 'Railcraft', version: config.railcraft.version, ext: 'jar'
-    // provided name: 'IC2NuclearControl', version: config.nc.version, ext: 'jar'
-    // provided name: 'ImmersiveEngineering', version: config.immeng.version, ext: 'jar'
-    // provided name: 'magneticraft', version: config.magneticraft.version, ext: 'jar'nonRuntimeLibs
-    provided fileTree(dir: 'libs', include: '*.jar')
+    provided fileTree(dir: 'libs', include: '*.jar')	
     compileOnly fileTree(dir: 'nonRuntimeLibs', include: '*.jar')
 }
 
 processResources
 {
+	def propertiesFile = file "src/main/resources/version.properties"
+	def properties = new Properties()
+	properties.setProperty("version", project.version)
+	propertiesFile.withWriter { properties.store(it, null) }
+		
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -138,6 +132,13 @@ processResources
         exclude 'mcmod.info'
     }
 	exclude '**/Thumbs.db'
+}
+
+jar {
+		manifest {
+		attributes 'FMLCorePlugin': 'idealindustrial.hooks.HookLoader'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
 }
 
 task sourceJar(type: Jar) {
@@ -166,4 +167,27 @@ task resolveAllDependencies {
 
 artifacts {
     archives devJar
+}
+
+tasks.withType(PublishToMavenRepository) {
+	dependsOn(tasks.assemble)
+}
+
+publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = "https://maven.pkg.github.com/IdealIndustrial/GT5Unofficial"
+      credentials {
+        username = System.getenv("GITHUB_ACTOR")
+        password = System.getenv("GITHUB_TOKEN")
+      }
+    }
+  }
+  publications {
+	mavenJava(MavenPublication){
+		artifactId archivesBaseName
+		artifact jar
+	}
+}
 }

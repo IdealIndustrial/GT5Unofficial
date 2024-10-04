@@ -3,13 +3,17 @@ package gregtech.api.metatileentity.implementations;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import static gregtech.api.enums.GT_Values.V;
 
 public class GT_MetaTileEntity_Hatch_Energy extends GT_MetaTileEntity_Hatch {
+
+    private boolean isCreativeHatch = false;
     public GT_MetaTileEntity_Hatch_Energy(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 0, new String[]{"Energy Injector for Multiblocks", "Accepts up to 2 Amps"});
     }
@@ -20,6 +24,34 @@ public class GT_MetaTileEntity_Hatch_Energy extends GT_MetaTileEntity_Hatch {
 
     public GT_MetaTileEntity_Hatch_Energy(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, 0, aDescription, aTextures);
+    }
+
+    public GT_MetaTileEntity_Hatch_Energy(String aName, int aTier, String aDescription, ITexture[][][] aTextures, boolean isCreative) {
+        super(aName, aTier, 0, aDescription, aTextures);
+        isCreativeHatch = isCreative;
+    }
+
+    public GT_MetaTileEntity_Hatch_Energy(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures, boolean isCreative) {
+        super(aName, aTier, 0, aDescription, aTextures);
+        isCreativeHatch = isCreative;
+    }
+
+    public GT_MetaTileEntity_Hatch_Energy(int aID, String aName, String aNameRegional, int aTier, boolean isCreative) {
+        super(aID, aName, aNameRegional, aTier, 0, new String[]{"Energy Injector for Multiblocks", "Accepts up to 2 Amps"});
+        isCreativeHatch = isCreative;
+    }
+
+    @Override
+    public long getEUVar() {
+        if(isCreativeHatch) {
+            return maxEUStore();
+        } else {
+            return super.getEUVar();
+        }
+    }
+
+    public boolean isCreativeHatch() {
+        return isCreativeHatch;
     }
 
     @Override
@@ -84,7 +116,7 @@ public class GT_MetaTileEntity_Hatch_Energy extends GT_MetaTileEntity_Hatch {
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_Hatch_Energy(mName, mTier, mDescriptionArray, mTextures);
+        return new GT_MetaTileEntity_Hatch_Energy(mName, mTier, mDescriptionArray, mTextures, isCreativeHatch);
     }
 
     @Override

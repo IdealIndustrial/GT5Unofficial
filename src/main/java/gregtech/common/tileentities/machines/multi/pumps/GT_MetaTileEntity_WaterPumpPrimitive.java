@@ -1,14 +1,14 @@
 package gregtech.common.tileentities.machines.multi.pumps;
 
-import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.*;
+import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Fluid;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_ModHandler;
 import net.minecraft.item.ItemStack;
@@ -62,21 +62,23 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
                 "Pipe (up to 10 blocks length) connects to Intake",
                 "Controller input must be connected to input this pipe",
                 "Uses 200l of steam per second",
-                "Pipe fluid capacity must be enough to transfer "+ getOutputRate()*20+ " l per second",
-                "Intake is situated in top layer of water source (river for water or ocean for salt water)",
+                "Pipe fluid capacity must be enough to transfer " + getOutputRate() * 20 + " l per second",
+                "Intake is situated in top layer of water source",
+                "River for water or ocean for salt water or swamp for dirty water",            
                 "Must cover 128 blocks of water surface in radius of 16",
                 "For each other pump in work radius will decrease efficiency",
                 "Also efficiency slowly decrease as intake gets clogged",
                 "Plunger sneaky right click on the controller clears it",
                 "Some pipes may connect only after all structure is assembled",
-                "River and Ocean are Minecraft Biomes"
+                "River and Ocean and Swampland are Minecraft Biomes"
         };
     }
 
     public boolean checkRecipe(ItemStack aStack) {
-        if (!depleteInput(GT_ModHandler.getSteam(40)))
+        super.checkRecipe(aStack);
+        if (!depleteInput(GT_ModHandler.getSteam(40))) {
             return false;
-        this.mEfficiencyIncrease = 10000;
+        }
         this.mMaxProgresstime = 10;
         this.mEUt = 0;
         return true;
@@ -85,19 +87,26 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
 
     @Override
     public boolean onRunningTick(ItemStack aStack) {
-        double tOut = getOutputRate()*(mEfficiency/10000) + waterToOutput;
-        int rOut = (int)tOut;
+        double tOut = getOutputRate() * (mPumpingEfficiency / 10000) + waterToOutput;
+        tOut *= mEfficiencyRate;
+        int rOut = (int) tOut;
         waterToOutput = tOut - rOut;
-        addOutput(mRiver ? GT_ModHandler.getWater(rOut) : Materials.SaltWater.getFluid(rOut));
+        if (mRiver) {
+            addOutput(GT_ModHandler.getWater(rOut));
+        } else if (mOcean) {
+            addOutput(Materials.SaltWater.getFluid(rOut));
+        } else if (mSwamp) {
+            addOutput(Materials.DirtyWater.getFluid(rOut));
+        }
         return true;
     }
 
     @Override
     public boolean addToStructure(TileEntity aTileEntityInput, TileEntity aTileEntityPipe, TileEntity aTileEntityOutput, boolean aDoAdd) {
-        if (aTileEntityInput instanceof IGregTechTileEntity && ((IGregTechTileEntity)aTileEntityInput).getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Input &&
-                aTileEntityOutput instanceof IGregTechTileEntity && ((IGregTechTileEntity)aTileEntityOutput).getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Output &&
-                aTileEntityPipe instanceof IGregTechTileEntity && ((IGregTechTileEntity)aTileEntityPipe).getMetaTileEntity() instanceof GT_MetaPipeEntity_Fluid &&
-                ((GT_MetaPipeEntity_Fluid)((IGregTechTileEntity)aTileEntityPipe).getMetaTileEntity()).mMaterial == Materials.Bronze) {
+        if (aTileEntityInput instanceof IGregTechTileEntity && ((IGregTechTileEntity) aTileEntityInput).getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Input &&
+                aTileEntityOutput instanceof IGregTechTileEntity && ((IGregTechTileEntity) aTileEntityOutput).getMetaTileEntity() instanceof GT_MetaTileEntity_Hatch_Output &&
+                aTileEntityPipe instanceof IGregTechTileEntity && ((IGregTechTileEntity) aTileEntityPipe).getMetaTileEntity() instanceof GT_MetaPipeEntity_Fluid &&
+                ((GT_MetaPipeEntity_Fluid) ((IGregTechTileEntity) aTileEntityPipe).getMetaTileEntity()).mMaterial == Materials.Bronze) {
             if (aDoAdd) {
                 addToMachineList((IGregTechTileEntity) aTileEntityInput, 128 + 51);
                 addToMachineList((IGregTechTileEntity) aTileEntityOutput, 128 + 51);
@@ -106,8 +115,6 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
         }
         return false;
     }
-
-
 
 
     public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
@@ -124,7 +131,7 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
         return Textures.BlockIcons.OVERLAY_PIPE_IN;
     }
 
-    private  static IIconContainer[] mFaces = new IIconContainer[]{Textures.BlockIcons.OVERLAY_PRIMITIVE_PUMP_ACTIVE, Textures.BlockIcons.OVERLAY_PRIMITIVE_PUMP_INACTIVE};
+    private static final IIconContainer[] mFaces = new IIconContainer[]{Textures.BlockIcons.OVERLAY_PRIMITIVE_PUMP_ACTIVE, Textures.BlockIcons.OVERLAY_PRIMITIVE_PUMP_INACTIVE};
 
     @Override
     public IIconContainer[] getFacings() {
@@ -133,6 +140,11 @@ public class GT_MetaTileEntity_WaterPumpPrimitive extends GT_MetaTileEntity_Wate
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone) {
         return super.getTexture(aBaseMetaTileEntity, aSide, aFacing, aColorIndex, aActive, aRedstone);
+    }
+
+    @Override
+    protected String getConsumptionDescription() {
+        return (getBaseMetaTileEntity().isActive() ? 40 : 0) + " L/t";
     }
 
 

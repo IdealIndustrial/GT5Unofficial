@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import static gregtech.api.enums.GT_Values.W;
 
 public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_MultiBlockBase {
-	private static final ItemStack miningPipe = GT_ModHandler.getIC2Item("miningPipe", 0);
+	protected static final ItemStack miningPipe = GT_ModHandler.getIC2Item("miningPipe", 0);
     private static final ItemStack miningPipeTip = GT_ModHandler.getIC2Item("miningPipeTip", 0);
     private static final Block miningPipeBlock = GT_Utility.getBlockFromStack(miningPipe);
     private static final Block miningPipeTipBlock = GT_Utility.getBlockFromStack(miningPipeTip);
@@ -107,8 +107,13 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
         case 1: return 1;
         case 2: return 3;
         }
-        
-        if (!GT_Utility.setBlockByFakePlayer(getFakePlayer(getBaseMetaTileEntity()), xPipe, yHead - 1, zPipe, miningPipeTipBlock, 0, isSimulating)) return 3;
+
+        if (!GT_Utility.setBlockByFakePlayer(getFakePlayer(getBaseMetaTileEntity()), xPipe, yHead - 1, zPipe, miningPipeTipBlock, 0, isSimulating)) {
+            Block nextBlock = getBaseMetaTileEntity().getWorld().getBlock(xPipe, yHead - 1, zPipe);
+            if (!Block.isEqualTo(nextBlock, miningPipeTipBlock)) {
+                return 3; // fixed! return 3 only if it was not "miningPipeTipBlock", otherwise it is ok.
+            }
+        }
         if (!isSimulating) {
             if (yHead != yDrill) getBaseMetaTileEntity().getWorld().setBlock(xPipe, yHead, zPipe, miningPipeBlock);
             getBaseMetaTileEntity().decrStackSize(1, 1);
@@ -143,10 +148,18 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
     }
 
     private boolean tryOutputPipe(){
-    	if (!getBaseMetaTileEntity().addStackToSlot(1, GT_Utility.copyAmount(1, miningPipe)))
-    		mOutputItems = new ItemStack[] {GT_Utility.copyAmount(1, miningPipe)};
+        if(allowPutPipesToController()) {
+            if (!getBaseMetaTileEntity().addStackToSlot(1, GT_Utility.copyAmount(1, miningPipe))) {
+                mOutputItems = new ItemStack[]{GT_Utility.copyAmount(1, miningPipe)};
+            }
+        } else {
+            ItemStack pickedUpPipe = miningPipe.copy();
+            pickedUpPipe.stackSize = 1;
+            addOutput(pickedUpPipe);
+        }
     	return true;
     }
+
 
     /**
      * @return 0 for available, 1 for invalid block, 2 for event canceled.
@@ -163,7 +176,7 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
     	return yHead <= 0 || checkBlockAndMeta(xPipe, yHead - 1, zPipe, Blocks.bedrock, W);
     }
 
-    private boolean isHasMiningPipes() {
+    public boolean isHasMiningPipes() {
         return isHasMiningPipes(1);
     }
 
@@ -332,6 +345,7 @@ public abstract class GT_MetaTileEntity_DrillerBase extends GT_MetaTileEntity_Mu
         return false;
     }
 
+    protected abstract boolean allowPutPipesToController();
     protected abstract ItemList getCasingBlockItem();
 
     protected abstract Materials getFrameMaterial();

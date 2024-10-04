@@ -1,12 +1,20 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.ConfigCategories;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.util.GT_Config;
 import net.minecraft.block.Block;
 
 public class GT_MetaTileEntity_LargeBoiler_Titanium
         extends GT_MetaTileEntity_LargeBoiler {
+    public static long oxygenPerOperation = 32;
+    public void onConfigLoad(GT_Config aConfig) {
+        super.onConfigLoad(aConfig);
+        oxygenPerOperation = Math.max(1, Math.min(500, aConfig.get(ConfigCategories.machineconfig, "LargeBoiler.Titanium.oxygenPerOperation", 32)));
+    }
+
     public GT_MetaTileEntity_LargeBoiler_Titanium(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
@@ -71,5 +79,9 @@ public class GT_MetaTileEntity_LargeBoiler_Titanium
     @Override
     int runtimeBoost(int mTime) {
         return mTime * 130 / 100;
+    }
+
+    public long getOxygenPerOperation(){
+        return oxygenPerOperation;
     }
 }

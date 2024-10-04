@@ -99,6 +99,10 @@ public abstract class GT_MetaTileEntity_BasicTank extends GT_MetaTileEntity_Tier
         mFluid = aFluid;
         return mFluid;
     }
+    @Override
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex, boolean aActive, boolean aRedstone, byte aFluidFacing) {
+        return getTexture(aBaseMetaTileEntity, aSide, aFacing, aColorIndex, aActive, aRedstone);
+    }
 
     public FluidStack getDrainableStack() {
         return mFluid;

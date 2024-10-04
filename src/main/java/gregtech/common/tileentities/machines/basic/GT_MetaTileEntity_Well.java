@@ -71,6 +71,10 @@ public class GT_MetaTileEntity_Well extends GT_MetaTileEntity_BasicTank {
         if (mProgresstime >= 60) {
             mProgresstime = 0;
             FluidStack fs = GT_UndergroundOil.undergroundOil(getBaseMetaTileEntity(), 1f);
+            if (fs == null) {
+                mProgresstime = 0;
+                return;
+            }
             fs.amount *= mEfficiency;
             if (isFluidAllowed(fs.getFluid())) {
                 if (fluid == null)

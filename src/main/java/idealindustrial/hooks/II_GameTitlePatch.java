@@ -2,16 +2,15 @@ package idealindustrial.hooks;
 
 import gloomyfolken.hooklib.asm.Hook;
 import gregtech.GT_Mod;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.Display;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import javax.imageio.ImageIO;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
+import org.lwjgl.opengl.Display;
 
 public class II_GameTitlePatch {
 
@@ -24,7 +23,6 @@ public class II_GameTitlePatch {
             InputStream inputstream = GT_Mod.class.getResourceAsStream("/assets/" + icon.getResourceDomain() + "/" + icon.getResourcePath());
             Display.setIcon(new ByteBuffer[]{call(inputstream)});
         } catch (IOException ignore) {
-
         }
     }
 

@@ -26,7 +26,7 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
         for (byte i = 16; i < 32; i = (byte) (i + 1)) {
             Textures.BlockIcons.casingTexturePages[1][i] = new GT_CopiedBlockTexture(this, 6, i);
         }
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
         GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".0.name", "Plascrete Window"); // for Cleanroom
         ItemList.Block_Plascrete_Window.set(new ItemStack(this.setHardness(40.0f).setResistance(100.0f), 1, 0));
     }
@@ -55,7 +55,7 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
     public float getBlockHardness(World aWorld, int aX, int aY, int aZ) {
         int tMeta = aWorld.getBlockMetadata(aX, aY, aZ);
         if (tMeta == 0) {
-            return 40.0F;
+            return 10.0F;
         }
         assert tMeta >= 0 && tMeta <= maxAllowedMeta : "GT_Block_Glass_Casings - Invalid Metadata: " + tMeta;
         return 1.0F;
@@ -89,8 +89,7 @@ public class GT_Block_Glass_Casings extends GT_Block_Casings_Abstract {
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess aWorld, int aX, int aY, int aZ, int aSide)
     {
-        Block block = aWorld.getBlock(aX, aY, aZ);
-        return !block.isBlockSolid(aWorld, aX, aY, aZ, aSide);
+        return aWorld.getBlock(aX, aY, aZ) != this && super.shouldSideBeRendered(aWorld, aX, aY, aZ, aSide);
     }
 
 }

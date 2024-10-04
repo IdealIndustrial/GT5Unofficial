@@ -8,6 +8,8 @@ import gregtech.api.util.GT_ModHandler;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+//import cpw.mods.fml.common.Loader;
+//import com.glodblock.github.loader.ItemAndBlockHolder;
 
 public class GT_RecyclerBlacklistLoader
         implements Runnable {
@@ -52,5 +54,9 @@ public class GT_RecyclerBlacklistLoader
             GT_ModHandler.addToRecyclerBlackList(GT_ModHandler.getRecipeOutput(new ItemStack[]{new ItemStack(Blocks.glass, 1, 0)}));
             GT_ModHandler.addToRecyclerBlackList(GT_ModHandler.getRecipeOutput(new ItemStack[]{new ItemStack(Blocks.glass, 1, 0), new ItemStack(Blocks.glass, 1, 0)}));
         }
+//        if (Loader.isModLoaded("ae2fc")) {
+//            GT_ModHandler.addToRecyclerBlackList(new ItemStack(ItemAndBlockHolder.DROP));
+//            GT_ModHandler.addToRecyclerBlackList(new ItemStack(ItemAndBlockHolder.PACKET));
+//        }     
     }
 }

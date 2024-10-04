@@ -1,20 +1,16 @@
 package gregtech.api.util;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import gregtech.api.GregTech_API;
+import java.util.HashMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-
-import java.util.HashMap;
-import java.util.Map.Entry;
 
 import static gregtech.api.enums.GT_Values.E;
 
 public class GT_LanguageManager {
-    public static final HashMap<String, String> TEMPMAP = new HashMap<String, String>(), BUFFERMAP = new HashMap<String, String>(), LANGMAP = new HashMap<String, String>();
+    public static final HashMap<String, String> TEMPMAP = new HashMap<>(), BUFFERMAP = new HashMap<>(), LANGMAP = new HashMap<>();
     public static Configuration sEnglishFile;
     public static boolean sUseEnglishFile = false;
     public static boolean i18nPlaceholder = true;
@@ -25,10 +21,13 @@ public class GT_LanguageManager {
 
     public static synchronized String addStringLocalization(String aKey, String aEnglish, boolean aWriteIntoLangFile) {
         if (aKey == null) return E;
-        if (aWriteIntoLangFile){ aEnglish = writeToLangFile(aKey, aEnglish);
-        if(!LANGMAP.containsKey(aKey)){
-        	LANGMAP.put(aKey, aEnglish);
-        	}
+		//TODO LuxinfineTeam code REPLACE
+		/*
+		if (aWriteIntoLangFile){
+			aEnglish = writeToLangFile(aKey, aEnglish);
+			if(!LANGMAP.containsKey(aKey)){
+				LANGMAP.put(aKey, aEnglish);
+			}
         }
         TEMPMAP.put(aKey.trim(), aEnglish);
         LanguageRegistry.instance().injectLanguage("en_US", TEMPMAP);
@@ -37,9 +36,19 @@ public class GT_LanguageManager {
         	aEnglish = LANGMAP.get(aKey);
         }
         return aEnglish;
+		*/
+		String translate = LanguageRegistry.instance().getStringLocalization(aKey);
+		if(!translate.isEmpty()) return translate;
+                if (aWriteIntoLangFile){
+                    LanguageRegistry.instance().addStringLocalization(aKey, "en_US", aEnglish);
+                }
+		return aEnglish;
+		//TODO LuxinfineTeam code END
     }
 
     private static synchronized String writeToLangFile(String aKey, String aEnglish) {
+		/*TODO LuxinfineTeam code REMOVE
+
         if (aKey == null) return E;
         if (sEnglishFile == null) {
             BUFFERMAP.put(aKey.trim(), aEnglish);
@@ -57,7 +66,7 @@ public class GT_LanguageManager {
                 aEnglish = tProperty.getString();
                 sUseEnglishFile = true;
             }
-        }
+        }*/
         return aEnglish;
     }
 
@@ -107,6 +116,8 @@ public class GT_LanguageManager {
     }
     
     public static void writePlaceholderStrings(){
+		/*TODO LuxinfineTeam code REMOVE (port translates to lang file
+
     	addStringLocalization("Interaction_DESCRIPTION_Index_001", "Puts out into adjacent Slot #");
     	addStringLocalization("Interaction_DESCRIPTION_Index_002", "Grabs in for own Slot #");    	
     	addStringLocalization("Interaction_DESCRIPTION_Index_003", "Normal");
@@ -312,11 +323,6 @@ public class GT_LanguageManager {
     	addStringLocalization("Interaction_DESCRIPTION_Index_203", " gibbl");
     	addStringLocalization("Interaction_DESCRIPTION_Index_204", "No Pollution in Chunk! HAYO!");
     	addStringLocalization("Interaction_DESCRIPTION_Index_205", " of ");
-//    	addStringLocalization("Interaction_DESCRIPTION_Index_206", "Grab");
-//    	addStringLocalization("Interaction_DESCRIPTION_Index_207", "Grab");
-//    	addStringLocalization("Interaction_DESCRIPTION_Index_208", "Grab");
-//    	addStringLocalization("Interaction_DESCRIPTION_Index_209", "Grab");
-//    	addStringLocalization("Interaction_DESCRIPTION_Index_210", "Grab");
         addStringLocalization("Interaction_DESCRIPTION_Index_211", "Items per side: ");
         addStringLocalization("Interaction_DESCRIPTION_Index_212", "Input enabled");
         addStringLocalization("Interaction_DESCRIPTION_Index_213", "Input disabled");
@@ -341,7 +347,7 @@ public class GT_LanguageManager {
         addStringLocalization("Item_DESCRIPTION_Index_015", "Device at:");
         addStringLocalization("Item_DESCRIPTION_Index_016", "Amount: %s L");
         addStringLocalization("Item_DESCRIPTION_Index_017", "Temperature: %s K");
-        addStringLocalization("Item_DESCRIPTION_Index_018", "State: %s");
+        addStringLocalization("Item_DESCRIPTION_Index_018", "State: %s");*/
     }
     
 }

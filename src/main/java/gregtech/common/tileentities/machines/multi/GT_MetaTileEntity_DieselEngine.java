@@ -1,6 +1,7 @@
 package gregtech.common.tileentities.machines.multi;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.ConfigCategories;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
@@ -11,12 +12,14 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Dynamo;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -28,12 +31,19 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
     protected int fuelRemaining = 0;
     protected boolean boostEu = false;
 
+    private static int oxygenPerTick = 50;
+
     public GT_MetaTileEntity_DieselEngine(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
 
     public GT_MetaTileEntity_DieselEngine(String aName) {
         super(aName);
+    }
+
+    public void onConfigLoad(GT_Config aConfig) {
+        super.onConfigLoad(aConfig);
+        oxygenPerTick =  Math.max(1,Math.min(100, aConfig.get(ConfigCategories.machineconfig, "DieselEngine.oxygenPerTick", 50)));
     }
 
     public String[] getDescription() {
@@ -49,7 +59,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                 "1x Dynamo Hatch (back centered)",
                 "Engine Intake Casings must not be obstructed in front (only air blocks)",
                 "Supply Flammable Fuels and 1000L of Lubricant per hour to run.",
-                "Supply 40L of Oxygen per second to boost output (optional).",
+                "Supply "+(oxygenPerTick * 20)+"L of Oxygen per second to boost output (optional).",
                 "Default: Produces 2048EU/t at 100% efficiency",
                 "Boosted: Produces 6144EU/t at 150% efficiency",
                 "Causes " + 20 * getPollutionPerTick(null) + " Pollution per second"};
@@ -84,7 +94,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                         if (hatchFluid1.isFluidEqual(tLiquid)) { //Has a diesel fluid
                             fuelConsumption = tLiquid.amount = boostEu ? (4096 / aFuel.mSpecialValue) : (2048 / aFuel.mSpecialValue); //Calc fuel consumption
                             if(depleteInput(tLiquid)) { //Deplete that amount
-                                boostEu = depleteInput(Materials.Oxygen.getGas(2L));
+                                boostEu = depleteInput(Materials.Oxygen.getGas(oxygenPerTick));
 
                                 if(tFluids.contains(Materials.Lubricant.getFluid(1L))) { //Has lubricant?
                                     //Deplete Lubricant. 1000L should = 1 hour of runtime (if baseEU = 2048)
@@ -224,7 +234,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
 
     @Override
     public int getPollutionPerTick(ItemStack aStack) {
-        return 16;
+        return boostEu ? 32 : 16;
     }
 
     @Override
@@ -234,14 +244,24 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
 
     @Override
     public String[] getInfoData() {
+        String tRunning = mMaxProgresstime>0 ? "Running":"Stopped";
         return new String[]{
                 "Diesel Engine",
-                "Current Output: " + mEUt * mEfficiency / 10000 + " EU/t",
-                "Fuel Consumption: " + fuelConsumption + "L/t",
-                "Fuel Value: " + fuelValue + " EU/L",
-                "Fuel Remaining: " + fuelRemaining + " Litres",
-                "Current Efficiency: " + (mEfficiency / 100) + "%",
-                getIdealStatus() == getRepairStatus() ? "No Maintainance issues" : "Needs Maintainance"};
+                tRunning,
+                "Mode: ",
+                (boostEu ? "Boosted" : "Normal"),
+                "Output: ",
+                mEUt * mEfficiency / 10000 + " EU/t",
+                "Fuel Consumption: ",
+                fuelConsumption + "L/t",
+                "Fuel Value: ",
+                fuelValue + " EU/L",
+                "Fuel Remaining: ",
+                fuelRemaining + " Litres",
+                "Efficiency: ",
+                (mEfficiency / 100) + "%",
+                StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
+                "" + (getIdealStatus() - getRepairStatus())};
     }
 
     @Override

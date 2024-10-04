@@ -10,9 +10,12 @@ import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 
 public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
 	private String lockedFluidName = null;
@@ -22,7 +25,7 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
     public GT_MetaTileEntity_Hatch_Output(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier, 3, new String[]{
         		"Fluid Output for Multiblocks",
-        		"Capacity: " + 8000 * (aTier + 1) + "L",
+        		"Capacity: " + countCapacity(aTier) + "L",
         		"Right click with screwdriver to restrict output",
         		"Can be restricted to put out Items and/or Steam/No Steam/1 specific Fluid",
         		"Restricted Output Hatches are given priority for Multiblock Fluid output"});
@@ -154,9 +157,20 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
         return aSide == aBaseMetaTileEntity.getFrontFacing() && aIndex == 0;
     }
 
+    public static int countCapacity (int aTier) {
+        int x;
+    
+        if (aTier > 3) {
+            x = (aTier - 3) * 8;
+        } else {
+            x =  aTier + 1;
+        }    
+        return 8000 * x;
+    }
+
     @Override
     public int getCapacity() {
-        return 8000 * (mTier + 1);
+        return countCapacity(mTier);
     }
 
     @Override
@@ -171,35 +185,35 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
         String inBrackets;
         switch (mMode) {
             case 0:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("108","Outputs misc. Fluids, Steam and Items"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_108"));
                 this.setLockedFluidName(null);
                 break;
             case 1:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("109","Outputs Steam and Items"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_109"));
                 this.setLockedFluidName(null);
                 break;
             case 2:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("110","Outputs Steam and misc. Fluids"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_110"));
                 this.setLockedFluidName(null);
                 break;
             case 3:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("111","Outputs Steam"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_111"));
                 this.setLockedFluidName(null);
                 break;
             case 4:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("112","Outputs misc. Fluids and Items"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_112"));
                 this.setLockedFluidName(null);
                 break;
             case 5:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("113","Outputs only Items"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_113"));
                 this.setLockedFluidName(null);
                 break;
             case 6:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("114","Outputs only misc. Fluids"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_114"));
                 this.setLockedFluidName(null);
                 break;
             case 7:
-                GT_Utility.sendChatToPlayer(aPlayer, trans("115","Outputs nothing"));
+                aPlayer.addChatComponentMessage(new ChatComponentTranslation("Interaction_DESCRIPTION_Index_115"));
                 this.setLockedFluidName(null);
                 break;
             case 8:
@@ -267,4 +281,20 @@ public class GT_MetaTileEntity_Hatch_Output extends GT_MetaTileEntity_Hatch {
         	GT_Utility.sendChatToPlayer(playerThatLockedfluid, String.format(trans("151.4","Sucessfully locked Fluid to %s"), mFluid.getLocalizedName()));
     	}
     }
+	
+    @Override
+    public boolean isGivingInformation() {
+        return true;
+    }
+    @Override
+    public String[] getInfoData() {
+        return new String[]{
+            EnumChatFormatting.BLUE + "Output Hatch"+ EnumChatFormatting.RESET,
+            "Stored Fluid:",
+            EnumChatFormatting.GOLD + (mFluid == null ? "No Fluid" : mFluid.getLocalizedName())+ EnumChatFormatting.RESET,
+            EnumChatFormatting.GREEN + Integer.toString(mFluid == null ? 0 : mFluid.amount) + " L"+ EnumChatFormatting.RESET+" "+
+                EnumChatFormatting.YELLOW+ getCapacity() + " L"+ EnumChatFormatting.RESET,
+            lockedFluidName == null ? "Not Locked" : ("Locked to " + StatCollector.translateToLocal(getLockedFluidName()))
+        };
+    }	
 }

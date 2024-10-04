@@ -36,7 +36,7 @@ public class GT_Item_Machines
         super(par1);
         setMaxDamage(0);
         setHasSubtypes(true);
-        setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setCreativeTab(GregTech_API.TAB_GREGTECH.get());
         INSTANCE = this;
     }
 

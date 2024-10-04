@@ -18,10 +18,14 @@ import gregtech.api.util.GT_Config;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -31,13 +35,10 @@ import net.minecraft.world.World;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.food.IEdible;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static gregtech.api.enums.GT_Values.*;
+import static gregtech.api.enums.GT_Values.D1;
+import static gregtech.api.enums.GT_Values.MOD_ID_APC;
+import static gregtech.api.enums.GT_Values.RA;
+import static gregtech.api.enums.GT_Values.RES_PATH_ITEM;
 
 /**
  * @author Gregorius Techneticies
@@ -59,7 +60,7 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
      * <p/>
      * You can also use the unlocalized Name gotten from getUnlocalizedName() as Key if you want to get a specific Item.
      */
-    public static final ConcurrentHashMap<String, GT_MetaGenerated_Item> sInstances = new ConcurrentHashMap<String, GT_MetaGenerated_Item>();
+    public static final ConcurrentHashMap<String, GT_MetaGenerated_Item> sInstances = new ConcurrentHashMap<>();
 
 	/* ---------- CONSTRUCTOR AND MEMBER VARIABLES ---------- */
 
@@ -68,10 +69,10 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
     public final BitSet mVisibleItems;
     public final IIcon[][] mIconList;
 
-    public final ConcurrentHashMap<Short, IFoodStat> mFoodStats = new ConcurrentHashMap<Short, IFoodStat>();
-    public final ConcurrentHashMap<Short, Long[]> mElectricStats = new ConcurrentHashMap<Short, Long[]>();//wtf? why boxing ? array is already an object todo: replace with long[]
-    public final ConcurrentHashMap<Short, Long[]> mFluidContainerStats = new ConcurrentHashMap<Short, Long[]>();
-    public final ConcurrentHashMap<Short, Short> mBurnValues = new ConcurrentHashMap<Short, Short>();
+    public final ConcurrentHashMap<Short, IFoodStat> mFoodStats = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<Short, Long[]> mElectricStats = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<Short, Long[]> mFluidContainerStats = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<Short, Short> mBurnValues = new ConcurrentHashMap<>();
 
     /**
      * Creates the Item using these Parameters.
@@ -80,7 +81,7 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
      */
     public GT_MetaGenerated_Item(String aUnlocalized, short aOffset, short aItemAmount) {
         super(aUnlocalized);
-        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS);
+        setCreativeTab(GregTech_API.TAB_GREGTECH_MATERIALS.get());
         setHasSubtypes(true);
         setMaxDamage(0);
         mEnabledItems = new BitSet(aItemAmount);
@@ -99,7 +100,6 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
      * @param aID           The Id of the assigned Item [0 - mItemAmount] (The MetaData gets auto-shifted by +mOffset)
      * @param aEnglish      The Default Localized Name of the created Item
      * @param aToolTip      The Default ToolTip of the created Item, you can also insert null for having no ToolTip
-     * @param aFoodBehavior The Food Value of this Item. Can be null aswell. Just a convenience thing.
      * @param aRandomData   The OreDict Names you want to give the Item. Also used for TC Aspects and some other things.
      * @return An ItemStack containing the newly created Item.
      */
@@ -111,7 +111,7 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
             mVisibleItems.set(aID);
             GT_LanguageManager.addStringLocalization(getUnlocalizedName(rStack) + ".name", aEnglish);
             GT_LanguageManager.addStringLocalization(getUnlocalizedName(rStack) + ".tooltip", aToolTip);
-            List<TC_AspectStack> tAspects = new ArrayList<TC_AspectStack>();
+            List<TC_AspectStack> tAspects = new ArrayList<>();
             // Important Stuff to do first
             for (Object tRandomData : aRandomData)
                 if (tRandomData instanceof SubTag) {
@@ -121,7 +121,6 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
                     }
                     if (tRandomData == SubTag.NO_UNIFICATION) {
                         GT_OreDictUnificator.addToBlacklist(rStack);
-                        continue;
                     }
                 }
             // now check for the rest
@@ -160,7 +159,6 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
                     }
                     if (tUseOreDict) {
                         GT_OreDictUnificator.registerOre(tRandomData, rStack);
-                        continue;
                     }
                 }
             if (GregTech_API.sThaumcraftCompat != null)
@@ -222,13 +220,8 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
 
     /**
      * @param aMetaValue     the Meta Value of the Item you want to set it to. [0 - 32765]
-     * @param aMaxCharge     Maximum Charge. (if this is == 0 it will remove the Electric Behavior)
-     * @param aTransferLimit Transfer Limit.
-     * @param aTier          The electric Tier.
-     * @param aSpecialData   If this Item has a Fixed Charge, like a SingleUse Battery (if > 0).
-     *                       Use -1 if you want to make this Battery chargeable (the use and canUse Functions will still discharge if you just use this)
-     *                       Use -2 if you want to make this Battery dischargeable.
-     *                       Use -3 if you want to make this Battery charge/discharge-able.
+     * @param aCapacity
+     * @param aStacksize
      * @return the Item itself for convenience in constructing.
      */
     public final GT_MetaGenerated_Item setFluidContainerStats(int aMetaValue, long aCapacity, long aStacksize) {
@@ -358,9 +351,5 @@ public abstract class GT_MetaGenerated_Item extends GT_MetaBase_Item implements 
     @Override
     public boolean getIsRepairable(ItemStack aStack, ItemStack aMaterial) {
         return false;
-    }
-
-    public IFoodStat getFoodStat(ItemStack stack) {
-        return mFoodStats.get(((short) Items.feather.getDamage(stack)));
     }
 }

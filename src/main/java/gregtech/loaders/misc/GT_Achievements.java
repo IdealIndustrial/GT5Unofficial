@@ -38,8 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GT_Achievements {
 
-    public static List<Materials> oreList = new ArrayList<Materials>();
-    public static List<Integer[]> oreStats = new ArrayList<Integer[]>();
+    public static List<Materials> oreList = new ArrayList<>();
+    public static List<Integer[]> oreStats = new ArrayList<>();
     public static int oreReg = -1;
     public static int assReg=-1;
     public ConcurrentHashMap<String, Achievement> achievementList;
@@ -260,7 +260,6 @@ public class GT_Achievements {
         if (!GT_Mod.gregtechproxy.mAchievements) {
             return null;
         }
-        ;
         Achievement achievement = new Achievement(textId, textId, this.adjX + x, this.adjY + y, icon, getAchievement(requirement));
         if (special) {
             achievement.setSpecial();

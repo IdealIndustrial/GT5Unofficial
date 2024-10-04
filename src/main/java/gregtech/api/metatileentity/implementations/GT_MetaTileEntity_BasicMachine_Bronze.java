@@ -17,20 +17,22 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.ArrayList;
 
 import static gregtech.api.enums.GT_Values.D1;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * NEVER INCLUDE THIS FILE IN YOUR MOD!!!
  * <p/>
- * This is the main construct for my Basic Machines such as the Automatic Extractor
- * Extend this class to make a simple Machine
+ * This is the main construct for my Basic Machines such as the Automatic
+ * Extractor Extend this class to make a simple Machine
  */
 public abstract class GT_MetaTileEntity_BasicMachine_Bronze extends GT_MetaTileEntity_BasicMachine {
+
     /*
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_BasicMachine_Bronze(mTier, mDescription, mTextures);
     }
-    */
+     */
     public boolean mNeedsSteamVenting = false;
 
     public GT_MetaTileEntity_BasicMachine_Bronze(int aID, String aName, String aNameRegional, String aDescription, int aInputSlotCount, int aOutputSlotCount, boolean aBricked) {
@@ -55,6 +57,14 @@ public abstract class GT_MetaTileEntity_BasicMachine_Bronze extends GT_MetaTileE
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
         mNeedsSteamVenting = aNBT.getBoolean("mNeedsSteamVenting");
+    }
+    
+    @Override
+    public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        if (aSide == getBaseMetaTileEntity().getFrontFacing() || aSide == mMainFacing) {
+            mAllowInputFromOutputSide = !mAllowInputFromOutputSide;
+            GT_Utility.sendChatToPlayer(aPlayer, mAllowInputFromOutputSide ? trans("095","Input from Output Side allowed") : trans("096","Input from Output Side forbidden"));
+        }
     }
 
     @Override
@@ -137,7 +147,9 @@ public abstract class GT_MetaTileEntity_BasicMachine_Bronze extends GT_MetaTileE
                     GT_Utility.applyHeatDamage(tLiving, getSteamDamage());
                 }
             } catch (Throwable e) {
-                if (D1) e.printStackTrace(GT_Log.err);
+                if (D1) {
+                    e.printStackTrace(GT_Log.err);
+                }
             }
         }
         return !mNeedsSteamVenting;
@@ -145,7 +157,9 @@ public abstract class GT_MetaTileEntity_BasicMachine_Bronze extends GT_MetaTileE
 
     @Override
     public void endProcess() {
-        if (isSteampowered()) mNeedsSteamVenting = true;
+        if (isSteampowered()) {
+            mNeedsSteamVenting = true;
+        }
     }
 
     @Override
@@ -153,8 +167,9 @@ public abstract class GT_MetaTileEntity_BasicMachine_Bronze extends GT_MetaTileE
         super.doSound(aIndex, aX, aY, aZ);
         if (aIndex == 9) {
             GT_Utility.doSoundAtClient(GregTech_API.sSoundList.get(4), 5, 1.0F, aX, aY, aZ);
-            for (int l = 0; l < 8; ++l)
+            for (int l = 0; l < 8; ++l) {
                 getBaseMetaTileEntity().getWorld().spawnParticle("largesmoke", aX - 0.5 + (new XSTR()).nextFloat(), aY - 0.5 + (new XSTR()).nextFloat(), aZ - 0.5 + (new XSTR()).nextFloat(), ForgeDirection.getOrientation(getBaseMetaTileEntity().getFrontFacing()).offsetX / 5.0, ForgeDirection.getOrientation(getBaseMetaTileEntity().getFrontFacing()).offsetY / 5.0, ForgeDirection.getOrientation(getBaseMetaTileEntity().getFrontFacing()).offsetZ / 5.0);
+            }
         }
     }
 

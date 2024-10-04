@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -113,7 +114,6 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
         return ((addMaintenanceToMachineList(tTileEntity, getCasingTextureIndex())) || (addInputToMachineList(tTileEntity, getCasingTextureIndex())) || (addOutputToMachineList(tTileEntity, getCasingTextureIndex())) || (addMufflerToMachineList(tTileEntity, getCasingTextureIndex())));
     }
 
-
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
@@ -193,7 +193,6 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
     @Override
     public String[] getInfoData() {
         String tRunning = mMaxProgresstime>0 ? "Turbine running":"Turbine stopped";
-        String tMaintainance = getIdealStatus() == getRepairStatus() ? "No Maintainance issues" : "Needs Maintainance" ;
         int tDura = 0;
 
         if (mInventory[1] != null && mInventory[1].getItem() instanceof GT_MetaGenerated_Tool_01) {
@@ -203,12 +202,18 @@ public abstract class GT_MetaTileEntity_LargeTurbine extends GT_MetaTileEntity_M
         return new String[]{
                 "Large Turbine",
                 tRunning,
-                "Current Output: "+mEUt+" EU/t",
-                "Optimal Flow: "+(int)realOptFlow+" L/t",
-                "Fuel Remaining: "+storedFluid+"L",
-                "Current Speed: "+(mEfficiency/100)+"%",
-                "Turbine Damage: "+tDura+"%",
-                tMaintainance};
+                "Current Output: ",
+                mEUt+" EU/t",
+                "Optimal Flow: ",
+                (int)realOptFlow+" L/t",
+                "Fuel Remaining: ",
+                storedFluid+"L",
+                "Current Speed: ",
+                (mEfficiency/100)+"%",
+                "Turbine Damage: ",
+                tDura+"%",
+                StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
+                "" + (getIdealStatus() - getRepairStatus())};
     }
 
     @Override

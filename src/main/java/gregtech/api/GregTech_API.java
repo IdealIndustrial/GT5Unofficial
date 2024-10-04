@@ -18,20 +18,34 @@ import gregtech.api.objects.GT_Cover_None;
 import gregtech.api.objects.GT_HashSet;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.threads.GT_Runnable_MachineBlockUpdate;
-import gregtech.api.util.*;
+import gregtech.api.util.GT_CircuitryBehavior;
+import gregtech.api.util.GT_Config;
+import gregtech.api.util.GT_CoverBehavior;
+import gregtech.api.util.GT_CreativeTab;
+import gregtech.api.util.GT_Log;
+import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GT_OreDictUnificator;
+import gregtech.api.util.GT_Utility;
 import gregtech.api.world.GT_Worldgen;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static gregtech.api.enums.GT_Values.*;
+import static gregtech.api.enums.GT_Values.B;
+import static gregtech.api.enums.GT_Values.L;
+import static gregtech.api.enums.GT_Values.M;
+import static gregtech.api.enums.GT_Values.MOD_ID_IC2;
 
 /**
  * Please do not include this File in your Mod-download as it ruins compatiblity, like with the IC2-API
@@ -56,7 +70,7 @@ public class GregTech_API {
      * Fixes the HashMap Mappings for ItemStacks once the Server started
      */
     public static final Collection<Map<? extends GT_ItemStack, ?>> sItemStackMappings = new ArrayList<>();
-    public static final Collection<Map<Fluid, ?>> sFluidMappings = new ArrayList<Map<Fluid, ?>>();
+    public static final Collection<Map<Fluid, ?>> sFluidMappings = new ArrayList<>();
     /**
      * The MetaTileEntity-ID-List-Length
      */
@@ -64,9 +78,11 @@ public class GregTech_API {
     /**
      * My Creative Tab
      */
-    public static final CreativeTabs TAB_GREGTECH = new GT_CreativeTab("Main", "Main"),
-            TAB_GREGTECH_MATERIALS = new GT_CreativeTab("Materials", "Materials"),
-            TAB_GREGTECH_ORES = new GT_CreativeTab("Ores", "Ores");
+    //due to GT_CreativeTab constructor calls localization, these constants cannot be initialized on <cinit>
+    //so converting these constants to lazy initialized
+    public static final Supplier<GT_CreativeTab> TAB_GREGTECH = GT_Utility.lazy(() -> new GT_CreativeTab("Main", "Main"));
+    public static final Supplier<GT_CreativeTab> TAB_GREGTECH_MATERIALS = GT_Utility.lazy(() -> new GT_CreativeTab("Materials", "Materials"));
+    public static final Supplier<GT_CreativeTab> TAB_GREGTECH_ORES =  GT_Utility.lazy(() -> new GT_CreativeTab("Ores", "Ores"));
     /**
      * A List of all registered MetaTileEntities
      * <p/>
@@ -102,60 +118,60 @@ public class GregTech_API {
     /**
      * The Icon List for Covers
      */
-    public static final Map<GT_ItemStack, ITexture> sCovers = new ConcurrentHashMap<GT_ItemStack, ITexture>();
+    public static final Map<GT_ItemStack, ITexture> sCovers = new ConcurrentHashMap<>();
     /**
      * The List of Cover Behaviors for the Covers
      */
-    public static final Map<GT_ItemStack, GT_CoverBehavior> sCoverBehaviors = new ConcurrentHashMap<GT_ItemStack, GT_CoverBehavior>();
+    public static final Map<GT_ItemStack, GT_CoverBehavior> sCoverBehaviors = new ConcurrentHashMap<>();
     /**
      * The List of Circuit Behaviors for the Redstone Circuit Block
      */
-    public static final Map<Integer, GT_CircuitryBehavior> sCircuitryBehaviors = new ConcurrentHashMap<Integer, GT_CircuitryBehavior>();
+    public static final Map<Integer, GT_CircuitryBehavior> sCircuitryBehaviors = new ConcurrentHashMap<>();
     /**
      * The List of Blocks, which can conduct Machine Block Updates
      */
-    public static final Map<Block, Integer> sMachineIDs = new ConcurrentHashMap<Block, Integer>();
+    public static final Map<Block, Integer> sMachineIDs = new ConcurrentHashMap<>();
     /**
      * The Redstone Frequencies
      */
-    public static final Map<Integer, Byte> sWirelessRedstone = new ConcurrentHashMap<Integer, Byte>();
+    public static final Map<Integer, Byte> sWirelessRedstone = new ConcurrentHashMap<>();
     /**
      * The IDSU Frequencies
      */
-    public static final Map<Integer, Integer> sIDSUList = new ConcurrentHashMap<Integer, Integer>();
+    public static final Map<Integer, Integer> sIDSUList = new ConcurrentHashMap<>();
     /**
      * A List of all Books, which were created using @GT_Utility.getWrittenBook the original Title is the Key Value
      */
-    public static final Map<String, ItemStack> sBookList = new ConcurrentHashMap<String, ItemStack>();
+    public static final Map<String, ItemStack> sBookList = new ConcurrentHashMap<>();
     /**
      * The List of all Sounds used in GT, indices are in the static Block at the bottom
      */
-    public static final Map<Integer, String> sSoundList = new ConcurrentHashMap<Integer, String>();
+    public static final Map<Integer, String> sSoundList = new ConcurrentHashMap<>();
     /**
      * The List of Tools, which can be used. Accepts regular damageable Items and Electric Items
      */
-    public static final GT_HashSet<GT_ItemStack> sToolList = new GT_HashSet<GT_ItemStack>(),
-            sCrowbarList = new GT_HashSet<GT_ItemStack>(), sScrewdriverList = new GT_HashSet<GT_ItemStack>(),
-            sWrenchList = new GT_HashSet<GT_ItemStack>(), sSoftHammerList = new GT_HashSet<GT_ItemStack>(),
-            sHardHammerList = new GT_HashSet<GT_ItemStack>(), sWireCutterList = new GT_HashSet<GT_ItemStack>(),
-            sSolderingToolList = new GT_HashSet<GT_ItemStack>(), sSolderingMetalList = new GT_HashSet<GT_ItemStack>();
+    public static final GT_HashSet<GT_ItemStack> sToolList = new GT_HashSet<>(),
+            sCrowbarList = new GT_HashSet<>(), sScrewdriverList = new GT_HashSet<>(),
+            sWrenchList = new GT_HashSet<>(), sSoftHammerList = new GT_HashSet<>(),
+            sHardHammerList = new GT_HashSet<>(), sWireCutterList = new GT_HashSet<>(),
+            sSolderingToolList = new GT_HashSet<>(), sSolderingMetalList = new GT_HashSet<>();
     /**
      * The List of Hazmat Armors
      */
-    public static final GT_HashSet<GT_ItemStack> sGasHazmatList = new GT_HashSet<GT_ItemStack>(),
-            sBioHazmatList = new GT_HashSet<GT_ItemStack>(), sFrostHazmatList = new GT_HashSet<GT_ItemStack>(),
-            sHeatHazmatList = new GT_HashSet<GT_ItemStack>(), sRadioHazmatList = new GT_HashSet<GT_ItemStack>(),
-            sElectroHazmatList = new GT_HashSet<GT_ItemStack>(), sQuantumArmorList = new GT_HashSet<GT_ItemStack>();
+    public static final GT_HashSet<GT_ItemStack> sGasHazmatList = new GT_HashSet<>(),
+            sBioHazmatList = new GT_HashSet<>(), sFrostHazmatList = new GT_HashSet<>(),
+            sHeatHazmatList = new GT_HashSet<>(), sRadioHazmatList = new GT_HashSet<>(),
+            sElectroHazmatList = new GT_HashSet<>(), sQuantumArmorList = new GT_HashSet<>();
     /**
      * The List of Dimensions, which are Whitelisted for the Teleporter. This list should not contain other Planets.
      * Mystcraft Dimensions and other Dimensional Things should be allowed.
      * Mystcraft and Twilight Forest are automatically considered a Dimension, without being in this List.
      */
-    public static final Collection<Integer> sDimensionalList = new HashSet<Integer>();
+    public static final Collection<Integer> sDimensionalList = new HashSet<>();
     /**
      * Lists of all the active World generation Features, these are getting Initialized in Postload!
      */
-    public static final List<GT_Worldgen> sWorldgenList = new ArrayList<GT_Worldgen>();
+    public static final List<GT_Worldgen> sWorldgenList = new ArrayList<>();
     /**
      * A List containing all the Materials, which are somehow in use by GT and therefor receive a specific Set of Items.
      */
@@ -179,12 +195,12 @@ public class GregTech_API {
      * without having to control the load order. Add your "Commands" in the Constructor or in a static Code Block of your Mods Main Class.
      * These are not Threaded, I just use a native Java Interface for their execution. Implement just the Method run() and everything should work
      */
-    public static List<Runnable> sBeforeGTPreload = new ArrayList<Runnable>(), sAfterGTPreload = new ArrayList<Runnable>(),
-            sBeforeGTLoad = new ArrayList<Runnable>(), sAfterGTLoad = new ArrayList<Runnable>(),
-            sBeforeGTPostload = new ArrayList<Runnable>(), sAfterGTPostload = new ArrayList<Runnable>(),
-            sBeforeGTServerstart = new ArrayList<Runnable>(), sAfterGTServerstart = new ArrayList<Runnable>(),
-            sBeforeGTServerstop = new ArrayList<Runnable>(), sAfterGTServerstop = new ArrayList<Runnable>(),
-            sGTBlockIconload = new ArrayList<Runnable>(), sGTItemIconload = new ArrayList<Runnable>();
+    public static List<Runnable> sBeforeGTPreload = new ArrayList<>(), sAfterGTPreload = new ArrayList<>(),
+            sBeforeGTLoad = new ArrayList<>(), sAfterGTLoad = new ArrayList<>(),
+            sBeforeGTPostload = new ArrayList<>(), sAfterGTPostload = new ArrayList<>(),
+            sBeforeGTServerstart = new ArrayList<>(), sAfterGTServerstart = new ArrayList<>(),
+            sBeforeGTServerstop = new ArrayList<>(), sAfterGTServerstop = new ArrayList<>(),
+            sGTBlockIconload = new ArrayList<>(), sGTItemIconload = new ArrayList<>();
     /**
      * The Icon Registers from Blocks and Items. They will get set right before the corresponding Icon Load Phase as executed in the Runnable List above.
      */
@@ -206,7 +222,7 @@ public class GregTech_API {
             sBlockMetal1, sBlockMetal2, sBlockMetal3, sBlockMetal4, sBlockMetal5, sBlockMetal6, sBlockMetal7,
             sBlockMetal8, sBlockGem1, sBlockGem2, sBlockGem3, sBlockReinforced;
     public static Block sBlockGranites, sBlockConcretes, sBlockStones, sBlockGlass;
-    public static Block sBlockCasings1, sBlockCasings2, sBlockCasings3, sBlockCasings4, sBlockCasings5, sBlockCasings8;
+    public static Block sBlockCasings1, sBlockCasings2, sBlockCasings3, sBlockCasings4, sBlockCasings5, sBlockCasings6, sBlockCasings8;
     /**
      * Getting assigned by the Config
      */
@@ -336,8 +352,9 @@ public class GregTech_API {
      * You should call @causeMachineUpdate in @Block.breakBlock and in @Block.onBlockAdded of your registered Block.
      * You don't need to register TileEntities which implement @IMachineBlockUpdateable
      *
-     * @param aID   the ID of your Block
+     * @param aBlock  your Block
      * @param aMeta the Metadata of the Blocks as Bitmask! -1 or ~0 for all Metavalues
+     * @return 
      */
     public static boolean registerMachineBlock(Block aBlock, int aMeta) {
         if (GT_Utility.isBlockInvalid(aBlock)) return false;
