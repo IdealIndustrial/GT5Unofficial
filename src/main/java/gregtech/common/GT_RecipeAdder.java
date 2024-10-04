@@ -1418,6 +1418,11 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
     }
 
     @Override
+    public boolean addFermentingBarrelRecipe(FluidStack aInput, FluidStack aOutput, int aDuration) {
+        return false;
+    }
+
+    @Override
     public boolean addRockBreakerRecipe(ItemStack aInput, int aCircuit, ItemStack aOutput, int aDuration, int aEUt) {
         if (aOutput == null) {
             return false;

@@ -111,7 +111,7 @@ public class GT_MetaGenerated_Item_02 extends GT_MetaGenerated_Item_X32 {
                 new GT_FoodStat(0, 0.0F, EnumAction.drink, ItemList.Bottle_Empty.get(1L), potions, false, false, Potion.moveSpeed.id, TwoMin, 1, 100, Potion.digSpeed.id, TwoMin, 1, 100, Potion.hunger.id, TwoMin, 1, 100, Potion.confusion.id, OneMin/10, 0, 50)));
         ItemList.Bottle_Chilly_Sauce.set(addItem(tLastID = 120, "Chilly Sauce", "Spicy",
                 new GT_FoodStat(0, 0.0F, EnumAction.drink, ItemList.Bottle_Empty.get(1L), potions, false, false, Potion.confusion.id, OneMin/10, 0, 100, Potion.fireResistance.id, OneMin/10, 0, 100)));
-        ItemList.Bottle_Hot_Sauce.set(addItem(tLastID = 121, "Hot Sauce", "Very Spicy, I guess?",
+        ItemList.Bottle_Hot_Sauce.set(addItem(tLastID = 121, "Hot Sauce", "Very Spicy. Can it be spicier?",
                 new GT_FoodStat(0, 0.0F, EnumAction.drink, ItemList.Bottle_Empty.get(1L), potions, false, false, Potion.confusion.id, TwoMin/10, 0, 100, Potion.fireResistance.id, TwoMin/10, 0, 100)));
         ItemList.Bottle_Diabolo_Sauce.set(addItem(tLastID = 122, "Diabolo Sauce", "As if the Devil made this Sauce",
                 new GT_FoodStat(0, 0.0F, EnumAction.drink, ItemList.Bottle_Empty.get(1L), potions, false, false, Potion.confusion.id, ThreeMin/10, 1, 100, Potion.fireResistance.id, ThreeMin/10, 0, 100, Potion.poison.id, ThreeMin/10, 0, 100)));

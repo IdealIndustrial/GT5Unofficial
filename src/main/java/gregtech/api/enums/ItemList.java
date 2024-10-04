@@ -666,7 +666,7 @@ public enum ItemList implements IItemContainer {
     VOLUMETRIC_FLASK, Machine_DigitalTransformer_EV, Machine_DigitalTransformer_IV, Machine_DigitalTransformer_LuV, Machine_DigitalTransformer_ZPM, Machine_DigitalTransformer_UV, Machine_DigitalTransformer_MAX,
     Small_Gunpowder_Bundle,
     Solvent_Spray, Solvent_Spray_Used, ProspectorsBook, ProspectorsBookCreative, Machine_Well, FluidFilterItem, SimpleFluidFilterItem, PrimitiveFluidFilterItem, ItemWaterProofUpgrade, Machine_WaterPump_UVL, Machine_WaterPump_LV, Machine_WaterPump_MV, Machine_WaterPump_HV, Machine_WaterPump_EV, Machine_WaterPump_IV, Casing_Filter_ULV, Casing_Filter_LV, Casing_Filter_MV, Casing_Filter_HV, Casing_Filter_EV, Casing_Filter_IV,
-    Tool_DataReader_MV, Tool_DataReader_EV, Tool_CD, Machine_Debug_LagCreator,
+    Tool_DataReader_MV, Tool_DataReader_EV, Tool_CD, Machine_Debug_LagCreator, Machine_FermentingBarrel,
     Casing_Pyrolyse, AutoRepairKit;
 
     public static final ItemList[]

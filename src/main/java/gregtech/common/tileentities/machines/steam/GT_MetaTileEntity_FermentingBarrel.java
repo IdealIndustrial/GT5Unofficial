@@ -18,14 +18,14 @@ public class GT_MetaTileEntity_FermentingBarrel extends GT_MetaTileEntity_Machin
     public GT_Recipe mLastRecipe;
     public FluidStack mNextFluidStack;
     public GT_MetaTileEntity_FermentingBarrel(int aID) {
-        super(aID, "gt.machine.primitive.fermenting_barrel", "Fermenting Barrel", 0, 0, new String[]{"GG"},
+        super(aID, "gt.machine.primitive.fermenting_barrel", "Fermenting Barrel [dev]", 0, 0, new String[]{"Ferments liquids, requires patience to work."},
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_BOTTOM")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_TOP")),
-                new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_SIDE")),
+                new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_FRONT")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_SIDE")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_BOTTOM_ACTIVE")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_TOP_ACTIVE")),
-                new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_SIDE_ACTIVE")),
+                new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_FRONT_ACTIVE")),
                 new GT_RenderedTexture(new Textures.BlockIcons.CustomIcon("basicmachines/fermenting_barrel/OVERLAY_SIDE_ACTIVE"))
         );
     }
