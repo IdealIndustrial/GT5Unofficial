@@ -1419,6 +1419,10 @@ public class GT_RecipeAdder implements IGT_RecipeAdder {
 
     @Override
     public boolean addFermentingBarrelRecipe(FluidStack aInput, FluidStack aOutput, int aDuration) {
+        if (aInput == null || aOutput == null) {
+            return false;
+        }
+        GT_Recipe.GT_Recipe_Map.sFermentingBarrelRecipes.addRecipe(new GT_Recipe(false, null, null, null, null, new FluidStack[]{aInput}, new FluidStack[]{aOutput},aDuration, 0, 0));
         return false;
     }
 
