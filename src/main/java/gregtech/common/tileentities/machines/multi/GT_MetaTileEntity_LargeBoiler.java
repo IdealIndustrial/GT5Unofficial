@@ -383,6 +383,8 @@ public abstract class GT_MetaTileEntity_LargeBoiler
             tRunning,
             "Producing: ",
             (oxygenBoost ? "SH Steam" : "Steam "),
+            "Fuel: ",
+            ""+progressTimeStash,
             "Amount: ",
             (mEUt > 0 ? tGeneratedEU : 0)+" L/t",
             "Efficiency: ",
@@ -393,3 +395,4 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     }
 
 }
+
