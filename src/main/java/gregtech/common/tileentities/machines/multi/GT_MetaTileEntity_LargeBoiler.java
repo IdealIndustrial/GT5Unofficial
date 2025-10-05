@@ -116,6 +116,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         aNBT.setInteger("excessProjectedEU", excessProjectedEU);
         aNBT.setInteger("progressTimeStash", progressTimeStash);
         aNBT.setInteger("excessFuel", excessFuel);
+        aNBT.setInteger("lastFuelEfficiencyIncrease", lastFuelEfficiencyIncrease);
         aNBT.setBoolean("oxygenBoost", oxygenBoost);
         aNBT.setBoolean("solidSuperFuel", solidSuperFuel);
     }
@@ -127,6 +128,7 @@ public abstract class GT_MetaTileEntity_LargeBoiler
         excessProjectedEU = aNBT.getInteger("excessProjectedEU");
         progressTimeStash = aNBT.getInteger("progressTimeStash");
         excessFuel = aNBT.getInteger("excessFuel");
+        lastFuelEfficiencyIncrease = aNBT.getInteger("lastFuelEfficiencyIncrease");
         oxygenBoost = aNBT.getBoolean("oxygenBoost");
         solidSuperFuel = aNBT.getBoolean("solidSuperFuel");
     }
@@ -393,3 +395,4 @@ public abstract class GT_MetaTileEntity_LargeBoiler
     }
 
 }
+
