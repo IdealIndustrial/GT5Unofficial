@@ -299,10 +299,11 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
                 mProgresstime / 20 + " s / " +
                         mMaxProgresstime / 20 + " s",
                 StatCollector.translateToLocal("Water/Steam L/t") + ": ",
-                distilledConsumed + " / " +
-                        distilledConsumed * 160,
+                distilledConsumed / (superheated ? 2f : 1f) + " / " +
+                        distilledConsumed * 160 / (superheated ? 2f : 1f),
                 StatCollector.translateToLocal("GT5U.multiblock.usage") + " " + StatCollector.translateToLocal("GT5U.LHE.steam") + ": ",
-                (superheated ? -2 * mEUt : -mEUt) + " EU/t",
+//                (superheated ? -2 * mEUt : -mEUt) + " EU/t",
+                (-mEUt) + " EU/t",
                 "" + StatCollector.translateToLocal("GT5U.multiblock.efficiency") + ": ",
                 mEfficiency / 100.0F + " %",
                 StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
