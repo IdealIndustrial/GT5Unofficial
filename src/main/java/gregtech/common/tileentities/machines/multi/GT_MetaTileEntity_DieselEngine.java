@@ -216,11 +216,21 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
         super.saveNBTData(aNBT);
+        aNBT.setInteger("mEfficiency", mEfficiency);
+        aNBT.setBoolean("boostEu", boostEu);
+        aNBT.setInteger("fuelConsumption", fuelConsumption);
+        aNBT.setInteger("fuelValue", fuelValue);
+        aNBT.setInteger("fuelRemaining", fuelRemaining);
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         super.loadNBTData(aNBT);
+        mEfficiency = aNBT.getInteger("mEfficiency");
+        boostEu = aNBT.getBoolean("boostEu");
+        fuelConsumption = aNBT.getInteger("fuelConsumption");
+        fuelValue = aNBT.getInteger("fuelValue");
+        fuelRemaining = aNBT.getInteger("fuelRemaining");
     }
 
     @Override
