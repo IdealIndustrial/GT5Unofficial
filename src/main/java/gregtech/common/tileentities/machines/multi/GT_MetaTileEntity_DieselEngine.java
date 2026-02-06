@@ -93,6 +93,7 @@ public class GT_MetaTileEntity_DieselEngine extends GT_MetaTileEntity_MultiBlock
                     if ((tLiquid = GT_Utility.getFluidForFilledItem(aFuel.getRepresentativeInput(0), true)) != null) { //Create fluidstack from current recipe
                         if (hatchFluid1.isFluidEqual(tLiquid)) { //Has a diesel fluid
                             fuelConsumption = tLiquid.amount = boostEu ? (4096 / aFuel.mSpecialValue) : (2048 / aFuel.mSpecialValue); //Calc fuel consumption
+                            fuelConsumption = tLiquid.amount = Math.max(tLiquid.amount, 1); //fix if fuel callories < 1
                             if(depleteInput(tLiquid)) { //Deplete that amount
                                 boostEu = depleteInput(Materials.Oxygen.getGas(oxygenPerTick));
 
