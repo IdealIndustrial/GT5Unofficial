@@ -16,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -89,7 +90,7 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
 
         int fluidAmountToConsume = mInputHotFluidHatch.getFluidAmount(); // how much fluid is in hatch
 
-        int superheated_threshold = 4000;   // default: must have 4000L per second to generate superheated steam
+        superheated_threshold = 4000;   // default: must have 4000L per second to generate superheated steam
         float efficiency = 1f;              // default: operate at 100% efficiency with no integrated circuitry
         float penalty_per_config = 0.015f;  // penalize 1.5% efficiency per circuitry level (1-25)
         int shs_reduction_per_config = 150; // reduce threshold 150L/s per circuitry level (1-25)
@@ -308,8 +309,8 @@ public class GT_MetaTileEntity_HeatExchanger extends GT_MetaTileEntity_MultiBloc
                 mEfficiency / 100.0F + " %",
                 StatCollector.translateToLocal("GT5U.multiblock.problems") + ": ",
                 "" + (getIdealStatus() - getRepairStatus()),
-                StatCollector.translateToLocal("GT5U.LHE.superheated") + ": " + superheated,
-                StatCollector.translateToLocal("GT5U.LHE.superheated") + " " + StatCollector.translateToLocal("GT5U.LHE.threshold") + ": ", "" + superheated_threshold
+                StatCollector.translateToLocal("GT5U.LHE.superheated")+": "+ (superheated?EnumChatFormatting.RED:EnumChatFormatting.BLUE) + superheated + EnumChatFormatting.RESET,
+                StatCollector.translateToLocal("GT5U.LHE.superheated")+" "+StatCollector.translateToLocal("GT5U.LHE.threshold")+": "+ EnumChatFormatting.GREEN + superheated_threshold + EnumChatFormatting.RESET
         };
     }
 }
