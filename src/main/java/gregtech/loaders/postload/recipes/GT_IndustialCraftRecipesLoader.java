@@ -23,6 +23,10 @@ public class GT_IndustialCraftRecipesLoader implements Runnable {
 
         GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("carbonFiber", 1L));
 
+        GT_ModHandler.addCompressionRecipe(GT_ModHandler.getModItem("IC2", "itemPartCarbonMesh", 1L), GT_ModHandler.getModItem("IC2", "itemPartCarbonPlate", 1L));
+        GT_ModHandler.addPulverisationRecipe(GT_ModHandler.getModItem("IC2", "itemFuelPlantBall", 1L), GT_ModHandler.getModItem("IC2", "itemBiochaff", 1L));
+        GT_ModHandler.addPulverisationRecipe(GT_ModHandler.getModItem("IC2", "blockMiningPipe", 1L), GT_OreDictUnificator.get(OrePrefixes.dustSmall, Materials.Steel, 2L));
+
         if (GT_Mod.gregtechproxy.mDisableIC2Cables) {
             GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("copperCableItem", 1L));
             GT_ModHandler.removeRecipeByOutput(GT_ModHandler.getIC2Item("insulatedCopperCableItem", 1L));
