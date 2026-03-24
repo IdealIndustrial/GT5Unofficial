@@ -2131,6 +2131,14 @@ public class GT_Utility {
         return chPos;
     }
     
+    /**
+     * Gets the block by left-right axis
+     * @param te
+     * @param ro
+     * @param offset
+     * @param aY
+     * @return 
+     */
     public static Object getFrontRelativeOffsetBlock(IGregTechTileEntity te, RelativeOffset ro, int offset, int aY){
         int x = 0, z = 0;
         
@@ -2162,7 +2170,15 @@ public class GT_Utility {
         return te.getBlockOffset(x, aY, z);
     }
     
-    
+    /**
+     * Get the block by front-back axis
+     * @param te
+     * @param ro
+     * @param offset
+     * @param backoffset
+     * @param aY
+     * @return 
+     */
     public static GT_MetaBlock getFrontRelativeOffsetBackBlock(IGregTechTileEntity te, RelativeOffset ro, int offset, int backoffset, int aY){
         int x = 0, z = 0;
             if(te.getFrontFacing() == 2 || te.getFrontFacing() == 3) {
