@@ -261,7 +261,8 @@ public abstract class GT_MetaTileEntity_BasicMachine extends GT_MetaTileEntity_B
 
     @Override
     public boolean isLiquidInput(byte aSide) {
-        return aSide != mMainFacing && (mAllowFluidInputFromOutputSide || aSide != getBaseMetaTileEntity().getFrontFacing());
+        return aSide != mMainFacing
+                && (mAllowFluidInputFromOutputSide || aSide != getBaseMetaTileEntity().getFluidFacing());
     }
 
     @Override
