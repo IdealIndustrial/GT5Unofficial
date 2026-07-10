@@ -74,6 +74,7 @@ public class GT_BaseCrop extends CropCard implements ICropCardInfo {
             mMaxSize = Math.max(3, aMaxSize);
             mHarvestSize = Math.min(Math.max(aHarvestSize, 2), mMaxSize);
             mAfterHarvestSize = Math.min(Math.max(aAfterHarvestSize, 1), mMaxSize - 1);
+            mGrowthSpeed = aGrowthSpeed;
             mStats[0] = aStatChemical;
             mStats[1] = aStatFood;
             mStats[2] = aStatDefensive;
